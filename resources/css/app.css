@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .no-spinner {
+        @apply [-moz-appearance:_textfield];
+    }
+
+    .no-spinner::-webkit-outer-spin-button,
+    .no-spinner::-webkit-inner-spin-button {
+        @apply appearance-none m-0;
+    }
+}
+#mobile-menu {
+    transition: transform 0.3s ease-in-out;
+}
+#mobile-menu[x-show] {
+    transform: translateY(0);
+}
+#mobile-menu:not([x-show]) {
+    transform: translateY(-100%);
+}
+[x-cloak] {
+    display: none;
+}
