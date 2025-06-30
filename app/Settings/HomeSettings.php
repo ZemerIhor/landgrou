@@ -41,6 +41,7 @@ class HomeSettings extends Settings
     public array $tender_items;
     public string $tenders_phone;
     // About Section
+
     public string $about_title;
     public string $about_description;
     public ?string $about_more_link = null ;
