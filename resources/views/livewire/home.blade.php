@@ -256,16 +256,15 @@
     <section class="flex overflow-hidden flex-col bg-zinc-800" role="main" aria-labelledby="about-heading">
         <div class="container mx-auto px-2">
             <div class="main-container relative">
-                <div class="flex z-10 flex-wrap justify-between relative py-10 w-full max-md:max-w-full">
-                    <article class="flex flex-col flex-1 shrink items-start font-bold basis-0 min-w-60 max-md:max-w-full">
-                        <header class="max-w-full w-[487px]">
-                            <h1 id="about-heading" class="text-4xl leading-none text-white max-md:max-w-full">
+                <div class="flex justify-between relative py-10 w-full max-md:flex-col max-md:items-start max-md:gap-10">
+                    <article class="flex flex-col flex-1 shrink items-start font-bold basis-0 min-w-[15rem] max-md:w-full">
+                        <header class="w-full max-md:w-full max-md:max-w-none">
+                            <h1 id="about-heading" class="text-4xl leading-none text-white max-md:text-3xl max-md:w-full">
                                 {{ $settings->about_title ?: __('messages.about.title') }}
                             </h1>
-                            <p class="mt-5 text-xl leading-6 text-white max-md:max-w-full">{!! $settings->about_description !!}</p>
+                            <p class="mt-5 text-xl leading-6 text-white max-md:text-base max-md:w-full">{!! $settings->about_description !!}</p>
                         </header>
-                        <nav class="flex gap-4 items-center mt-40 text-base leading-snug whitespace-nowrap max-md:mt-10"
-                             role="navigation" aria-label="About us actions">
+                        <nav class="flex gap-4 items-center mt-40 text-base leading-snug whitespace-nowrap max-md:mt-10 max-md:flex-wrap max-md:justify-start">
                             <a href="{{ $settings->about_more_link }}"
                                class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-green-600 rounded-2xl border-2 border-solid border-[color:var(--Primaries-700,#228F5D)] min-h-11 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-800"
                                type="button" aria-label="{{ __('messages.about.more_button_aria_label') }}">
@@ -278,22 +277,26 @@
                             </a>
                         </nav>
                     </article>
-                    <aside class="flex flex-wrap gap-2 items-end self-start min-w-60 max-md:max-w-full"
+                    <aside class="flex flex-wrap gap-2 items-end self-start min-w-[15rem] max-md:w-full max-md:flex-col max-md:gap-6"
                            aria-label="Company statistics and information">
-                        <article class="min-w-60">
+                        <article class="min-w-[15rem] max-md:w-full">
                             <header>
-                                <h2 class="text-4xl font-bold leading-none text-green-600">
+                                <h2 class="text-4xl font-bold leading-none text-green-600 max-md:text-3xl">
                                     {{ $settings->about_statistic_title }}
                                 </h2>
                             </header>
-                            <div class="mt-3 text-xs font-semibold leading-5 text-white">
+                            <div class="mt-3 text-xs font-semibold leading-5 text-white max-md:text-sm">
                                 {!! $settings->about_statistic_description !!}
                             </div>
                         </article>
-                        <figure class="overflow-hidden text-xs font-semibold text-right text-white rounded-3xl min-w-60 shadow-[var(--sds-size-depth-0)_var(--sds-size-depth-400)_var(--sds-size-depth-800)_var(--sds-size-depth-negative-200)_var(--sds-color-black-400)]">
-                            <div class="flex relative flex-col px-7 pb-4 w-full aspect-[0.57] pt-[473px] max-md:pt-24 max-md:pl-5">
-                                <img src="{{ Storage::url($settings->about_location_image) }}" alt="{{ $settings->about_location_caption }}"
-                                     class="object-cover absolute inset-0 size-full" />
+                        <figure
+                            class="overflow-hidden text-xs font-semibold text-right text-white rounded-3xl shadow-[var(--sds-size-depth-0)_var(--sds-size-depth-400)_var(--sds-size-depth-800)_var(--sds-size-depth-negative-200)_var(--sds-color-black-400)] max-md:w-full max-md:rounded-lg"
+                            style="min-width: 15rem;">
+                            <div
+                                class="flex relative flex-col px-7 pb-4 w-full aspect-[0.57] pt-[473px] max-md:pt-24 max-md:pl-5">
+                                <img src="{{ Storage::url($settings->about_location_image) }}"
+                                     alt="{{ $settings->about_location_caption }}"
+                                     class="object-cover absolute inset-0 w-full h-full" />
                                 <figcaption class="relative z-10">{{ $settings->about_location_caption }}</figcaption>
                             </div>
                         </figure>
