@@ -9,3 +9,7 @@ document.querySelectorAll('[data-toggle]').forEach(button => {
         button.setAttribute('aria-expanded', !isExpanded);
     });
 });
+
+document.addEventListener('DOMContentLoaded' , () => {
+    console.log('GOOD ONE')
+})
