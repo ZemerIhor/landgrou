@@ -32,6 +32,7 @@
         </section>
     </div>
 
+
     <div class="container mx-auto px-2">
         <section class="flex relative flex-col gap-0.5 items-start self-stretch pt-10 pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0" aria-label="Company Advantages">
             <div class="main-container">
