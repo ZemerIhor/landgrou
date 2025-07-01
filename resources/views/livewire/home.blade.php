@@ -22,7 +22,7 @@
         <section class="flex relative flex-col gap-0.5 items-start self-stretch pt-10 pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0" aria-label="Company Advantages">
             <div class="main-container">
                 <div class="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] max-md:grid-cols-2 max-sm:grid-cols-1 gap-1">
-                    @if (!empty($settings->advantages_cards[app()->getLocale()]) && is_array($settings->advantages_cards[app()->getLocale()]))
+                    @if (!empty($settings->advantages_cards[app()->getLocale()]))
                         @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
                             <article class="flex flex-col gap-3 items-center p-6 rounded-3xl bg-zinc-800">
                                 <div class="flex flex-col gap-2 w-full text-center text-white">
@@ -98,7 +98,7 @@
                         <p>{{ __('messages.feedback_form.no_image') }}</p>
                     @endif
                     <div class="flex-1 shrink self-start basis-0 min-w-60 max-md:max-w-full">
-                        @if (!empty($settings->faq_items[app()->getLocale()]) && is_array($settings->faq_items[app()->getLocale()]))
+                        @if (!empty($settings->faq_items[app()->getLocale()]))
                             @php $counter = 1; @endphp
                             @foreach ($settings->faq_items[app()->getLocale()] as $faq)
                                 <article class="flex flex-wrap items-start px-4 py-2 w-full rounded-3xl bg-neutral-200 max-md:max-w-full mb-1">
@@ -225,7 +225,7 @@
                     {{ isset($settings->tenders_title[app()->getLocale()]) ? $settings->tenders_title[app()->getLocale()] : __('messages.tenders.title') }}
                 </h1>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-5 w-full font-semibold leading-6 text-white max-md:max-w-full">
-                    @if (!empty($settings->tender_items[app()->getLocale()]) && is_array($settings->tender_items[app()->getLocale()]))
+                    @if (!empty($settings->tender_items[app()->getLocale()]))
                         @foreach ($settings->tender_items[app()->getLocale()] as $tender)
                             <article class="flex overflow-hidden relative p-4 rounded-3xl min-h-[210px]"
                                      style="background-color: {{ isset($tender['background_color']) ? $tender['background_color'] : '#228F5D' }}"
@@ -318,8 +318,9 @@
                     </aside>
                 </div>
             </div>
+        </div>
     </section>
-</div>
+
 
 <div class="container mx-auto px-2">
     <section class="flex flex-col py-10" aria-label="Reviews">
