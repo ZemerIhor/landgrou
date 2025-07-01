@@ -1,6 +1,8 @@
 <div>
     <x-welcome-banner :settings="$settings" />
 
+
+
     <div class="container mx-auto px-2">
         <section class="flex flex-col self-stretch py-10" aria-label="Всі продукти">
             <div class="main-container">
@@ -132,7 +134,7 @@
     </div>
 
     <div class="container mx-auto px-2">
-        <section class="flex flex-col justify-center self-stretch py-10" role="main" aria-labelledby="feedback-form-title">
+        <section class="flex flex-col justify-center self-stretch py-10" role="main" aria-label="Feedback Form">
             <div class="main-container">
                 <div class="flex flex-wrap gap-2 justify-center w-full max-md:max-w-full">
                     <div class="flex relative flex-col flex-1 shrink justify-center self-start px-5 rounded-3xl basis-0 bg-neutral-200 min-h-[570px] max-md:max-w-full">
@@ -150,12 +152,6 @@
                                 <div class="mb-4">
                                     <label for="name-input" class="sr-only">{{ __('messages.feedback_form.name_placeholder') }}</label>
                                     <input type="text" id="name-input" name="name" placeholder="{{ __('messages.feedback_form.name_placeholder') }}"
-                                           class="overflow-hidden flex-1 shrink gap-2 self-stretch px-4 py-3.5 w-full rounded-2xl border border-solid basis-0 border-[color:var(--Gray-400,#A9A9A9)] min-h-12 text-neutral-400 max-md:max-w-full focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
-                                           aria-required="true" />
-                                </div>
-                                <div class="mb-4">
-                                    <label for="phone-input" class="sr-only">{{ __('messages.feedback_form.phone_placeholder') }}</label>
-                                    <input type="tel" id="phone-input" name="phone" placeholder="{{ __('messages.feedback_form.phone_placeholder') }}"
                                            class="overflow-hidden flex-1 shrink gap-2 self-stretch px-4 py-3.5 w-full rounded-2xl border border-solid basis-0 border-[color:var(--Gray-400,#A9A9A9)] min-h-12 text-neutral-400 max-md:max-w-full focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
                                            aria-required="true" />
                                 </div>
@@ -314,13 +310,13 @@
                             </figure>
                         @else
                             <p>{{ __('messages.about.no_image') }}</p>
+                            rando
                         @endif
                     </aside>
                 </div>
             </div>
         </div>
     </section>
-
 
 <div class="container mx-auto px-2">
     <section class="flex flex-col py-10" aria-label="Reviews">
@@ -329,7 +325,7 @@
                 {{ isset($settings->reviews_title[app()->getLocale()]) ? $settings->reviews_title[app()->getLocale()] : __('messages.reviews.title') }}
             </h2>
             <div class="flex flex-wrap gap-5 justify-center mt-5 w-full max-sm:max-w-full">
-                @if (!empty($settings->review_items[app()->getLocale()]) && is_array($settings->review_items[app()->getLocale()]))
+                @if (!empty($settings->review_items[app()->getLocale()]))
                     @foreach ($settings->review_items[app()->getLocale()] as $review)
                         <article class="flex flex-col gap-3 p-6 rounded-3xl bg-neutral-200 max-md:max-w-full">
                             <div class="flex flex-col gap-2 w-full">
@@ -355,6 +351,8 @@
         </div>
     </section>
 </div>
+
+
 
 
 </div>
