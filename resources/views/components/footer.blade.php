@@ -3,7 +3,7 @@
 
 
 @endphp
-<footer class="self-stretch bg-zinc-800" role="contentinfo" aria-label="Site footer">
+<footer class="self-stretch bg-zinc-800 mt-auto" role="contentinfo" aria-label="Site footer">
     <div class="main-container container mx-auto">
         <!-- Logo and social links -->
         <section class="flex flex-wrap gap-10 justify-between items-end pt-11 pb-6 w-full max-md:max-w-full">

@@ -7,8 +7,11 @@ use App\Filament\Pages\Home;
 use App\Filament\Resources\BlogPostResource;
 use App\Livewire\Elements\PromoBoxElement;
 use App\Modifiers\ShippingModifier;
+use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+use Filament\SpatieLaravelTranslatablePlugin;
 use Geosem42\Filamentor\FilamentorPlugin;
 use Illuminate\Support\ServiceProvider;
+use Kenepa\TranslationManager\TranslationManagerPlugin;
 use Lunar\Admin\Support\Facades\LunarPanel;
 use Lunar\Base\ShippingModifiers;
 use Lunar\Shipping\ShippingPlugin;
@@ -22,8 +25,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         LunarPanel::panel(
-            fn ($panel) => $panel
-
+            fn($panel) => $panel
                 ->pages([
                     Footer::class, // 👈 добавляем сюда
                     Home::class,
@@ -36,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
                     FilamentorPlugin::make(),
                     \Biostate\FilamentMenuBuilder\FilamentMenuBuilderPlugin::make(),
                     FilamentTranslateFieldPlugin::make()
-                        ->defaultLocales(['en', 'uk']) // список языков
+                        ->defaultLocales(['en', 'uk'])
                 ])
         )->register();
     }
@@ -46,13 +48,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(ShippingModifiers $shippingModifiers): void
     {
+
         $shippingModifiers->add(
             ShippingModifier::class
         );
         \Lunar\Facades\ModelManifest::replace(
             \Lunar\Models\Contracts\Product::class,
             \App\Models\Product::class,
-            // \App\Models\CustomProduct::class,
+        // \App\Models\CustomProduct::class,
         );
     }
 }

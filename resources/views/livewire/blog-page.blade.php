@@ -1,14 +1,14 @@
-<main class="flex flex-col px-4 py-6 max-w-7xl mx-auto">
+<div class="flex flex-col px-4 py-6 container mx-auto">
     <!-- Breadcrumbs -->
     <nav aria-label="Breadcrumb" class="flex gap-2 items-center text-sm font-medium text-neutral-500 mb-4">
-        <a href="/" class="hover:text-black transition">Головна</a>
+        <a href="/" class="hover:text-black transition">{{ __('messages.breadcrumbs.home') }}</a>
         <span>/</span>
-        <span class="text-black font-semibold">Блог</span>
+        <span class="text-black font-semibold">{{ __('messages.breadcrumbs.blog') }}</span>
     </nav>
 
     <!-- Title -->
     <header class="mb-6">
-        <h1 class="text-3xl font-bold text-black">Блог</h1>
+        <h1 class="text-3xl font-bold text-black">  {{ __('messages.blog.title') }}</h1>
     </header>
 
     <!-- Blog Grid -->
@@ -21,7 +21,7 @@
                          class="w-full h-48 object-cover">
                 @else
                     <div class="w-full h-48 bg-neutral-200 flex items-center justify-center text-neutral-500">
-                        No Image
+                        {{ __('messages.blog.no_image') }}
                     </div>
                 @endif
 
@@ -40,7 +40,7 @@
 
                     <a href="{{ route('blog.post', $post->slug) }}"
                        class="mt-auto inline-flex items-center gap-1 text-green-600 font-medium hover:underline">
-                        Читать далее
+                        {{ __('messages.blog.read_more') }}
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                              stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -51,4 +51,4 @@
             </article>
         @endforeach
     </section>
-</main>
+</div>

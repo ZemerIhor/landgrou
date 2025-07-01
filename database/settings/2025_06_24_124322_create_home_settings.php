@@ -11,6 +11,7 @@ class CreateHomeSettings extends SettingsMigration
 
 
         $this->migrator->add('home.hero_heading', '');
+        $this->migrator->add('home.hero_slides', []);
         $this->migrator->add('home.hero_subheading', '');
         $this->migrator->add('home.hero_background_image', null);
 
@@ -54,6 +55,7 @@ class CreateHomeSettings extends SettingsMigration
 
     public function down(): void
     {
+        $this->migrator->delete('home.hero_slides', []);
 
         $this->migrator->delete('home.hero_heading');
         $this->migrator->delete('home.hero_subheading');

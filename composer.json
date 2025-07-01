@@ -13,9 +13,11 @@
     "require": {
         "php": "^8.2",
         "biostate/filament-menu-builder": "^1.0",
+        "filament/spatie-laravel-translatable-plugin": "^3.2",
         "geosem42/filamentor": "^1.1",
         "guzzlehttp/guzzle": "^7.2",
         "http-interop/http-factory-guzzle": "^1.2",
+        "kenepa/translation-manager": "^4.0",
         "laravel/framework": "^10.43|^11.0",
         "laravel/sanctum": "^3.3|^4.0",
         "laravel/tinker": "^2.8",
