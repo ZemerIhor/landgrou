@@ -57,7 +57,7 @@
                              class="object-contain z-0 w-full aspect-[4.13] rounded-[32px]" />
                     @endif
                     <div class="flex z-0 gap-2 justify-between items-center mt-2 w-full min-h-60">
-                        @if (!empty($settings->comparison_items[app()->getLocale()]) && is_array($settings->comparison_items[app()->getLocale()]))
+                        @if (!empty($settings->comparison_items[app()->getLocale()]))
                             @foreach ($settings->comparison_items[app()->getLocale()] as $item)
                                 <div class="flex relative flex-col grow shrink-0 items-start self-stretch my-auto aspect-[1.617] min-h-60 rounded-[32px]">
                                     @if (!empty($item['image']))
