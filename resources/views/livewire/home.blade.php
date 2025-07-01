@@ -1,13 +1,12 @@
 <div>
     <x-welcome-banner :settings="$settings" />
 
-
     <div class="container mx-auto px-2">
         <section class="flex flex-col self-stretch py-10" aria-label="Всі продукти">
             <div class="main-container">
                 <h2 class="text-2xl font-bold leading-tight text-black max-md:max-w-full">{{ __('messages.products.title') }}</h2>
                 <div class="flex flex-wrap gap-2 items-center mt-5 w-full min-h-[360px] max-md:max-w-full" role="list">
-                    @if (!empty($allProducts) && is_array($allProducts))
+                    @if (!empty($allProducts))
                         @foreach ($allProducts as $product)
                             <x-product-card :product="$product" />
                         @endforeach
