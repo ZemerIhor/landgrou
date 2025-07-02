@@ -20,7 +20,7 @@
                                 </div>
                             </div>
                         @empty
-                            <p class="text-sm text-gray-500">{{ __('cart.empty') }}</p>
+                            <p class="text-sm text-gray-500">{{ __('messages.cart.empty') }}</p>
                         @endforelse
                     </div>
                 </div>
@@ -37,7 +37,7 @@
 
                         {{-- Итог --}}
                         <div class="flex flex-wrap py-4">
-                            <dt class="w-1/2 font-medium">{{ __('cart.total') }}</dt>
+                            <dt class="w-1/2 font-medium">{{ __('messages.cart.total') }}</dt>
                             <dd class="w-1/2 text-right">
                                 {{ $cart->total?->formatted() ?? '0.00' }}
                             </dd>
