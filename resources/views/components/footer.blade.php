@@ -4,14 +4,12 @@
 @endphp
 
 <footer class="self-stretch bg-zinc-800 mt-auto" role="contentinfo" aria-label="Site footer">
-    <div class="main-container container mx-auto">
-        <!-- Logo and social links -->
+    <div class="main-container container mx-auto px-2">
         <section class="flex flex-wrap gap-10 justify-between items-end pt-11 pb-6 w-full max-md:max-w-full">
             <x-brand.logo class="w-auto h-8 text-indigo-600" />
 
             @if (!empty($footer->social_links))
                 <nav aria-label="Social media links" class="flex gap-5 items-start">
-                    <!-- Loop 1: Social links -->
                     @foreach ($footer->social_links as $link)
                         @if (!empty($link['url']) && !empty($link['icon']))
                             <a href="{{ $link['url'] }}" aria-label="Follow us on {{ $link['icon'] }}" target="_blank" rel="noopener noreferrer">

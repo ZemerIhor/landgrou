@@ -169,6 +169,13 @@ class Home extends Page implements HasForms
                                         TextInput::make('alt')
                                             ->label(__('Альтернативный текст изображения'))
                                             ->maxLength(255),
+                                        FileUpload::make('image')
+                                            ->label(__('Изображение'))
+                                            ->directory('home/comparison/items')
+                                            ->disk('public')
+                                            ->preserveFilenames()
+                                            ->maxSize(5120)
+                                            ->image(),
                                     ])
                                     ->maxItems(3)
                                     ->collapsible()

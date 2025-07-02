@@ -49,19 +49,23 @@
     <div class="container mx-auto px-2">
         <section class="flex overflow-hidden flex-col py-10 font-bold" aria-labelledby="advantages-title">
             <div class="main-container">
-                <h1 id="advantages-title" class="text-4xl leading-none text-center text-zinc-800 max-md:max-w-full">
-                    {{ isset($settings->comparison_title[app()->getLocale()]) ? $settings->comparison_title[app()->getLocale()] : __('messages.advantages.title') }}
-                </h1>
-                <div class="flex relative flex-col self-center mt-6 w-full text-white max-md:max-w-full">
+                <!-- Part 1: Title and Main Image -->
+                <div class="flex flex-col items-center">
+                    <h1 id="advantages-title" class="text-4xl leading-none text-center text-zinc-800 max-md:max-w-full">
+                        {{ isset($settings->comparison_title[app()->getLocale()]) ? $settings->comparison_title[app()->getLocale()] : __('messages.advantages.title') }}
+                    </h1>
                     @if (!empty($settings->main_comparison_image) && is_string($settings->main_comparison_image))
                         <img src="{{ Storage::url($settings->main_comparison_image) }}"
                              alt="{{ isset($settings->main_comparison_alt[app()->getLocale()]) ? $settings->main_comparison_alt[app()->getLocale()] : 'Comparison of peat briquettes' }}"
-                             class="object-contain z-0 w-full aspect-[4.13] rounded-[32px]" />
+                             class="object-contain w-full mt-6 aspect-[4.13] rounded-[32px] max-md:max-w-full" />
                     @endif
-                    <div class="flex z-0 gap-2 justify-between items-center mt-2 w-full min-h-60">
+                </div>
+                <!-- Part 2: Comparison Items and Central Text -->
+                <div class="flex relative flex-col self-center mt-2 w-full text-white max-md:max-w-full">
+                    <div class="flex z-0 gap-2 justify-between items-center w-full min-h-60 max-md:flex-col max-md:gap-6">
                         @if (!empty($settings->comparison_items[app()->getLocale()]))
                             @foreach ($settings->comparison_items[app()->getLocale()] as $item)
-                                <div class="flex relative flex-col grow shrink-0 items-start self-stretch my-auto aspect-[1.617] min-h-60 rounded-[32px]">
+                                <div class="flex relative flex-col grow shrink-0 items-start self-stretch my-auto aspect-[1.617] min-h-60 rounded-[32px] max-md:w-full">
                                     @if (!empty($item['image']) && is_string($item['image']))
                                         <img src="{{ Storage::url($item['image']) }}"
                                              alt="{{ isset($item['alt']) ? $item['alt'] : '' }}"
@@ -74,10 +78,10 @@
                                 </div>
                             @endforeach
                         @else
-                            <p>{{ __('messages.comparison.no_items') }}</p>
+                            <p class="text-center w-full">{{ __('messages.comparison.no_items') }}</p>
                         @endif
                     </div>
-                    <span class="flex absolute top-0 z-0 flex-col justify-center items-center self-start px-4 py-12 leading-none text-center whitespace-nowrap left-[489px]"
+                    <span class="flex absolute top-0 z-10 flex-col justify-center items-center self-center px-4 py-12 leading-none text-center whitespace-nowrap max-md:top-10"
                           aria-label="Quantity of peat briquettes for comparison">
                     <span class="text-8xl tracking-tighter text-white max-md:text-4xl">{{ isset($settings->central_text_value[app()->getLocale()]) ? $settings->central_text_value[app()->getLocale()] : '1t' }}</span>
                     <span class="text-4xl text-white">{{ isset($settings->central_text_unit[app()->getLocale()]) ? $settings->central_text_unit[app()->getLocale()] : 'briquettes' }}</span>
