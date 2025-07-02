@@ -65,7 +65,8 @@
                     <div class="flex z-0 gap-2 justify-between items-center w-full min-h-60 max-md:flex-col max-md:gap-6">
                         @if (!empty($settings->comparison_items[app()->getLocale()]))
                             @foreach ($settings->comparison_items[app()->getLocale()] as $item)
-                                <div class="flex relative flex-col grow shrink-0 items-start self-stretch my-auto aspect-[1.617] min-h-60 rounded-[32px] max-md:w-full">
+                                <div class="flex relative flex-col grow shrink-0 items-start self-stretch overflow-hidden
+ my-auto min-h-60 rounded-[32px] max-md:w-full">
                                     @if (!empty($item['image']) && is_string($item['image']))
                                         <img src="{{ Storage::url($item['image']) }}"
                                              alt="{{ isset($item['alt']) ? $item['alt'] : '' }}"
