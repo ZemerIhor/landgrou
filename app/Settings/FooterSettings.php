@@ -12,8 +12,8 @@ class FooterSettings extends Settings
     public string $phone;
     public $email;
     public $address;
-    public string $copyright_text;
-    public array $social_links;
+    public $copyright_text; // Уберите тип string или укажите array
+    //    public array $social_links;
     public array $sections;
 
     protected array $translatable = [
