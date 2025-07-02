@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Settings;
 
 use Spatie\LaravelSettings\Settings;
@@ -9,35 +8,42 @@ class HomeSettings extends Settings
 {
     use HasTranslations;
 
-    public array $hero_slides;
-    public array $advantages_cards;
-    public ?string $advantages_image_1;
-    public ?string $advantages_image_2;
-    public ?string $advantages_image_3;
-    public array $comparison_title;
-    public ?string $main_comparison_image;
-    public array $main_comparison_alt;
-    public array $comparison_items;
-    public array $central_text_value;
-    public array $central_text_unit;
-    public array $faq_items;
-    public array $feedback_form_title;
-    public array $feedback_form_description;
-    public ?string $feedback_form_image;
-    public array $feedback_form_image_alt;
-    public array $tenders_title;
-    public array $tender_items;
-    public array $tenders_phone;
-    public array $about_title;
-    public array $about_description;
-    public array $about_more_link;
-    public array $about_certificates_link;
-    public array $about_statistic_title;
-    public array $about_statistic_description;
-    public ?string $about_location_image;
-    public array $about_location_caption;
-    public array $reviews_title;
-    public array $review_items;
+    public array $hero_slides = [];
+
+    public array $advantages_cards = [];
+    public ?string $advantages_image_1 = null;
+    public ?string $advantages_image_2 = null;
+    public ?string $advantages_image_3 = null;
+
+    public $comparison_title;
+    public ?string $main_comparison_image = null;
+    public $main_comparison_alt;
+    public array $comparison_items = [];
+    public $central_text_value;
+    public $central_text_unit;
+
+    public array $faq_items = [];
+
+    public $feedback_form_title;
+    public $feedback_form_description;
+    public ?string $feedback_form_image = null;
+    public $feedback_form_image_alt;
+
+    public $tenders_title;
+    public array $tender_items = [];
+    public $tenders_phone;
+
+    public $about_title;
+    public $about_description;
+    public $about_more_link;
+    public $about_certificates_link;
+    public $about_statistic_title;
+    public $about_statistic_description;
+    public ?string $about_location_image = null;
+    public $about_location_caption;
+
+    public $reviews_title;
+    public array $review_items = [];
 
     protected array $translatable = [
         'hero_slides',
