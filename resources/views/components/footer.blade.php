@@ -11,6 +11,7 @@
 
             @if (!empty($footer->social_links))
                 <nav aria-label="Social media links" class="flex gap-5 items-start">
+                    <!-- Loop 1: Social links -->
                     @foreach ($footer->social_links as $link)
                         @if (!empty($link['url']) && !empty($link['icon']))
                             <a href="{{ $link['url'] }}" aria-label="Follow us on {{ $link['icon'] }}" target="_blank" rel="noopener noreferrer">
@@ -22,7 +23,7 @@
                                 />
                             </a>
                         @endif
-                        @foreach
+                    @endforeach
                 </nav>
             @endif
         </section>
@@ -30,11 +31,13 @@
         <!-- Navigation sections and contacts -->
         <section class="flex flex-wrap gap-10 justify-between items-start w-full text-base font-semibold leading-none text-white max-md:max-w-full">
             @if (!empty($footer->sections[$currentLocale]))
+                <!-- Loop 2: Navigation sections -->
                 @foreach ($footer->sections[$currentLocale] as $section)
                     @if (!empty($section['title']) && !empty($section['links']))
                         <nav aria-label="{{ $section['title'] }}" class="w-auto">
                             <h3 class="text-lg font-bold">{{ $section['title'] }}</h3>
                             <ul class="space-y-5">
+                                <!-- Loop 3: Links within section -->
                                 @foreach ($section['links'] as $link)
                                     @if (!empty($link['label']) && !empty($link['url']))
                                         <li>
