@@ -158,6 +158,9 @@ return [
     'cart' => [
         'cart' => 'Cart',
         'close' => 'Close',
+        'order_summary' => 'Order Summary',
+        'total' => 'Total',
+
         'empty' => 'Your cart is empty',
         'sub_total' => 'Subtotal',
         'update_cart' => 'Update Cart',

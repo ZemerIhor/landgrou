@@ -1,9 +1,9 @@
 <div>
-    <div class="max-w-screen-xl px-4 py-12 mx-auto sm:px-6 lg:px-8">
+    <div class="container mx-auto px-4 py-12 mx-auto sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:items-start">
             {{-- Резюме заказа --}}
             <div class="px-6 py-8 space-y-4 bg-white border border-gray-100 lg:sticky lg:top-8 rounded-xl lg:order-last">
-                <h3 class="font-medium">Резюме заказа</h3>
+                <h3 class="font-medium">{{ __('cart.order_summary') }}</h3>
                 <div class="flow-root">
                     <div class="-my-4 divide-y divide-gray-100">
                         @forelse ($cart->lines as $line)
@@ -20,7 +20,7 @@
                                 </div>
                             </div>
                         @empty
-                            <p class="text-sm text-gray-500">Корзина пуста.</p>
+                            <p class="text-sm text-gray-500">{{ __('cart.empty') }}</p>
                         @endforelse
                     </div>
                 </div>
@@ -37,7 +37,7 @@
 
                         {{-- Итог --}}
                         <div class="flex flex-wrap py-4">
-                            <dt class="w-1/2 font-medium">Итого</dt>
+                            <dt class="w-1/2 font-medium">{{ __('cart.total') }}</dt>
                             <dd class="w-1/2 text-right">
                                 {{ $cart->total?->formatted() ?? '0.00' }}
                             </dd>
