@@ -111,9 +111,11 @@ return [
     'blog' => [
         'title' => 'Blog',
         'articles' => 'Blog Articles',
-        'no_image' => 'No Image',
+        'no_image' => 'No Image Available',
         'read_more' => 'Read More',
-        'no_posts' => 'No blog posts available',
+        'no_posts' => 'No Blog Posts Available',
+        'more_button' => 'More',
+        'more_button_aria_label' => 'View More Blog Articles',
     ],
     'breadcrumbs' => [
         'home' => 'Home',

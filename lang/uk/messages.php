@@ -113,6 +113,8 @@ return [
         'no_image' => 'Зображення відсутнє',
         'read_more' => 'Читати далі',
         'no_posts' => 'Пости блогу відсутні',
+        'more_button' => 'Більше',
+        'more_button_aria_label' => 'Переглянути більше статей блогу', // Updated for blog context
     ],
     'breadcrumbs' => [
         'home' => 'Головна',

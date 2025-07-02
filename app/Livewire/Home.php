@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\BlogPost;
 use App\Settings\HomeSettings;
 use Illuminate\View\View;
 use Livewire\Component;
@@ -52,12 +53,25 @@ class Home extends Component
         return $collections->inRandomOrder()->first()?->element;
     }
 
+    /**
+     * Return up to 6 published blog posts.
+     */
+    public function getBlogPostsProperty()
+    {
+        return BlogPost::query()
+            ->where('published', true)
+            ->whereNotNull('published_at')
+            ->orderBy('published_at', 'desc')
+            ->take(6)
+            ->get();
+    }
+
     public function render(HomeSettings $settings): View
     {
-        return view('livewire.home',
-        [
+        return view('livewire.home', [
             'allProducts' => Product::with('thumbnail')->get(),
             'settings' => $settings,
+            'blogPosts' => $this->blogPosts, // Fixed: Use $this->blogPosts instead of $this->getBlogPostsProperty
         ]);
     }
 }
