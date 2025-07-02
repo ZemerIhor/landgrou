@@ -287,7 +287,7 @@
                         </nav>
                     </article>
                     <!-- Part 2: Statistics and Image -->
-                    <aside class="flex flex-wrap gap-2 items-end self-start min-w-[15rem] max-md:w-full max-md:flex-col max-md:gap-6"
+                    <aside class="flex gap-2 items-end self-start min-w-[15rem] max-md:w-full max-md:flex-col max-md:gap-6"
                            aria-label="Company statistics and information">
                         <article class="min-w-[15rem] max-md:w-full">
                             <header>
