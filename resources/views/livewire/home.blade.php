@@ -261,6 +261,7 @@
         <div class="container mx-auto px-2">
             <div class="main-container relative">
                 <div class="flex justify-between relative py-10 w-full max-md:flex-col max-md:items-start max-md:gap-10">
+                    <!-- Part 1: Main Content -->
                     <article class="flex flex-col flex-1 shrink items-start font-bold basis-0 min-w-[15rem] max-md:w-full">
                         <header class="w-full max-md:w-full max-md:max-w-none">
                             <h1 id="about-heading" class="text-4xl leading-none text-white max-md:text-3xl max-md:w-full">
@@ -285,6 +286,7 @@
                             @endif
                         </nav>
                     </article>
+                    <!-- Part 2: Statistics and Image -->
                     <aside class="flex flex-wrap gap-2 items-end self-start min-w-[15rem] max-md:w-full max-md:flex-col max-md:gap-6"
                            aria-label="Company statistics and information">
                         <article class="min-w-[15rem] max-md:w-full">
@@ -311,14 +313,12 @@
                             </figure>
                         @else
                             <p>{{ __('messages.about.no_image') }}</p>
-                            rando
                         @endif
                     </aside>
                 </div>
             </div>
         </div>
     </section>
-
     <div class="container mx-auto px-2">
         <section class="flex flex-col py-10" aria-label="Reviews">
             <div class="main-container">
