@@ -293,7 +293,7 @@
                     <!-- Part 2: Statistics and Image -->
                     <aside class="flex gap-2 items-end self-start min-w-[15rem] max-md:w-full max-md:flex-col max-md:gap-6"
                            aria-label="Company statistics and information">
-                        <article class="min-w-[15rem] max-md:max-w-sm">
+                        <article class="min-w-[15rem] max-w-sm max-md:max-w-sm">
                             <header>
                                 <h2 class="text-4xl font-bold leading-none text-green-600 max-md:text-3xl">
                                     {{ isset($settings->about_statistic_title[app()->getLocale()]) ? $settings->about_statistic_title[app()->getLocale()] : '' }}
