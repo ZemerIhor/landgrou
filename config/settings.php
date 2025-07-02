@@ -9,6 +9,7 @@ return [
     'settings' => [
         'footer' => App\Settings\FooterSettings::class,
         'home' => App\Settings\HomeSettings::class,
+        'header' => App\Settings\HeaderSettings::class,
 
     ],
     /*

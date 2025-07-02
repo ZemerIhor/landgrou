@@ -10,23 +10,17 @@ class HomeSettings extends Settings
 
     public array $hero_slides = [];
 
-    public ?string $hero_heading = null;
-    public ?string $hero_subheading = null;
-    public ?string $hero_background_image = null;
-
     public array $advantages_cards = [];
     public ?string $advantages_image_1 = null;
     public ?string $advantages_image_2 = null;
     public ?string $advantages_image_3 = null;
 
-    // Translatable fields (no strict ?string typehint)
     public $comparison_title;
     public ?string $main_comparison_image = null;
     public $main_comparison_alt;
     public array $comparison_items = [];
     public $central_text_value;
     public $central_text_unit;
-    public ?string $comparison_link = null;
 
     public array $faq_items = [];
 
@@ -50,7 +44,6 @@ class HomeSettings extends Settings
 
     public $reviews_title;
     public array $review_items = [];
-    public ?string $reviews_more_link = null;
 
     protected array $translatable = [
         'hero_slides',

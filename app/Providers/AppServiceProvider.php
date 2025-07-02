@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Filament\Pages\Footer;
+use App\Filament\Pages\Header;
 use App\Filament\Pages\Home;
 use App\Filament\Resources\BlogPostResource;
 use App\Livewire\Elements\PromoBoxElement;
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
                 ->pages([
                     Footer::class, // 👈 добавляем сюда
                     Home::class,
+                    Header::class, // Регистрируем страницу Header
                 ])
                 ->resources([ // Register BlogPostResource as a resource
                     BlogPostResource::class,

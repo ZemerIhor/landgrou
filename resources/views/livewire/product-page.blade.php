@@ -1,6 +1,6 @@
-<main class="self-stretch pt-14 bg-zinc-100">
-    <!-- Breadcrumbs Navigation -->
-    <nav class="flex flex-wrap gap-2 items-center px-12 w-full text-xs font-semibold min-h-[34px] text-neutral-400 max-md:px-5 max-md:max-w-full" aria-label="Breadcrumb">
+<div class="self-stretch pt-14 bg-zinc-100">
+    <div class="container mx-auto px-4">
+    <nav class="flex flex-wrap gap-2 items-center w-full text-xs font-semibold min-h-[34px] text-neutral-400 max-md:max-w-full" aria-label="Breadcrumb">
         <ol class="flex flex-wrap gap-2 items-center">
             <li class="gap-2 self-stretch py-2 my-auto whitespace-nowrap text-neutral-400">
                 <a href="/" class="text-neutral-400 hover:text-neutral-600">Головна</a>
@@ -16,10 +16,9 @@
         </ol>
     </nav>
 
-    <!-- Product Details Section -->
-    <section class="px-12 w-full max-md:px-5 max-md:max-w-full">
+    <section class="w-full max-md:max-w-full">
         <div class="w-full max-md:max-w-full">
-            <div class="max-w-full w-[1179px]">
+            <div class="max-w-full">
                 <header>
                     <h1 class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
                         {{ $this->product->translateAttribute('name') }}
@@ -81,10 +80,6 @@
                                     </button>
                                 </div>
 
-                                <!-- Purchase Buttons -->
-                                <button wire:click="buyNow" class="gap-2 self-stretch px-5 my-auto text-base font-bold leading-snug text-green-600 rounded-2xl border-2 border-solid border-[color:var(--Primaries-700,#228F5D)] min-h-11 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2">
-                                    Купити в 1 клік
-                                </button>
                                 <livewire:components.add-to-cart :purchasable="$this->variant" :quantity="$this->quantity" :wire:key="$this->variant->id" />
                             </div>
                         </div>
@@ -162,10 +157,10 @@
                     </div>
                 </section>
             </div>
+        </div>
     </section>
 
-    <!-- Similar Products Section -->
-    <section class="flex flex-col px-12 py-20 w-full bg-zinc-100 max-md:px-5 max-md:max-w-full">
+    <section class="flex flex-col py-20 w-full bg-zinc-100 max-md:max-w-full">
         <h2 class="text-2xl font-bold leading-tight text-black max-md:max-w-full">
             Схожі товари
         </h2>
@@ -205,4 +200,5 @@
             <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/adfd6f8e64442318efc1c8531674886bcc6b3a15?placeholderIfAbsent=true" alt="" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" aria-hidden="true" />
         </button>
     </section>
-</main>
+    </div>
+</div>

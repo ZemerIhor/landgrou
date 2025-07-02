@@ -14,6 +14,7 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
+use Illuminate\Support\Facades\Log;
 
 class Home extends Page implements HasForms
 {
@@ -92,7 +93,10 @@ class Home extends Page implements HasForms
                                         FileUpload::make('background_image')
                                             ->label(__('Фоновое изображение'))
                                             ->directory('home/banners')
+                                            ->disk('public')
+                                            ->preserveFilenames()
                                             ->maxSize(5120)
+                                            ->image()
                                             ->required(false),
                                     ])
                                     ->maxItems(5)
@@ -125,16 +129,27 @@ class Home extends Page implements HasForms
                             ]),
                         FileUpload::make('advantages_image_1')
                             ->label(__('Изображение 1'))
+                            ->directory('home/advantages')
+                            ->disk('public')
+                            ->preserveFilenames()
                             ->maxSize(5120)
+                            ->image()
                             ->required(false),
                         FileUpload::make('advantages_image_2')
                             ->label(__('Изображение 2'))
+                            ->directory('home/advantages')
+                            ->disk('public')
+                            ->preserveFilenames()
                             ->maxSize(5120)
+                            ->image()
                             ->required(false),
                         FileUpload::make('advantages_image_3')
                             ->label(__('Изображение 3'))
                             ->directory('home/advantages')
+                            ->disk('public')
+                            ->preserveFilenames()
                             ->maxSize(5120)
+                            ->image()
                             ->required(false),
                     ])
                     ->collapsible(),
@@ -182,7 +197,11 @@ class Home extends Page implements HasForms
                             ]),
                         FileUpload::make('main_comparison_image')
                             ->label(__('Основное изображение'))
+                            ->directory('home/comparison')
+                            ->disk('public')
+                            ->preserveFilenames()
                             ->maxSize(5120)
+                            ->image()
                             ->required(false),
                     ])
                     ->collapsible(),
@@ -232,7 +251,10 @@ class Home extends Page implements HasForms
                         FileUpload::make('feedback_form_image')
                             ->label(__('Зображення'))
                             ->directory('home/feedback')
+                            ->disk('public')
+                            ->preserveFilenames()
                             ->maxSize(5120)
+                            ->image()
                             ->required(false),
                     ])
                     ->collapsible(),
@@ -262,21 +284,6 @@ class Home extends Page implements HasForms
                                     ->required()
                                     ->maxLength(20),
                             ]),
-                        FileUpload::make('icon')
-                            ->label(__('Іконка'))
-                            ->directory('home/tenders/icons')
-                            ->maxSize(1024)
-                            ->required(false),
-                        FileUpload::make('background_pattern')
-                            ->label(__('Фоновий візерунок'))
-                            ->directory('home/tenders/patterns')
-                            ->maxSize(1024)
-                            ->required(false),
-                        TextInput::make('background_color')
-                            ->label(__('Колір фону (HEX)'))
-                            ->required()
-                            ->maxLength(7)
-                            ->default('#228F5D'),
                     ])
                     ->collapsible(),
 
@@ -317,7 +324,10 @@ class Home extends Page implements HasForms
                         FileUpload::make('about_location_image')
                             ->label(__('Зображення локації'))
                             ->directory('home/about')
+                            ->disk('public')
+                            ->preserveFilenames()
                             ->maxSize(5120)
+                            ->image()
                             ->required(false),
                     ])
                     ->collapsible(),
@@ -366,27 +376,32 @@ class Home extends Page implements HasForms
     public function save(): void
     {
         try {
-            // Нормалізація даних для FileUpload полів
-            $data = $this->data;
+            $data = $this->form->getState();
+
+            // Логирование данных для отладки
+            Log::info('Home Settings Form Data', ['data' => $data]);
+
+            // Нормализация данных для FileUpload полей
             $fileFields = [
                 'advantages_image_1', 'advantages_image_2', 'advantages_image_3',
-                'main_comparison_image', 'feedback_form_image', 'icon',
-                'background_pattern', 'about_location_image',
+                'main_comparison_image', 'feedback_form_image', 'about_location_image',
             ];
 
             foreach ($fileFields as $field) {
-                if (isset($data[$field]) && is_array($data[$field])) {
-                    $data[$field] = $data[$field][0] ?? null; // Беремо перший елемент масиву або null
+                if (isset($data[$field])) {
+                    // Если это массив, берем первый элемент; если строка - оставляем
+                    $data[$field] = is_array($data[$field]) ? ($data[$field][0] ?? null) : $data[$field];
                 }
             }
 
-            // Нормалізація background_image у hero_slides
+            // Нормализация background_image в hero_slides
             if (isset($data['hero_slides']) && is_array($data['hero_slides'])) {
                 foreach ($data['hero_slides'] as &$slide) {
-                    if (isset($slide['background_image']) && is_array($slide['background_image'])) {
-                        $slide['background_image'] = $slide['background_image'][0] ?? null;
+                    if (isset($slide['background_image'])) {
+                        $slide['background_image'] = is_array($slide['background_image']) ? ($slide['background_image'][0] ?? null) : $slide['background_image'];
                     }
                 }
+                unset($slide); // Очистка ссылки
             }
 
             $settings = app(HomeSettings::class);
@@ -398,6 +413,7 @@ class Home extends Page implements HasForms
                 ->success()
                 ->send();
         } catch (\Exception $e) {
+            Log::error('Error saving Home Settings', ['error' => $e->getMessage()]);
             Notification::make()
                 ->title(__('Помилка збереження налаштувань'))
                 ->body($e->getMessage())

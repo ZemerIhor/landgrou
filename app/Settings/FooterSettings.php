@@ -3,14 +3,24 @@
 namespace App\Settings;
 
 use Spatie\LaravelSettings\Settings;
+use Spatie\Translatable\HasTranslations;
 
 class FooterSettings extends Settings
 {
-    public array $social_links = [];
-    public string $phone = '';
-    public string $email = '';
-    public string $address = '';
-    public string $copyright_text = '';
+    use HasTranslations;
+
+    public string $phone;
+    public $email;
+    public $address;
+    public string $copyright_text;
+    public array $social_links;
+    public array $sections;
+
+    protected array $translatable = [
+        'address',
+        'copyright_text',
+        'sections',
+    ];
 
     public static function group(): string
     {
