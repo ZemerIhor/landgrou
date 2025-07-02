@@ -81,11 +81,9 @@ class Home extends Page implements HasForms
                                     ->schema([
                                         TextInput::make('heading')
                                             ->label(__('Заголовок'))
-                                            ->required()
                                             ->maxLength(255),
                                         Textarea::make('subheading')
                                             ->label(__('Подзаголовок'))
-                                            ->required()
                                             ->maxLength(500),
                                         TextInput::make('extra_text')
                                             ->label(__('Дополнительный текст'))
@@ -96,8 +94,7 @@ class Home extends Page implements HasForms
                                             ->disk('public')
                                             ->preserveFilenames()
                                             ->maxSize(5120)
-                                            ->image()
-                                            ->required(false),
+                                            ->image(),
                                     ])
                                     ->maxItems(5)
                                     ->collapsible()
@@ -116,11 +113,9 @@ class Home extends Page implements HasForms
                                     ->schema([
                                         TextInput::make('title')
                                             ->label(__('Заголовок'))
-                                            ->required()
                                             ->maxLength(100),
                                         Textarea::make('description')
                                             ->label(__('Описание'))
-                                            ->required()
                                             ->maxLength(500),
                                     ])
                                     ->maxItems(4)
@@ -133,24 +128,21 @@ class Home extends Page implements HasForms
                             ->disk('public')
                             ->preserveFilenames()
                             ->maxSize(5120)
-                            ->image()
-                            ->required(false),
+                            ->image(),
                         FileUpload::make('advantages_image_2')
                             ->label(__('Изображение 2'))
                             ->directory('home/advantages')
                             ->disk('public')
                             ->preserveFilenames()
                             ->maxSize(5120)
-                            ->image()
-                            ->required(false),
+                            ->image(),
                         FileUpload::make('advantages_image_3')
                             ->label(__('Изображение 3'))
                             ->directory('home/advantages')
                             ->disk('public')
                             ->preserveFilenames()
                             ->maxSize(5120)
-                            ->image()
-                            ->required(false),
+                            ->image(),
                     ])
                     ->collapsible(),
 
@@ -161,26 +153,21 @@ class Home extends Page implements HasForms
                             ->schema([
                                 TextInput::make('comparison_title')
                                     ->label(__('Заголовок'))
-                                    ->required()
                                     ->maxLength(255),
                                 TextInput::make('main_comparison_alt')
                                     ->label(__('Альтернативный текст основного изображения'))
-                                    ->required()
                                     ->maxLength(255),
                                 Repeater::make('comparison_items')
                                     ->label(__('Пункты сравнения'))
                                     ->schema([
                                         TextInput::make('value')
                                             ->label(__('Значение'))
-                                            ->required()
                                             ->maxLength(50),
                                         TextInput::make('unit')
                                             ->label(__('Единица измерения'))
-                                            ->required()
                                             ->maxLength(100),
                                         TextInput::make('alt')
                                             ->label(__('Альтернативный текст изображения'))
-                                            ->required()
                                             ->maxLength(255),
                                     ])
                                     ->maxItems(3)
@@ -188,11 +175,9 @@ class Home extends Page implements HasForms
                                     ->reorderable(),
                                 TextInput::make('central_text_value')
                                     ->label(__('Центральное значение'))
-                                    ->required()
                                     ->maxLength(50),
                                 TextInput::make('central_text_unit')
                                     ->label(__('Центральная единица'))
-                                    ->required()
                                     ->maxLength(100),
                             ]),
                         FileUpload::make('main_comparison_image')
@@ -201,8 +186,7 @@ class Home extends Page implements HasForms
                             ->disk('public')
                             ->preserveFilenames()
                             ->maxSize(5120)
-                            ->image()
-                            ->required(false),
+                            ->image(),
                     ])
                     ->collapsible(),
 
@@ -216,11 +200,9 @@ class Home extends Page implements HasForms
                                     ->schema([
                                         TextInput::make('question')
                                             ->label(__('Питання'))
-                                            ->required()
                                             ->maxLength(255),
                                         Textarea::make('answer')
                                             ->label(__('Відповідь'))
-                                            ->required()
                                             ->maxLength(500),
                                     ])
                                     ->maxItems(10)
@@ -237,15 +219,12 @@ class Home extends Page implements HasForms
                             ->schema([
                                 TextInput::make('feedback_form_title')
                                     ->label(__('Заголовок'))
-                                    ->required()
                                     ->maxLength(255),
                                 Textarea::make('feedback_form_description')
                                     ->label(__('Опис'))
-                                    ->required()
                                     ->maxLength(500),
                                 TextInput::make('feedback_form_image_alt')
                                     ->label(__('Альтернативний текст зображення'))
-                                    ->required()
                                     ->maxLength(255),
                             ]),
                         FileUpload::make('feedback_form_image')
@@ -254,8 +233,7 @@ class Home extends Page implements HasForms
                             ->disk('public')
                             ->preserveFilenames()
                             ->maxSize(5120)
-                            ->image()
-                            ->required(false),
+                            ->image(),
                     ])
                     ->collapsible(),
 
@@ -266,14 +244,12 @@ class Home extends Page implements HasForms
                             ->schema([
                                 TextInput::make('tenders_title')
                                     ->label(__('Заголовок'))
-                                    ->required()
                                     ->maxLength(255),
                                 Repeater::make('tender_items')
                                     ->label(__('Пункти тендерів'))
                                     ->schema([
                                         TextInput::make('title')
                                             ->label(__('Назва'))
-                                            ->required()
                                             ->maxLength(255),
                                     ])
                                     ->maxItems(5)
@@ -281,7 +257,6 @@ class Home extends Page implements HasForms
                                     ->reorderable(),
                                 TextInput::make('tenders_phone')
                                     ->label(__('Телефон відділу тендерів'))
-                                    ->required()
                                     ->maxLength(20),
                             ]),
                     ])
@@ -294,11 +269,9 @@ class Home extends Page implements HasForms
                             ->schema([
                                 TextInput::make('about_title')
                                     ->label(__('Заголовок'))
-                                    ->required()
                                     ->maxLength(255),
                                 Textarea::make('about_description')
                                     ->label(__('Опис'))
-                                    ->required()
                                     ->maxLength(1000),
                                 TextInput::make('about_more_link')
                                     ->label(__('Посилання "Більше"'))
@@ -310,15 +283,12 @@ class Home extends Page implements HasForms
                                     ->maxLength(255),
                                 TextInput::make('about_statistic_title')
                                     ->label(__('Заголовок статистики'))
-                                    ->required()
                                     ->maxLength(255),
                                 Textarea::make('about_statistic_description')
                                     ->label(__('Опис статистики'))
-                                    ->required()
                                     ->maxLength(1000),
                                 TextInput::make('about_location_caption')
                                     ->label(__('Підпис до зображення локації'))
-                                    ->required()
                                     ->maxLength(255),
                             ]),
                         FileUpload::make('about_location_image')
@@ -327,8 +297,7 @@ class Home extends Page implements HasForms
                             ->disk('public')
                             ->preserveFilenames()
                             ->maxSize(5120)
-                            ->image()
-                            ->required(false),
+                            ->image(),
                     ])
                     ->collapsible(),
 
@@ -339,28 +308,23 @@ class Home extends Page implements HasForms
                             ->schema([
                                 TextInput::make('reviews_title')
                                     ->label(__('Заголовок'))
-                                    ->required()
                                     ->maxLength(255),
                                 Repeater::make('review_items')
                                     ->label(__('Відгуки'))
                                     ->schema([
                                         TextInput::make('name')
                                             ->label(__('Ім’я'))
-                                            ->required()
                                             ->maxLength(100),
                                         TextInput::make('date')
                                             ->label(__('Дата'))
-                                            ->type('date')
-                                            ->required(),
+                                            ->type('date'),
                                         TextInput::make('rating')
                                             ->label(__('Рейтинг (1-5)'))
                                             ->numeric()
-                                            ->required()
                                             ->minValue(1)
                                             ->maxValue(5),
                                         Textarea::make('text')
                                             ->label(__('Текст відгуку'))
-                                            ->required()
                                             ->maxLength(500),
                                     ])
                                     ->maxItems(10)
