@@ -1,8 +1,8 @@
 @php
     $footer = app(\App\Settings\FooterSettings::class);
-
-
+    $currentLocale = app()->getLocale(); // Get current locale (e.g., 'en' or 'uk')
 @endphp
+
 <footer class="self-stretch bg-zinc-800 mt-auto" role="contentinfo" aria-label="Site footer">
     <div class="main-container container mx-auto">
         <!-- Logo and social links -->
@@ -12,28 +12,28 @@
             @if (!empty($footer->social_links))
                 <nav aria-label="Social media links" class="flex gap-5 items-start">
                     @foreach ($footer->social_links as $link)
-                        @if (!empty($link['url']) && !empty($link['icon_url']))
-                            <a href="{{ $link['url'] }}" aria-label="Follow us on social media">
+                        @if (!empty($link['url']) && !empty($link['icon']))
+                            <a href="{{ $link['url'] }}" aria-label="Follow us on {{ $link['icon'] }}" target="_blank" rel="noopener noreferrer">
                                 <img
-                                    src="{{ $link['icon_url'] }}"
-                                    alt=""
+                                    src="{{ asset('images/icons/' . $link['icon'] . '.svg') }}"
+                                    alt="{{ $link['icon'] }} icon"
                                     class="object-contain shrink-0 w-6 aspect-square"
                                     role="img"
                                 />
                             </a>
                         @endif
-                    @endforeach
+                        @foreach
                 </nav>
             @endif
         </section>
 
         <!-- Navigation sections and contacts -->
         <section class="flex flex-wrap gap-10 justify-between items-start w-full text-base font-semibold leading-none text-white max-md:max-w-full">
-
-            @if (!empty($footer->sections))
-                @foreach ($footer->sections as $section)
+            @if (!empty($footer->sections[$currentLocale]))
+                @foreach ($footer->sections[$currentLocale] as $section)
                     @if (!empty($section['title']) && !empty($section['links']))
                         <nav aria-label="{{ $section['title'] }}" class="w-auto">
+                            <h3 class="text-lg font-bold">{{ $section['title'] }}</h3>
                             <ul class="space-y-5">
                                 @foreach ($section['links'] as $link)
                                     @if (!empty($link['label']) && !empty($link['url']))
@@ -52,7 +52,7 @@
             @endif
 
             <!-- Contact information -->
-            @if (!empty($footer->phone) || !empty($footer->email) || !empty($footer->address))
+            @if (!empty($footer->phone) || !empty($footer->email[$currentLocale]) || !empty($footer->address[$currentLocale]))
                 <section aria-label="Contact information" class="min-w-60 w-[357px]">
                     <address class="not-italic">
                         <div class="space-y-5">
@@ -64,18 +64,18 @@
                                     </a>
                                 </div>
                             @endif
-                            @if (!empty($footer->email))
+                            @if (!empty($footer->email[$currentLocale]))
                                 <div>
-                                    <a href="mailto:{{ $footer->email }}"
+                                    <a href="mailto:{{ $footer->email[$currentLocale] ?? $footer->email['en'] ?? '' }}"
                                        class="gap-2 self-stretch mt-5 w-full text-white rounded-lg hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-zinc-800">
-                                        {{ $footer->email }}
+                                        {{ $footer->email[$currentLocale] ?? $footer->email['en'] ?? '' }}
                                     </a>
                                 </div>
                             @endif
-                            @if (!empty($footer->address))
+                            @if (!empty($footer->address[$currentLocale]))
                                 <div>
                                     <p class="flex-1 shrink gap-2 self-stretch mt-5 w-full leading-6 text-white rounded-lg basis-0">
-                                        {{ $footer->address }}
+                                        {{ $footer->address[$currentLocale] ?? $footer->address['en'] ?? '' }}
                                     </p>
                                 </div>
                             @endif
@@ -88,7 +88,7 @@
         <!-- Copyright and scroll to top -->
         <section class="flex relative gap-2.5 justify-center items-start py-6 w-full max-md:max-w-full">
             <p class="z-0 my-auto text-xs font-semibold text-neutral-400">
-                {{ $footer->copyright_text ?? '© Всі права захищені' }}
+                {{ $footer->copyright_text[$currentLocale] ?? $footer->copyright_text['en'] ?? '© Всі права захищені' }}
             </p>
             <button
                 type="button"
