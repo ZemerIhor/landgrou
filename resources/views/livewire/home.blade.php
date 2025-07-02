@@ -49,15 +49,21 @@
     <div class="container mx-auto px-2">
         <section class="flex overflow-hidden flex-col py-10 font-bold" aria-labelledby="advantages-title">
             <div class="main-container">
-                <!-- Part 1: Title and Main Image -->
                 <div class="flex flex-col items-center">
                     <h1 id="advantages-title" class="text-4xl leading-none text-center text-zinc-800 max-md:max-w-full">
                         {{ isset($settings->comparison_title[app()->getLocale()]) ? $settings->comparison_title[app()->getLocale()] : __('messages.advantages.title') }}
                     </h1>
                     @if (!empty($settings->main_comparison_image) && is_string($settings->main_comparison_image))
+                       <div class="relative">
                         <img src="{{ Storage::url($settings->main_comparison_image) }}"
                              alt="{{ isset($settings->main_comparison_alt[app()->getLocale()]) ? $settings->main_comparison_alt[app()->getLocale()] : 'Comparison of peat briquettes' }}"
                              class="object-contain w-full mt-6 aspect-[4.13] rounded-[32px] max-md:max-w-full" />
+                        <span class="flex absolute top-0 z-10 flex-col justify-center items-center self-center px-4 py-12 leading-none text-center whitespace-nowrap max-md:top-10"
+                              aria-label="Quantity of peat briquettes for comparison">
+                    <span class="text-8xl tracking-tighter text-white max-md:text-4xl">{{ isset($settings->central_text_value[app()->getLocale()]) ? $settings->central_text_value[app()->getLocale()] : '1t' }}</span>
+                    <span class="text-4xl text-white">{{ isset($settings->central_text_unit[app()->getLocale()]) ? $settings->central_text_unit[app()->getLocale()] : 'briquettes' }}</span>
+                </span>
+                       </div>
                     @endif
                 </div>
                 <!-- Part 2: Comparison Items and Central Text -->
@@ -82,11 +88,6 @@
                             <p class="text-center w-full">{{ __('messages.comparison.no_items') }}</p>
                         @endif
                     </div>
-                    <span class="flex absolute top-0 z-10 flex-col justify-center items-center self-center px-4 py-12 leading-none text-center whitespace-nowrap max-md:top-10"
-                          aria-label="Quantity of peat briquettes for comparison">
-                    <span class="text-8xl tracking-tighter text-white max-md:text-4xl">{{ isset($settings->central_text_value[app()->getLocale()]) ? $settings->central_text_value[app()->getLocale()] : '1t' }}</span>
-                    <span class="text-4xl text-white">{{ isset($settings->central_text_unit[app()->getLocale()]) ? $settings->central_text_unit[app()->getLocale()] : 'briquettes' }}</span>
-                </span>
                 </div>
             </div>
         </section>

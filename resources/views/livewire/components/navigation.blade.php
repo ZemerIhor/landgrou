@@ -1,12 +1,18 @@
 <header class="shadow-xl h-[56px] flex items-center" role="banner">
-    <div class="main-container flex relative justify-between items-center py-2 px-4 w-full h-auto container mx-auto">
+    <div class="main-container nav-header flex relative justify-between items-center py-2 px-4 w-full h-auto container mx-auto">
         <!-- Логотип -->
         <a href="{{ url('/') }}" class="flex items-center" aria-label="{{ __('messages.banner.catalog_button_aria_label') }}" wire:navigate>
             <div>
                 <x-brand.logo class="w-auto h-8 text-indigo-600" />
             </div>
         </a>
-
+        <style>
+.nav-header ul {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+        </style>
         @if(app()->getLocale() === 'en')
             <x-filament-menu-builder::menu slug="en-header-menu" />
         @elseif(app()->getLocale() === 'uk')
