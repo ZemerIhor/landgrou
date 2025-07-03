@@ -29,3 +29,5 @@ Route::get('/products', SearchPage::class)->name('products.index');
 Route::get('/lang/{lang}', [\App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
 Route::get('/{slug}', [App\Http\Controllers\PageController::class, 'show'])->name('page.show');
 
+Route::get('/reviews', \App\Livewire\ReviewsPage::class)->name('reviews');
+Route::get('/submit-review', \App\Livewire\SubmitReview::class)->name('submit-review');

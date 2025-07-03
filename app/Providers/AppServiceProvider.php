@@ -6,9 +6,9 @@ use App\Filament\Pages\Footer;
 use App\Filament\Pages\Header;
 use App\Filament\Pages\Home;
 use App\Filament\Resources\BlogPostResource;
+use App\Filament\Resources\ReviewResource;
 use App\Livewire\Elements\PromoBoxElement;
 use App\Modifiers\ShippingModifier;
-use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 use Filament\SpatieLaravelTranslatablePlugin;
 use Geosem42\Filamentor\FilamentorPlugin;
 use Illuminate\Support\ServiceProvider;
@@ -32,8 +32,9 @@ class AppServiceProvider extends ServiceProvider
                     Home::class,
                     Header::class, // Регистрируем страницу Header
                 ])
-                ->resources([ // Register BlogPostResource as a resource
+                ->resources([
                     BlogPostResource::class,
+                    ReviewResource::class,
                 ])
                 ->plugins([
                     new ShippingPlugin,

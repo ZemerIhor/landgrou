@@ -113,12 +113,22 @@ return [
         'no_image' => 'Зображення відсутнє',
         'read_more' => 'Читати далі',
         'no_posts' => 'Пости блогу відсутні',
-        'more_button' => 'Більше',
-        'more_button_aria_label' => 'Переглянути більше статей блогу', // Updated for blog context
+        'no_date' => 'Дата відсутня',
+        'read_full_article' => 'Читати статтю повністю',
+        'categories_aria_label' => 'Категорії контенту',
+        'tab_all' => 'Всі',
+        'tab_blog' => 'Блог',
+        'tab_articles' => 'Статті',
+        'tab_label' => 'Label',
+        'pagination_aria_label' => 'Навігація по сторінках',
+        'previous_page' => 'Попередня сторінка',
+        'next_page' => 'Наступна сторінка',
+        'page' => 'Сторінка :page',
     ],
     'breadcrumbs' => [
         'home' => 'Головна',
         'blog' => 'Блог',
+        'aria_label' => 'Навігація по хлібним крихтам',
     ],
     'language' => [
         'current' => 'Мова',
@@ -172,5 +182,6 @@ return [
         'add_to_cart_aria' => 'Додати товар до кошика',
         'added_to_cart' => 'Товар додано до кошика',
     ],
+
 ];
 
