@@ -1,3 +1,6 @@
+import Swiper from 'swiper';
+window.Swiper = Swiper; // Делаем Swiper доступным глобально, если нужно
+
 document.querySelectorAll('[data-toggle]').forEach(button => {
     button.addEventListener('click', () => {
         const targetId = button.getAttribute('data-toggle');
@@ -11,5 +14,4 @@ document.querySelectorAll('[data-toggle]').forEach(button => {
 });
 
 document.addEventListener('DOMContentLoaded' , () => {
-    console.log('GOOD ONE')
 })

@@ -1,11 +1,14 @@
 <div class="flex flex-col container mx-auto w-full max-md:max-w-full">
     <!-- Breadcrumb Navigation -->
-    @include('partials.breadcrumbs', ['currentPage' => __('messages.breadcrumbs.blog')])
+    @include('livewire.components.breadcrumbs', ['currentPage' => __('messages.breadcrumbs.blog')])
 
     <!-- Tab Navigation -->
-    <section class="flex flex-wrap items-start py-2 mt-2 text-sm font-bold leading-tight text-center whitespace-nowrap" role="tablist" aria-label="{{ __('blog.categories_aria_label') }}">
+    <section class="flex flex-wrap items-start py-2 mt-2 text-sm font-bold leading-tight text-center whitespace-nowrap"
+             role="tablist" aria-label="{{ __('blog.categories_aria_label') }}">
         @foreach (['all' => __('messages.blog.tab_all'), 'blog' => __('messages.blog.tab_blog'), 'articles' => __('messages.blog.tab_articles'), 'label' => __('messages.blog.tab_label')] as $key => $label)
-            <div class="{{ $selectedCategory === $key ? 'text-green-600' : 'text-zinc-800' }} {{ $key === 'label' ? 'flex-1 shrink basis-0 min-w-60 max-md:max-w-full' : 'w-' . ($key === 'all' ? '[53px]' : ($key === 'blog' ? '[66px]' : '[77px]')) }}" role="presentation">
+            <div
+                class="{{ $selectedCategory === $key ? 'text-green-600' : 'text-zinc-800' }} {{ $key === 'label' ? 'flex-1 shrink basis-0 min-w-60 max-md:max-w-full' : 'w-' . ($key === 'all' ? '[53px]' : ($key === 'blog' ? '[66px]' : '[77px]')) }}"
+                role="presentation">
                 <button
                     wire:click="setCategory('{{ $key }}')"
                     class="flex gap-2.5 {{ $key === 'label' ? 'justify-center self-center' : '' }} items-center px-4 {{ $key === 'blog' ? 'w-full' : '' }} hover:text-green-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded"
@@ -13,9 +16,12 @@
                     aria-selected="{{ $selectedCategory === $key ? 'true' : 'false' }}"
                     tabindex="{{ $selectedCategory === $key ? '0' : '-1' }}"
                 >
-                    <span class="self-stretch my-auto {{ $selectedCategory === $key ? 'text-green-600' : 'text-zinc-800' }}">{{ $label }}</span>
+                    <span
+                        class="self-stretch my-auto {{ $selectedCategory === $key ? 'text-green-600' : 'text-zinc-800' }}">{{ $label }}</span>
                 </button>
-                <div class="flex mt-2 w-full {{ $selectedCategory === $key ? 'bg-green-600 rounded min-h-[3px]' : 'bg-neutral-400 min-h-px' }}" aria-hidden="true"></div>
+                <div
+                    class="flex mt-2 w-full {{ $selectedCategory === $key ? 'bg-green-600 rounded min-h-[3px]' : 'bg-neutral-400 min-h-px' }}"
+                    aria-hidden="true"></div>
             </div>
         @endforeach
     </section>
@@ -26,11 +32,13 @@
     </h1>
 
     <!-- Blog Cards Grid -->
-    <section class="flex flex-wrap gap-2 items-center mt-2 min-h-[307px] max-md:max-w-full" aria-label="{{ __('blog.articles') }}">
+    <section class="flex flex-wrap gap-2 items-center mt-2 min-h-[307px] max-md:max-w-full"
+             aria-label="{{ __('blog.articles') }}">
         @forelse ($posts->chunk(4) as $row)
             <div class="flex flex-wrap gap-2 items-center w-full">
                 @foreach ($row as $post)
-                    <article class="overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60">
+                    <article
+                        class="overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60">
                         <div class="overflow-hidden z-0 w-full">
                             <img
                                 src="{{ $post->banner ? Storage::url($post->banner) : 'https://via.placeholder.com/300x158' }}"
@@ -45,7 +53,8 @@
                             <p class="text-sm text-zinc-600 mt-2">
                                 {{ Str::limit($post->getTranslation('excerpt', app()->getLocale()), 100) }}
                             </p>
-                            <time class="mt-4 text-xs text-neutral-400" datetime="{{ $post->published_at ? $post->published_at->format('Y-m-d') : '' }}">
+                            <time class="mt-4 text-xs text-neutral-400"
+                                  datetime="{{ $post->published_at ? $post->published_at->format('Y-m-d') : '' }}">
                                 {{ $post->published_at ? $post->published_at->format('d.m.Y') : __('blog.no_date') }}
                             </time>
                         </div>
@@ -63,7 +72,8 @@
     </section>
 
     <!-- Pagination -->
-    <nav class="flex flex-wrap gap-2 justify-center items-center pt-10 mt-2 w-full max-md:max-w-full" aria-label="{{ __('blog.pagination_aria_label') }}">
+    <nav class="flex flex-wrap gap-2 justify-center items-center pt-10 mt-2 w-full max-md:max-w-full"
+         aria-label="{{ __('blog.pagination_aria_label') }}">
         @if ($posts->hasPages())
             <!-- Previous Page -->
             <button
@@ -72,7 +82,8 @@
                 class="flex gap-2.5 items-center self-stretch p-2 my-auto w-8 rounded-[32px] hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 {{ $posts->onFirstPage() ? 'opacity-50 cursor-not-allowed' : '' }}"
                 aria-label="{{ __('blog.previous_page') }}"
             >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
             </button>
@@ -96,7 +107,8 @@
                 class="flex gap-2.5 items-center self-stretch p-2 my-auto w-8 rounded-[32px] hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 {{ $posts->hasMorePages() ? '' : 'opacity-50 cursor-not-allowed' }}"
                 aria-label="{{ __('messages.blog.next_page') }}"
             >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                     xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
             </button>

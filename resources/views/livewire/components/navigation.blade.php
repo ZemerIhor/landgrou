@@ -1,3 +1,4 @@
+
 <header class="shadow-xl h-[56px] flex items-center" role="banner">
     <div class="main-container nav-header flex relative justify-between items-center py-2 px-4 w-full h-auto container mx-auto">
         <!-- Логотип -->
@@ -7,11 +8,11 @@
             </div>
         </a>
         <style>
-.nav-header ul {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-}
+            .nav-header ul {
+                display: flex;
+                justify-content: space-between;
+                gap: 15px;
+            }
         </style>
         @if(app()->getLocale() === 'en')
             <x-filament-menu-builder::menu slug="en-header-menu" />
@@ -21,11 +22,12 @@
             <x-filament-menu-builder::menu slug="en-header-menu" />
         @endif
 
-        <div class="flex gap-3 items-center relative" x-data="{ mobileMenu: false, showContactForm: false, languageMenu: false }">
-            <x-header.search class="max-w-sm hidden sm:block" />
-            <button class="hidden sm:block px-3 py-1 text-sm font-bold text-green-600 rounded-2xl border-2 border-green-600 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600"
-                    aria-label="{{ __('messages.feedback_form.submit_button') }}"
-                    x-on:click="showContactForm = true">
+        <div class="flex gap-3 items-center relative" x-data="{ mobileMenu: false, languageMenu: false }">
+            <button
+                wire:click="$dispatch('openContactForm')"
+                class="hidden sm:block px-3 py-1 text-sm font-bold text-green-600 rounded-2xl border-2 border-green-600 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600"
+                aria-label="{{ __('messages.feedback_form.submit_button') }}"
+            >
                 {{ __('messages.feedback_form.submit_button') }}
             </button>
 
@@ -93,10 +95,12 @@
             </div>
 
             <!-- Кнопка мобильного меню -->
-            <button x-on:click="mobileMenu = !mobileMenu"
-                    class="sm:hidden text-2xl cursor-pointer text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600"
-                    aria-label="Переключить мобильное меню"
-                    :aria-expanded="mobileMenu">
+            <button
+                x-on:click="mobileMenu = !mobileMenu"
+                class="sm:hidden text-2xl cursor-pointer text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600"
+                aria-label="Переключить мобильное меню"
+                :aria-expanded="mobileMenu"
+            >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3 6H21" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M3 12H21" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -104,16 +108,20 @@
                 </svg>
             </button>
 
-            <div x-cloak
-                 x-transition
-                 x-show="mobileMenu"
-                 id="mobile-menu"
-                 class="z-50 sm:hidden bg-white shadow-lg absolute top-14 left-0 w-full"
-                 x-on:click.away="mobileMenu = false">
+            <div
+                x-cloak
+                x-transition
+                x-show="mobileMenu"
+                id="mobile-menu"
+                class="z-50 sm:hidden bg-white shadow-lg absolute top-14 left-0 w-full"
+                x-on:click.away="mobileMenu = false"
+            >
                 <nav class="flex flex-col items-center gap-4 py-4 text-sm font-semibold text-zinc-800" role="navigation" aria-label="Мобильная навигация">
-                    <button class="px-3 py-1 text-sm font-bold text-green-600 rounded-2xl border-2 border-green-600 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600"
-                            aria-label="{{ __('messages.feedback_form.submit_button') }}"
-                            x-on:click="showContactForm = true; mobileMenu = false">
+                    <button
+                        wire:click="$dispatch('openContactForm')"
+                        class="px-3 py-1 text-sm font-bold text-green-600 rounded-2xl border-2 border-green-600 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600"
+                        aria-label="{{ __('messages.feedback_form.submit_button') }}"
+                    >
                         {{ __('messages.feedback_form.submit_button') }}
                     </button>
                     <x-header.search class="max-w-sm w-full px-4" />
@@ -154,9 +162,8 @@
                     </div>
                 </nav>
             </div>
-
-            <!-- Модальное окно формы -->
-            @livewire('contact-form')
         </div>
     </div>
+    @livewire('components.contact-form')
+
 </header>

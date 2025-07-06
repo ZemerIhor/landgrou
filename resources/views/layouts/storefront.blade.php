@@ -15,6 +15,7 @@
     {{ $slot }}
 </main>
 @livewireScripts
+@stack('scripts')
 <x-footer/>
 </body>
 </html>

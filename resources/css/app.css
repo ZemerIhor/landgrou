@@ -1,3 +1,6 @@
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -23,4 +26,9 @@
 }
 [x-cloak] {
     display: none;
+}
+
+.gallery-slide {
+    max-width: 250px;
+    width: auto !important;
 }

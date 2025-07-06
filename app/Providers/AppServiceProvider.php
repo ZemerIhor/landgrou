@@ -2,15 +2,20 @@
 
 namespace App\Providers;
 
+use App\Filament\Pages\AboutUs;
+use App\Filament\Pages\Contacts;
+use App\Filament\Pages\Faq;
 use App\Filament\Pages\Footer;
 use App\Filament\Pages\Header;
 use App\Filament\Pages\Home;
 use App\Filament\Resources\BlogPostResource;
 use App\Filament\Resources\ReviewResource;
+use App\Livewire\Components\Breadcrumbs;
 use App\Livewire\Elements\PromoBoxElement;
 use App\Modifiers\ShippingModifier;
 use Filament\SpatieLaravelTranslatablePlugin;
 use Geosem42\Filamentor\FilamentorPlugin;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Kenepa\TranslationManager\TranslationManagerPlugin;
 use Lunar\Admin\Support\Facades\LunarPanel;
@@ -31,6 +36,9 @@ class AppServiceProvider extends ServiceProvider
                     Footer::class, // 👈 добавляем сюда
                     Home::class,
                     Header::class, // Регистрируем страницу Header
+                    Faq::class, // Регистрируем страницу Header
+                    Contacts::class, // Регистрируем страницу Header
+                    AboutUs::class, // Регистрируем страницу Header
                 ])
                 ->resources([
                     BlogPostResource::class,
