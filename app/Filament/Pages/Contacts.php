@@ -48,7 +48,7 @@ class Contacts extends Page implements HasForms
             'export_email' => $settings->export_email ?? '',
             'additional_emails' => collect($settings->additional_emails ?? [])->map(function ($value, $key) {
                 return ['key' => $key, 'value' => $value];
-            })->values()->toArray(), // Восстановлено: пары key-value
+            })->values()->toArray(),
             'map_image' => $settings->map_image ?? '',
             'map_image_alt' => $settings->map_image_alt ?? ['en' => '', 'uk' => ''],
         ];
