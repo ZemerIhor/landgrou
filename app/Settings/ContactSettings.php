@@ -36,8 +36,5 @@ class ContactSettings extends Settings
     }
 
     // Добавляем метод для отладки
-    public function __construct()
-    {
-        Log::info('ContactSettings initialized', ['translatable' => $this->translatable]);
-    }
+
 }
