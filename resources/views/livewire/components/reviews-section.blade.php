@@ -2,17 +2,17 @@
     <section class="flex flex-col py-10" aria-label="Reviews" role="main" aria-labelledby="reviews-heading">
         <div class="main-container">
             <h2 id="reviews-heading" class="w-full text-2xl font-bold leading-7 text-left text-zinc-800 max-md:text-2xl max-md:text-center max-sm:text-xl">
-                {{ isset($settings->reviews_title[app()->getLocale()]) ? $settings->reviews_title[app()->getLocale()] : __('messages.reviews.title') }}
+                {{ __('messages.reviews.title') }}
             </h2>
             <div class="flex flex-wrap gap-5 justify-center mt-5 w-full max-sm:max-w-full" role="region" aria-label="{{ __('reviews.articles') }}">
                 @forelse ($reviews as $review)
                     <article class="flex flex-col gap-3 p-6 rounded-3xl bg-neutral-200 max-md:max-w-full">
                         <div class="flex flex-col gap-2 w-full">
                             <h3 class="gap-2.5 w-full text-xl font-bold leading-6 flex-[1_0_0] text-zinc-800 max-md:text-lg max-sm:text-base">
-                                {{ isset($review['name']) ? $review['name'] : '' }}
+                                {{ $review['name'] ?? '' }}
                             </h3>
                             <p class="text-sm font-semibold leading-5 text-zinc-800">
-                                {{ isset($review['date']) ? $review['date'] : '' }}
+                                {{ $review['date'] ?? '' }}
                             </p>
                             <div class="flex gap-1" role="img" aria-label="{{ ($review['rating'] ?? 0) }} out of 5 stars">
                                 @for ($i = 1; $i <= 5; $i++)

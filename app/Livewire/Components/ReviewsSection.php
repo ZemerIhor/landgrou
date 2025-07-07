@@ -4,21 +4,26 @@ namespace App\Livewire\Components;
 
 use App\Models\Review;
 use Livewire\Component;
-use Livewire\WithPagination;
 
 class ReviewsSection extends Component
 {
-    use WithPagination;
-
-    public $perPage = 6; // Number of reviews per page
-
     public function render()
     {
         $reviews = Review::query()
             ->where('published', true)
             ->whereNotNull('published_at')
             ->orderBy('published_at', 'desc')
-            ->take(4); // Limit to 4 reviews for the section
+            ->take(4) // Limit to 4 reviews, matching blog section
+            ->get()
+            ->map(function ($review) {
+                return [
+                    'name' => $review->name,
+                    'date' => $review->published_at->locale(app()->getLocale())->translatedFormat('d F Y'),
+                    'rating' => $review->rating,
+                    'text' => $review->comment,
+                ];
+            })
+            ->toArray();
 
         return view('livewire.components.reviews-section', [
             'reviews' => $reviews,

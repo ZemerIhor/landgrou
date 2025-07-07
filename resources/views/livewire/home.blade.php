@@ -246,7 +246,7 @@
         </div>
     </section>
 
-    <livewire:components.reviews-section :settings="$settings" />
+    <livewire:components.reviews-section />
 
 
 
