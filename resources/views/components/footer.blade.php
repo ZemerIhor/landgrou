@@ -97,7 +97,7 @@
                 class="flex absolute top-0 right-4 z-0 gap-2.5 justify-center items-center self-start px-3 w-12 h-12 bg-green-600 rounded-[32px] hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-zinc-800 transition-colors duration-200"
                 onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
             >
-                <div class="flex self-stretch my-auto w-6 min-h-6 rotate-[-1.5707963267948966rad]" aria-hidden="true">
+                <div class="flex self-stretch my-auto w-6 min-h-6" aria-hidden="true">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                          xmlns="http://www.w3.org/2000/svg" class="text-white">
                         <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2"
