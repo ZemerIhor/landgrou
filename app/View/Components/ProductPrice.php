@@ -12,19 +12,25 @@ use Lunar\Models\ProductVariant;
 class ProductPrice extends Component
 {
     public ?Price $price = null;
-
     public ?ProductVariant $variant = null;
 
     /**
      * Create a new component instance.
-     *
-     * @return void
      */
     public function __construct($product = null, $variant = null)
     {
-            $this->price = Pricing::for(
-                $variant ?: $product->variants->first()
-            )->get()->matched;
+        // Check if a valid variant is available
+        $targetVariant = $variant ?: ($product->variants->first() ?? null);
+
+        if ($targetVariant) {
+            try {
+                $this->price = Pricing::for($targetVariant)->get()->matched;
+                $this->variant = $targetVariant;
+            } catch (\Lunar\Exceptions\MissingCurrencyPriceException) {
+                // Handle the missing price gracefully (e.g., set price to null)
+                $this->price = null;
+            }
+        }
     }
 
     /**
