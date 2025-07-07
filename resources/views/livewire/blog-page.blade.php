@@ -33,7 +33,7 @@
 
     <!-- Blog Cards Grid -->
     <section class="grid gap-4 w-full mt-2"
-         style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+         style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));"
              aria-label="{{ __('blog.articles') }}">
         @forelse ($posts as $post)
             <div class="flex flex-wrap gap-2 items-center w-full">
