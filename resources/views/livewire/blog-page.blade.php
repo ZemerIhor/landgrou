@@ -37,7 +37,7 @@
              aria-label="{{ __('blog.articles') }}">
         @forelse ($posts as $post)
             <div class="flex flex-wrap gap-2 items-center w-full">
-                    <article
+                    <a href="{{ route('blog.post', $post->slug) }}"
                         class="overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60">
                         <div class="overflow-hidden z-0 w-full">
                             <img
@@ -62,8 +62,16 @@
                             href="{{ route('blog.post', $post->slug) }}"
                             class="flex absolute top-0 right-0 z-0 gap-2.5 justify-center items-center w-14 h-14 min-h-14 hover:bg-black hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded"
                             aria-label="{{ __('blog.read_full_article') }}"
-                        ></a>
-                    </article>
+                        >
+                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M27.8039 23.6143L27.8039 8.19658L8.19714 27.8033L16.8675 19.133C20.8868 15.1137 27.7607 17.9304 27.8039 23.6143Z" fill="white"/>
+                                <path d="M27.8039 8.19658L17.5254 8.19658L12.3862 8.19658C18.0731 8.21717 20.9068 15.0936 16.8856 19.1149L8.19714 27.8033L27.8039 8.19658Z" fill="white"/>
+                                <path d="M27.8027 7.19672C28.3548 7.19693 28.8027 7.64463 28.8027 8.19672V28.7534C28.8027 29.3055 28.3548 29.7531 27.8027 29.7534C27.2507 29.7531 26.8038 29.3054 26.8037 28.7534L26.8027 23.6137C26.7603 18.8976 21.1435 16.5251 17.7344 19.685L17.5732 19.8403L8.90332 28.5102C8.51284 28.9007 7.87979 28.9006 7.48926 28.5102C7.12332 28.1441 7.09979 27.565 7.41992 27.1723L7.48926 27.0961L16.1777 18.4077C19.5696 15.0152 17.1791 9.21438 12.3818 9.19672H7.24609C6.69388 9.19672 6.24622 8.7489 6.24609 8.19672C6.24617 7.6445 6.69386 7.19672 7.24609 7.19672H27.8027ZM21.1689 16.2455C23.2741 16.1954 25.3478 17.053 26.8018 18.5776L26.8037 10.6108L21.1689 16.2455ZM17.4424 9.19672C18.9621 10.6475 19.8183 12.7158 19.7695 14.8159L25.3887 9.19672H17.4424Z" fill="white"/>
+                            </svg>
+
+
+                        </a>
+                    </a>
             </div>
         @empty
             <p class="text-sm text-neutral-400 w-full text-center">{{ __('messages.blog.no_posts') }}</p>
