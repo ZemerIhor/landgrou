@@ -46,7 +46,7 @@ class AppServiceProvider extends ServiceProvider
                 ])
                 ->plugins([
                     new ShippingPlugin,
-//                    FilamentorPlugin::make(),
+                    FilamentorPlugin::make(),
                     \Biostate\FilamentMenuBuilder\FilamentMenuBuilderPlugin::make(),
                     FilamentTranslateFieldPlugin::make()
                         ->defaultLocales(['en', 'uk'])
