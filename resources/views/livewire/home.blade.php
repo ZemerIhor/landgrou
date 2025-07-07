@@ -25,30 +25,32 @@
         </h1>
 
         <div class="flex flex-wrap gap-2 items-center mt-5 w-full min-h-[307px] max-md:max-w-full" role="region" aria-label="{{ __('blog.articles') }}">
-            @forelse ($blogPosts as $post)
-                <article class="overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60" tabindex="0" role="article">
-                    <div class="overflow-hidden z-0 w-full">
-                        <img
-                            src="{{ $post->banner ? Storage::url($post->banner) : 'https://via.placeholder.com/300x158' }}"
-                            alt="{{ $post->getTranslation('title', app()->getLocale()) }}"
-                            class="object-contain w-full"
-                            loading="lazy"
-                        />
-                    </div>
-                    <div class="z-0 p-4 w-full font-semibold">
-                        <h2 class="text-base leading-6 text-ellipsis text-zinc-800">
-                            {{ Str::limit($post->getTranslation('title', app()->getLocale()), 50) }}
-                        </h2>
-                        <p class="text-sm text-zinc-600 mt-2">
-                            {{ Str::limit($post->getTranslation('excerpt', app()->getLocale()), 100) }}
-                        </p>
-                        <time class="mt-4 text-xs text-neutral-400" datetime="{{ $post->published_at->format('Y-m-d') }}">
-                            {{ $post->published_at->format('d.m.Y') }}
-                        </time>
-                    </div>
-                    <div class="flex absolute top-0 right-0 z-0 gap-2.5 justify-center items-center w-14 h-14 min-h-14" aria-hidden="true">
-                    </div>
-                </article>
+            @forelse ($blogPosts->take(4) as $post)
+                <a href="{{ route('blog.show', $post->slug) }}" class="block overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60 hover:shadow-lg transition-shadow" aria-label="{{ __('blog.read_article', ['title' => $post->getTranslation('title', app()->getLocale())]) }}">
+                    <article class="overflow-hidden" role="article">
+                        <div class="overflow-hidden z-0 w-full">
+                            <img
+                                src="{{ $post->banner ? Storage::url($post->banner) : 'https://via.placeholder.com/300x158' }}"
+                                alt="{{ $post->getTranslation('title', app()->getLocale()) }}"
+                                class="object-contain w-full"
+                                loading="lazy"
+                            />
+                        </div>
+                        <div class="z-0 p-4 w-full font-semibold">
+                            <h2 class="text-base leading-6 text-ellipsis text-zinc-800">
+                                {{ Str::limit($post->getTranslation('title', app()->getLocale()), 50) }}
+                            </h2>
+                            <p class="text-sm text-zinc-600 mt-2">
+                                {{ Str::limit($post->getTranslation('excerpt', app()->getLocale()), 100) }}
+                            </p>
+                            <time class="mt-4 text-xs text-neutral-400" datetime="{{ $post->published_at->format('Y-m-d') }}">
+                                {{ $post->published_at->format('d.m.Y') }}
+                            </time>
+                        </div>
+                        <div class="flex absolute top-0 right-0 z-0 gap-2.5 justify-center items-center w-14 h-14 min-h-14" aria-hidden="true">
+                        </div>
+                    </article>
+                </a>
             @empty
                 <p class="text-sm text-neutral-400 w-full text-center">{{ __('messages.blog.no_posts') }}</p>
             @endforelse
