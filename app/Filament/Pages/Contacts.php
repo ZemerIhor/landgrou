@@ -46,7 +46,9 @@ class Contacts extends Page implements HasForms
             'export_phone' => $settings->export_phone ?? '',
             'export_contact' => $settings->export_contact ?? ['en' => '', 'uk' => ''],
             'export_email' => $settings->export_email ?? '',
-            'additional_emails' => collect($settings->additional_emails ?? [])->values()->toArray(), // Изменено: только значения
+            'additional_emails' => collect($settings->additional_emails ?? [])->map(function ($value, $key) {
+                return ['key' => $key, 'value' => $value];
+            })->values()->toArray(), // Восстановлено: пары key-value
             'map_image' => $settings->map_image ?? '',
             'map_image_alt' => $settings->map_image_alt ?? ['en' => '', 'uk' => ''],
         ];
@@ -110,17 +112,21 @@ class Contacts extends Page implements HasForms
                             ])
                             ->collapsible()
                             ->cloneable(),
-                        // Repeater для дополнительных email (без ключа)
+                        // Repeater для дополнительных email (с ключом и значением)
                         Repeater::make('additional_emails')
                             ->label(__('messages.contacts.additional_emails'))
                             ->schema([
+                                TextInput::make('key')
+                                    ->label(__('messages.contacts.email_key'))
+                                    ->required()
+                                    ->maxLength(50),
                                 TextInput::make('value')
                                     ->label(__('messages.contacts.email_value'))
                                     ->email()
                                     ->required()
                                     ->maxLength(255),
                             ])
-                            ->itemLabel(fn (array $state): ?string => $state['value'] ?? null) // Изменено: используем value
+                            ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
                             ->collapsible()
                             ->cloneable(),
                         // Поле для изображения карты
@@ -147,8 +153,8 @@ class Contacts extends Page implements HasForms
                 Log::info('MIME type for map_image', ['mime' => $data['map_image']->getMimeType()]);
             }
 
-            // Преобразование additional_emails в массив строк
-            $data['additional_emails'] = collect($data['additional_emails'])->pluck('value')->toArray();
+            // Преобразование additional_emails в ассоциативный массив
+            $data['additional_emails'] = collect($data['additional_emails'])->pluck('value', 'key')->toArray();
 
             Log::info('Contact Settings Form Data', ['data' => $data]);
 
