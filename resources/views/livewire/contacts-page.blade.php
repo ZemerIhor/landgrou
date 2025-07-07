@@ -191,7 +191,10 @@
                         {{ __('messages.contacts.address') }}
                     </h3>
                     <address class="contact-text mt-4 not-italic">
-                        {!! nl2br(e(data_get($settings, 'main_address.' . app()->getLocale(), data_get($settings, 'main_address.en', ''))) !!}<br>
+                        @php
+                            $address = data_get($settings, 'main_address.' . app()->getLocale(), data_get($settings, 'main_address.en', ''));
+                        @endphp
+                        {!! nl2br(e($address)) !!}<br>
                         E-Mail: <a href="mailto:{{ $settings->main_email }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
                             {{ $settings->main_email }}
                         </a>
@@ -222,9 +225,12 @@
                         {{ __('messages.contacts.export') }}
                     </h3>
                     <div class="contact-text mt-4">
+                        @php
+                            $contact = data_get($settings, 'export_contact.' . app()->getLocale(), data_get($settings, 'export_contact.en', ''));
+                        @endphp
                         <a href="tel:{{ $settings->export_phone }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
                             {{ $settings->export_phone }}
-                        </a> {{ data_get($settings, 'export_contact.' . app()->getLocale(), data_get($settings, 'export_contact.en', '')) }}<br>
+                        </a> {{ e($contact) }}<br>
                         E-Mail: <a href="mailto:{{ $settings->export_email }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
                             {{ $settings->export_email }}
                         </a>
