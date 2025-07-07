@@ -137,7 +137,6 @@ class Contacts extends Page implements HasForms
                             ->image()
                             ->disk('public')
                             ->directory('contacts-images')
-                            ->accept(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
                             ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
                     ])
                     ->collapsible(),
