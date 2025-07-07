@@ -1,4 +1,4 @@
-<header class="shadow-xl h-[56px] flex items-center bg-white fixed top-0 left-0 right-0 z-50" role="banner">
+<header class="shadow-xl h-[56px] flex items-center bg-white top-0 left-0 right-0 z-50" :class="{ 'is-fixed': isScrolled }" x-data="{ isScrolled: false }" role="banner" @scroll.window="isScrolled = (window.scrollY > 0)">
     <div class="main-container nav-header flex relative justify-between items-center py-2 px-4 sm:px-6 w-full h-auto container mx-auto">
         <!-- Logo -->
         <a href="{{ url('/') }}" class="flex items-center" aria-label="{{ __('messages.banner.catalog_button_aria_label') }}" wire:navigate>
@@ -53,6 +53,15 @@
 
             .nav-header ul li a:hover {
                 color: #16a34a; /* Matches Tailwind green-600 */
+            }
+
+            /* Header positioning */
+            header {
+                position: relative; /* Default state */
+            }
+
+            header.is-fixed {
+                position: fixed; /* Fixed when scrolled */
             }
         </style>
 
