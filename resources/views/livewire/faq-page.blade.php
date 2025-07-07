@@ -9,16 +9,24 @@
 
     @media (min-width: 768px) {
         .faq-container {
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 2fr;
+        }
+        .faq-container:nth-child(odd) {
+            grid-template-columns: 2fr 1fr;
+        }
+        .faq-container:nth-child(odd) .faq-items{
+order: -1;
         }
     }
 
+
     .faq-image {
         width: 100%;
-        max-width: 24rem; /* ~384px */
+        max-width: 24rem;
         height: auto;
         border-radius: 1.5rem;
         margin: 0 auto;
+        max-height: 548px;
     }
 
     .faq-items {
