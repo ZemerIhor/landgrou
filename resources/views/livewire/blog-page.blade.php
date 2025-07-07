@@ -34,9 +34,8 @@
     <!-- Blog Cards Grid -->
     <section class="flex flex-wrap gap-2 items-center mt-2 min-h-[307px] max-md:max-w-full"
              aria-label="{{ __('blog.articles') }}">
-        @forelse ($posts as $row)
+        @forelse ($posts as $post)
             <div class="flex flex-wrap gap-2 items-center w-full">
-                @foreach ($row as $post)
                     <article
                         class="overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60">
                         <div class="overflow-hidden z-0 w-full">
@@ -64,7 +63,6 @@
                             aria-label="{{ __('blog.read_full_article') }}"
                         ></a>
                     </article>
-                @endforeach
             </div>
         @empty
             <p class="text-sm text-neutral-400 w-full text-center">{{ __('messages.blog.no_posts') }}</p>
