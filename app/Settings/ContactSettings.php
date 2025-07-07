@@ -10,9 +10,9 @@ class ContactSettings extends Settings
     use HasTranslations;
 
     // Переводимые поля
-    public array $main_address;
-    public array $export_contact;
-    public array $map_image_alt;
+    public  $main_address;
+    public  $export_contact;
+    public  $map_image_alt;
 
     // Непереводимые поля
     public string $main_email;
