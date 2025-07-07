@@ -23,7 +23,8 @@ order: -1;
     .faq-image {
         width: 100%;
         max-width: 24rem;
-        height: auto;
+        object-fit: cover;
+        height: 100%;
         border-radius: 1.5rem;
         margin: 0 auto;
         max-height: 548px;
