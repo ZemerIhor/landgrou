@@ -1,4 +1,3 @@
-
 <style>
     .contacts-container {
         display: grid;
@@ -192,7 +191,7 @@
                         {{ __('messages.contacts.address') }}
                     </h3>
                     <address class="contact-text mt-4 not-italic">
-                        {!! nl2br(e($settings->main_address[app()->getLocale()] ?? $settings->main_address['en'] ?? '')) !!}<br>
+                        {!! nl2br(e(data_get($settings, 'main_address.' . app()->getLocale(), data_get($settings, 'main_address.en', ''))) !!}<br>
                         E-Mail: <a href="mailto:{{ $settings->main_email }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
                             {{ $settings->main_email }}
                         </a>
@@ -225,7 +224,7 @@
                     <div class="contact-text mt-4">
                         <a href="tel:{{ $settings->export_phone }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
                             {{ $settings->export_phone }}
-                        </a> {{ $settings->export_contact[app()->getLocale()] ?? $settings->export_contact['en'] ?? '' }}<br>
+                        </a> {{ data_get($settings, 'export_contact.' . app()->getLocale(), data_get($settings, 'export_contact.en', '')) }}<br>
                         E-Mail: <a href="mailto:{{ $settings->export_email }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
                             {{ $settings->export_email }}
                         </a>
@@ -238,7 +237,7 @@
                     </h3>
                     <div class="contact-text mt-4">
                         @foreach ($settings->additional_emails as $key => $email)
-                            {{ __('messages.contacts.' . $key) }}: <a href="mailto:{{ $email }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
+                            {{ __('messages.contacts.' . $key, [], app()->getLocale()) ?: $key }}: <a href="mailto:{{ $email }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
                                 {{ $email }}
                             </a><br>
                         @endforeach
@@ -249,15 +248,19 @@
             <!-- Map and Route Section -->
             <section class="mt-2" aria-labelledby="map-section">
                 <h3 id="map-section" class="sr-only">{{ __('messages.contacts.map') }}</h3>
-                <img
-                    src="{{ Storage::url($settings->map_image) }}"
-                    alt="{{ $settings->map_image_alt[app()->getLocale()] ?? $settings->map_image_alt['en'] ?? '' }}"
-                    class="map-image"
-                />
+                @if ($settings->map_image)
+                    <img
+                        src="{{ Storage::url($settings->map_image) }}"
+                        alt="{{ data_get($settings, 'map_image_alt.' . app()->getLocale(), data_get($settings, 'map_image_alt.en', '')) }}"
+                        class="map-image"
+                    />
+                @else
+                    <p class="text-neutral-400">{{ __('messages.contacts.no_map_image') }}</p>
+                @endif
                 <button
                     type="button"
                     class="form-button form-button-secondary mt-4"
-                    x-on:click="window.open('https://www.google.com/maps/search/' + encodeURIComponent('{{ e($settings->main_address[app()->getLocale()] ?? $settings->main_address['en'] ?? '') }}'), '_blank')"
+                    x-on:click="window.open('https://www.google.com/maps/search/' + encodeURIComponent('{{ e(data_get($settings, 'main_address.' . app()->getLocale(), data_get($settings, 'main_address.en', ''))) }}'), '_blank')"
                 >
                     <span>{{ __('messages.contacts.route') }}</span>
                     <img
@@ -279,4 +282,3 @@
         </section>
     </main>
 </div>
-
