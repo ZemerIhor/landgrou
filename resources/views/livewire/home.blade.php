@@ -26,7 +26,7 @@
 
         <div class="flex flex-wrap gap-2 items-center mt-5 w-full min-h-[307px] max-md:max-w-full" role="region" aria-label="{{ __('blog.articles') }}">
             @forelse ($blogPosts->take(4) as $post)
-                <a href="{{ route('blog.show', $post->slug) }}" class="block overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60 hover:shadow-lg transition-shadow" aria-label="{{ __('blog.read_article', ['title' => $post->getTranslation('title', app()->getLocale())]) }}">
+                <a href="{{ route('blog.post', $post->slug) }}" class="block overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60 hover:shadow-lg transition-shadow" aria-label="{{ __('blog.read_article', ['title' => $post->getTranslation('title', app()->getLocale())]) }}">
                     <article class="overflow-hidden" role="article">
                         <div class="overflow-hidden z-0 w-full">
                             <img
