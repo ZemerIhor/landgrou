@@ -13,7 +13,7 @@ class ReviewsSection extends Component
             ->where('published', true)
             ->whereNotNull('published_at')
             ->orderBy('published_at', 'desc')
-            ->take(4) // Limit to 4 reviews, matching blog section
+            ->take(6) // Fetch enough for sliding
             ->get()
             ->map(function ($review) {
                 return [
