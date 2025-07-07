@@ -10,9 +10,9 @@ class ContactSettings extends Settings
     use HasTranslations;
 
     // Переводимые поля
-    public  $main_address;
-    public  $export_contact;
-    public  $map_image_alt;
+    public array $main_address;
+    public array $export_contact;
+    public array $map_image_alt;
 
     // Непереводимые поля
     public string $main_email;
@@ -33,5 +33,11 @@ class ContactSettings extends Settings
     public static function group(): string
     {
         return 'contacts';
+    }
+
+    // Добавляем метод для отладки
+    public function __construct()
+    {
+        Log::info('ContactSettings initialized', ['translatable' => $this->translatable]);
     }
 }

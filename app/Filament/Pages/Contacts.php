@@ -53,6 +53,8 @@ class Contacts extends Page implements HasForms
             'map_image_alt' => $settings->map_image_alt ?? ['en' => '', 'uk' => ''],
         ];
 
+        Log::info('Contacts form initialized', ['data' => $this->data]);
+
         $this->form->fill($this->data);
     }
 
@@ -135,8 +137,8 @@ class Contacts extends Page implements HasForms
                             ->image()
                             ->disk('public')
                             ->directory('contacts-images')
-                            ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp'])
-                            ->required(),
+                            ->accept(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                            ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
                     ])
                     ->collapsible(),
             ])
