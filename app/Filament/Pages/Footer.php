@@ -94,11 +94,13 @@ class Footer extends Page implements HasForms
                                     ])
                                     ->default([])
                                     ->collapsible()
-                                    ->reorderable(),
+                                    ->reorderable()
+                                    ->cloneable(),
                             ])
                             ->default([])
                             ->collapsible()
-                            ->reorderable(),
+                            ->reorderable()
+                            ->cloneable(),
                     ]),
                 Repeater::make('social_links')
                     ->label(__('Соцмережі'))
@@ -120,7 +122,8 @@ class Footer extends Page implements HasForms
                     ])
                     ->default([])
                     ->collapsible()
-                    ->reorderable(),
+                    ->reorderable()
+                    ->cloneable(),
             ])
             ->statePath('data');
     }

@@ -13,5 +13,3 @@ document.querySelectorAll('[data-toggle]').forEach(button => {
     });
 });
 
-document.addEventListener('DOMContentLoaded' , () => {
-})

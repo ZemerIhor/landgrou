@@ -26,44 +26,54 @@ class Home extends Page implements HasForms
 
     protected static string $settings = HomeSettings::class;
 
+    protected static ?string $navigationLabel = 'Home Settings';
+
+    public static function getSlug(): string
+    {
+        return 'home';
+    }
+
     public ?array $data = [];
 
     public function mount(): void
     {
         $settings = app(HomeSettings::class);
 
+
+
         $this->data = [
-            'hero_slides' => $settings->hero_slides ?? [],
-            'advantages_cards' => $settings->advantages_cards ?? [],
+            'hero_slides' => $settings->hero_slides ?? ['en' => [], 'uk' => []],
+            'advantages_cards' => $settings->advantages_cards ?? ['en' => [], 'uk' => []],
             'advantages_image_1' => $settings->advantages_image_1,
             'advantages_image_2' => $settings->advantages_image_2,
             'advantages_image_3' => $settings->advantages_image_3,
-            'comparison_title' => $settings->comparison_title,
+            'comparison_title' => $settings->comparison_title ?? ['en' => '', 'uk' => ''],
             'main_comparison_image' => $settings->main_comparison_image,
-            'main_comparison_alt' => $settings->main_comparison_alt,
-            'comparison_items' => $settings->comparison_items ?? [],
-            'central_text_value' => $settings->central_text_value,
-            'central_text_unit' => $settings->central_text_unit,
-            'faq_items' => $settings->faq_items ?? [],
-            'feedback_form_title' => $settings->feedback_form_title,
-            'feedback_form_description' => $settings->feedback_form_description,
+            'main_comparison_alt' => $settings->main_comparison_alt ?? ['en' => '', 'uk' => ''],
+            'comparison_items' => $settings->comparison_items ?? ['en' => [], 'uk' => []],
+            'central_text_value' => $settings->central_text_value ?? ['en' => '', 'uk' => ''],
+            'central_text_unit' => $settings->central_text_unit ?? ['en' => '', 'uk' => ''],
+            'faq_items' => $settings->faq_items ?? ['en' => [], 'uk' => []],
+            'feedback_form_title' => $settings->feedback_form_title ?? ['en' => '', 'uk' => ''],
+            'feedback_form_description' => $settings->feedback_form_description ?? ['en' => '', 'uk' => ''],
             'feedback_form_image' => $settings->feedback_form_image,
-            'feedback_form_image_alt' => $settings->feedback_form_image_alt,
-            'tenders_title' => $settings->tenders_title,
-            'tender_items' => $settings->tender_items ?? [],
-            'tenders_phone' => $settings->tenders_phone,
-            'about_title' => $settings->about_title,
-            'about_description' => $settings->about_description,
-            'about_more_link' => $settings->about_more_link,
-            'about_certificates_link' => $settings->about_certificates_link,
-            'about_statistic_title' => $settings->about_statistic_title,
-            'about_statistic_description' => $settings->about_statistic_description,
+            'feedback_form_image_alt' => $settings->feedback_form_image_alt ?? ['en' => '', 'uk' => ''],
+            'tenders_title' => $settings->tenders_title ?? ['en' => '', 'uk' => ''],
+            'tender_items' => $settings->tender_items ?? ['en' => [], 'uk' => []],
+            'tenders_phone' => $settings->tenders_phone ?? ['en' => '', 'uk' => ''],
+            'about_title' => $settings->about_title ?? ['en' => '', 'uk' => ''],
+            'about_description' => $settings->about_description ?? ['en' => '', 'uk' => ''],
+            'about_more_link' => $settings->about_more_link ?? ['en' => '', 'uk' => ''],
+            'about_certificates_link' => $settings->about_certificates_link ?? ['en' => '', 'uk' => ''],
+            'about_statistic_title' => $settings->about_statistic_title ?? ['en' => '', 'uk' => ''],
+            'about_statistic_description' => $settings->about_statistic_description ?? ['en' => '', 'uk' => ''],
             'about_location_image' => $settings->about_location_image,
-            'about_location_caption' => $settings->about_location_caption,
-            'reviews_title' => $settings->reviews_title,
-            'review_items' => $settings->review_items ?? [],
+            'about_location_caption' => $settings->about_location_caption ?? ['en' => '', 'uk' => ''],
+            'reviews_title' => $settings->reviews_title ?? ['en' => '', 'uk' => ''],
+            'review_items' => $settings->review_items ?? ['en' => [], 'uk' => []],
         ];
 
+        Log::info('Home Settings Loaded Data', ['data' => $this->data]);
         $this->form->fill($this->data);
     }
 
@@ -98,7 +108,8 @@ class Home extends Page implements HasForms
                                     ])
                                     ->maxItems(5)
                                     ->collapsible()
-                                    ->reorderable(),
+                                    ->reorderable()
+                                    ->cloneable(),
                             ]),
                     ])
                     ->collapsible(),
@@ -120,7 +131,8 @@ class Home extends Page implements HasForms
                                     ])
                                     ->maxItems(4)
                                     ->collapsible()
-                                    ->reorderable(),
+                                    ->reorderable()
+                                    ->cloneable(),
                             ]),
                         FileUpload::make('advantages_image_1')
                             ->label(__('Изображение 1'))
@@ -179,7 +191,8 @@ class Home extends Page implements HasForms
                                     ])
                                     ->maxItems(3)
                                     ->collapsible()
-                                    ->reorderable(),
+                                    ->reorderable()
+                                    ->cloneable(),
                                 TextInput::make('central_text_value')
                                     ->label(__('Центральное значение'))
                                     ->maxLength(50),
@@ -214,7 +227,8 @@ class Home extends Page implements HasForms
                                     ])
                                     ->maxItems(10)
                                     ->collapsible()
-                                    ->reorderable(),
+                                    ->reorderable()
+                                    ->cloneable(),
                             ]),
                     ])
                     ->collapsible(),
@@ -261,7 +275,8 @@ class Home extends Page implements HasForms
                                     ])
                                     ->maxItems(5)
                                     ->collapsible()
-                                    ->reorderable(),
+                                    ->reorderable()
+                                    ->cloneable(),
                                 TextInput::make('tenders_phone')
                                     ->label(__('Телефон відділу тендерів'))
                                     ->maxLength(20),
@@ -336,7 +351,8 @@ class Home extends Page implements HasForms
                                     ])
                                     ->maxItems(10)
                                     ->collapsible()
-                                    ->reorderable(),
+                                    ->reorderable()
+                                    ->cloneable(),
                             ]),
                     ])
                     ->collapsible(),
@@ -360,22 +376,61 @@ class Home extends Page implements HasForms
 
             foreach ($fileFields as $field) {
                 if (isset($data[$field])) {
-                    // Если это массив, берем первый элемент; если строка - оставляем
                     $data[$field] = is_array($data[$field]) ? ($data[$field][0] ?? null) : $data[$field];
                 }
             }
 
-            // Нормализация background_image в hero_slides
-            if (isset($data['hero_slides']) && is_array($data['hero_slides'])) {
-                foreach ($data['hero_slides'] as &$slide) {
-                    if (isset($slide['background_image'])) {
-                        $slide['background_image'] = is_array($slide['background_image']) ? ($slide['background_image'][0] ?? null) : $slide['background_image'];
+            // Нормализация переводимых массивов
+            $translatableArrays = [
+                'hero_slides', 'advantages_cards', 'comparison_items', 'faq_items',
+                'tender_items', 'review_items'
+            ];
+
+            foreach ($translatableArrays as $field) {
+                if (!isset($data[$field]) || !is_array($data[$field])) {
+                    $data[$field] = ['en' => [], 'uk' => []];
+                } else {
+                    foreach (['en', 'uk'] as $locale) {
+                        if (!isset($data[$field][$locale]) || !is_array($data[$field][$locale])) {
+                            $data[$field][$locale] = [];
+                        }
                     }
                 }
-                unset($slide); // Очистка ссылки
+            }
+
+            // Нормализация hero_slides
+            if (isset($data['hero_slides']) && is_array($data['hero_slides'])) {
+                foreach ($data['hero_slides'] as $locale => &$slides) {
+                    if (is_array($slides)) {
+                        foreach ($slides as &$slide) {
+                            if (isset($slide['background_image'])) {
+                                $slide['background_image'] = is_array($slide['background_image']) ? ($slide['background_image'][0] ?? null) : $slide['background_image'];
+                            }
+                        }
+                        unset($slide);
+                    }
+                }
+                unset($slides);
+            }
+
+            // Нормализация comparison_items
+            if (isset($data['comparison_items']) && is_array($data['comparison_items'])) {
+                foreach ($data['comparison_items'] as $locale => &$items) {
+                    if (is_array($items)) {
+                        foreach ($items as &$item) {
+                            if (isset($item['image'])) {
+                                $item['image'] = is_array($item['image']) ? ($item['image'][0] ?? null) : $item['image'];
+                            }
+                        }
+                        unset($item);
+                    }
+                }
+                unset($items);
             }
 
             $settings = app(HomeSettings::class);
+            Log::info('Settings before save', ['settings' => $settings->toArray()]);
+
             $settings->fill($data);
             $settings->save();
 

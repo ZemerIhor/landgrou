@@ -91,11 +91,13 @@ class Faq extends Page implements HasForms
                                             ])
                                             ->columns(2)
                                             ->itemLabel(fn (array $state): ?string => $state['question'] ?? null)
-                                            ->collapsible(),
+                                            ->collapsible()
+                                            ->cloneable(),
                                     ])
                                     ->columns(2)
                                     ->itemLabel(fn (array $state): ?string => $state['main_image_alt'] ?? null)
-                                    ->collapsible(),
+                                    ->collapsible()
+                                    ->cloneable(),
                             ]),
                     ])
                     ->collapsible(),

@@ -15,14 +15,9 @@ class ProductPage extends Component
 {
     use FetchesUrls;
 
-    /**
-     * The selected option values.
-     */
     public array $selectedOptionValues = [];
+    public int $quantity = 1;
 
-    /**
-     * List of attributes to display.
-     */
     public array $displayAttributes = [
         'calories',
         'moisture',
@@ -33,9 +28,6 @@ class ProductPage extends Component
         'packaging',
     ];
 
-    /**
-     * Attribute translations.
-     */
     public array $productAttributes = [
         'calories' => ['en' => 'Calories', 'uk' => 'Калорійність'],
         'moisture' => ['en' => 'Moisture content', 'uk' => 'Масова доля загальної вологи'],
@@ -46,10 +38,43 @@ class ProductPage extends Component
         'packaging' => ['en' => 'Packaging type', 'uk' => 'Вид пакування'],
     ];
 
-    /**
-     * The quantity of the product.
-     */
-    public int $quantity = 1;
+    public array $detailedAttributes = [
+        'moisture' => [
+            'name' => ['en' => 'Moisture content', 'uk' => 'Масова доля загальної вологи'],
+            'norm' => '20%',
+            'value' => '19.1%',
+        ],
+        'ash' => [
+            'name' => ['en' => 'Ash content', 'uk' => 'Зольність'],
+            'norm' => '23%',
+            'value' => '18.3%',
+        ],
+        'strength' => [
+            'name' => ['en' => 'Mechanical strength', 'uk' => 'Механічна міцність'],
+            'norm' => '96.6%',
+            'value' => '96.6%',
+        ],
+        'calories_kcal' => [
+            'name' => ['en' => 'Calorific value kcal/kg', 'uk' => 'Теплота згорання Ккал/кг'],
+            'norm' => '>3500',
+            'value' => '4155',
+        ],
+        'calories_mj' => [
+            'name' => ['en' => 'Calorific value MJ/kg', 'uk' => 'Теплота згорання МДж/кг'],
+            'norm' => '>14.65',
+            'value' => '17.387',
+        ],
+        'sulfur' => [
+            'name' => ['en' => 'Sulfur content', 'uk' => 'Вміст сірки, %'],
+            'norm' => '-',
+            'value' => '0.24%',
+        ],
+        'radionuclides' => [
+            'name' => ['en' => 'Radionuclide contamination', 'uk' => 'Забруднення радіонуклідами'],
+            'norm' => 'не нормується',
+            'value' => 'не виявлено',
+        ],
+    ];
 
     public function mount($slug): void
     {
@@ -64,7 +89,7 @@ class ProductPage extends Component
             ]
         );
 
-        if (! $this->url) {
+        if (!$this->url) {
             abort(404);
         }
 
@@ -73,30 +98,21 @@ class ProductPage extends Component
         })->toArray();
     }
 
-    /**
-     * Computed property to get variant.
-     */
     public function getVariantProperty(): ProductVariant
     {
         return $this->product->variants->first(function ($variant) {
-            return ! $variant->values->pluck('id')
+            return !$variant->values->pluck('id')
                 ->diff(
                     collect($this->selectedOptionValues)->values()
                 )->count();
         });
     }
 
-    /**
-     * Computed property to return all available option values.
-     */
     public function getProductOptionValuesProperty(): Collection
     {
         return $this->product->variants->pluck('values')->flatten();
     }
 
-    /**
-     * Computed property to get available product options with values.
-     */
     public function getProductOptionsProperty(): Collection
     {
         return $this->productOptionValues->unique('id')->groupBy('product_option_id')
@@ -108,25 +124,16 @@ class ProductPage extends Component
             })->values();
     }
 
-    /**
-     * Computed property to return product.
-     */
     public function getProductProperty(): Product
     {
         return $this->url->element;
     }
 
-    /**
-     * Return all images for the product.
-     */
     public function getImagesProperty(): Collection
     {
         return $this->product->media->sortBy('order_column');
     }
 
-    /**
-     * Computed property to return current image.
-     */
     public function getImageProperty(): ?Media
     {
         if (count($this->variant->images)) {
@@ -140,13 +147,46 @@ class ProductPage extends Component
         return $this->images->first();
     }
 
-    /**
-     * Computed property to return similar products.
-     */
+    public function getAttributesProperty(): array
+    {
+        $attributes = [];
+        $locale = app()->getLocale();
+
+        foreach ($this->displayAttributes as $handle) {
+            $value = $this->product->translateAttribute($handle);
+            $attributes[$handle] = [
+                'name' => $this->productAttributes[$handle][$locale] ?? $this->productAttributes[$handle]['en'],
+                'value' => $value ?: 'N/A',
+            ];
+        }
+
+        return $attributes;
+    }
+
+    public function getDetailedAttributesProperty(): array
+    {
+        $locale = app()->getLocale();
+        $detailedAttributes = [];
+
+        foreach ($this->detailedAttributes as $key => $data) {
+            $name = is_array($data['name']) ? ($data['name'][$locale] ?? $data['name']['en']) : $data['name'];
+            $value = $data['value'] ?? ($this->product->translateAttribute($key) ?: 'N/A');
+            $norm = $data['norm'] ?? $value;
+
+            $detailedAttributes[$key] = [
+                'name' => $name,
+                'norm' => $norm,
+                'value' => $value,
+            ];
+        }
+
+        return $detailedAttributes;
+    }
+
     public function getSimilarProductsProperty(): Collection
     {
-        if (! $this->product->category) {
-            return collect([]); // Возвращаем пустую коллекцию, если категория отсутствует
+        if (!$this->product->category) {
+            return collect([]);
         }
 
         return $this->product->category->products()

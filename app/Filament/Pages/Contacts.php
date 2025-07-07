@@ -80,7 +80,8 @@ class Contacts extends Page
                                             ->tel()
                                             ->maxLength(20),
                                     ])
-                                    ->collapsible(),
+                                    ->collapsible()
+                                    ->cloneable(),
                                 TextInput::make('sales_email')
                                     ->label(__('messages.contacts.sales_email'))
                                     ->email()
@@ -113,7 +114,8 @@ class Contacts extends Page
                                             ->required()
                                             ->maxLength(255),
                                     ])
-                                    ->collapsible(),
+                                    ->collapsible()
+                                    ->cloneable(),
                                 FileUpload::make('map_image')
                                     ->label(__('messages.contacts.map_image'))
                                     ->image()
