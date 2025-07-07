@@ -53,35 +53,36 @@
             @endif
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            new Swiper('.reviews-swiper', {
+                slidesPerView: 2,
+                spaceBetween: 20,
+                loop: true,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                breakpoints: {
+                    768: {
+                        slidesPerView: 3,
+                        spaceBetween: 20,
+                    },
+                },
+                navigation: false,
+                pagination: false,
+            });
+        });
+    </script>
+
+    <style>
+        .swiper-slide {
+            height: auto !important;
+        }
+        .swiper-wrapper {
+            align-items: stretch;
+        }
+    </style>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        new Swiper('.reviews-swiper', {
-            slidesPerView: 2,
-            spaceBetween: 20,
-            loop: true,
-            autoplay: {
-                delay: 3000,
-                disableOnInteraction: false,
-            },
-            breakpoints: {
-                768: {
-                    slidesPerView: 3,
-                    spaceBetween: 20,
-                },
-            },
-            navigation: false,
-            pagination: false,
-        });
-    });
-</script>
-
-<style>
-    .swiper-slide {
-        height: auto !important;
-    }
-    .swiper-wrapper {
-        align-items: stretch;
-    }
-</style>
