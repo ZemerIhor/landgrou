@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ReviewResource\Pages;
 use App\Models\Review;
-use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Select; // Correct import for Select
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -14,13 +14,15 @@ use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Actions\Action;
 use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
+use Filament\Notifications\Notification;
 
 class ReviewResource extends Resource
 {
     protected static ?string $model = Review::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-star'; // Иконка в админке
+    protected static ?string $navigationIcon = 'heroicon-o-star';
 
     public static function form(Form $form): Form
     {
@@ -33,7 +35,7 @@ class ReviewResource extends Resource
                         ->required(),
                 ])
                 ->fieldTranslatableLabel(fn ($field, $locale) => __($field->getName(), [], $locale))
-                ->locales(['en', 'uk']), // Поддерживаемые языки
+                ->locales(['en', 'uk']),
             TextInput::make('name')
                 ->label('Имя')
                 ->required(),
@@ -70,6 +72,30 @@ class ReviewResource extends Resource
             ->filters([])
             ->actions([
                 \Filament\Tables\Actions\EditAction::make(),
+                Action::make('duplicate')
+                    ->label('Дублировать')
+                    ->icon('heroicon-o-document-duplicate')
+                    ->action(function ($record) {
+                        $newRecord = $record->replicate();
+                        $newRecord->published = false;
+                        $newRecord->published_at = null;
+                        $newRecord->save();
+
+                        // Copy translations
+                        foreach ($record->getTranslations() as $attribute => $translations) {
+                            foreach ($translations as $locale => $value) {
+                                $newRecord->setTranslation($attribute, $locale, $value);
+                            }
+                        }
+                        $newRecord->save();
+
+                        Notification::make()
+                            ->title('Отзыв успешно дублирован')
+                            ->success()
+                            ->send();
+                    })
+                    ->requiresConfirmation()
+                    ->color('warning'),
             ])
             ->bulkActions([
                 \Filament\Tables\Actions\DeleteBulkAction::make(),

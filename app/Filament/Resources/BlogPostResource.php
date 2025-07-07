@@ -15,7 +15,9 @@ use Filament\Resources\Resource;
 use Filament\Tables\Table;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Actions\Action;
 use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
+use Filament\Notifications\Notification;
 
 class BlogPostResource extends Resource
 {
@@ -44,7 +46,7 @@ class BlogPostResource extends Resource
                         ->label('SEO опис'),
                 ])
                 ->fieldTranslatableLabel(fn ($field, $locale) => __($field->getName(), [], $locale))
-                ->locales(['en', 'uk']), // Match your locales
+                ->locales(['en', 'uk']),
             TextInput::make('slug')
                 ->required()
                 ->unique(ignoreRecord: true),
@@ -76,6 +78,32 @@ class BlogPostResource extends Resource
             ->filters([])
             ->actions([
                 \Filament\Tables\Actions\EditAction::make(),
+                Action::make('duplicate')
+                    ->label('Дублировать')
+                    ->icon('heroicon-o-document-duplicate')
+                    ->action(function ($record) {
+                        $newRecord = $record->replicate();
+                        $newRecord->published = false;
+                        $newRecord->published_at = null;
+                        // Ensure unique slug
+                        $newRecord->slug = $newRecord->slug . '-' . uniqid();
+                        $newRecord->save();
+
+                        // Copy translations
+                        foreach ($record->getTranslations() as $attribute => $translations) {
+                            foreach ($translations as $locale => $value) {
+                                $newRecord->setTranslation($attribute, $locale, $value);
+                            }
+                        }
+                        $newRecord->save();
+
+                        Notification::make()
+                            ->title('Пост успешно дублирован')
+                            ->success()
+                            ->send();
+                    })
+                    ->requiresConfirmation()
+                    ->color('warning'),
             ])
             ->bulkActions([
                 \Filament\Tables\Actions\DeleteBulkAction::make(),
