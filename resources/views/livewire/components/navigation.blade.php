@@ -1,4 +1,5 @@
-<header class="shadow-xl h-[56px] flex items-center bg-white top-0 left-0 right-0 z-50" :class="{ 'is-fixed': isScrolled }" x-data="{ isScrolled: false }" role="banner" @scroll.window="isScrolled = (window.scrollY > 0)">
+<div>
+<header class="shadow-xl h-[56px] flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300" :class="{ 'is-fixed': isScrolled }" x-data="{ isScrolled: false }" role="banner" @scroll.window="isScrolled = (window.scrollY > 0)">
     <div class="main-container nav-header flex relative justify-between items-center py-2 px-4 sm:px-6 w-full h-auto container mx-auto">
         <!-- Logo -->
         <a href="{{ url('/') }}" class="flex items-center" aria-label="{{ __('messages.banner.catalog_button_aria_label') }}" wire:navigate>
@@ -58,10 +59,25 @@
             /* Header positioning */
             header {
                 position: relative; /* Default state */
+                transform: translateY(0);
+                opacity: 1;
             }
 
             header.is-fixed {
                 position: fixed; /* Fixed when scrolled */
+                transform: translateY(0); /* Ensures it stays at the top */
+                opacity: 1;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow for fixed state */
+            }
+
+            /* Smooth transition for header when not fixed */
+            header:not(.is-fixed) {
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+
+            /* Placeholder to prevent content jump */
+            .header-placeholder {
+                transition: height 0.3s ease;
             }
         </style>
 
@@ -233,3 +249,6 @@
     </div>
     @livewire('components.contact-form')
 </header>
+<!-- Placeholder to prevent content jump -->
+<div class="header-placeholder" x-show="isScrolled" style="height: 56px;" x-cloak x-transition:enter="transition ease-out duration-300" x-transition:enter-start="height 0" x-transition:enter-end="height 56px" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="height 56px" x-transition:leave-end="height 0"></div>
+</div>
