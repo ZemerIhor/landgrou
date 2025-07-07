@@ -24,7 +24,7 @@ class ContactSettings extends Settings
     public ?string  $map_image;
 
     // Публичное свойство для переводимых полей
-    public array $translatable = [
+    protected array $translatable = [
         'main_address',
         'export_contact',
         'map_image_alt',
