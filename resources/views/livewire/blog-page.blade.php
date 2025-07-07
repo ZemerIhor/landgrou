@@ -34,7 +34,7 @@
     <!-- Blog Cards Grid -->
     <section class="flex flex-wrap gap-2 items-center mt-2 min-h-[307px] max-md:max-w-full"
              aria-label="{{ __('blog.articles') }}">
-        @forelse ($posts->chunk(4) as $row)
+        @forelse ($posts as $row)
             <div class="flex flex-wrap gap-2 items-center w-full">
                 @foreach ($row as $post)
                     <article
