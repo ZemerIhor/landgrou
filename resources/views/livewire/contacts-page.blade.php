@@ -207,8 +207,11 @@
                     </h3>
                     <div class="contact-text mt-4">
                         @foreach ($settings->sales_phones as $phone)
-                            <a href="tel:{{ $phone }}" class="block text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
-                                {{ $phone }}
+                            @php
+                                $phoneNumber = is_array($phone) ? ($phone['phone'] ?? '') : $phone;
+                            @endphp
+                            <a href="tel:{{ $phoneNumber }}" class="block text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
+                                {{ $phoneNumber }}
                             </a>
                         @endforeach
                         E-Mail: <a href="mailto:{{ $settings->sales_email }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
