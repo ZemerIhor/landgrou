@@ -40,6 +40,7 @@ class AboutUs extends Page implements HasForms
     {
         $settings = app(AboutUsSettings::class);
 
+        // Инициализация данных формы из настроек
         $this->data = [
             'hero_background_image' => $settings->hero_background_image,
             'hero_background_image_alt' => $settings->hero_background_image_alt,
@@ -73,7 +74,7 @@ class AboutUs extends Page implements HasForms
                         Translate::make()
                             ->locales(['en', 'uk'])
                             ->schema([
-                                // Hero Section
+                                // Секция Hero
                                 Section::make(__('Hero Section'))
                                     ->schema([
                                         FileUpload::make('hero_background_image')
@@ -82,7 +83,8 @@ class AboutUs extends Page implements HasForms
                                             ->disk('public')
                                             ->directory('about-us/hero')
                                             ->preserveFilenames()
-                                            ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif'])
+                                            ->accept(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                                            ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp'])
                                             ->default(fn () => app(AboutUsSettings::class)->hero_background_image),
                                         TextInput::make('hero_background_image_alt')
                                             ->label(__('Hero Background Image Alt Text'))
@@ -93,7 +95,8 @@ class AboutUs extends Page implements HasForms
                                             ->disk('public')
                                             ->directory('about-us/logo')
                                             ->preserveFilenames()
-                                            ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif'])
+                                            ->accept(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                                            ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp'])
                                             ->default(fn () => app(AboutUsSettings::class)->hero_logo),
                                         TextInput::make('hero_logo_alt')
                                             ->label(__('Hero Logo Alt Text'))
@@ -116,7 +119,7 @@ class AboutUs extends Page implements HasForms
                                     ])
                                     ->collapsible(),
 
-                                // Advantages Section
+                                // Секция Advantages
                                 Section::make(__('Advantages Section'))
                                     ->schema([
                                         Repeater::make('advantages')
@@ -136,7 +139,7 @@ class AboutUs extends Page implements HasForms
                                             ->columns(3)
                                             ->itemLabel(fn (array $state): ?string => $state['title'][app()->getLocale()] ?? null)
                                             ->collapsible()
-                                            ->cloneable() // Добавлено
+                                            ->cloneable()
                                             ->defaultItems(3)
                                             ->maxItems(3),
                                         Repeater::make('advantage_images')
@@ -148,8 +151,8 @@ class AboutUs extends Page implements HasForms
                                                     ->disk('public')
                                                     ->directory('about-us/advantages')
                                                     ->preserveFilenames()
-                                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif'])
-                                                    ->default(fn ($state) => $state['image'] ?? null),
+                                                    ->accept(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
                                                 TextInput::make('alt')
                                                     ->label(__('Alt Text'))
                                                     ->rules(['nullable', 'max:255']),
@@ -157,13 +160,13 @@ class AboutUs extends Page implements HasForms
                                             ->columns(2)
                                             ->itemLabel(fn (array $state): ?string => $state['alt'][app()->getLocale()] ?? null)
                                             ->collapsible()
-                                            ->cloneable() // Добавлено
+                                            ->cloneable()
                                             ->defaultItems(3)
                                             ->maxItems(3),
                                     ])
                                     ->collapsible(),
 
-                                // About Section
+                                // Секция About
                                 Section::make(__('About Section'))
                                     ->schema([
                                         Repeater::make('about_background_images')
@@ -175,8 +178,8 @@ class AboutUs extends Page implements HasForms
                                                     ->disk('public')
                                                     ->directory('about-us/background')
                                                     ->preserveFilenames()
-                                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif'])
-                                                    ->default(fn ($state) => $state['image'] ?? null),
+                                                    ->accept(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
                                                 TextInput::make('alt')
                                                     ->label(__('Alt Text'))
                                                     ->rules(['nullable', 'max:255']),
@@ -184,7 +187,7 @@ class AboutUs extends Page implements HasForms
                                             ->columns(2)
                                             ->itemLabel(fn (array $state): ?string => $state['alt'][app()->getLocale()] ?? null)
                                             ->collapsible()
-                                            ->cloneable() // Добавлено
+                                            ->cloneable()
                                             ->defaultItems(2)
                                             ->maxItems(2),
                                         TextInput::make('about_title')
@@ -199,12 +202,12 @@ class AboutUs extends Page implements HasForms
                                             ])
                                             ->itemLabel(fn (array $state): ?string => substr($state['text'][app()->getLocale()] ?? '', 0, 50) . '...' ?? null)
                                             ->collapsible()
-                                            ->cloneable() // Добавлено
+                                            ->cloneable()
                                             ->defaultItems(5),
                                     ])
                                     ->collapsible(),
 
-                                // Gallery Section
+                                // Секция Gallery
                                 Section::make(__('Gallery Section'))
                                     ->schema([
                                         TextInput::make('gallery_title')
@@ -219,8 +222,8 @@ class AboutUs extends Page implements HasForms
                                                     ->disk('public')
                                                     ->directory('about-us/gallery')
                                                     ->preserveFilenames()
-                                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif'])
-                                                    ->default(fn ($state) => $state['image'] ?? null),
+                                                    ->accept(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
                                                 TextInput::make('alt')
                                                     ->label(__('Alt Text'))
                                                     ->rules(['nullable', 'max:255']),
@@ -228,12 +231,12 @@ class AboutUs extends Page implements HasForms
                                             ->columns(2)
                                             ->itemLabel(fn (array $state): ?string => $state['alt'][app()->getLocale()] ?? null)
                                             ->collapsible()
-                                            ->cloneable() // Добавлено
+                                            ->cloneable()
                                             ->defaultItems(5),
                                     ])
                                     ->collapsible(),
 
-                                // Certificates Section
+                                // Секция Certificates
                                 Section::make(__('Certificates Section'))
                                     ->schema([
                                         TextInput::make('certificates_title')
@@ -248,8 +251,8 @@ class AboutUs extends Page implements HasForms
                                                     ->disk('public')
                                                     ->directory('about-us/certificates')
                                                     ->preserveFilenames()
-                                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif'])
-                                                    ->default(fn ($state) => $state['image'] ?? null),
+                                                    ->accept(['image/jpeg', 'image/png', 'image/gif', 'image/webp'])
+                                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
                                                 TextInput::make('alt')
                                                     ->label(__('Alt Text'))
                                                     ->rules(['nullable', 'max:255']),
@@ -257,7 +260,7 @@ class AboutUs extends Page implements HasForms
                                             ->columns(2)
                                             ->itemLabel(fn (array $state): ?string => $state['alt'][app()->getLocale()] ?? null)
                                             ->collapsible()
-                                            ->cloneable() // Добавлено
+                                            ->cloneable()
                                             ->defaultItems(5),
                                     ])
                                     ->collapsible(),
@@ -272,6 +275,25 @@ class AboutUs extends Page implements HasForms
     {
         try {
             $data = $this->form->getState();
+
+            // Логирование MIME-типов загруженных файлов для отладки
+            $imageFields = ['hero_background_image', 'hero_logo'];
+            foreach ($imageFields as $field) {
+                if (isset($data[$field]) && is_object($data[$field])) {
+                    Log::info("MIME type for $field", ['mime' => $data[$field]->getMimeType()]);
+                }
+            }
+            // Логирование для repeater-полей
+            $repeaterFields = ['advantage_images', 'about_background_images', 'gallery_images', 'certificates_images'];
+            foreach ($repeaterFields as $field) {
+                if (isset($data[$field]) && is_array($data[$field])) {
+                    foreach ($data[$field] as $index => $item) {
+                        if (isset($item['image']) && is_object($item['image'])) {
+                            Log::info("MIME type for $field[$index]", ['mime' => $item['image']->getMimeType()]);
+                        }
+                    }
+                }
+            }
 
             Log::info('About Us Settings Form Data', ['data' => $data]);
 

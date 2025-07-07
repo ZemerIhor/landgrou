@@ -32,7 +32,8 @@
     </h1>
 
     <!-- Blog Cards Grid -->
-    <section class="flex flex-wrap gap-2 items-center mt-2 min-h-[307px] max-md:max-w-full"
+    <section class="grid gap-4 w-full mt-2"
+         style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
              aria-label="{{ __('blog.articles') }}">
         @forelse ($posts as $post)
             <div class="flex flex-wrap gap-2 items-center w-full">
@@ -112,4 +113,4 @@
             </button>
         @endif
     </nav>
-</div>
+</section>
