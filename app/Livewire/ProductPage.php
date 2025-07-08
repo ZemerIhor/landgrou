@@ -105,26 +105,6 @@ class ProductPage extends Component
         return $attributes;
     }
 
-    public function getDetailedAttributesProperty(): array
-    {
-        $locale = app()->getLocale();
-        $detailedAttributes = [];
-
-        foreach ($this->detailedAttributes as $key => $data) {
-            $name = is_array($data['name']) ? ($data['name'][$locale] ?? $data['name']['en']) : $data['name'];
-            $value = $data['value'] ?? ($this->product->translateAttribute($key) ?: 'N/A');
-            $norm = $data['norm'] ?? $value;
-
-            $detailedAttributes[$key] = [
-                'name' => $name,
-                'norm' => $norm,
-                'value' => $value,
-            ];
-        }
-
-        return $detailedAttributes;
-    }
-
     public function getSimilarProductsProperty(): Collection
     {
         if (!$this->product->category) {
