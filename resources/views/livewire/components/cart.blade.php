@@ -5,7 +5,6 @@
     <button class="grid w-16 h-16 transition border-l border-gray-100 lg:border-l-transparent hover:opacity-75"
             x-on:click="linesVisible = !linesVisible">
         <span class="sr-only">{{ __('messages.cart.cart') }}</span>
-
         <span class="place-self-center">
             <svg xmlns="http://www.w3.org/2000/svg"
                  class="w-4 h-4"
@@ -50,35 +49,39 @@
                                 <li>
                                     <div class="flex py-4"
                                          wire:key="line_{{ $line['id'] }}">
-                                        @if($line['thumbnail'])
+                                        @if($line['thumbnail'] && (is_string($line['thumbnail']) || method_exists($line['thumbnail'], 'getUrl')))
                                             <img class="object-cover w-16 h-16 rounded"
-                                                 src="{{ $line['thumbnail'] }}"
-                                                 alt="{{ $line['description'] }}">
+                                                 src="{{ is_string($line['thumbnail']) ? $line['thumbnail'] : $line['thumbnail']->getUrl() }}"
+                                                 alt="{{ $line['description'] ?? 'Product Image' }}">
+                                        @else
+                                            <img class="object-cover w-16 h-16 rounded"
+                                                 src="{{ asset('images/fallback-product.jpg') }}"
+                                                 alt="{{ $line['description'] ?? 'Product Image' }}">
                                         @endif
 
                                         <div class="flex-1 ml-4">
                                             <p class="max-w-[20ch] text-sm font-medium">
-                                                {{ $line['description'] }}
+                                                {{ $line['description'] ?? '' }}
                                             </p>
 
                                             <span class="block mt-1 text-xs text-gray-500">
-                                                {{ $line['identifier'] }} / {{ $line['options'] }}
+                                                {{ $line['identifier'] ?? '' }} / {{ $line['options'] ?? '' }}
                                             </span>
 
                                             <div class="flex items-center mt-2">
                                                 <input class="w-16 p-2 text-xs transition-colors border border-gray-100 rounded-lg hover:border-gray-200"
                                                        type="number"
                                                        wire:model.live="lines.{{ $index }}.quantity"
-                                                       aria-label="{{ __('messages.cart.quantity') }} {{ $line['description'] }}" />
+                                                       aria-label="{{ __('messages.cart.quantity') }} {{ $line['description'] ?? '' }}" />
 
                                                 <p class="ml-2 text-xs">
-                                                    @ {{ $line['unit_price'] }}
+                                                    @ {{ $line['unit_price'] ?? '' }}
                                                 </p>
 
                                                 <button class="p-2 ml-auto text-gray-600 transition-colors rounded-lg hover:bg-gray-100 hover:text-gray-700"
                                                         type="button"
                                                         wire:click="removeLine('{{ $line['id'] }}')"
-                                                        aria-label="{{ __('messages.cart.remove_item') }} {{ $line['description'] }}">
+                                                        aria-label="{{ __('messages.cart.remove_item') }} {{ $line['description'] ?? '' }}">
                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                          class="w-4 h-4"
                                                          fill="none"
