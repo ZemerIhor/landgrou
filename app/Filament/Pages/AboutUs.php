@@ -164,12 +164,11 @@ class AboutUs extends Page implements HasForms
                                             ->schema([
                                                 Textarea::make('text')
                                                     ->label(__('Paragraph'))
-                                                    ->rules(['nullable', 'max:1000']),
+                                                    ->rules(['nullable']),
                                             ])
                                             ->itemLabel(fn (array $state): ?string => substr($state['text'][app()->getLocale()] ?? '', 0, 50) . '...' ?? null)
                                             ->collapsible()
                                             ->cloneable() // Добавлено
-                                            ->defaultItems(5),
                                     ])
                                     ->collapsible(),
 
