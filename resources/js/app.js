@@ -2,11 +2,9 @@ document.addEventListener("DOMContentLoaded", initApp);
 document.addEventListener("livewire:navigated", initApp);
 document.addEventListener("livewire:init", initApp);
 document.addEventListener("livewire:update", initApp);
-
+import Swiper from 'swiper';
 function initApp () {
-    import Swiper from 'swiper';
-    window.Swiper = Swiper; // Делаем Swiper доступным глобально, если нужно
-
+    window.Swiper = Swiper;
     document.querySelectorAll('[data-toggle]').forEach(button => {
         button.addEventListener('click', () => {
             const targetId = button.getAttribute('data-toggle');
