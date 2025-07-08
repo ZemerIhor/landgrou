@@ -20,7 +20,7 @@
         </span>
     </button>
 
-    <div class="absolute inset-x-0 top-auto z-50 w-screen max-w-sm px-6 py-8 mx-auto mt-4 bg-white border border-gray-100 shadow-xl sm:left-auto rounded-xl"
+    <div class="absolute right-0 top-auto z-50 w-screen max-w-sm px-6 py-8 mx-auto mt-4 bg-white border border-gray-100 shadow-xl sm:left-auto rounded-xl"
          x-show="linesVisible"
          x-on:click.away="linesVisible = false"
          x-transition
