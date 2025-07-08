@@ -1,5 +1,11 @@
-<x-filament-panels::page>
-    <x-filament-panels::form wire:model="data">
+<x-filament::page>
+    <form wire:submit.prevent="save" class="space-y-6">
         {{ $this->form }}
-    </x-filament-panels::form>
-</x-filament-panels::page>
+
+        <div>
+            <button type="submit" class="filament-button filament-button-primary">
+                Зберегти
+            </button>
+        </div>
+    </form>
+</x-filament::page>
