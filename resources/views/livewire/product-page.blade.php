@@ -235,25 +235,25 @@
             </tr>
             </thead>
             <tbody>
-            @foreach ($this->detailedAttributes as $attribute)
-                <tr class="flex relative items-center self-stretch {{ $loop->even ? 'bg-white' : '' }} rounded-lg">
-                    <td class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">
-                            <span class="relative text-base font-semibold leading-5 flex-[1_0_0] text-zinc-600 max-sm:text-sm">
-                                {{ is_array($attribute['name']) ? ($attribute['name'][app()->getLocale()] ?? '') : $attribute['name'] }}
-                            </span>
-                    </td>
-                    <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                            <span class="relative text-base font-semibold leading-5 text-right flex-[1_0_0] text-zinc-800 max-sm:text-sm">
-                                {{ is_array($attribute['norm']) ? ($attribute['norm'][app()->getLocale()] ?? '') : $attribute['norm'] }}
-                            </span>
-                    </td>
-                    <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                            <span class="relative text-base font-semibold leading-5 text-right flex-[1_0_0] text-zinc-800 max-sm:text-sm">
-                                {{ is_array($attribute['value']) ? ($attribute['value'][app()->getLocale()] ?? '') : $attribute['value'] }}
-                            </span>
-                    </td>
-                </tr>
-            @endforeach
+{{--            @foreach ($this->detailedAttributes as $attribute)--}}
+{{--                <tr class="flex relative items-center self-stretch {{ $loop->even ? 'bg-white' : '' }} rounded-lg">--}}
+{{--                    <td class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">--}}
+{{--                            <span class="relative text-base font-semibold leading-5 flex-[1_0_0] text-zinc-600 max-sm:text-sm">--}}
+{{--                                {{ is_array($attribute['name']) ? ($attribute['name'][app()->getLocale()] ?? '') : $attribute['name'] }}--}}
+{{--                            </span>--}}
+{{--                    </td>--}}
+{{--                    <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">--}}
+{{--                            <span class="relative text-base font-semibold leading-5 text-right flex-[1_0_0] text-zinc-800 max-sm:text-sm">--}}
+{{--                                {{ is_array($attribute['norm']) ? ($attribute['norm'][app()->getLocale()] ?? '') : $attribute['norm'] }}--}}
+{{--                            </span>--}}
+{{--                    </td>--}}
+{{--                    <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">--}}
+{{--                            <span class="relative text-base font-semibold leading-5 text-right flex-[1_0_0] text-zinc-800 max-sm:text-sm">--}}
+{{--                                {{ is_array($attribute['value']) ? ($attribute['value'][app()->getLocale()] ?? '') : $attribute['value'] }}--}}
+{{--                            </span>--}}
+{{--                    </td>--}}
+{{--                </tr>--}}
+{{--            @endforeach--}}
             </tbody>
         </table>
     </section>
