@@ -127,9 +127,11 @@
             </h2>
 
             <div class="mt-5 w-full h-[400px]">
+                <?php
+                    dd($settings)
+                ?>
                 @php
                     $certificates_images = $settings->certificates_images[app()->getLocale()] ?? [];
-                    \Illuminate\Support\Facades\Log::info('Certificates images data', ['certificates_images' => $certificates_images]);
                 @endphp
 
                 @if (empty($certificates_images))

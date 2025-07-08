@@ -20,7 +20,6 @@ class AboutUsSettings extends Settings
     public $hero_description;
     public $advantages;
     public  $advantage_images;
-    public $about_background_images;
     public $about_title;
     public $about_description;
     public $gallery_title;
