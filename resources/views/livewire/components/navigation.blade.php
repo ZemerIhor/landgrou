@@ -40,6 +40,10 @@
                     text-align: center;
                     width: 100%;
                 }
+
+                .nav-header ul {
+                    flex-direction: column;
+                }
             }
 
             /* Menu link styles */

@@ -1,5 +1,5 @@
 <div class="max-w-full mx-auto">
-    <div class="top-section bg-zinc-800">
+    <div class="top-section">
 
 
     <header class="font-semibold ">
@@ -151,4 +151,10 @@
     </section>
 
     <livewire:components.blog-section />
+
+    <style>
+        .top-section {
+            background: #333333;
+        }
+    </style>
 </div>

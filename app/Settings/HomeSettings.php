@@ -35,8 +35,7 @@ class HomeSettings extends Settings
     public $about_statistic_description;
     public ?string $about_location_image = null;
     public $about_location_caption;
-    public $reviews_title;
-    public $review_items;
+
 
     protected array $translatable = [
         'hero_slides',
@@ -60,8 +59,6 @@ class HomeSettings extends Settings
         'about_statistic_title',
         'about_statistic_description',
         'about_location_caption',
-        'reviews_title',
-        'review_items',
     ];
 
     public static function group(): string
