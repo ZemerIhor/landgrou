@@ -69,20 +69,27 @@ class AboutUs extends Page implements HasForms
             ->schema([
                 Section::make(__('About Us Page'))
                     ->schema([
-                        // Images Section (outside Translate)
-                        Section::make(__('Images'))
+                        // Общие (непереводимые) поля для изображений
+                        Section::make(__('Common Images'))
                             ->schema([
-                                // Hero Images
+                                // Hero Section Images
                                 FileUpload::make('hero_background_image')
                                     ->label(__('Hero Background Image'))
                                     ->image()
                                     ->disk('public')
                                     ->directory('about-us/hero'),
+                                TextInput::make('hero_background_image_alt')
+                                    ->label(__('Hero Background Image Alt Text'))
+                                    ->rules(['nullable', 'max:255']),
                                 FileUpload::make('hero_logo')
                                     ->label(__('Hero Logo'))
                                     ->image()
                                     ->disk('public')
                                     ->directory('about-us/logo'),
+                                TextInput::make('hero_logo_alt')
+                                    ->label(__('Hero Logo Alt Text'))
+                                    ->rules(['nullable', 'max:255']),
+
                                 // Advantage Images
                                 Repeater::make('advantage_images')
                                     ->label(__('Advantage Images'))
@@ -92,12 +99,17 @@ class AboutUs extends Page implements HasForms
                                             ->image()
                                             ->disk('public')
                                             ->directory('about-us/advantages'),
+                                        TextInput::make('alt')
+                                            ->label(__('Alt Text'))
+                                            ->rules(['nullable', 'max:255']),
                                     ])
-                                    ->columns(1)
+                                    ->columns(2)
+                                    ->itemLabel(fn (array $state): ?string => is_string($state['alt']) ? $state['alt'] : null)
                                     ->collapsible()
                                     ->cloneable()
                                     ->defaultItems(3)
                                     ->maxItems(3),
+
                                 // Gallery Images
                                 Repeater::make('gallery_images')
                                     ->label(__('Gallery Images'))
@@ -107,11 +119,16 @@ class AboutUs extends Page implements HasForms
                                             ->image()
                                             ->disk('public')
                                             ->directory('about-us/gallery'),
+                                        TextInput::make('alt')
+                                            ->label(__('Alt Text'))
+                                            ->rules(['nullable', 'max:255']),
                                     ])
-                                    ->columns(1)
+                                    ->columns(2)
+                                    ->itemLabel(fn (array $state): ?string => is_string($state['alt']) ? $state['alt'] : null)
                                     ->collapsible()
                                     ->cloneable()
                                     ->defaultItems(5),
+
                                 // Certificates Images
                                 Repeater::make('certificates_images')
                                     ->label(__('Certificates Images'))
@@ -121,27 +138,25 @@ class AboutUs extends Page implements HasForms
                                             ->image()
                                             ->disk('public')
                                             ->directory('about-us/certificates'),
+                                        TextInput::make('alt')
+                                            ->label(__('Alt Text'))
+                                            ->rules(['nullable', 'max:255']),
                                     ])
-                                    ->columns(1)
+                                    ->columns(2)
+                                    ->itemLabel(fn (array $state): ?string => is_string($state['alt']) ? $state['alt'] : null)
                                     ->collapsible()
                                     ->cloneable()
                                     ->defaultItems(5),
                             ])
                             ->collapsible(),
 
-                        // Translated Content
+                        // Переводимые поля
                         Translate::make()
                             ->locales(['en', 'uk'])
                             ->schema([
                                 // Hero Section
                                 Section::make(__('Hero Section'))
                                     ->schema([
-                                        TextInput::make('hero_background_image_alt')
-                                            ->label(__('Hero Background Image Alt Text'))
-                                            ->rules(['nullable', 'max:255']),
-                                        TextInput::make('hero_logo_alt')
-                                            ->label(__('Hero Logo Alt Text'))
-                                            ->rules(['nullable', 'max:255']),
                                         TextInput::make('hero_title')
                                             ->label(__('Hero Title'))
                                             ->rules(['nullable', 'max:255']),
@@ -183,19 +198,6 @@ class AboutUs extends Page implements HasForms
                                             ->cloneable()
                                             ->defaultItems(3)
                                             ->maxItems(3),
-                                        Repeater::make('advantage_images')
-                                            ->label(__('Advantage Images Alt Texts'))
-                                            ->schema([
-                                                TextInput::make('alt')
-                                                    ->label(__('Alt Text'))
-                                                    ->rules(['nullable', 'max:255']),
-                                            ])
-                                            ->columns(1)
-                                            ->itemLabel(fn (array $state): ?string => $state['alt'][app()->getLocale()] ?? null)
-                                            ->collapsible()
-                                            ->cloneable()
-                                            ->defaultItems(3)
-                                            ->maxItems(3),
                                     ])
                                     ->collapsible(),
 
@@ -214,7 +216,7 @@ class AboutUs extends Page implements HasForms
                                             ])
                                             ->itemLabel(fn (array $state): ?string => substr($state['text'][app()->getLocale()] ?? '', 0, 50) . '...' ?? null)
                                             ->collapsible()
-                                            ->cloneable()
+                                            ->cloneable(),
                                     ])
                                     ->collapsible(),
 
@@ -224,18 +226,6 @@ class AboutUs extends Page implements HasForms
                                         TextInput::make('gallery_title')
                                             ->label(__('Gallery Title'))
                                             ->rules(['nullable', 'max:255']),
-                                        Repeater::make('gallery_images')
-                                            ->label(__('Gallery Images Alt Texts'))
-                                            ->schema([
-                                                TextInput::make('alt')
-                                                    ->label(__('Alt Text'))
-                                                    ->rules(['nullable', 'max:255']),
-                                            ])
-                                            ->columns(1)
-                                            ->itemLabel(fn (array $state): ?string => $state['alt'][app()->getLocale()] ?? null)
-                                            ->collapsible()
-                                            ->cloneable()
-                                            ->defaultItems(5),
                                     ])
                                     ->collapsible(),
 
@@ -245,18 +235,6 @@ class AboutUs extends Page implements HasForms
                                         TextInput::make('certificates_title')
                                             ->label(__('Certificates Title'))
                                             ->rules(['nullable', 'max:255']),
-                                        Repeater::make('certificates_images')
-                                            ->label(__('Certificates Images Alt Texts'))
-                                            ->schema([
-                                                TextInput::make('alt')
-                                                    ->label(__('Alt Text'))
-                                                    ->rules(['nullable', 'max:255']),
-                                            ])
-                                            ->columns(1)
-                                            ->itemLabel(fn (array $state): ?string => $state['alt'][app()->getLocale()] ?? null)
-                                            ->collapsible()
-                                            ->cloneable()
-                                            ->defaultItems(5),
                                     ])
                                     ->collapsible(),
                             ]),
