@@ -103,7 +103,6 @@
     'loop' => true,
     'autoplay' => ['delay' => 3000],
     'spaceBetween' => 10,
-    'slidesPerView' => 3
 ]">
                 @foreach ($settings->gallery_images[app()->getLocale()] ?? [] as $image)
                     <div class="swiper-slide gallery-slide flex overflow-hidden flex-col items-center rounded-3xl aspect-square">
@@ -120,43 +119,47 @@
     </section>
 
 
-    <!-- Gallery Section -->
 
-    <!-- Certificates Section -->
     <section class="bg-zinc-800 py-10" aria-labelledby="certificates-title">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-2">
             <h2 id="certificates-title" class="text-3xl font-bold text-white">
-                {{ data_get($settings, 'certificates_title.' . app()->getLocale(), __('messages.about_us.certificates_title')) }}
+                {{ $settings->certificates_title[app()->getLocale()] ?? __('messages.about_us.certificates_title') }}
             </h2>
 
             <div class="mt-5 w-full h-[400px]">
-                <x-flexible-slider
-                    :aria-label="__('messages.about_us.certificates_aria_label')"
-                    :config="[
-                    'loop' => true,
-                    'autoplay' => ['delay' => 3000],
-                    'spaceBetween' => 10,
-                    'slidesPerView' => 3,
-                    'breakpoints' => [
-                        640 => ['slidesPerView' => 1],
-                        768 => ['slidesPerView' => 2],
-                        1024 => ['slidesPerView' => 3]
-                    ]
-                ]"
-                >
-                    @php
-                        $certificates_images = data_get($settings, 'certificates_images.' . app()->getLocale(), []);
-                    @endphp
-                    @foreach ($certificates_images as $image)
-                        <div class="swiper-slide flex flex-col items-center rounded-3xl aspect-[0.71] bg-white shadow-md">
-                            <img
-                                src="{{ isset($image['image']) && Storage::disk('public')->exists($image['image']) ? Storage::url($image['image']) : asset('images/fallback-certificate.jpg') }}"
-                                alt="{{ data_get($image, 'alt.' . app()->getLocale(), 'Certificate Image') }}"
-                                class="object-contain w-full h-full rounded-3xl"
-                            />
-                        </div>
-                    @endforeach
-                </x-flexible-slider>
+                @php
+                    $certificates_images = $settings->certificates_images[app()->getLocale()] ?? [];
+                    \Illuminate\Support\Facades\Log::info('Certificates images data', ['certificates_images' => $certificates_images]);
+                @endphp
+
+                @if (empty($certificates_images))
+                    <p class="text-neutral-400 text-center">{{ __('messages.about_us.no_certificates') }}</p>
+                @else
+                    <x-flexible-slider
+                        :aria-label="__('messages.about_us.certificates_aria_label')"
+                        :config="[
+                        'loop' => true,
+                        'autoplay' => ['delay' => 3000],
+                        'spaceBetween' => 10,
+                        'slidesPerView' => 3,
+                        'breakpoints' => [
+                            640 => ['slidesPerView' => 1],
+                            768 => ['slidesPerView' => 2],
+                            1024 => ['slidesPerView' => 3]
+                        ]
+                    ]"
+                    >
+                        @foreach ($certificates_images as $image)
+                            <div class="swiper-slide flex flex-col items-center rounded-3xl aspect-[0.71] bg-white shadow-md">
+                                <img
+                                    src="{{ isset($image['image']) && Storage::disk('public')->exists($image['image']) ? Storage::url($image['image']) : asset('images/fallback-certificate.jpg') }}"
+                                    alt="{{ $image['alt'][app()->getLocale()] ?? 'Certificate Image' }}"
+                                    class="object-contain w-full h-full rounded-3xl"
+                                />
+                            </div>
+                        @endforeach
+                    </x-flexible-slider>
+                @endif
             </div>
         </div>
     </section>
