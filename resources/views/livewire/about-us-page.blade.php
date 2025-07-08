@@ -121,43 +121,6 @@
 
 
     <!-- Gallery Section -->
-    <section class="bg-zinc-100 mt-4" aria-labelledby="gallery-title">
-        <div class="container mx-auto px-4">
-            <h2 id="gallery-title" class="text-3xl font-bold text-zinc-800">
-                {{ data_get($settings, 'gallery_title.' . app()->getLocale(), __('messages.about_us.gallery_title')) }}
-            </h2>
-
-            <div class="mt-5 w-full h-[400px]">
-                <x-flexible-slider
-                    :aria-label="__('messages.about_us.gallery_aria_label')"
-                    :config="[
-                    'loop' => true,
-                    'autoplay' => ['delay' => 3000],
-                    'spaceBetween' => 10,
-                    'slidesPerView' => 3,
-                    'breakpoints' => [
-                        640 => ['slidesPerView' => 1],
-                        768 => ['slidesPerView' => 2],
-                        1024 => ['slidesPerView' => 3]
-                    ]
-                ]"
-                >
-                    @php
-                        $gallery_images = data_get($settings, 'gallery_images.' . app()->getLocale(), []);
-                    @endphp
-                    @foreach ($gallery_images as $image)
-                        <div class="swiper-slide flex flex-col items-center rounded-3xl aspect-square bg-white shadow-md">
-                            <img
-                                src="{{ isset($image['image']) && Storage::disk('public')->exists($image['image']) ? Storage::url($image['image']) : asset('images/fallback-gallery.jpg') }}"
-                                alt="{{ data_get($image, 'alt.' . app()->getLocale(), 'Gallery Image') }}"
-                                class="object-contain w-full h-full rounded-3xl"
-                            />
-                        </div>
-                    @endforeach
-                </x-flexible-slider>
-            </div>
-        </div>
-    </section>
 
     <!-- Certificates Section -->
     <section class="bg-zinc-800 py-10" aria-labelledby="certificates-title">
