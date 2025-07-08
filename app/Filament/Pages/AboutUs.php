@@ -40,26 +40,47 @@ class AboutUs extends Page implements HasForms
     {
         $settings = app(AboutUsSettings::class);
 
-        $this->data = [
+        // Преобразование переводимых alt в строки
+        $data = [
             'hero_background_image' => $settings->hero_background_image,
-            'hero_background_image_alt' => $settings->hero_background_image_alt,
+            'hero_background_image_alt' => is_array($settings->hero_background_image_alt)
+                ? ($settings->hero_background_image_alt['en'] ?? '')
+                : $settings->hero_background_image_alt,
             'hero_logo' => $settings->hero_logo,
-            'hero_logo_alt' => $settings->hero_logo_alt,
+            'hero_logo_alt' => is_array($settings->hero_logo_alt)
+                ? ($settings->hero_logo_alt['en'] ?? '')
+                : $settings->hero_logo_alt,
             'hero_title' => $settings->hero_title,
             'hero_subtitle' => $settings->hero_subtitle,
             'hero_subtitle_highlight' => $settings->hero_subtitle_highlight,
             'hero_slogan' => $settings->hero_slogan,
             'hero_description' => $settings->hero_description,
             'advantages' => $settings->advantages,
-            'advantage_images' => $settings->advantage_images,
+            'advantage_images' => array_map(function ($item) {
+                return [
+                    'image' => $item['image'],
+                    'alt' => is_array($item['alt']) ? ($item['alt']['en'] ?? '') : $item['alt'],
+                ];
+            }, $settings->advantage_images ?? []),
             'about_title' => $settings->about_title,
             'about_description' => $settings->about_description,
             'gallery_title' => $settings->gallery_title,
-            'gallery_images' => $settings->gallery_images,
+            'gallery_images' => array_map(function ($item) {
+                return [
+                    'image' => $item['image'],
+                    'alt' => is_array($item['alt']) ? ($item['alt']['en'] ?? '') : $item['alt'],
+                ];
+            }, $settings->gallery_images ?? []),
             'certificates_title' => $settings->certificates_title,
-            'certificates_images' => $settings->certificates_images,
+            'certificates_images' => array_map(function ($item) {
+                return [
+                    'image' => $item['image'],
+                    'alt' => is_array($item['alt']) ? ($item['alt']['en'] ?? '') : $item['alt'],
+                ];
+            }, $settings->certificates_images ?? []),
         ];
 
+        $this->data = $data;
         $this->form->fill($this->data);
     }
 
@@ -69,10 +90,9 @@ class AboutUs extends Page implements HasForms
             ->schema([
                 Section::make(__('About Us Page'))
                     ->schema([
-                        // Общие (непереводимые) поля для изображений
-                        Section::make(__('Common Images'))
+                        // Hero Section (Images and Text)
+                        Section::make(__('Hero Section'))
                             ->schema([
-                                // Hero Section Images
                                 FileUpload::make('hero_background_image')
                                     ->label(__('Hero Background Image'))
                                     ->image()
@@ -80,7 +100,7 @@ class AboutUs extends Page implements HasForms
                                     ->directory('about-us/hero'),
                                 TextInput::make('hero_background_image_alt')
                                     ->label(__('Hero Background Image Alt Text'))
-                                    ->rules(['nullable', 'max:255']),
+                                    ->rules(['nullable', 'string', 'max:255']),
                                 FileUpload::make('hero_logo')
                                     ->label(__('Hero Logo'))
                                     ->image()
@@ -88,74 +108,9 @@ class AboutUs extends Page implements HasForms
                                     ->directory('about-us/logo'),
                                 TextInput::make('hero_logo_alt')
                                     ->label(__('Hero Logo Alt Text'))
-                                    ->rules(['nullable', 'max:255']),
-
-                                // Advantage Images
-                                Repeater::make('advantage_images')
-                                    ->label(__('Advantage Images'))
-                                    ->schema([
-                                        FileUpload::make('image')
-                                            ->label(__('Image'))
-                                            ->image()
-                                            ->disk('public')
-                                            ->directory('about-us/advantages'),
-                                        TextInput::make('alt')
-                                            ->label(__('Alt Text'))
-                                            ->rules(['nullable', 'max:255']),
-                                    ])
-                                    ->columns(2)
-                                    ->itemLabel(fn (array $state): ?string => is_string($state['alt']) ? $state['alt'] : null)
-                                    ->collapsible()
-                                    ->cloneable()
-                                    ->defaultItems(3)
-                                    ->maxItems(3),
-
-                                // Gallery Images
-                                Repeater::make('gallery_images')
-                                    ->label(__('Gallery Images'))
-                                    ->schema([
-                                        FileUpload::make('image')
-                                            ->label(__('Image'))
-                                            ->image()
-                                            ->disk('public')
-                                            ->directory('about-us/gallery'),
-                                        TextInput::make('alt')
-                                            ->label(__('Alt Text'))
-                                            ->rules(['nullable', 'max:255']),
-                                    ])
-                                    ->columns(2)
-                                    ->itemLabel(fn (array $state): ?string => is_string($state['alt']) ? $state['alt'] : null)
-                                    ->collapsible()
-                                    ->cloneable()
-                                    ->defaultItems(5),
-
-                                // Certificates Images
-                                Repeater::make('certificates_images')
-                                    ->label(__('Certificates Images'))
-                                    ->schema([
-                                        FileUpload::make('image')
-                                            ->label(__('Image'))
-                                            ->image()
-                                            ->disk('public')
-                                            ->directory('about-us/certificates'),
-                                        TextInput::make('alt')
-                                            ->label(__('Alt Text'))
-                                            ->rules(['nullable', 'max:255']),
-                                    ])
-                                    ->columns(2)
-                                    ->itemLabel(fn (array $state): ?string => is_string($state['alt']) ? $state['alt'] : null)
-                                    ->collapsible()
-                                    ->cloneable()
-                                    ->defaultItems(5),
-                            ])
-                            ->collapsible(),
-
-                        // Переводимые поля
-                        Translate::make()
-                            ->locales(['en', 'uk'])
-                            ->schema([
-                                // Hero Section
-                                Section::make(__('Hero Section'))
+                                    ->rules(['nullable', 'string', 'max:255']),
+                                Translate::make()
+                                    ->locales(['en', 'uk'])
                                     ->schema([
                                         TextInput::make('hero_title')
                                             ->label(__('Hero Title'))
@@ -172,11 +127,33 @@ class AboutUs extends Page implements HasForms
                                         Textarea::make('hero_description')
                                             ->label(__('Hero Description'))
                                             ->rules(['nullable']),
-                                    ])
-                                    ->collapsible(),
+                                    ]),
+                            ])
+                            ->collapsible(),
 
-                                // Advantages Section
-                                Section::make(__('Advantages Section'))
+                        // Advantages Section
+                        Section::make(__('Advantages Section'))
+                            ->schema([
+                                Repeater::make('advantage_images')
+                                    ->label(__('Advantage Images'))
+                                    ->schema([
+                                        FileUpload::make('image')
+                                            ->label(__('Image'))
+                                            ->image()
+                                            ->disk('public')
+                                            ->directory('about-us/advantages'),
+                                        TextInput::make('alt')
+                                            ->label(__('Alt Text'))
+                                            ->rules(['nullable', 'string', 'max:255']),
+                                    ])
+                                    ->columns(2)
+                                    ->itemLabel(fn (array $state): ?string => is_string($state['alt']) ? $state['alt'] : null)
+                                    ->collapsible()
+                                    ->cloneable()
+                                    ->defaultItems(3)
+                                    ->maxItems(3),
+                                Translate::make()
+                                    ->locales(['en', 'uk'])
                                     ->schema([
                                         Repeater::make('advantages')
                                             ->label(__('Advantages'))
@@ -198,11 +175,15 @@ class AboutUs extends Page implements HasForms
                                             ->cloneable()
                                             ->defaultItems(3)
                                             ->maxItems(3),
-                                    ])
-                                    ->collapsible(),
+                                    ]),
+                            ])
+                            ->collapsible(),
 
-                                // About Section
-                                Section::make(__('About Section'))
+                        // About Section
+                        Section::make(__('About Section'))
+                            ->schema([
+                                Translate::make()
+                                    ->locales(['en', 'uk'])
                                     ->schema([
                                         TextInput::make('about_title')
                                             ->label(__('About Title'))
@@ -216,28 +197,72 @@ class AboutUs extends Page implements HasForms
                                             ])
                                             ->itemLabel(fn (array $state): ?string => substr($state['text'][app()->getLocale()] ?? '', 0, 50) . '...' ?? null)
                                             ->collapsible()
-                                            ->cloneable(),
-                                    ])
-                                    ->collapsible(),
+                                            ->cloneable()
+                                            ->defaultItems(1)
+                                            ->maxItems(5),
+                                    ]),
+                            ])
+                            ->collapsible(),
 
-                                // Gallery Section
-                                Section::make(__('Gallery Section'))
+                        // Gallery Section
+                        Section::make(__('Gallery Section'))
+                            ->schema([
+                                Repeater::make('gallery_images')
+                                    ->label(__('Gallery Images'))
+                                    ->schema([
+                                        FileUpload::make('image')
+                                            ->label(__('Image'))
+                                            ->image()
+                                            ->disk('public')
+                                            ->directory('about-us/gallery'),
+                                        TextInput::make('alt')
+                                            ->label(__('Alt Text'))
+                                            ->rules(['nullable', 'string', 'max:255']),
+                                    ])
+                                    ->columns(2)
+                                    ->itemLabel(fn (array $state): ?string => is_string($state['alt']) ? $state['alt'] : null)
+                                    ->collapsible()
+                                    ->cloneable()
+                                    ->defaultItems(5),
+                                Translate::make()
+                                    ->locales(['en', 'uk'])
                                     ->schema([
                                         TextInput::make('gallery_title')
                                             ->label(__('Gallery Title'))
                                             ->rules(['nullable', 'max:255']),
-                                    ])
-                                    ->collapsible(),
+                                    ]),
+                            ])
+                            ->collapsible(),
 
-                                // Certificates Section
-                                Section::make(__('Certificates Section'))
+                        // Certificates Section
+                        Section::make(__('Certificates Section'))
+                            ->schema([
+                                Repeater::make('certificates_images')
+                                    ->label(__('Certificates Images'))
+                                    ->schema([
+                                        FileUpload::make('image')
+                                            ->label(__('Image'))
+                                            ->image()
+                                            ->disk('public')
+                                            ->directory('about-us/certificates'),
+                                        TextInput::make('alt')
+                                            ->label(__('Alt Text'))
+                                            ->rules(['nullable', 'string', 'max:255']),
+                                    ])
+                                    ->columns(2)
+                                    ->itemLabel(fn (array $state): ?string => is_string($state['alt']) ? $state['alt'] : null)
+                                    ->collapsible()
+                                    ->cloneable()
+                                    ->defaultItems(5),
+                                Translate::make()
+                                    ->locales(['en', 'uk'])
                                     ->schema([
                                         TextInput::make('certificates_title')
                                             ->label(__('Certificates Title'))
                                             ->rules(['nullable', 'max:255']),
-                                    ])
-                                    ->collapsible(),
-                            ]),
+                                    ]),
+                            ])
+                            ->collapsible(),
                     ])
                     ->collapsible(),
             ])
