@@ -52,7 +52,6 @@ class AboutUs extends Page implements HasForms
             'hero_description' => $settings->hero_description,
             'advantages' => $settings->advantages,
             'advantage_images' => $settings->advantage_images,
-            'about_background_images' => $settings->about_background_images,
             'about_title' => $settings->about_title,
             'about_description' => $settings->about_description,
             'gallery_title' => $settings->gallery_title,
@@ -80,10 +79,7 @@ class AboutUs extends Page implements HasForms
                                             ->label(__('Hero Background Image'))
                                             ->image()
                                             ->disk('public')
-                                            ->directory('about-us/hero')
-                                            ->preserveFilenames()
-                                            ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif'])
-                                            ->default(fn () => app(AboutUsSettings::class)->hero_background_image),
+                                            ->directory('about-us/hero'),
                                         TextInput::make('hero_background_image_alt')
                                             ->label(__('Hero Background Image Alt Text'))
                                             ->rules(['nullable', 'max:255']),
@@ -91,10 +87,7 @@ class AboutUs extends Page implements HasForms
                                             ->label(__('Hero Logo'))
                                             ->image()
                                             ->disk('public')
-                                            ->directory('about-us/logo')
-                                            ->preserveFilenames()
-                                            ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif'])
-                                            ->default(fn () => app(AboutUsSettings::class)->hero_logo),
+                                            ->directory('about-us/logo'),
                                         TextInput::make('hero_logo_alt')
                                             ->label(__('Hero Logo Alt Text'))
                                             ->rules(['nullable', 'max:255']),
@@ -146,10 +139,7 @@ class AboutUs extends Page implements HasForms
                                                     ->label(__('Image'))
                                                     ->image()
                                                     ->disk('public')
-                                                    ->directory('about-us/advantages')
-                                                    ->preserveFilenames()
-                                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif'])
-                                                    ->default(fn ($state) => $state['image'] ?? null),
+                                                    ->directory('about-us/advantages'),
                                                 TextInput::make('alt')
                                                     ->label(__('Alt Text'))
                                                     ->rules(['nullable', 'max:255']),
@@ -166,27 +156,6 @@ class AboutUs extends Page implements HasForms
                                 // About Section
                                 Section::make(__('About Section'))
                                     ->schema([
-                                        Repeater::make('about_background_images')
-                                            ->label(__('About Background Images'))
-                                            ->schema([
-                                                FileUpload::make('image')
-                                                    ->label(__('Image'))
-                                                    ->image()
-                                                    ->disk('public')
-                                                    ->directory('about-us/background')
-                                                    ->preserveFilenames()
-                                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif'])
-                                                    ->default(fn ($state) => $state['image'] ?? null),
-                                                TextInput::make('alt')
-                                                    ->label(__('Alt Text'))
-                                                    ->rules(['nullable', 'max:255']),
-                                            ])
-                                            ->columns(2)
-                                            ->itemLabel(fn (array $state): ?string => $state['alt'][app()->getLocale()] ?? null)
-                                            ->collapsible()
-                                            ->cloneable() // Добавлено
-                                            ->defaultItems(2)
-                                            ->maxItems(2),
                                         TextInput::make('about_title')
                                             ->label(__('About Title'))
                                             ->rules(['nullable', 'max:255']),
@@ -217,10 +186,7 @@ class AboutUs extends Page implements HasForms
                                                     ->label(__('Image'))
                                                     ->image()
                                                     ->disk('public')
-                                                    ->directory('about-us/gallery')
-                                                    ->preserveFilenames()
-                                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif'])
-                                                    ->default(fn ($state) => $state['image'] ?? null),
+                                                    ->directory('about-us/gallery'),
                                                 TextInput::make('alt')
                                                     ->label(__('Alt Text'))
                                                     ->rules(['nullable', 'max:255']),
@@ -246,10 +212,7 @@ class AboutUs extends Page implements HasForms
                                                     ->label(__('Image'))
                                                     ->image()
                                                     ->disk('public')
-                                                    ->directory('about-us/certificates')
-                                                    ->preserveFilenames()
-                                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif'])
-                                                    ->default(fn ($state) => $state['image'] ?? null),
+                                                    ->directory('about-us/certificates'),
                                                 TextInput::make('alt')
                                                     ->label(__('Alt Text'))
                                                     ->rules(['nullable', 'max:255']),

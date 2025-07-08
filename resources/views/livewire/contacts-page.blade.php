@@ -13,7 +13,6 @@
     }
 
     .contact-section {
-        padding: 1.5rem;
         background-color: #ffffff;
         border-radius: 1.5rem;
     }
