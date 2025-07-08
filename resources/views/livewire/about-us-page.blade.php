@@ -143,7 +143,7 @@
                         ]"
                         >
                             @foreach ($certificates_images as $image)
-                                <div class="swiper-slide flex flex-col items-center rounded-3xl aspect-[0.71] bg-white shadow-md">
+                                <div class="swiper-slide certificate-slide flex flex-col items-center rounded-3xl aspect-[0.71] bg-white shadow-md">
                                     <img
                                         src="{{ isset($image['image']) && Storage::disk('public')->exists($image['image']) ? Storage::url($image['image']) : asset('images/fallback-certificate.jpg') }}"
                                         alt="{{ $image['alt'] ?? 'Certificate Image' }}"

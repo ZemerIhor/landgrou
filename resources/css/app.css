@@ -28,7 +28,8 @@
     display: none;
 }
 
-.gallery-slide {
+.gallery-slide,
+.certificate-slide{
     max-width: 250px;
     width: auto !important;
 }
