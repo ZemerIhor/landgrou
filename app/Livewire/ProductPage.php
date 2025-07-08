@@ -18,64 +18,6 @@ class ProductPage extends Component
     public array $selectedOptionValues = [];
     public int $quantity = 1;
 
-    public array $displayAttributes = [
-        'calories',
-        'moisture',
-        'strength',
-        'ash',
-        'dimensions',
-        'material',
-        'packaging',
-    ];
-
-    public array $productAttributes = [
-        'calories' => ['en' => 'Calories', 'uk' => 'Калорійність'],
-        'moisture' => ['en' => 'Moisture content', 'uk' => 'Масова доля загальної вологи'],
-        'strength' => ['en' => 'Mechanical strength', 'uk' => 'Механічна міцність'],
-        'ash' => ['en' => 'Ash content', 'uk' => 'Зольність'],
-        'dimensions' => ['en' => 'Dimensions', 'uk' => 'Розміри'],
-        'material' => ['en' => 'Material', 'uk' => 'Сировина'],
-        'packaging' => ['en' => 'Packaging type', 'uk' => 'Вид пакування'],
-    ];
-
-    public array $detailedAttributes = [
-        'moisture' => [
-            'name' => ['en' => 'Moisture content', 'uk' => 'Масова доля загальної вологи'],
-            'norm' => '20%',
-            'value' => '19.1%',
-        ],
-        'ash' => [
-            'name' => ['en' => 'Ash content', 'uk' => 'Зольність'],
-            'norm' => '23%',
-            'value' => '18.3%',
-        ],
-        'strength' => [
-            'name' => ['en' => 'Mechanical strength', 'uk' => 'Механічна міцність'],
-            'norm' => '96.6%',
-            'value' => '96.6%',
-        ],
-        'calories_kcal' => [
-            'name' => ['en' => 'Calorific value kcal/kg', 'uk' => 'Теплота згорання Ккал/кг'],
-            'norm' => '>3500',
-            'value' => '4155',
-        ],
-        'calories_mj' => [
-            'name' => ['en' => 'Calorific value MJ/kg', 'uk' => 'Теплота згорання МДж/кг'],
-            'norm' => '>14.65',
-            'value' => '17.387',
-        ],
-        'sulfur' => [
-            'name' => ['en' => 'Sulfur content', 'uk' => 'Вміст сірки, %'],
-            'norm' => '-',
-            'value' => '0.24%',
-        ],
-        'radionuclides' => [
-            'name' => ['en' => 'Radionuclide contamination', 'uk' => 'Забруднення радіонуклідами'],
-            'norm' => 'не нормується',
-            'value' => 'не виявлено',
-        ],
-    ];
-
     public function mount($slug): void
     {
         $this->url = $this->fetchUrl(

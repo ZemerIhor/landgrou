@@ -20,7 +20,6 @@ class CatalogPage extends Component
     public $weights = [];
     public $sort = 'name_asc';
     public $view = 'grid';
-    public $availableWeights = ['10 kg', '25 kg', '40 kg', '100 kg', '500 kg', '1 t'];
 
     public function applyFilters()
     {
@@ -65,14 +64,12 @@ class CatalogPage extends Component
 
         try {
             $productsQuery = Product::where('status', 'published')
-                ->with(['variants', 'thumbnail', 'collections', 'variants.prices']);
-
-            // Фильтр по категориям
-            if (!empty($this->categories)) {
-                $productsQuery->whereHas('collections', function ($query) {
+                ->with(['variants', 'thumbnail', 'collections', 'variants.prices', 'attributes.attribute'])
+            ->when(!empty($this->categories), function ($query) {
+                $query->whereHas('collections', function ($query) {
                     $query->whereIn('id', $this->categories);
                 });
-            }
+            });
 
             // Фильтр по цене
             if ($this->priceMin || $this->priceMax) {

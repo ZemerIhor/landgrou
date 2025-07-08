@@ -155,19 +155,18 @@
                     {{ $this->product->translateAttribute('description') }}
                 </p>
 
-                <!-- Specifications Table -->
                 <table class="flex relative flex-col items-start self-stretch" role="table" aria-label="Основні характеристики товару">
                     @foreach ($this->attributes as $attribute)
                         <tr class="flex relative items-center self-stretch {{ $loop->even ? 'bg-white' : '' }} rounded-lg">
                             <td class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">
-                                <span class="relative text-base font-semibold leading-5 flex-[1_0_0] text-zinc-600 max-sm:text-sm">
-                                    {{ $attribute['name'] }}
-                                </span>
+                <span class="relative text-base font-semibold leading-5 flex-[1_0_0] text-zinc-600 max-sm:text-sm">
+                    {{ $attribute['name'] }}
+                </span>
                             </td>
                             <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                                <span class="relative text-base font-semibold leading-5 text-right flex-[1_0_0] text-zinc-800 max-sm:text-sm">
-                                    {{ $attribute['value'] }}
-                                </span>
+                <span class="relative text-base font-semibold leading-5 text-right flex-[1_0_0] text-zinc-800 max-sm:text-sm">
+                    {{ $attribute['value'] }}
+                </span>
                             </td>
                         </tr>
                     @endforeach

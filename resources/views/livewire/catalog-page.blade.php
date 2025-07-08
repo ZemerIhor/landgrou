@@ -141,6 +141,7 @@
 
     <div class="{{ $view == 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6' : 'flex flex-col gap-6' }} mt-6">
         @foreach ($products as $product)
+
             <article class="overflow-hidden flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60" role="listitem">
                 <div class="block group">
                     <a href="{{ route('product.view', $product->defaultUrl->slug) }}" wire:navigate class="block">
