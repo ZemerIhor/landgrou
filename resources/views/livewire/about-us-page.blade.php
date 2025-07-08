@@ -131,7 +131,7 @@
                         <x-flexible-slider
                             :aria-label="__('messages.about_us.certificates_aria_label')"
                             :config="[
-                            'loop' => true,
+                            'loop' => false,
                             'autoplay' => ['delay' => 3000],
                             'spaceBetween' => 10,
                             'slidesPerView' => 3,
