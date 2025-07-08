@@ -57,37 +57,45 @@
 
         <div class="container mx-auto px-2">
 
-        <section class="" aria-labelledby="advantages-title">
-       <div class="flex container mx-auto px-2 overflow-hidden flex-col justify-center py-10 w-full max-w-screen-xl text-center">
-        <h2 id="advantages-title" class="sr-only">{{ __('messages.about_us.advantages_title') }}</h2>
-        <div class="flex flex-wrap gap-2 w-full max-md:max-w-full">
-            @php
-                $advantages = $settings->advantages[app()->getLocale()] ?? [];
-                $advantage_images = $settings->advantage_images[app()->getLocale()] ?? [];
-            @endphp
-            @foreach($advantages as $index => $advantage)
-                <article class="flex flex-col flex-1 shrink self-end pt-6 pb-14 rounded-3xl basis-0 bg-neutral-800 min-h-[180px] shadow-[0_4px_8px_-1px_rgba(0,0,0,0.2),0_1px_1px_-1px_rgba(0,0,0,0.1)]">
-                    <div class="self-center text-4xl leading-none text-green-600">
-                        {{ $advantage['value'] ?? '0' }}
+            <section class="py-10" aria-labelledby="advantages-title">
+                <div class="container mx-auto px-4">
+                    <h2 id="advantages-title" class="sr-only">{{ __('messages.about_us.advantages_title') }}</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Получение данных с учетом локали -->
+                        @php
+                            $advantages = data_get($settings, 'advantages.' . app()->getLocale(), []);
+                            $advantage_images = data_get($settings, 'advantage_images.' . app()->getLocale(), []);
+                        @endphp
+
+                            <!-- Цикл по преимуществам и изображениям -->
+                        @foreach($advantages as $index => $advantage)
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                                <!-- Карточка преимущества -->
+                                <article class="bg-neutral-800 rounded-3xl p-6 shadow-md text-white">
+                                    <div class="text-4xl font-bold text-green-600 text-center">
+                                        {{ $advantage['value'] ?? '0' }}
+                                    </div>
+                                    <div class="mt-3 text-left">
+                                        <h3 class="text-base font-bold">
+                                            {{ $advantage['title'] ?? '' }}
+                                        </h3>
+                                        <p class="mt-2 text-sm font-semibold">
+                                            {{ $advantage['description'] ?? '' }}
+                                        </p>
+                                    </div>
+                                </article>
+
+                                <!-- Изображение -->
+                                <img
+                                    src="{{ isset($advantage_images[$index]['image']) && Storage::disk('public')->exists($advantage_images[$index]['image']) ? Storage::url($advantage_images[$index]['image']) : asset('images/fallback-advantage.jpg') }}"
+                                    alt="{{ data_get($advantage_images[$index], 'alt.' . app()->getLocale(), '') }}"
+                                    class="rounded-3xl shadow-md w-full max-w-[190px] mx-auto"
+                                />
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="flex overflow-hidden flex-col items-start mt-3 w-full text-white">
-                        <h3 class="text-base font-bold leading-tight text-white">
-                            {{ $advantage['title'] ?? '' }}
-                        </h3>
-                        <p class="mt-2 text-xs font-semibold text-white">
-                            {{ $advantage['description'] ?? '' }}
-                        </p>
-                    </div>
-                </article>
-                <img
-                    src="{{ isset($advantage_images[$index]['image']) && Storage::disk('public')->exists($advantage_images[$index]['image']) ? Storage::url($advantage_images[$index]['image']) : asset('images/fallback-advantage.jpg') }}"
-                    alt="{{ $advantage_images[$index]['alt'][app()->getLocale()] ?? '' }}"
-                    class="object-contain flex-1 shrink aspect-[1.06] basis-0 shadow-[0_4px_8px_-1px_rgba(0,0,0,0.2),0_1px_1px_-1px_rgba(0,0,0,0.1)] w-[190px]"
-                />
-            @endforeach
-        </div>
-       </div>
-    </section>
+                </div>
+            </section>
         </div>
     </div>
     <!-- Gallery Section -->
