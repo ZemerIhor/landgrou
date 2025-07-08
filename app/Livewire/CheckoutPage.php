@@ -10,7 +10,7 @@ use Lunar\Facades\CartSession;
 use Lunar\Facades\ShippingManifest;
 use Lunar\Models\Cart;
 use Lunar\Models\CartAddress;
-use Lunar\Models\Currency; // Добавляем для работы с валютой
+use Lunar\Models\Currency;
 
 class CheckoutPage extends Component
 {
@@ -22,12 +22,14 @@ class CheckoutPage extends Component
 
     public int $currentStep = 1;
     public ?string $chosenShipping = null;
+    public ?string $paymentType = null;
 
     public array $shippingOptions = [];
     public array $npCities = [];
     public array $npWarehouses = [];
 
     public string $citySearchTerm = '';
+    public bool $privacy_policy = false;
 
     public array $steps = [
         'personal_info' => 1,
@@ -58,7 +60,21 @@ class CheckoutPage extends Component
         $this->loadShippingOptions();
         $this->currentStep = session('checkout_step', 1);
 
-        // Проверка цен товаров
+        Log::info('Checkout Cart Data', [
+            'subTotal' => $this->cart->subTotal instanceof \Lunar\DataTypes\Price
+                ? ['value' => $this->cart->subTotal->value, 'formatted' => $this->cart->subTotal->formatted()]
+                : $this->cart->subTotal,
+            'total' => $this->cart->total instanceof \Lunar\DataTypes\Price
+                ? ['value' => $this->cart->total->value, 'formatted' => $this->cart->total->formatted()]
+                : $this->cart->total,
+            'lines' => $this->cart->lines->map(fn($line) => [
+                'id' => $line->id,
+                'subTotal' => $line->subTotal instanceof \Lunar\DataTypes\Price
+                    ? ['value' => $line->subTotal->value, 'formatted' => $line->subTotal->formatted()]
+                    : $line->subTotal,
+            ])->toArray(),
+        ]);
+
         $this->validateCartPrices();
     }
 
@@ -69,21 +85,25 @@ class CheckoutPage extends Component
             'shipping.last_name' => 'required|string|max:255',
             'shipping.contact_phone' => 'required|string|max:30',
             'shipping.contact_email' => 'required|email|max:255',
+            'privacy_policy' => 'accepted',
             'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable',
             'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
             'chosenShipping' => 'required|string',
+            'paymentType' => 'required|string|in:card,cash-on-delivery',
         ];
     }
 
     public function loadShippingOptions(): void
     {
-        $this->shippingOptions = ShippingManifest::getOptions($this->cart)->map(function ($option) {
+        $currency = Currency::where('code', $this->cart->currency->code)->first() ?? Currency::first();
+
+        $this->shippingOptions = ShippingManifest::getOptions($this->cart)->map(function ($option) use ($currency) {
             return [
                 'name' => $option->name,
                 'description' => $option->description,
                 'identifier' => $option->identifier,
-                'price' => 0, // Стоимость доставки всегда 0
-                'formatted_price' => '0.00', // Не отображаем цену
+                'price' => new \Lunar\DataTypes\Price($option->price->value ?? 0, $currency, 1),
+                'formatted_price' => (new \Lunar\DataTypes\Price($option->price->value ?? 0, $currency, 1))->formatted(),
                 'collect' => $option->collect ?? false,
             ];
         })->toArray();
@@ -98,9 +118,20 @@ class CheckoutPage extends Component
                     'description' => $line->purchasable->getDescription(),
                     'subtotal' => $line->subTotal->value,
                 ]);
-                $this->addError('cart', 'Один или несколько товаров имеют нулевую цену. Пожалуйста, обновите цены в базе данных.');
+                $this->addError('cart', __('messages.checkout.zero_price_error'));
             }
         }
+    }
+
+    public function updateLineQuantity($lineId, $quantity): void
+    {
+        if ($quantity < 1) {
+            $this->cart->lines()->where('id', $lineId)->delete();
+        } else {
+            $this->cart->lines()->where('id', $lineId)->update(['quantity' => $quantity]);
+        }
+        $this->cart->refresh();
+        $this->cart->calculate();
     }
 
     public function saveAddress(): void
@@ -110,40 +141,54 @@ class CheckoutPage extends Component
             'shipping.last_name' => 'required|string|max:255',
             'shipping.contact_phone' => 'required|string|max:30',
             'shipping.contact_email' => 'required|email|max:255',
+            'privacy_policy' => 'accepted',
         ]);
 
+        Log::info('Saving CartAddress', ['shipping' => $this->shipping->toArray()]);
         $this->shipping->save();
-
         $this->currentStep = $this->steps['delivery'];
         session(['checkout_step' => $this->currentStep]);
     }
 
     public function saveShippingOption(): void
     {
-        $this->validate();
+        $this->validate([
+            'chosenShipping' => 'required|string',
+            'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable',
+            'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
+        ]);
 
         $option = ShippingManifest::getOptions($this->cart)->first(
             fn($opt) => $opt->getIdentifier() === $this->chosenShipping
         );
 
         if (!$option) {
-            throw new \Exception('Опция доставки не найдена.');
+            $this->addError('chosenShipping', __('messages.checkout.shipping_option_not_found'));
+            return;
         }
 
         CartSession::setShippingOption($option);
-
         $this->shipping->shipping_option = $this->chosenShipping;
         $this->shipping->save();
         $this->cart->setShippingAddress($this->shipping);
-
-        // Устанавливаем стоимость доставки как 0 без использования Money
-        $this->cart->shippingTotal = 0;
-
+        $this->cart->shippingTotal = new \Lunar\DataTypes\Price(0, $this->cart->currency, 1);
         $this->cart->calculate();
         $this->loadShippingOptions();
 
         $this->currentStep = $this->steps['payment'];
         session(['checkout_step' => $this->currentStep]);
+    }
+
+    public function checkout(): void
+    {
+        $this->validate([
+            'paymentType' => 'required|string|in:card,cash-on-delivery',
+        ]);
+
+        if ($this->paymentType === 'cash-on-delivery') {
+            $order = $this->cart->createOrder();
+            $this->redirect(route('order.confirmation', $order->id));
+        }
     }
 
     public function updatedCitySearchTerm(): void
@@ -159,7 +204,7 @@ class CheckoutPage extends Component
         }
 
         $response = Http::post('https://api.novaposhta.ua/v2.0/json/', [
-            'apiKey' => '', // API-ключ не требуется
+            'apiKey' => env('NOVA_POSHTA_API_KEY', ''),
             'modelName' => 'AddressGeneral',
             'calledMethod' => 'searchSettlements',
             'methodProperties' => [
@@ -188,7 +233,7 @@ class CheckoutPage extends Component
             ]);
             $this->npCities = [];
             $this->showCityDropdown = false;
-            $this->addError('shipping.city', 'Ошибка загрузки городов. Попробуйте еще раз.');
+            $this->addError('shipping.city', __('messages.checkout.city_load_error'));
         }
     }
 
@@ -215,7 +260,7 @@ class CheckoutPage extends Component
                 'city' => $cityName,
                 'available_cities' => $this->npCities,
             ]);
-            $this->addError('shipping.city', 'Не удалось загрузить отделения для выбранного города.');
+            $this->addError('shipping.city', __('messages.checkout.warehouse_load_error'));
         }
 
         $this->cart->calculate();
@@ -247,32 +292,15 @@ class CheckoutPage extends Component
         $this->loadShippingOptions();
     }
 
-    public function updatedChosenShipping(): void
-    {
-        if ($this->chosenShipping === 'nova-poshta' && $this->shipping->city) {
-            $city = collect($this->npCities)->first(fn($c) => ($c['MainDescription'] ?? '') === $this->shipping->city);
-            if ($city && isset($city['DeliveryCity'])) {
-                $this->fetchNovaPoshtaWarehouses($city['DeliveryCity']);
-            }
-        } else {
-            $this->npWarehouses = [];
-            $this->shipping->city = '';
-            $this->shipping->line_one = '';
-        }
-
-        $this->cart->calculate();
-        $this->loadShippingOptions();
-    }
-
     public function fetchNovaPoshtaWarehouses(string $cityRef): void
     {
         $response = Http::post('https://api.novaposhta.ua/v2.0/json/', [
-            'apiKey' => '', // API-ключ не требуется
+            'apiKey' => env('NOVA_POSHTA_API_KEY', ''),
             'modelName' => 'Address',
             'calledMethod' => 'getWarehouses',
             'methodProperties' => [
                 'CityRef' => $cityRef,
-                'TypeOfWarehouseRef' => '841339c7-591a-42e2-8233-7a0a00f0ed6f', // Только почтовые отделения
+                'TypeOfWarehouseRef' => '841339c7-591a-42e2-8233-7a0a00f0ed6f',
                 'Limit' => '100',
                 'Page' => '1',
             ],
@@ -289,7 +317,7 @@ class CheckoutPage extends Component
             $this->npWarehouses = $response->json('data') ?? [];
             if (empty($this->npWarehouses)) {
                 Log::warning('Список отделений пуст для города', ['cityRef' => $cityRef]);
-                $this->addError('shipping.line_one', 'Не найдено отделений для выбранного города. Попробуйте другой город.');
+                $this->addError('shipping.line_one', __('messages.checkout.warehouse_empty_error'));
             }
         } else {
             Log::error('Nova Poshta: error fetching warehouses', [
@@ -298,7 +326,7 @@ class CheckoutPage extends Component
                 'errors' => $response->json('errors') ?? 'Нет деталей ошибки',
             ]);
             $this->npWarehouses = [];
-            $this->addError('shipping.line_one', 'Ошибка загрузки отделений. Проверьте подключение или попробуйте позже.');
+            $this->addError('shipping.line_one', __('messages.checkout.warehouse_load_error'));
         }
     }
 

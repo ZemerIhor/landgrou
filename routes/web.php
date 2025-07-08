@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', Home::class);
 
 
+Route::get('/privacy-policy', function () {
+    return 'Hello World';
+})->name('privacy-policy');
+
 Route::get('/terms', function () {
     return 'Hello World';
 })->name('terms');
