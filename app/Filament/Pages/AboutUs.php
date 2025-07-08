@@ -105,7 +105,7 @@ class AboutUs extends Page implements HasForms
                                             ->rules(['nullable', 'max:100']),
                                         Textarea::make('hero_description')
                                             ->label(__('Hero Description'))
-                                            ->rules(['nullable', 'max:1000']),
+                                            ->rules(['nullable', 'max:10000']),
                                     ])
                                     ->collapsible(),
 
