@@ -18,6 +18,7 @@ class ProductPage extends Component
     public array $selectedOptionValues = [];
     public int $quantity = 1;
 
+
     public function mount($slug): void
     {
         $this->url = $this->fetchUrl(
@@ -88,21 +89,52 @@ class ProductPage extends Component
 
         return $this->images->first();
     }
-
     public function getAttributesProperty(): array
     {
-        $attributes = [];
         $locale = app()->getLocale();
+        $attributes = [];
 
-        foreach ($this->displayAttributes as $handle) {
-            $value = $this->product->translateAttribute($handle);
+        // Список атрибутов, которые нужно пропустить
+        $excludedAttributes = ['name', 'description'];
+
+        // Перебираем все ключи из attribute_data, исключая name и description
+        foreach ($this->product->attribute_data->keys()->filter(fn($handle) => !in_array($handle, $excludedAttributes)) as $handle) {
+            // Получаем значение атрибута для текущей локали
+            $value = $this->product->translateAttribute($handle, $locale) ?: 'N/A';
+
+            // Динамически формируем читаемое имя атрибута
+            $name = ucwords(str_replace(['_', '-'], ' ', $handle));
+
+            // Если есть модель Attribute с переводами имен, используем её
+            if ($attributeModel = \Lunar\Models\Attribute::where('handle', $handle)->first()) {
+                $name = $attributeModel->name[$locale] ?? $attributeModel->name['en'] ?? $name;
+            }
+
             $attributes[$handle] = [
-                'name' => $this->productAttributes[$handle][$locale] ?? $this->productAttributes[$handle]['en'],
-                'value' => $value ?: 'N/A',
+                'name' => $name,
+                'value' => strip_tags($value), // Убираем HTML-теги
+            ];
+        }
+        return $attributes;
+    }
+    public function getDetailedAttributesProperty(): array
+    {
+        $locale = app()->getLocale();
+        $detailedAttributes = [];
+
+        foreach ($this->detailedAttributes as $key => $data) {
+            $name = is_array($data['name']) ? ($data['name'][$locale] ?? $data['name']['en']) : $data['name'];
+            $value = $data['value'] ?? ($this->product->translateAttribute($key) ?: 'N/A');
+            $norm = $data['norm'] ?? $value;
+
+            $detailedAttributes[$key] = [
+                'name' => $name,
+                'norm' => $norm,
+                'value' => $value,
             ];
         }
 
-        return $attributes;
+        return $detailedAttributes;
     }
 
     public function getSimilarProductsProperty(): Collection

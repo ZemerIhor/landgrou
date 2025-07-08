@@ -50,7 +50,6 @@
 
 
 
-            <!-- Инициализация Swiper -->
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     function initSwiper() {
@@ -135,7 +134,7 @@
                         }
                     }
 
-                    // Инициализация при загрузке
+                    // Иницaиализация при загрузке
                     initSwiper();
 
                     // Ограничиваем повторную инициализацию
@@ -149,14 +148,15 @@
                     });
                 });
             </script>
-            <!-- Product Details Section -->
+
+
             <section class="flex relative flex-col gap-6 items-end flex-[1_0_0]">
                 <p class="relative self-stretch text-base font-semibold leading-5 text-zinc-800 max-sm:text-sm">
                     {{ $this->product->translateAttribute('description') }}
                 </p>
 
                 <table class="flex relative flex-col items-start self-stretch" role="table" aria-label="Основні характеристики товару">
-                    @foreach ($this->attributes as $attribute)
+                    @foreach ($this->getAttributesProperty() as $attribute)
                         <tr class="flex relative items-center self-stretch {{ $loop->even ? 'bg-white' : '' }} rounded-lg">
                             <td class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">
                 <span class="relative text-base font-semibold leading-5 flex-[1_0_0] text-zinc-600 max-sm:text-sm">
@@ -207,7 +207,6 @@
             </section>
         </div>
     </header>
-
     <!-- Description Section -->
     <section class="flex relative flex-col gap-4 items-start self-stretch">
         <h2 class="relative self-stretch text-xl font-bold leading-6 text-black max-sm:text-lg">{{ __('Опис:') }}</h2>
