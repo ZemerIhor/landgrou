@@ -62,7 +62,7 @@
                 </div>
                 <!-- Part 2: Comparison Items and Central Text -->
                 <div class="flex relative flex-col self-center mt-2 w-full text-white max-md:max-w-full">
-                    <div class="flex z-0 gap-2 justify-between items-center w-full min-h-60 max-md:flex-col max-md:gap-6">
+                    <div class="flex z-0 gap-2 justify-between items-center w-full min-h-60 max-md:gap-6">
                         @if (!empty($settings->comparison_items[app()->getLocale()]))
                             @foreach ($settings->comparison_items[app()->getLocale()] as $item)
                                 <div class="flex relative flex-col grow items-start self-stretch overflow-hidden
@@ -72,7 +72,7 @@
                                              alt="{{ isset($item['alt']) ? $item['alt'] : '' }}"
                                              class="object-cover absolute inset-0 size-full" />
                                     @endif
-                                    <div class="flex relative gap-2 items-end p-4">
+                                    <div class="flex relative gap-2 items-end p-4 max-md:flex-col">
                                         <p class="text-4xl leading-none">{{ isset($item['value']) ? $item['value'] : '' }}</p>
                                         <p class="text-2xl leading-tight w-[189px]">{!! isset($item['unit']) ? $item['unit'] : '' !!}</p>
                                     </div>
