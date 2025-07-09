@@ -141,7 +141,7 @@ class CatalogPage extends Component
             return view('livewire.catalog-page', [
                 'products' => $products,
                 'collections' => $collections,
-                'availableWeights' => $this->availableWeights,
+//                'availableWeights' => $this->availableWeights,
                 'minPrice' => $minPrice,
                 'maxPrice' => $maxPrice,
                 'locale' => $locale,
@@ -162,7 +162,7 @@ class CatalogPage extends Component
             return view('livewire.catalog-page', [
                 'products' => Product::query()->paginate($this->perPage),
                 'collections' => Collection::whereHas('products')->get(),
-                'availableWeights' => $this->availableWeights,
+//                'availableWeights' => $this->availableWeights,
                 'minPrice' => null,
                 'maxPrice' => null,
                 'locale' => $locale,
