@@ -5,7 +5,7 @@
         <!-- Оборачиваем в ссылку только изображение и название -->
         <a href="{{ route('product.view', $product->defaultUrl->slug) }}" wire:navigate class="block">
             <div class="flex relative flex-col w-full min-h-[153px]">
-                <div class="flex overflow-hidden absolute top-1/2 left-1/2 z-0 flex-col max-w-full -translate-x-1/2 -translate-y-1/2 h-[163px] w-full">
+                <div class="flex overflow-hidden absolute top-1/2 left-1/2 z-0 flex-col max-w-full h-[163px] w-full">
                     @if ($product->thumbnail)
                         <img src="{{ $product->thumbnail->getUrl() }}"
                              alt="{{ $product->translateAttribute('name') }}"
