@@ -6,6 +6,7 @@ use App\Filament\Pages\AboutUs;
 use App\Filament\Pages\Contacts;
 use App\Filament\Pages\Faq;
 use App\Filament\Pages\Footer;
+use App\Filament\Pages\GlobalSet;
 use App\Filament\Pages\Header;
 use App\Filament\Pages\Home;
 use App\Filament\Resources\BlogPostResource;
@@ -39,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
                     Faq::class, // Регистрируем страницу Header
                     Contacts::class, // Регистрируем страницу Header
                     AboutUs::class, // Регистрируем страницу Header
+                    GlobalSet::class, // Регистрируем страницу Header
                 ])
                 ->resources([
                     BlogPostResource::class,

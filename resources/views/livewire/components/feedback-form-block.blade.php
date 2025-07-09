@@ -1,16 +1,17 @@
+
 <div class="container mx-auto px-2">
     <!-- Form Block -->
     <section class="flex flex-col justify-center self-stretch py-10" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
         <div class="main-container">
             <div class="flex flex-wrap gap-2 justify-center w-full max-md:max-w-full">
                 <div class="flex relative flex-col flex-1 shrink justify-center self-start px-5 rounded-3xl basis-0 bg-neutral-200 min-h-[570px] max-md:max-w-full">
-                    <form wire:submit.prevent="submit" class="z-0 w-full" aria-labelledby="feedback-form-title" novalidate>
+                    <form wire:submit="submit" class="z-0 w-full" aria-labelledby="feedback-form-title" novalidate>
                         <header class="w-full text-zinc-800 max-md:max-w-full">
                             <h1 id="feedback-form-title" class="text-xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
-                                {{ isset($settings->feedback_form_title[app()->getLocale()]) ? $settings->feedback_form_title[app()->getLocale()] : __('messages.feedback_form.title') }}
+                                {{ $settings->feedback_form_title[app()->getLocale()] ?? __('messages.feedback_form.title') }}
                             </h1>
                             <p class="mt-3 text-base font-semibold leading-none text-zinc-800 max-md:max-w-full">
-                                {{ isset($settings->feedback_form_description[app()->getLocale()]) ? $settings->feedback_form_description[app()->getLocale()] : __('messages.feedback_form.description') }}
+                                {{ $settings->feedback_form_description[app()->getLocale()] ?? __('messages.feedback_form.description') }}
                             </p>
                         </header>
                         <fieldset class="z-0 mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full">
@@ -107,7 +108,7 @@
                     @if (!empty($settings->feedback_form_image))
                         <img
                             src="{{ Storage::url($settings->feedback_form_image) }}"
-                            alt="{{ isset($settings->feedback_form_image_alt[app()->getLocale()]) ? $settings->feedback_form_image_alt[app()->getLocale()] : __('messages.feedback_form.image_alt') }}"
+                            alt="{{ $settings->feedback_form_image_alt[app()->getLocale()] ?? __('messages.feedback_form.image_alt') }}"
                             class="w-full rounded-3xl aspect-[1.03]"
                         />
                     @else
