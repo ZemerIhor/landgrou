@@ -48,11 +48,11 @@
                         {{ isset($settings->comparison_title[app()->getLocale()]) ? $settings->comparison_title[app()->getLocale()] : __('messages.advantages.title') }}
                     </h1>
                     @if (!empty($settings->main_comparison_image) && is_string($settings->main_comparison_image))
-                       <div class="relative w-full">
+                       <div class="relative w-full min-h-32">
                         <img src="{{ Storage::url($settings->main_comparison_image) }}"
                              alt="{{ isset($settings->main_comparison_alt[app()->getLocale()]) ? $settings->main_comparison_alt[app()->getLocale()] : 'Comparison of peat briquettes' }}"
                              class="object-contain w-full mt-6 aspect-[4.13] rounded-[32px] max-md:max-w-full" />
-                        <span class="flex absolute top-0 z-10 flex-col justify-center items-center self-center px-4 py-12 leading-none text-center whitespace-nowrap max-md:top-10"
+                        <span class="w-full flex absolute top-0 z-10 flex-col justify-center items-center self-center px-4 py-12 leading-none text-center whitespace-nowrap max-md:top-10"
                               aria-label="Quantity of peat briquettes for comparison">
                     <span class="text-8xl tracking-tighter text-white max-md:text-4xl">{{ isset($settings->central_text_value[app()->getLocale()]) ? $settings->central_text_value[app()->getLocale()] : '1t' }}</span>
                     <span class="text-4xl text-white">{{ isset($settings->central_text_unit[app()->getLocale()]) ? $settings->central_text_unit[app()->getLocale()] : 'briquettes' }}</span>
