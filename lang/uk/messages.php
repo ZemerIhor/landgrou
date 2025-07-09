@@ -293,5 +293,23 @@ return [
         'warehouse_empty_error' => 'Не знайдено відділень для вибраного міста. Спробуйте інше місто.',
     ],
 
+    'product' => [
+        'sku_label' => 'ID/Код/Артикул',
+        'image_gallery' => 'Галерея зображень товару',
+        'image' => 'Зображення',
+        'placeholder_image' => 'Заглушка зображення',
+        'description' => 'Опис',
+        'characteristics' => 'Характеристики',
+        'attributes_table' => 'Основні характеристики товару',
+        'detailed_attributes_table' => 'Детальні характеристики товару',
+        'attribute_name' => 'Найменування показників',
+        'norm_dstu' => 'Норма згідно з ДСТУ 2042-92',
+        'obtained_value' => 'Отримані показники',
+        'currency' => '₴',
+        'quantity_selection' => 'Вибір кількості',
+        'increment_quantity' => 'Збільшити кількість',
+        'decrement_quantity' => 'Зменшити кількість',
+    ],
+
 ];
 

@@ -7,7 +7,7 @@
             <div class="flex relative flex-col w-full min-h-[153px]">
                 <div class="flex overflow-hidden absolute top-1/2 left-1/2 z-0 flex-col px-1.5 max-w-full -translate-x-1/2 -translate-y-1/2 h-[163px] w-full">
                     @if ($product->thumbnail)
-                        <img src="{{ $product->thumbnail->getUrl('medium') }}"
+                        <img src="{{ $product->thumbnail->getUrl() }}"
                              alt="{{ $product->translateAttribute('name') }}"
                              class="object-contain w-full aspect-[1.77] transition-transform duration-300 group-hover:scale-105"/>
                     @else

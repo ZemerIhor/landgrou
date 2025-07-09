@@ -1,4 +1,5 @@
-<main class="flex relative flex-col gap-14 items-start self-stretch px-12 py-0 max-sm:gap-8 max-sm:px-4">
+
+<main class="flex relative flex-col gap-14 items-start self-stretch px-12 py-4 max-sm:gap-8 max-sm:px-4">
     <!-- Product Header Section -->
     <header class="flex relative flex-col gap-4 items-start self-stretch">
         <div class="flex relative flex-col gap-1 items-start">
@@ -6,26 +7,26 @@
                 {{ $this->product->translateAttribute('name') }}
             </h1>
             <p class="relative text-xs font-semibold leading-5 text-neutral-400 w-[1179px] max-md:w-full">
-                ID/Код/Артикул: {{ $this->variant->sku }}
+                {{ __('messages.product.sku_label') }}: {{ $this->variant->sku }}
             </p>
         </div>
 
         <div class="flex relative gap-28 items-start self-stretch max-md:flex-col max-md:gap-8">
-            <section class="flex relative flex-col items-start self-stretch w-[487px] max-md:w-full" aria-label="Галерея изображений товара">
+            <section class="flex relative flex-col items-start self-stretch w-[487px] max-md:w-full"
+                     aria-label="{{ __('messages.product.image_gallery') }}">
                 <div class="swiper product-gallery w-full rounded-3xl" wire:ignore>
                     <div class="swiper-wrapper">
                         @foreach ($this->images as $media)
-
                             <div class="swiper-slide flex justify-center items-center">
                                 <img src="{{ $media->getUrl() }}"
-                                     alt="{{ $this->product->translateAttribute('name') }} - Изображение {{ $loop->iteration }}"
-                                     class="object-contain h-[368px] w-[645px] max-md:w-full"/>
+                                     alt="{{ $this->product->translateAttribute('name') }} - {{ __('messages.product.image') }} {{ $loop->iteration }}"
+                                     class="object-cover h-[368px] w-[645px] max-md:w-full"/>
                             </div>
                         @endforeach
                         @if (!$this->images->count())
                             <div class="swiper-slide flex justify-center items-center">
                                 <img src="https://via.placeholder.com/645x368"
-                                     alt="Заглушка изображения"
+                                     alt="{{ __('messages.product.placeholder_image') }}"
                                      class="object-contain h-[368px] w-[645px] max-md:w-full"/>
                             </div>
                         @endif
@@ -48,8 +49,7 @@
                 </div>
             </section>
 
-
-
+            <!-- Swiper Initialization Script -->
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     function initSwiper() {
@@ -90,8 +90,8 @@
                                     clickable: true,
                                     bulletClass: 'swiper-pagination-bullet',
                                     bulletActiveClass: 'swiper-pagination-bullet-active',
-                                    bulletElement: 'span', // Явно указываем тег
-                                    type: 'bullets', // Явно указываем тип пагинации
+                                    bulletElement: 'span',
+                                    type: 'bullets',
                                 },
                                 navigation: {
                                     nextEl: '.swiper-button-next',
@@ -103,7 +103,6 @@
                                 on: {
                                     init: function () {
                                         console.log('Swiper инициализирован, слайдов:', slides.length);
-                                        // Проверяем буллеты
                                         const bullets = swiperContainer.querySelectorAll('.swiper-pagination-bullet');
                                         console.log('Количество буллетов:', bullets.length);
                                         bullets.forEach((bullet, index) => {
@@ -125,7 +124,6 @@
                                 },
                             });
 
-                            // Проверяем состояние кнопок
                             swiper.on('reachBeginning reachEnd', function () {
                                 console.log('Достигнут край слайдера, начало:', this.isBeginning, 'конец:', this.isEnd);
                             });
@@ -134,10 +132,8 @@
                         }
                     }
 
-                    // Иницaиализация при загрузке
                     initSwiper();
 
-                    // Ограничиваем повторную инициализацию
                     let isSwiperInitialized = false;
                     document.addEventListener('livewire:navigated', function () {
                         if (!isSwiperInitialized) {
@@ -149,24 +145,23 @@
                 });
             </script>
 
-
             <section class="flex relative flex-col gap-6 items-end flex-[1_0_0]">
-                <p class="relative self-stretch text-base font-semibold leading-5 text-zinc-800 max-sm:text-sm">
-                    {{ $this->product->translateAttribute('description') }}
+                <p class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm">
+                    {{ strip_tags($this->product->translateAttribute('description')) }}
                 </p>
 
-                <table class="flex relative flex-col items-start self-stretch" role="table" aria-label="Основні характеристики товару">
+                <table class="flex relative flex-col items-start self-stretch" role="table" aria-label="{{ __('messages.product.attributes_table') }}">
                     @foreach ($this->getAttributesProperty() as $attribute)
                         <tr class="flex relative items-center self-stretch {{ $loop->even ? 'bg-white' : '' }} rounded-lg">
                             <td class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">
-                <span class="relative text-base font-semibold leading-5 flex-[1_0_0] text-zinc-600 max-sm:text-sm">
-                    {{ $attribute['name'] }}
-                </span>
+                                <span class="relative text-base font-semibold leading-5 flex-[1_0_0] text-zinc-600 max-sm:text-sm">
+                                    {{ $attribute['name'] }}
+                                </span>
                             </td>
                             <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                <span class="relative text-base font-semibold leading-5 text-right flex-[1_0_0] text-zinc-800 max-sm:text-sm">
-                    {{ $attribute['value'] }}
-                </span>
+                                <span class="relative text-base font-semibold leading-5 text-right flex-[1_0_0] text-zinc-800 max-sm:text-sm">
+                                    {{ $attribute['value'] }}
+                                </span>
                             </td>
                         </tr>
                     @endforeach
@@ -179,13 +174,17 @@
                             <x-product-price :variant="$this->variant" />
                         </span>
                         <span class="relative text-2xl font-bold leading-7 text-zinc-800 max-sm:text-xl">
-                            ₴
+                            {{ __('messages.product.currency') }}
                         </span>
                     </div>
                     <div class="flex relative gap-4 items-center max-sm:flex-col max-sm:gap-3">
                         <!-- Quantity Selection -->
-                        <div class="flex relative gap-2 items-center px-2 py-0 h-11 rounded-2xl bg-neutral-200" role="group" aria-label="Вибір кількості">
-                            <button wire:click="incrementQuantity" class="flex relative gap-2.5 items-center" aria-label="Збільшити кількість">
+                        <div class="flex relative gap-2 items-center px-2 py-0 h-11 rounded-2xl bg-neutral-200"
+                             role="group"
+                             aria-label="{{ __('messages.product.quantity_selection') }}">
+                            <button wire:click="incrementQuantity"
+                                    class="flex relative gap-2.5 items-center"
+                                    aria-label="{{ __('messages.product.increment_quantity') }}">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="plus-icon">
                                     <path d="M12.75 7C12.75 6.58579 12.4142 6.25 12 6.25C11.5858 6.25 11.25 6.58579 11.25 7L11.25 11.25H7C6.58579 11.25 6.25 11.5858 6.25 12C6.25 12.4142 6.58579 12.75 7 12.75H11.25V17C11.25 17.4142 11.5858 17.75 12 17.75C12.4142 17.75 12.75 17.4142 12.75 17L12.75 12.75H17C17.4142 12.75 17.75 12.4142 17.75 12C17.75 11.5858 17.4142 11.25 17 11.25H12.75V7Z" fill="#333333"/>
                                 </svg>
@@ -195,7 +194,9 @@
                                     {{ $this->quantity }}
                                 </span>
                             </div>
-                            <button wire:click="decrementQuantity" class="flex relative gap-2.5 items-center" aria-label="Зменшити кількість">
+                            <button wire:click="decrementQuantity"
+                                    class="flex relative gap-2.5 items-center"
+                                    aria-label="{{ __('messages.product.decrement_quantity') }}">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="minus-icon">
                                     <path d="M17.2174 12.5C17.6496 12.5 18 12.1642 18 11.75C18 11.3358 17.6496 11 17.2174 11H6.78261C6.35039 11 6 11.3358 6 11.75C6 11.5858 6.35039 12.5 6.78261 12.5H17.2174Z" fill="#333333"/>
                                 </svg>
@@ -207,29 +208,42 @@
             </section>
         </div>
     </header>
+
     <!-- Description Section -->
     <section class="flex relative flex-col gap-4 items-start self-stretch">
-        <h2 class="relative self-stretch text-xl font-bold leading-6 text-black max-sm:text-lg">{{ __('Опис:') }}</h2>
+        <h2 class="relative self-stretch text-xl font-bold leading-6 text-black max-sm:text-lg">
+            {{ __('messages.product.description') }}
+        </h2>
         <p class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm">
-            {{ $this->product->translateAttribute('description') }}
+            {{ strip_tags($this->product->translateAttribute('description')) }}
         </p>
     </section>
 
     <!-- Characteristics Section -->
     <section class="flex relative flex-col gap-4 items-start self-stretch">
-        <h2 class="relative self-stretch text-xl font-bold leading-6 text-black max-sm:text-lg">{{ __('Характеристики:') }}</h2>
-        <table class="flex relative flex-col items-start self-stretch" role="table" aria-label="Детальні характеристики товару">
+        <h2 class="relative self-stretch text-xl font-bold leading-6 text-black max-sm:text-lg">
+            {{ __('messages.product.characteristics') }}
+        </h2>
+        <table class="flex relative flex-col items-start self-stretch"
+               role="table"
+               aria-label="{{ __('messages.product.detailed_attributes_table') }}">
             <!-- Table Header -->
             <thead class="flex relative items-center self-stretch rounded-lg bg-zinc-600">
             <tr class="flex relative items-center self-stretch rounded-lg bg-zinc-600">
                 <th class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">
-                    <span class="relative text-base font-semibold leading-5 text-white flex-[1_0_0] max-sm:text-sm">{{ __('Найменування показників') }}</span>
+                        <span class="relative text-base font-semibold leading-5 text-white flex-[1_0_0] max-sm:text-sm">
+                            {{ __('messages.product.attribute_name') }}
+                        </span>
                 </th>
                 <th class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                    <span class="relative text-base font-semibold leading-5 text-right text-white flex-[1_0_0] max-sm:text-sm">{{ __('Норма згідно з ДСТУ 2042-92') }}</span>
+                        <span class="relative text-base font-semibold leading-5 text-right text-white flex-[1_0_0] max-sm:text-sm">
+                            {{ __('messages.product.norm_dstu') }}
+                        </span>
                 </th>
                 <th class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                    <span class="relative text-base font-semibold leading-5 text-right text-white flex-[1_0_0] max-sm:text-sm">{{ __('Отримані показники') }}</span>
+                        <span class="relative text-base font-semibold leading-5 text-right text-white flex-[1_0_0] max-sm:text-sm">
+                            {{ __('messages.product.obtained_value') }}
+                        </span>
                 </th>
             </tr>
             </thead>
@@ -238,17 +252,17 @@
 {{--                <tr class="flex relative items-center self-stretch {{ $loop->even ? 'bg-white' : '' }} rounded-lg">--}}
 {{--                    <td class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">--}}
 {{--                            <span class="relative text-base font-semibold leading-5 flex-[1_0_0] text-zinc-600 max-sm:text-sm">--}}
-{{--                                {{ is_array($attribute['name']) ? ($attribute['name'][app()->getLocale()] ?? '') : $attribute['name'] }}--}}
+{{--                                {{ $attribute['name'] }}--}}
 {{--                            </span>--}}
 {{--                    </td>--}}
 {{--                    <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">--}}
 {{--                            <span class="relative text-base font-semibold leading-5 text-right flex-[1_0_0] text-zinc-800 max-sm:text-sm">--}}
-{{--                                {{ is_array($attribute['norm']) ? ($attribute['norm'][app()->getLocale()] ?? '') : $attribute['norm'] }}--}}
+{{--                                {{ $attribute['norm'] }}--}}
 {{--                            </span>--}}
 {{--                    </td>--}}
 {{--                    <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">--}}
 {{--                            <span class="relative text-base font-semibold leading-5 text-right flex-[1_0_0] text-zinc-800 max-sm:text-sm">--}}
-{{--                                {{ is_array($attribute['value']) ? ($attribute['value'][app()->getLocale()] ?? '') : $attribute['value'] }}--}}
+{{--                                {{ $attribute['value'] }}--}}
 {{--                            </span>--}}
 {{--                    </td>--}}
 {{--                </tr>--}}
@@ -257,4 +271,3 @@
         </table>
     </section>
 </main>
-

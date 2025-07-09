@@ -291,5 +291,21 @@ return [
         'warehouse_load_error' => 'Failed to load branches for the selected city.',
         'warehouse_empty_error' => 'No branches found for the selected city. Please try another one.',
     ],
-
+    'product' => [
+        'sku_label' => 'ID/Code/SKU',
+        'image_gallery' => 'Product Image Gallery',
+        'image' => 'Image',
+        'placeholder_image' => 'Placeholder Image',
+        'description' => 'Description',
+        'characteristics' => 'Characteristics',
+        'attributes_table' => 'Main Product Attributes',
+        'detailed_attributes_table' => 'Detailed Product Attributes',
+        'attribute_name' => 'Attribute Name',
+        'norm_dstu' => 'Standard according to DSTU 2042-92',
+        'obtained_value' => 'Obtained Value',
+        'currency' => '₴',
+        'quantity_selection' => 'Quantity Selection',
+        'increment_quantity' => 'Increase Quantity',
+        'decrement_quantity' => 'Decrease Quantity',
+    ],
 ];
