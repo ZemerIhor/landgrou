@@ -18,7 +18,7 @@
     </div>
     <livewire:components.blog-section />
     <div class="container mx-auto px-2">
-        <section class="flex relative flex-col gap-0.5 items-start self-stretch pt-10 pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0" aria-label="Company Advantages">
+        <section class="flex relative flex-col w-full gap-0.5 items-start self-stretch pt-10 pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0" aria-label="Company Advantages">
                 <div class="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] max-md:grid-cols-2 max-sm:grid-cols-1 gap-1">
                     @if (!empty($settings->advantages_cards[app()->getLocale()]))
                         @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
