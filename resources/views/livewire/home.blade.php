@@ -1,8 +1,5 @@
 <div>
     <x-welcome-banner :settings="$settings" />
-
-
-
     <div class="container mx-auto px-2">
         <section class="flex flex-col self-stretch py-10" aria-label="Всі продукти">
             <div class="main-container">
@@ -22,7 +19,6 @@
     <livewire:components.blog-section />
     <div class="container mx-auto px-2">
         <section class="flex relative flex-col gap-0.5 items-start self-stretch pt-10 pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0" aria-label="Company Advantages">
-            <div class="main-container">
                 <div class="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] max-md:grid-cols-2 max-sm:grid-cols-1 gap-1">
                     @if (!empty($settings->advantages_cards[app()->getLocale()]))
                         @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
@@ -42,10 +38,8 @@
                         <p>{{ __('messages.advantages.no_cards') }}</p>
                     @endif
                 </div>
-            </div>
         </section>
     </div>
-
     <div class="container mx-auto px-2">
         <section class="flex overflow-hidden flex-col py-10 font-bold" aria-labelledby="advantages-title">
             <div class="main-container">
@@ -92,7 +86,6 @@
             </div>
         </section>
     </div>
-
     <div class="container mx-auto px-2">
         <section class="flex flex-col py-10" aria-label="Frequently Asked Questions">
             <div class="main-container">
@@ -139,8 +132,6 @@
             </div>
         </section>
     </div>
-
-
     <div class="container mx-auto px-2">
         <section class="flex flex-col justify-center self-stretch py-10 text-base" aria-label="Tenders section">
             <div class="main-container">
@@ -182,7 +173,6 @@
             </div>
         </section>
     </div>
-
     <section class="flex overflow-hidden flex-col bg-zinc-800" role="main" aria-labelledby="about-heading">
         <div class="container mx-auto px-2">
             <div class="main-container relative">
@@ -245,10 +235,5 @@
             </div>
         </div>
     </section>
-
     <livewire:components.reviews-section />
-
-
-
-
 </div>
