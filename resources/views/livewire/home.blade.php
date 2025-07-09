@@ -48,7 +48,7 @@
                         {{ isset($settings->comparison_title[app()->getLocale()]) ? $settings->comparison_title[app()->getLocale()] : __('messages.advantages.title') }}
                     </h1>
                     @if (!empty($settings->main_comparison_image) && is_string($settings->main_comparison_image))
-                       <div class="relative w-full min-h-60]">
+                       <div class="relative w-full min-h-60">
                         <img src="{{ Storage::url($settings->main_comparison_image) }}"
                              alt="{{ isset($settings->main_comparison_alt[app()->getLocale()]) ? $settings->main_comparison_alt[app()->getLocale()] : 'Comparison of peat briquettes' }}"
                              class="object-contain w-full mt-6 aspect-[4.13] rounded-[32px] max-md:max-w-full" />
