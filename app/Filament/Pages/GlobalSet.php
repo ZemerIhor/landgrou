@@ -27,7 +27,7 @@ class GlobalSet extends Page implements HasForms
     protected static ?string $navigationGroup = 'Настройки';
     protected static ?int $navigationSort = 1;
 
-    protected static string $view = 'filament.pages.global-set';
+    protected static string $view = 'filament.pages.global-setting';
 
     public ?array $data = [];
 
