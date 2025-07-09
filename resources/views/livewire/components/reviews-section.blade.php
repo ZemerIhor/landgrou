@@ -50,7 +50,55 @@
             @endif
         </div>
     </section>
+    <script>
+document.addEventListener('DOMContentLoaded', initSwiper);
+document.addEventListener('livewire:navigated', initSwiper);
 
+function initSwiper() {
+    // Проверяем, что Swiper доступен
+    if (!window.Swiper) {
+        console.error('Swiper не найден. Убедитесь, что библиотека подключена.');
+        return;
+    }
+
+    try {
+        const swiperContainer = document.querySelector('.reviews-swiper');
+        if (!swiperContainer) {
+            console.error('Контейнер .reviews-swiper не найден');
+            return;
+        }
+
+        // Проверяем, не инициализирован ли Swiper уже
+        if (swiperContainer.swiper) {
+            console.log('Swiper уже инициализирован для .reviews-swiper');
+            return;
+        }
+
+        new window.Swiper('.reviews-swiper', {
+            slidesPerView: 2,
+            spaceBetween: 20,
+            loop: false,
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            breakpoints: {
+                768: {
+                    slidesPerView: 3,
+                    spaceBetween: 20,
+                },
+            },
+            navigation: false,
+            pagination: false,
+        });
+
+        console.log('Swiper для отзывов успешно инициализирован');
+    } catch (error) {
+        console.error('Ошибка при инициализации Swiper:', error);
+    }
+}
+
+    </script>
     <style>
         .swiper-slide {
             height: auto !important;
