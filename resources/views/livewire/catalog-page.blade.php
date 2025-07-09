@@ -119,13 +119,13 @@
                 </button>
                 <div id="weight-options" class="flex pr-0.5 pb-2 w-full rounded-2xl bg-neutral-200">
                     <div class="flex-1 shrink self-start w-full text-xs font-semibold basis-0 text-zinc-800 max-h-64 overflow-y-auto scrollbar-thin">
-                        @foreach ($availableWeights as $weight)
-                            <label class="flex gap-2 items-center px-4 py-2 w-full min-h-10 cursor-pointer hover:bg-neutral-300">
-                                <div class="flex shrink-0 self-stretch my-auto w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 {{ in_array($weight, $weights) ? 'bg-green-600' : 'bg-white' }}"></div>
-                                <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ $weight }}</span>
-                                <input type="checkbox" wire:model="weights" value="{{ $weight }}" class="sr-only" />
-                            </label>
-                        @endforeach
+{{--                        @foreach ($availableWeights as $weight)--}}
+{{--                            <label class="flex gap-2 items-center px-4 py-2 w-full min-h-10 cursor-pointer hover:bg-neutral-300">--}}
+{{--                                <div class="flex shrink-0 self-stretch my-auto w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 {{ in_array($weight, $weights) ? 'bg-green-600' : 'bg-white' }}"></div>--}}
+{{--                                <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ $weight }}</span>--}}
+{{--                                <input type="checkbox" wire:model="weights" value="{{ $weight }}" class="sr-only" />--}}
+{{--                            </label>--}}
+{{--                        @endforeach--}}
                     </div>
                 </div>
             </section>
