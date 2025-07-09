@@ -5,11 +5,11 @@
         <!-- Оборачиваем в ссылку только изображение и название -->
         <a href="{{ route('product.view', $product->defaultUrl->slug) }}" wire:navigate class="block">
             <div class="flex relative flex-col w-full min-h-[153px]">
-                <div class="flex overflow-hidden absolute top-1/2 left-1/2 z-0 flex-col px-1.5 max-w-full -translate-x-1/2 -translate-y-1/2 h-[163px] w-full">
+                <div class="flex overflow-hidden absolute top-1/2 left-1/2 z-0 flex-col max-w-full -translate-x-1/2 -translate-y-1/2 h-[163px] w-full">
                     @if ($product->thumbnail)
                         <img src="{{ $product->thumbnail->getUrl() }}"
                              alt="{{ $product->translateAttribute('name') }}"
-                             class="object-contain w-full aspect-[1.77] transition-transform duration-300 group-hover:scale-105"/>
+                             class="object-cover w-full aspect-[1.77] transition-transform duration-300 group-hover:scale-105"/>
                     @else
                         <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/d7f2f96fb365d97b578a2cfa0ccb76eaba272ebd?placeholderIfAbsent=true"
                              alt="Placeholder image"
