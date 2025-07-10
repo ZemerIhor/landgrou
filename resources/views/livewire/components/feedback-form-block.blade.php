@@ -108,7 +108,7 @@
                     @if ($settings['feedback_form_image'])
                         <img
                             src="{{ $settings['feedback_form_image'] }}"
-                            alt="{{ $settings['feedback_form_image_alt'] }}"
+                            alt=""
                             class="w-full rounded-3xl aspect-[1.03]"
                         />
                     @else
