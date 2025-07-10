@@ -14,7 +14,6 @@ class GlobalSettings extends Settings
     public  $feedback_form_title;
     public  $feedback_form_description;
     public  $feedback_form_image;
-    public  $feedback_form_image_alt;
 
     public static function group(): string
     {

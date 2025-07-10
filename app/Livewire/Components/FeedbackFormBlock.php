@@ -101,7 +101,6 @@ class FeedbackFormBlock extends Component
                 'feedback_form_title' => $settings->feedback_form_title[app()->getLocale()] ?? __('messages.feedback_form.title'),
                 'feedback_form_description' => $settings->feedback_form_description[app()->getLocale()] ?? __('messages.feedback_form.description'),
                 'feedback_form_image' => $settings->feedback_form_image ? Storage::url($settings->feedback_form_image) : null,
-                'feedback_form_image_alt' => $settings->feedback_form_image_alt[app()->getLocale()] ?? __('messages.feedback_form.image_alt'),
             ],
         ]);
     }
