@@ -1,7 +1,7 @@
 
-<div class="container mx-auto px-2" x-data="{ isOpen: @entangle('isOpen').live }" x-cloak>
+<div class="container mx-auto px-2">
     <!-- Form Block -->
-    <section x-show="isOpen" class="flex flex-col justify-center self-stretch py-10" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
+    <section class="flex flex-col justify-center self-stretch py-10" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
         <div class="main-container">
             <div class="flex flex-wrap gap-2 justify-center w-full max-md:max-w-full">
                 <div class="flex relative flex-col flex-1 shrink justify-center self-start px-5 rounded-3xl basis-0 bg-neutral-200 min-h-[570px] max-md:max-w-full">

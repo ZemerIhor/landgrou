@@ -88,7 +88,9 @@ class FeedbackFormBlock extends Component
 
     public function continueFromSuccess()
     {
-        $this->closeModal();
+        $this->state = 'form';
+        $this->resetForm();
+        Log::info('Feedback form continued from success');
     }
 
     private function resetForm()
