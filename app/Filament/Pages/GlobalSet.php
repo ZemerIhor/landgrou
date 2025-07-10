@@ -45,7 +45,6 @@ class GlobalSet extends Page implements HasForms
             'feedback_form_title' => $settings->feedback_form_title ?? ['en' => '', 'uk' => ''],
             'feedback_form_description' => $settings->feedback_form_description ?? ['en' => '', 'uk' => ''],
             'feedback_form_image' => $settings->feedback_form_image ?? '',
-            'feedback_form_image_alt' => $settings->feedback_form_image_alt ?? ['en' => '', 'uk' => ''],
         ];
 
         Log::info('Global Settings form initialized', ['data' => $this->data]);
@@ -109,13 +108,9 @@ class GlobalSet extends Page implements HasForms
                                     ->rows(4)
                                     ->required()
                                     ->maxLength(500),
-                                TextInput::make('feedback_form_image_alt')
-                                    ->label(__('messages.settings.feedback_form_image_alt'))
-                                    ->nullable()
-                                    ->maxLength(255),
                             ]),
                         FileUpload::make('feedback_form_image')
-                            ->label(__('messages.settings toller.feedback_form_image'))
+                            ->label(__('messages.settings.feedback_form_image'))
                             ->image()
                             ->disk('public')
                             ->directory('feedback-images')
