@@ -1,7 +1,7 @@
 
-<div class="container mx-auto px-2">
+<div class="container mx-auto px-2" x-data="{ isOpen: @entangle('isOpen').live }" x-cloak>
     <!-- Form Block -->
-    <section class="flex flex-col justify-center self-stretch py-10" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
+    <section x-show="isOpen" class="flex flex-col justify-center self-stretch py-10" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
         <div class="main-container">
             <div class="flex flex-wrap gap-2 justify-center w-full max-md:max-w-full">
                 <div class="flex relative flex-col flex-1 shrink justify-center self-start px-5 rounded-3xl basis-0 bg-neutral-200 min-h-[570px] max-md:max-w-full">
@@ -108,7 +108,7 @@
                     @if ($settings['feedback_form_image'])
                         <img
                             src="{{ $settings['feedback_form_image'] }}"
-                            alt=""
+                            alt="{{ __('messages.feedback_form.image_alt') }}"
                             class="w-full rounded-3xl aspect-[1.03]"
                         />
                     @else
@@ -120,7 +120,7 @@
     </section>
 
     <!-- Modal Overlay -->
-    <div x-show="$wire.state === 'success' || $wire.state === 'error'" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"></div>
+    <div x-show="$wire.state === 'success' || $wire.state === 'error'" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" x-cloak></div>
 
     <!-- Success Modal -->
     <section
@@ -130,6 +130,7 @@
         aria-labelledby="success-title"
         aria-describedby="success-description"
         aria-live="polite"
+        x-cloak
     >
         <button
             wire:click="continueFromSuccess"
@@ -175,7 +176,7 @@
                 wire:click="continueFromSuccess"
                 class="flex gap-2 justify-center items-center px-6 py-2.5 bg-sky-500 rounded-2xl cursor-pointer min-h-11 max-sm:w-full hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition-colors"
             >
-                <span class="text-base font-bold leading-6 text-white">{{ __('messages.feedback_form.submit_button') }}</span>
+                <span class="text-base font-bold leading-6 text-white">{{ __('messages.feedback_form.continue_button') }}</span>
             </button>
         </div>
     </section>
@@ -188,6 +189,7 @@
         aria-labelledby="error-title"
         aria-describedby="error-description"
         aria-live="polite"
+        x-cloak
     >
         <button
             wire:click="tryAgain"
@@ -240,7 +242,7 @@
 
     @push('scripts')
         <script>
-            document.addEventListener('livewire:initialized', () => {
+            document.addEventListener('livewire:init', () => {
                 Livewire.on('formSubmitted', () => {
                     console.log('Form submitted successfully');
                 });
@@ -254,4 +256,3 @@
         </script>
     @endpush
 </div>
-
