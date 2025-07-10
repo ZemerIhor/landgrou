@@ -1,4 +1,4 @@
-```blade
+
 @php
     $settings = app(\App\Settings\GlobalSettings::class);
     $locale = app()->getLocale();
@@ -47,4 +47,4 @@
         </defs>
     </svg>
 @endif
-```
+
