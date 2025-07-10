@@ -7,6 +7,7 @@ use Livewire\Attributes\Rule;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\FeedbackFormSubmitted;
+use App\Settings\GlobalSettings;
 use Illuminate\Support\Facades\Log;
 
 class FeedbackFormBlock extends Component
@@ -28,12 +29,13 @@ class FeedbackFormBlock extends Component
 
     public $settings;
 
-    public function mount($settings = null)
+    public function mount()
     {
-        $this->settings = $settings;
+        $this->settings = app(GlobalSettings::class);
         $this->isOpen = false;
         $this->state = 'form';
         $this->resetForm();
+        Log::info('FeedbackFormBlock mounted', ['settings' => $this->settings->toArray()]);
     }
 
     #[On('openFeedbackForm')]
@@ -57,7 +59,7 @@ class FeedbackFormBlock extends Component
         $validated = $this->validate();
 
         try {
-            Mail::to(config('mail.feedback_recipient', 'office@landgrou.com'))
+            Mail::to($this->settings->contact_email)
                 ->send(new FeedbackFormSubmitted($validated));
 
             $this->state = 'success';
@@ -80,11 +82,6 @@ class FeedbackFormBlock extends Component
     }
 
     public function continueFromSuccess()
-    {
-        $this->closeModal();
-    }
-
-    public function goBack()
     {
         $this->closeModal();
     }

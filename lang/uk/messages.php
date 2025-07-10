@@ -310,6 +310,23 @@ return [
         'increment_quantity' => 'Збільшити кількість',
         'decrement_quantity' => 'Зменшити кількість',
     ],
+    'settings' => [
+        'navigation_label' => 'Глобальні налаштування',
+        'main_section' => 'Основні налаштування сайту',
+        'feedback_form_section' => 'Форма зворотного зв’язку',
+        'site_name' => 'Назва сайту',
+        'meta_description' => 'Мета-описання',
+        'logo' => 'Логотип',
+        'favicon' => 'Фавікон',
+        'contact_email' => 'Контактний email',
+        'feedback_form_title' => 'Заголовок форми',
+        'feedback_form_description' => 'Опис форми',
+        'feedback_form_image' => 'Зображення форми',
+        'feedback_form_image_alt' => 'Alt-текст зображення',
+        'save_button' => 'Зберегти',
+        'saved' => 'Налаштування успішно збережено',
+        'error' => 'Помилка збереження налаштувань',
+    ],
 
 ];
 
