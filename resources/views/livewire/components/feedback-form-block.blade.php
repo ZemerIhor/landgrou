@@ -8,10 +8,10 @@
                     <form wire:submit="submit" class="z-0 w-full" aria-labelledby="feedback-form-title" novalidate>
                         <header class="w-full text-zinc-800 max-md:max-w-full">
                             <h1 id="feedback-form-title" class="text-xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
-                                {{ $settings->feedback_form_title[app()->getLocale()] ?? __('messages.feedback_form.title') }}
+                                {{ $settings['feedback_form_title'] }}
                             </h1>
                             <p class="mt-3 text-base font-semibold leading-none text-zinc-800 max-md:max-w-full">
-                                {{ $settings->feedback_form_description[app()->getLocale()] ?? __('messages.feedback_form.description') }}
+                                {{ $settings['feedback_form_description'] }}
                             </p>
                         </header>
                         <fieldset class="z-0 mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full">
@@ -105,10 +105,10 @@
                     </form>
                 </div>
                 <aside class="flex-1 max-sm:-order-1 shrink min-w-60 max-md:max-w-full" aria-label="{{ __('messages.feedback_form.image_aria_label') }}">
-                    @if (!empty($settings->feedback_form_image))
+                    @if ($settings['feedback_form_image'])
                         <img
-                            src="{{ Storage::url($settings->feedback_form_image) }}"
-                            alt="{{ $settings->feedback_form_image_alt[app()->getLocale()] ?? __('messages.feedback_form.image_alt') }}"
+                            src="{{ $settings['feedback_form_image'] }}"
+                            alt="{{ $settings['feedback_form_image_alt'] }}"
                             class="w-full rounded-3xl aspect-[1.03]"
                         />
                     @else
@@ -254,3 +254,4 @@
         </script>
     @endpush
 </div>
+

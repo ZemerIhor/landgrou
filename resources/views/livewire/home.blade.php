@@ -132,6 +132,8 @@
             </div>
         </section>
     </div>
+    <livewire:components.feedback-form-block />
+
     <div class="container mx-auto px-2">
         <section class="flex flex-col justify-center self-stretch py-10 text-base" aria-label="Tenders section">
             <div class="main-container">

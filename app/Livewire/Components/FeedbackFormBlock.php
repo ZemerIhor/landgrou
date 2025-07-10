@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\FeedbackFormSubmitted;
 use App\Settings\GlobalSettings;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class FeedbackFormBlock extends Component
 {
@@ -27,15 +28,12 @@ class FeedbackFormBlock extends Component
     #[Rule('accepted')]
     public $privacyAgreement = false;
 
-    public $settings;
-
     public function mount()
     {
-        $this->settings = app(GlobalSettings::class);
         $this->isOpen = false;
         $this->state = 'form';
         $this->resetForm();
-        Log::info('FeedbackFormBlock mounted', ['settings' => $this->settings->toArray()]);
+        Log::info('FeedbackFormBlock mounted');
     }
 
     #[On('openFeedbackForm')]
@@ -59,7 +57,8 @@ class FeedbackFormBlock extends Component
         $validated = $this->validate();
 
         try {
-            Mail::to($this->settings->contact_email)
+            $settings = app(GlobalSettings::class);
+            Mail::to($settings->contact_email ?? config('mail.feedback_recipient', 'office@landgrou.com'))
                 ->send(new FeedbackFormSubmitted($validated));
 
             $this->state = 'success';
@@ -94,6 +93,16 @@ class FeedbackFormBlock extends Component
 
     public function render()
     {
-        return view('livewire.components.feedback-form-block');
+        $settings = app(GlobalSettings::class);
+        Log::info('Global Settings in FeedbackFormBlock', $settings->toArray());
+
+        return view('livewire.components.feedback-form-block', [
+            'settings' => [
+                'feedback_form_title' => $settings->feedback_form_title[app()->getLocale()] ?? __('messages.feedback_form.title'),
+                'feedback_form_description' => $settings->feedback_form_description[app()->getLocale()] ?? __('messages.feedback_form.description'),
+                'feedback_form_image' => $settings->feedback_form_image ? Storage::url($settings->feedback_form_image) : null,
+                'feedback_form_image_alt' => $settings->feedback_form_image_alt[app()->getLocale()] ?? __('messages.feedback_form.image_alt'),
+            ],
+        ]);
     }
 }
