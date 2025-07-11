@@ -160,40 +160,6 @@
                             <div class="w-full text-zinc-800">
                                 <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $product->attribute_data['name']->getValue($locale) ?? 'N/A' }}</h2>
                                 <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ strip_tags($product->attribute_data['description']->getValue($locale) ?? '') }}</p>
-                                <ul class="mt-3 text-xs font-semibold leading-5 text-zinc-800">
-                                    <li>{{ __('Calories') }}: {{ $product->attribute_data['calories']->getValue($locale) ?? 'N/A' }}</li>
-                                    <li>{{ __('Moisture') }}: {{ $product->attribute_data['moisture']->getValue($locale) ?? 'N/A' }}</li>
-                                    <li>{{ __('Strength') }}: {{ $product->attribute_data['strength']->getValue($locale) ?? 'N/A' }}</li>
-                                    <li>{{ __('Ash') }}: {{ $product->attribute_data['ash']->getValue($locale) ?? 'N/A' }}</li>
-                                    <li>{{ __('Dimensions') }}: {{ $product->attribute_data['dimensions']->getValue($locale) ?? 'N/A' }}</li>
-                                    <li>{{ __('Material') }}: {{ $product->attribute_data['material']->getValue($locale) ?? 'N/A' }}</li>
-                                    <li>{{ __('Packaging') }}: {{ $product->attribute_data['packaging']->getValue($locale) ?? 'N/A' }}</li>
-                                </ul>
-                                @if ($product->variants->isNotEmpty())
-                                    <div class="mt-3 text-xs font-semibold leading-5 text-zinc-800">
-                                        <h3>{{ __('Variants') }}</h3>
-                                        @foreach ($product->variants as $variant)
-                                            <div>
-                                                <p>{{ __('SKU') }}: {{ $variant->sku ?? 'N/A' }}</p>
-                                                <p>{{ __('Stock') }}: {{ $variant->stock ?? 0 }} {{ __('pcs') }}</p>
-                                                @if ($variant->prices->isNotEmpty())
-                                                    <p>{{ __('Prices') }}:</p>
-                                                    <ul>
-                                                        @foreach ($variant->prices as $price)
-                                                            <li>
-                                                                {{ $price->currency->code }}:
-                                                                {{ number_format($price->price->value / 100, 2) }}
-                                                                @if ($price->compare_price->value > 0)
-                                                                    ({{ __('Compare Price') }}: {{ number_format($price->compare_price->value / 100, 2) }})
-                                                                @endif
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                @endif
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @endif
                             </div>
                         </div>
                     </a>
