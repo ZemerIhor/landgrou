@@ -107,7 +107,7 @@
                 <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0" />
             </div>
 
-            <!-- Price Filter (Simplified Range Slider) -->
+            <!-- Price Filter (Improved Dual Range Slider) -->
             <section class="py-4 w-full rounded-2xl bg-neutral-200">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-expanded="true" aria-controls="price-filter">
                     <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Цена') }}</span>
@@ -126,16 +126,10 @@
                     </header>
 
                     <!-- Range Slider -->
-                    <div class="relative h-8 w-[280px] max-md:w-full max-md:max-w-[280px]" role="group" aria-label="Фильтр цен">
-                        <!-- Background Track -->
-                        <div class="absolute left-0 top-3 h-1 rounded-sm bg-neutral-400 w-[280px]" aria-hidden="true"></div>
-
-                        <!-- Min Slider -->
-                        <input type="range" wire:model.live.debounce.500ms="priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-full h-8 top-0 left-0 cursor-pointer focus:outline-none z-10" style="-webkit-appearance: none; background: transparent;" aria-label="Минимальная цена" />
-
-                        <!-- Max Slider -->
-                        <input type="range" wire:model.live.debounce.500ms="priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-full h-8 top-0 left-0 cursor-pointer focus:outline-none z-10" style="-webkit-appearance: none; background: transparent;" aria-label="Максимальная цена" />
-                    </div>
+                    <span class="multi-range relative h-8 w-[280px] max-md:w-full max-md:max-w-[280px]" role="group" aria-label="Фильтр цен">
+                        <input type="range" wire:model.live.debounce.500ms="priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" id="priceMin" aria-label="Минимальная цена">
+                        <input type="range" wire:model.live.debounce.500ms="priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" id="priceMax" aria-label="Максимальная цена">
+                    </span>
                 </div>
             </section>
 
@@ -212,42 +206,103 @@
         </section>
     </div>
     <style>
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 8px;
-            background: transparent;
+        input[type=range] {
+            box-sizing: border-box;
+            appearance: none;
+            width: 280px;
+            margin: 0;
+            padding: 0 2px;
+            overflow: hidden;
+            border: 0;
+            border-radius: 1px;
+            outline: none;
+            background: linear-gradient(#a1a1aa, #a1a1aa) no-repeat center; /* neutral-400 */
+            background-size: 100% 2px;
+            pointer-events: none;
+        }
+
+        input[type=range]:active,
+        input[type=range]:focus {
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            height: 28px;
+            width: 28px;
+            border-radius: 28px;
+            background-color: #fff;
+            position: relative;
+            margin: 5px 0;
             cursor: pointer;
+            appearance: none;
+            pointer-events: all;
+            box-shadow: 0 1px 4px 0.5px rgba(0, 0, 0, 0.25);
+        }
+
+        input[type=range]::-webkit-slider-thumb::before {
+            content: ' ';
+            display: block;
             position: absolute;
-            top: 12px;
-            z-index: 10;
+            top: 13px;
+            left: 100%;
+            width: 2000px;
+            height: 2px;
         }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            background: #16a34a; /* green-600 */
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            margin-top: -4px; /* Align with track */
+
+        .multi-range {
+            position: relative;
+            height: 40px;
         }
-        input[type="range"]::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            background: #16a34a;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+        .multi-range input[type=range] {
+            position: absolute;
         }
-        input[type="range"]:focus::-webkit-slider-thumb {
-            outline: 2px solid #16a34a;
-            outline-offset: 2px;
+
+        .multi-range input[type=range]:nth-child(1)::-webkit-slider-thumb::before {
+            background-color: #16a34a; /* green-600 */
         }
-        input[type="range"]:focus::-moz-range-thumb {
-            outline: 2px solid #16a34a;
-            outline-offset: 2px;
+
+        .multi-range input[type=range]:nth-child(2) {
+            background: none;
+        }
+
+        .multi-range input[type=range]:nth-child(2)::-webkit-slider-thumb::before {
+            background-color: #a1a1aa; /* neutral-400 */
         }
     </style>
+
+    <script>
+        var priceMinSlider = document.querySelector('#priceMin');
+        var priceMaxSlider = document.querySelector('#priceMax');
+
+        if (priceMinSlider && priceMaxSlider) {
+            priceMaxSlider.oninput = function() {
+                var priceMinVal = parseFloat(priceMinSlider.value);
+                var priceMaxVal = parseFloat(priceMaxSlider.value);
+
+                if (priceMaxVal < priceMinVal + 4) {
+                    priceMinSlider.value = priceMaxVal - 4;
+
+                    if (priceMinVal == priceMinSlider.min) {
+                        priceMaxSlider.value = 4;
+                    }
+                }
+            };
+
+            priceMinSlider.oninput = function() {
+                var priceMinVal = parseFloat(priceMinSlider.value);
+                var priceMaxVal = parseFloat(priceMaxSlider.value);
+
+                if (priceMinVal > priceMaxVal - 4) {
+                    priceMaxSlider.value = priceMinVal + 4;
+
+                    if (priceMaxVal == priceMaxSlider.max) {
+                        priceMinSlider.value = parseFloat(priceMaxSlider.max) - 4;
+                    }
+                }
+            };
+        }
+    </script>
+
 </main>
 
