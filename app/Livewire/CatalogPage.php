@@ -30,7 +30,9 @@ class CatalogPage extends Component
         $this->currency = Currency::where('code', config('lunar.currency'))->first() ?? Currency::first();
         Log::info('Catalog Page Mounted', [
             'locale' => $this->locale,
-            'currency' => $this->currency->code,
+            'currency' => $this->currency ? $this->currency->code : 'not found',
+            'minPrice' => $this->priceRange['min'],
+            'maxPrice' => $this->priceRange['max'],
         ]);
     }
 
@@ -143,7 +145,12 @@ class CatalogPage extends Component
         $maxPrice = \DB::table('lunar_prices')
             ->where('priceable_type', 'Lunar\Models\ProductVariant')
             ->where('currency_id', $this->currency->id)
-            ->max('price') ?? 0;
+            ->max('price') ?? 1000; // Default to 1000 if no prices found
+
+        Log::info('Price Range Calculated', [
+            'minPrice' => $minPrice,
+            'maxPrice' => $maxPrice,
+        ]);
 
         return [
             'min' => floor($minPrice),
@@ -253,8 +260,8 @@ class CatalogPage extends Component
             return view('livewire.catalog-page', [
                 'products' => Product::where('status', 'published')->paginate($this->perPage),
                 'availableBrands' => Brand::whereHas('products')->get(),
-                'minPrice' => null,
-                'maxPrice' => null,
+                'minPrice' => 0,
+                'maxPrice' => 1000,
                 'locale' => $this->locale,
                 'currency' => $this->currency,
             ])->with('error', __('messages.catalog.error') . ': ' . $e->getMessage());
