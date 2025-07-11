@@ -8,16 +8,16 @@
     <nav class="flex flex-wrap gap-2 items-center w-full text-xs font-semibold min-h-[34px] text-neutral-400 max-md:max-w-full" aria-label="Breadcrumb">
         <ol class="flex flex-wrap gap-2 items-center">
             <li class="gap-2 self-stretch py-2 my-auto whitespace-nowrap text-neutral-400">
-                <a href="/" class="text-neutral-400 hover:text-neutral-600">{{ __('Home') }}</a>
+                <a href="/" class="text-neutral-400 hover:text-neutral-600">{{ __('Головна') }}</a>
             </li>
             <li class="flex gap-2 items-center self-stretch py-2 my-auto whitespace-nowrap text-zinc-800" aria-current="page">
                 <span class="self-stretch my-auto w-1.5 text-neutral-400" aria-hidden="true">/</span>
-                <span class="self-stretch my-auto text-zinc-800">{{ __('Catalog') }}</span>
+                <span class="self-stretch my-auto text-zinc-800">{{ __('Каталог') }}</span>
             </li>
         </ol>
     </nav>
 
-    <h1 class="text-3xl font-bold mb-6 mt-4">{{ __('Product Catalog') }}</h1>
+    <h1 class="text-3xl font-bold mb-6 mt-4">{{ __('Каталог продуктів') }}</h1>
 
     <div class="rounded-none max-w-[688px]">
         <!-- Filter Tags and Controls Section -->
@@ -38,7 +38,7 @@
                 @endforeach
                 @if ($priceMin || $priceMax)
                     <button wire:click="clearPrice" class="flex gap-1 items-center pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-600" aria-label="Remove price filter">
-                        <span class="self-stretch my-auto text-white">{{ __('Price') }}: {{ $priceMin ?? '0' }} - {{ $priceMax ?? '∞' }}</span>
+                        <span class="self-stretch my-auto text-white">Ціна: {{ $priceMin ?? '0' }} - {{ $priceMax ?? '∞' }}</span>
                         <span class="self-stretch my-auto w-6 aspect-square">×</span>
                     </button>
                 @endif
@@ -47,10 +47,10 @@
             <!-- Sort Dropdown -->
             <div class="relative">
                 <select wire:model="sort" class="flex gap-4 items-center px-4 my-auto text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 w-[180px] hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-400" aria-label="Sort options">
-                    <option value="name_asc">{{ __('Name A-Z') }}</option>
-                    <option value="name_desc">{{ __('Name Z-A') }}</option>
-                    <option value="price_asc">{{ __('Price: Low to High') }}</option>
-                    <option value="price_desc">{{ __('Price: High to Low') }}</option>
+                    <option value="name_asc">{{ __('Назва А-Я') }}</option>
+                    <option value="name_desc">{{ __('Назва Я-А') }}</option>
+                    <option value="price_asc">{{ __('Ціна: низька до високої') }}</option>
+                    <option value="price_desc">{{ __('Ціна: висока до низької') }}</option>
                 </select>
             </div>
 
@@ -70,7 +70,7 @@
             <!-- Product Type Filter -->
             <section class="w-full rounded-2xl text-zinc-800">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-400" aria-expanded="true" aria-controls="product-type-options">
-                    <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Product Type') }}</span>
+                    <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Тип товару') }}</span>
                     <div class="dropdown-arrow"></div>
                 </button>
                 <div id="product-type-options" class="flex items-start pr-0.5 pb-2 w-full text-xs font-semibold whitespace-nowrap rounded-2xl bg-neutral-200">
@@ -94,7 +94,7 @@
             <!-- Price Filter -->
             <section class="py-4 w-full rounded-2xl bg-neutral-200">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-400" aria-expanded="true" aria-controls="price-options">
-                    <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Price') }}</span>
+                    <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Ціна') }}</span>
                     <div class="dropdown-arrow"></div>
                 </button>
                 <div id="price-options" class="w-full">
@@ -111,10 +111,10 @@
                 <hr class="w-full rounded-sm bg-zinc-300 border-0 h-px" />
             </div>
 
-            <!-- Weight Filter (using packaging) -->
+            <!-- Weight Filter (using packaging as weight) -->
             <section class="w-full rounded-2xl">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-400" aria-expanded="true" aria-controls="weight-options">
-                    <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Weight') }}</span>
+                    <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Вага') }}</span>
                     <div class="dropdown-arrow"></div>
                 </button>
                 <div id="weight-options" class="flex pr-0.5 pb-2 w-full rounded-2xl bg-neutral-200">
@@ -122,8 +122,8 @@
                         @foreach ($availableWeights as $weight)
                             <label class="flex gap-2 items-center px-4 py-2 w-full min-h-10 cursor-pointer hover:bg-neutral-300">
                                 <div class="flex shrink-0 self-stretch my-auto w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 {{ in_array($weight, $weights) ? 'bg-green-600' : 'bg-white' }}"></div>
-                                <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ $weight }}</span>
-                                <input type="checkbox" wire:model="weights" value="{{ $weight }}" class="sr-only" />
+{{--                                <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ $weight }}</span>--}}
+{{--                                <input type="checkbox" wire:model="weights" value="{{ $weight }}" class="sr-only" />--}}
                             </label>
                         @endforeach
                     </div>
@@ -133,7 +133,7 @@
             <!-- Apply Button -->
             <div class="flex gap-2 items-start p-4 w-full text-base font-bold leading-snug text-green-600 whitespace-nowrap">
                 <button wire:click="applyFilters" class="flex flex-1 shrink gap-2 justify-center items-center px-6 py-2.5 w-full rounded-2xl border-2 border-green-600 border-solid basis-0 min-h-11 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-700">
-                    <span class="self-stretch my-auto text-green-600">{{ __('Apply') }}</span>
+                    <span class="self-stretch my-auto text-green-600">{{ __('Застосувати') }}</span>
                 </button>
             </div>
         </aside>
@@ -148,7 +148,7 @@
                             <div class="flex overflow-hidden absolute top-1/2 left-1/2 z-0 flex-col px-1.5 max-w-full -translate-x-1/2 -translate-y-1/2 h-[163px] w-full">
                                 @if ($product->thumbnail)
                                     <img src="{{ $product->thumbnail->getUrl() }}"
-                                         alt="{{ $product->attribute_data['name']->getValue($locale) ?? 'Product' }}"
+                                         alt="{{ $product->translateAttribute('name') }}"
                                          class="object-contain w-full aspect-[1.77] transition-transform duration-300 group-hover:scale-105"/>
                                 @else
                                     <img src="https://via.placeholder.com/300x169" alt="Placeholder image" class="object-contain w-full aspect-[1.77]"/>
@@ -158,8 +158,42 @@
 
                         <div class="p-4 w-full">
                             <div class="w-full text-zinc-800">
-                                <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $product->attribute_data['name']->getValue($locale) ?? 'N/A' }}</h2>
-                                <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ strip_tags($product->attribute_data['description']->getValue($locale) ?? '') }}</p>
+                                <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $product->translateAttribute('name') }}</h2>
+                                <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ strip_tags($product->translateAttribute('description')) }}</p>
+                                <ul class="mt-3 text-xs font-semibold leading-5 text-zinc-800">
+                                    <li>{{ __('Калорійність') }}: {{ $product->attribute_data['calories']->getValue($locale) ?? 'N/A' }}</li>
+                                    <li>{{ __('Вологість') }}: {{ $product->attribute_data['moisture']->getValue($locale) ?? 'N/A' }}</li>
+                                    <li>{{ __('Міцність') }}: {{ $product->attribute_data['strength']->getValue($locale) ?? 'N/A' }}</li>
+                                    <li>{{ __('Зольність') }}: {{ $product->attribute_data['ash']->getValue($locale) ?? 'N/A' }}</li>
+                                    <li>{{ __('Розміри') }}: {{ $product->attribute_data['dimensions']->getValue($locale) ?? 'N/A' }}</li>
+                                    <li>{{ __('Матеріал') }}: {{ $product->attribute_data['material']->getValue($locale) ?? 'N/A' }}</li>
+                                    <li>{{ __('Упаковка') }}: {{ $product->attribute_data['packaging']->getValue($locale) ?? 'N/A' }}</li>
+                                </ul>
+                                @if ($product->variants->isNotEmpty())
+                                    <div class="mt-3 text-xs font-semibold leading-5 text-zinc-800">
+                                        <h3>{{ __('Варіанти') }}</h3>
+                                        @foreach ($product->variants as $variant)
+                                            <div>
+                                                <p>{{ __('SKU') }}: {{ $variant->sku }}</p>
+                                                <p>{{ __('Наявність') }}: {{ $variant->stock }} {{ __('шт.') }}</p>
+                                                @if ($variant->prices->isNotEmpty())
+                                                    <p>{{ __('Ціни') }}:</p>
+                                                    <ul>
+                                                        @foreach ($variant->prices as $price)
+                                                            <li>
+                                                                {{ $price->currency->code }}:
+                                                                {{ number_format($price->price->value / 100, 2) }}
+                                                                @if ($price->compare_price->value > 0)
+                                                                    ({{ __('Порівняльна ціна') }}: {{ number_format($price->compare_price->value / 100, 2) }})
+                                                                @endif
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </a>
@@ -168,6 +202,7 @@
                         <span class="text-base font-bold leading-tight text-zinc-800">
                             <x-product-price :product="$product" />
                         </span>
+
                         <livewire:components.add-to-cart :purchasable="$product->variants->first()" />
                     </div>
                 </div>
