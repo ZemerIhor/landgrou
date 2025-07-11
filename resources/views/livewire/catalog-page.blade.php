@@ -107,34 +107,30 @@
                 <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0" />
             </div>
 
-            <!-- Price Filter (Range Slider) -->
+            <!-- Price Filter (Custom Range Slider) -->
             <section class="py-4 w-full rounded-2xl bg-neutral-200">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-expanded="true" aria-controls="price-filter">
                     <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Цена') }}</span>
                     <div class="flex shrink-0 self-stretch my-auto w-4 h-4 rotate-[-3.1415925661670165rad]" aria-hidden="true"></div>
                 </button>
-                <div id="price-filter" class="flex relative flex-col gap-2 items-start mx-auto my-0 w-[280px] max-md:w-full max-md:max-w-[280px]">
+                <div id="price-filter" class="flex relative flex-col gap-2 items-start mx-auto my-0 w-[280px] max-md:w-full max-md:max-w-[280px]" x-data="{ priceMin: {{ $priceMin ?? $minPrice }}, priceMax: {{ $priceMax ?? $maxPrice }} }">
                     <!-- Price Display -->
                     <header class="flex gap-2 justify-center items-center px-4 w-[280px] max-md:w-full max-md:max-w-[280px]" aria-label="Диапазон цен">
-                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Минимальная цена">
-                            {{ $priceMin ?? $minPrice }}
-                        </span>
+                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Минимальная цена" x-text="priceMin"></span>
                         <span class="text-xs font-bold leading-5 text-zinc-800" aria-hidden="true">-</span>
-                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Максимальная цена">
-                            {{ $priceMax ?? $maxPrice }}
-                        </span>
+                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Максимальная цена" x-text="priceMax"></span>
                     </header>
 
                     <!-- Range Slider -->
                     <div class="relative h-6 w-[280px] max-md:w-full max-md:max-w-[280px]" role="group" aria-label="Фильтр цен">
                         <!-- Background Track -->
-                        <div class="absolute left-4 shrink-0 h-0.5 rounded-sm bg-neutral-400 top-[11px] w-[248px]" aria-hidden="true"></div>
+                        <div class="absolute left-4 shrink-0 h-1 rounded-sm bg-neutral-400 top-[10px] w-[248px]" aria-hidden="true"></div>
 
                         <!-- Active Range -->
-                        <div class="flex absolute top-0 items-center h-6" style="left: {{ $maxPrice > 0 ? ($priceMin ?? $minPrice) / $maxPrice * 248 + 4 : 4 }}px; width: {{ $maxPrice > 0 ? (($priceMax ?? $maxPrice) - ($priceMin ?? $minPrice)) / $maxPrice * 248 : 248 }}px;" aria-hidden="true">
-                            <input type="range" wire:model.live.debounce.500ms="priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-6 h-6 bg-green-600 rounded-2xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 z-10" aria-label="Минимальная цена" />
-                            <div class="h-0.5 bg-green-600 flex-1"></div>
-                            <input type="range" wire:model.live.debounce.500ms="priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-6 h-6 bg-green-600 rounded-2xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 z-10" aria-label="Максимальная цена" />
+                        <div class="absolute top-0 h-6" :style="{ left: `calc(${(priceMin - {{ $minPrice }}) / ({{ $maxPrice }} - {{ $minPrice }}) * 248px + 4px)`, width: `calc(${(priceMax - priceMin) / ({{ $maxPrice }} - {{ $minPrice }}) * 248px)` }" aria-hidden="true">
+                            <input type="range" wire:model.live.debounce.500ms="priceMin" x-model="priceMin" @change="if (priceMin > priceMax) priceMin = priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-6 h-6 bg-green-600 rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 z-10" style="-webkit-appearance: none;" aria-label="Минимальная цена" />
+                            <div class="h-1 bg-green-600 flex-1 top-[10px] absolute"></div>
+                            <input type="range" wire:model.live.debounce.500ms="priceMax" x-model="priceMax" @change="if (priceMax < priceMin) priceMax = priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-6 h-6 bg-green-600 rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 z-10" style="-webkit-appearance: none;" aria-label="Максимальная цена" />
                         </div>
                     </div>
                 </div>
@@ -212,4 +208,35 @@
             </nav>
         </section>
     </div>
+
+    <style>
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #16a34a; /* green-600 */
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #16a34a;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+
 </main>
+
