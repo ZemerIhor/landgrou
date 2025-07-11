@@ -46,7 +46,7 @@
             @endif
             @if ($priceMin || $priceMax)
                 <button wire:click="clearPrice" class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Удалить фильтр: Цена">
-                    <span class="self-stretch my-auto text-white">{{ __('Цина') }}: {{ $priceMin ?? 0 }}-{{ $priceMax ?? '∞' }}</span>
+                    <span class="self-stretch my-auto text-white">{{ __('Цена') }}: {{ $priceMin ?? 0 }}-{{ $priceMax ?? '∞' }}</span>
                     <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ba94ac2e61738f897029abe123360249f0f65ef9?placeholderIfAbsent=true" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" alt="Удалить фильтр" />
                 </button>
             @endif
@@ -122,18 +122,21 @@
                     </header>
 
                     <!-- Range Slider -->
-                    <div class="relative h-6 w-[280px] max-md:w-full max-md:max-w-[280px]" role="group" aria-label="Фильтр цен">
+                    <div class="relative h-8 w-[280px] max-md:w-full max-md:max-w-[280px]" role="group" aria-label="Фильтр цен">
                         <!-- Background Track -->
-                        <div class="absolute left-0 shrink-0 h-1 rounded-sm bg-neutral-400 top-[10px] w-[280px]" aria-hidden="true"></div>
+                        <div class="absolute left-0 shrink-0 h-1 rounded-sm bg-neutral-400 top-[14px] w-[280px]" aria-hidden="true"></div>
 
                         <!-- Active Range -->
-                        <div class="absolute h-1 bg-green-600 top-[10px]" :style="{ left: `calc(${(priceMin - {{ $minPrice }}) / ({{ $maxPrice }} - {{ $minPrice }} || 1) * 260px + 10px)`, width: `calc(${(priceMax - priceMin) / ({{ $maxPrice }} - {{ $minPrice }} || 1) * 260px)` }" aria-hidden="true"></div>
+                        <div class="absolute h-1 bg-green-600 top-[14px]" x-bind:style="{
+                            left: ({{ $maxPrice }} - {{ $minPrice }} > 0) ? `calc(${(priceMin - {{ $minPrice }}) / ({{ $maxPrice }} - {{ $minPrice }}) * 260px + 10px)` : '10px',
+                            width: ({{ $maxPrice }} - {{ $minPrice }} > 0) ? `calc(${(priceMax - priceMin) / ({{ $maxPrice }} - {{ $minPrice }}) * 260px)` : '260px'
+                        }" aria-hidden="true"></div>
 
                         <!-- Min Slider -->
-                        <input type="range" wire:model.live.debounce.500ms="priceMin" x-model="priceMin" @input="if (priceMin > priceMax) priceMin = priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-full h-6 top-0 left-0 cursor-pointer focus:outline-none" style="-webkit-appearance: none; background: transparent;" aria-label="Минимальная цена" />
+                        <input type="range" wire:model.live.debounce.500ms="priceMin" x-model="priceMin" x-on:input="if (priceMin > priceMax) priceMin = priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-full h-8 top-0 left-0 cursor-pointer focus:outline-none" style="-webkit-appearance: none; background: transparent;" aria-label="Минимальная цена" />
 
                         <!-- Max Slider -->
-                        <input type="range" wire:model.live.debounce.500ms="priceMax" x-model="priceMax" @input="if (priceMax < priceMin) priceMax = priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-full h-6 top-0 left-0 cursor-pointer focus:outline-none" style="-webkit-appearance: none; background: transparent;" aria-label="Максимальная цена" />
+                        <input type="range" wire:model.live.debounce.500ms="priceMax" x-model="priceMax" x-on:input="if (priceMax < priceMin) priceMax = priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-full h-8 top-0 left-0 cursor-pointer focus:outline-none" style="-webkit-appearance: none; background: transparent;" aria-label="Максимальная цена" />
                     </div>
                 </div>
             </section>
@@ -217,11 +220,11 @@
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
-            height: 6px;
+            height: 8px;
             background: transparent;
             cursor: pointer;
             position: absolute;
-            top: 10px;
+            top: 12px;
             z-index: 10;
         }
         input[type="range"]::-webkit-slider-thumb {
@@ -232,7 +235,7 @@
             border-radius: 50%;
             border: 2px solid #fff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            margin-top: -6px; /* Align with track */
+            margin-top: -4px; /* Align with track */
         }
         input[type="range"]::-moz-range-thumb {
             width: 16px;
