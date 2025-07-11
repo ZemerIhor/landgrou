@@ -46,7 +46,7 @@
             @endif
             @if ($priceMin || $priceMax)
                 <button wire:click="clearPrice" class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Удалить фильтр: Цена">
-                    <span class="self-stretch my-auto text-white">{{ __('Цена') }}: {{ $priceMin ?? 0 }}-{{ $priceMax ?? '∞' }}</span>
+                    <span class="self-stretch my-auto text-white">{{ __('Цина') }}: {{ $priceMin ?? 0 }}-{{ $priceMax ?? '∞' }}</span>
                     <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ba94ac2e61738f897029abe123360249f0f65ef9?placeholderIfAbsent=true" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" alt="Удалить фильтр" />
                 </button>
             @endif
@@ -116,22 +116,24 @@
                 <div id="price-filter" class="flex relative flex-col gap-2 items-start mx-auto my-0 w-[280px] max-md:w-full max-md:max-w-[280px]" x-data="{ priceMin: {{ $priceMin ?? $minPrice }}, priceMax: {{ $priceMax ?? $maxPrice }} }">
                     <!-- Price Display -->
                     <header class="flex gap-2 justify-center items-center px-4 w-[280px] max-md:w-full max-md:max-w-[280px]" aria-label="Диапазон цен">
-                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Минимальная цена" x-text="priceMin"></span>
+                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Минимальная цена" x-text="priceMin.toFixed(2)"></span>
                         <span class="text-xs font-bold leading-5 text-zinc-800" aria-hidden="true">-</span>
-                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Максимальная цена" x-text="priceMax"></span>
+                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Максимальная цена" x-text="priceMax.toFixed(2)"></span>
                     </header>
 
                     <!-- Range Slider -->
                     <div class="relative h-6 w-[280px] max-md:w-full max-md:max-w-[280px]" role="group" aria-label="Фильтр цен">
                         <!-- Background Track -->
-                        <div class="absolute left-4 shrink-0 h-1 rounded-sm bg-neutral-400 top-[10px] w-[248px]" aria-hidden="true"></div>
+                        <div class="absolute left-0 shrink-0 h-1 rounded-sm bg-neutral-400 top-[10px] w-[280px]" aria-hidden="true"></div>
 
                         <!-- Active Range -->
-                        <div class="absolute top-0 h-6" :style="{ left: `calc(${(priceMin - {{ $minPrice }}) / ({{ $maxPrice }} - {{ $minPrice }}) * 248px + 4px)`, width: `calc(${(priceMax - priceMin) / ({{ $maxPrice }} - {{ $minPrice }}) * 248px)` }" aria-hidden="true">
-                            <input type="range" wire:model.live.debounce.500ms="priceMin" x-model="priceMin" @change="if (priceMin > priceMax) priceMin = priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-6 h-6 bg-green-600 rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 z-10" style="-webkit-appearance: none;" aria-label="Минимальная цена" />
-                            <div class="h-1 bg-green-600 flex-1 top-[10px] absolute"></div>
-                            <input type="range" wire:model.live.debounce.500ms="priceMax" x-model="priceMax" @change="if (priceMax < priceMin) priceMax = priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-6 h-6 bg-green-600 rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 z-10" style="-webkit-appearance: none;" aria-label="Максимальная цена" />
-                        </div>
+                        <div class="absolute h-1 bg-green-600 top-[10px]" :style="{ left: `calc(${(priceMin - {{ $minPrice }}) / ({{ $maxPrice }} - {{ $minPrice }} || 1) * 260px + 10px)`, width: `calc(${(priceMax - priceMin) / ({{ $maxPrice }} - {{ $minPrice }} || 1) * 260px)` }" aria-hidden="true"></div>
+
+                        <!-- Min Slider -->
+                        <input type="range" wire:model.live.debounce.500ms="priceMin" x-model="priceMin" @input="if (priceMin > priceMax) priceMin = priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-full h-6 top-0 left-0 cursor-pointer focus:outline-none" style="-webkit-appearance: none; background: transparent;" aria-label="Минимальная цена" />
+
+                        <!-- Max Slider -->
+                        <input type="range" wire:model.live.debounce.500ms="priceMax" x-model="priceMax" @input="if (priceMax < priceMin) priceMax = priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-full h-6 top-0 left-0 cursor-pointer focus:outline-none" style="-webkit-appearance: none; background: transparent;" aria-label="Максимальная цена" />
                     </div>
                 </div>
             </section>
@@ -209,6 +211,9 @@
         </section>
     </div>
 
+    <!-- Alpine.js for Range Slider -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
     <style>
         input[type="range"] {
             -webkit-appearance: none;
@@ -216,7 +221,8 @@
             height: 6px;
             background: transparent;
             cursor: pointer;
-            position: relative;
+            position: absolute;
+            top: 10px;
             z-index: 10;
         }
         input[type="range"]::-webkit-slider-thumb {
@@ -227,6 +233,7 @@
             border-radius: 50%;
             border: 2px solid #fff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-top: -6px; /* Align with track */
         }
         input[type="range"]::-moz-range-thumb {
             width: 16px;
@@ -236,7 +243,13 @@
             border: 2px solid #fff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
+        input[type="range"]:focus::-webkit-slider-thumb {
+            outline: 2px solid #16a34a;
+            outline-offset: 2px;
+        }
+        input[type="range"]:focus::-moz-range-thumb {
+            outline: 2px solid #16a34a;
+            outline-offset: 2px;
+        }
     </style>
-
 </main>
-
