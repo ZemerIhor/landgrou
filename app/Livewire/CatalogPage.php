@@ -4,9 +4,9 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use Lunar\Models\Product;
 use Lunar\Models\Collection;
 use Lunar\Models\Currency;
+use Lunar\Models\Product;
 use Illuminate\Support\Facades\Log;
 
 class CatalogPage extends Component
@@ -64,12 +64,14 @@ class CatalogPage extends Component
 
         try {
             $productsQuery = Product::where('status', 'published')
-                ->with(['variants', 'thumbnail', 'collections', 'variants.prices', 'attributes.attribute'])
-            ->when(!empty($this->categories), function ($query) {
-                $query->whereHas('collections', function ($query) {
+                ->with(['variants', 'thumbnail', 'collections', 'variants.prices']);
+
+            // Фильтр по категориям
+            if (!empty($this->categories)) {
+                $productsQuery->whereHas('collections', function ($query) {
                     $query->whereIn('id', $this->categories);
                 });
-            });
+            }
 
             // Фильтр по цене
             if ($this->priceMin || $this->priceMax) {
@@ -86,7 +88,7 @@ class CatalogPage extends Component
 
             // Фильтр по весу
             if (!empty($this->weights)) {
-                $productsQuery->where(function ($query) {
+                $productsQuery->where(function ($query) use ($locale) {
                     foreach ($this->weights as $weight) {
                         $query->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(attribute_data, '$.weight.value')) = ?", [$weight]);
                     }
@@ -96,10 +98,10 @@ class CatalogPage extends Component
             // Сортировка
             switch ($this->sort) {
                 case 'name_asc':
-                    $productsQuery->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(attribute_data, '$.name.value." . $locale . "')) ASC");
+                    $productsQuery->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(attribute_data, '$.name.value.{$locale}')) ASC");
                     break;
                 case 'name_desc':
-                    $productsQuery->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(attribute_data, '$.name.value." . $locale . "')) DESC");
+                    $productsQuery->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(attribute_data, '$.name.value.{$locale}')) DESC");
                     break;
                 case 'price_asc':
                     $productsQuery->select('lunar_products.*')
@@ -116,15 +118,29 @@ class CatalogPage extends Component
             }
 
             $products = $productsQuery->paginate($this->perPage);
+
+            // Получить коллекции (категории)
             $collections = Collection::whereHas('products')->get();
+
+            // Получить доступные веса
+            $availableWeights = Product::where('status', 'published')
+                ->get()
+                ->pluck('attribute_data.weight.value')
+                ->filter()
+                ->unique()
+                ->sort()
+                ->values()
+                ->toArray();
+
+            // Минимальная и максимальная цена
             $minPrice = \DB::table('lunar_prices')
-                    ->where('priceable_type', 'Lunar\\Models\\ProductVariant')
-                    ->where('currency_id', $currency->id)
-                    ->min('price') / 100;
+                ->where('priceable_type', 'Lunar\\Models\\ProductVariant')
+                ->where('currency_id', $currency->id)
+                ->min('price') / 100 ?? 0;
             $maxPrice = \DB::table('lunar_prices')
-                    ->where('priceable_type', 'Lunar\\Models\\ProductVariant')
-                    ->where('currency_id', $currency->id)
-                    ->max('price') / 100;
+                ->where('priceable_type', 'Lunar\\Models\\ProductVariant')
+                ->where('currency_id', $currency->id)
+                ->max('price') / 100 ?? 0;
 
             Log::info('Catalog Page Products', [
                 'products' => $products->toArray(),
@@ -141,7 +157,7 @@ class CatalogPage extends Component
             return view('livewire.catalog-page', [
                 'products' => $products,
                 'collections' => $collections,
-//                'availableWeights' => $this->availableWeights,
+                'availableWeights' => $availableWeights,
                 'minPrice' => $minPrice,
                 'maxPrice' => $maxPrice,
                 'locale' => $locale,
@@ -149,6 +165,7 @@ class CatalogPage extends Component
         } catch (\Exception $e) {
             Log::error('Error loading Catalog Page', [
                 'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
                 'filters' => [
                     'categories' => $this->categories,
                     'priceMin' => $this->priceMin,
@@ -160,9 +177,9 @@ class CatalogPage extends Component
             ]);
 
             return view('livewire.catalog-page', [
-                'products' => Product::query()->paginate($this->perPage),
+                'products' => Product::where('status', 'published')->paginate($this->perPage),
                 'collections' => Collection::whereHas('products')->get(),
-//                'availableWeights' => $this->availableWeights,
+                'availableWeights' => [],
                 'minPrice' => null,
                 'maxPrice' => null,
                 'locale' => $locale,
