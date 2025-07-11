@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use Lunar\Models\Collection;
+use Lunar\Models\Brand;
 use Lunar\Models\Currency;
 use Lunar\Models\Product;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +15,7 @@ class CatalogPage extends Component
     use WithPagination;
 
     public $perPage = 12;
-    public $categories = [];
+    public $brands = [];
     public $priceMin = null;
     public $priceMax = null;
     public $weights = [];
@@ -30,22 +30,15 @@ class CatalogPage extends Component
         $this->currency = Currency::where('code', config('lunar.currency'))->first() ?? Currency::first();
     }
 
-    /**
-     * Computed property to return products with applied filters.
-     */
     public function getProductsProperty()
     {
         $productsQuery = Product::where('status', 'published')
-            ->with(['variants', 'thumbnail', 'collections', 'variants.prices']);
+            ->with(['variants', 'thumbnail', 'brand', 'variants.prices']);
 
-        // Category filter
-        if (!empty($this->categories)) {
-            $productsQuery->whereHas('collections', function ($query) {
-                $query->whereIn('id', $this->categories);
-            });
+        if (!empty($this->brands)) {
+            $productsQuery->whereIn('brand_id', $this->brands);
         }
 
-        // Price filter
         if ($this->priceMin || $this->priceMax) {
             $productsQuery->whereHas('variants.prices', function ($query) {
                 $query->where('currency_id', $this->currency->id);
@@ -58,7 +51,6 @@ class CatalogPage extends Component
             });
         }
 
-        // Weight filter (using 'packaging' instead of 'weight')
         if (!empty($this->weights)) {
             $productsQuery->where(function ($query) {
                 foreach ($this->weights as $weight) {
@@ -67,7 +59,6 @@ class CatalogPage extends Component
             });
         }
 
-        // Sorting
         switch ($this->sort) {
             case 'name_asc':
                 $productsQuery->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(attribute_data, '$.name.value.{$this->locale}')) ASC");
@@ -92,17 +83,11 @@ class CatalogPage extends Component
         return $productsQuery->paginate($this->perPage);
     }
 
-    /**
-     * Computed property to return collections.
-     */
-    public function getCollectionsProperty()
+    public function getAvailableBrandsProperty()
     {
-        return Collection::whereHas('products')->get();
+        return Brand::whereHas('products')->get();
     }
 
-    /**
-     * Computed property to return available weights.
-     */
     public function getAvailableWeightsProperty()
     {
         return Product::where('status', 'published')
@@ -117,9 +102,6 @@ class CatalogPage extends Component
             ->toArray();
     }
 
-    /**
-     * Computed property to return price range.
-     */
     public function getPriceRangeProperty()
     {
         return [
@@ -139,9 +121,9 @@ class CatalogPage extends Component
         $this->resetPage();
     }
 
-    public function removeCategory($id)
+    public function removeBrand($id)
     {
-        $this->categories = array_diff($this->categories, [$id]);
+        $this->brands = array_diff($this->brands, [$id]);
         $this->applyFilters();
     }
 
@@ -165,7 +147,7 @@ class CatalogPage extends Component
 
     public function updated($property)
     {
-        if (in_array($property, ['categories', 'priceMin', 'priceMax', 'weights', 'sort'])) {
+        if (in_array($property, ['brands', 'priceMin', 'priceMax', 'weights', 'sort'])) {
             $this->applyFilters();
         }
     }
@@ -176,7 +158,7 @@ class CatalogPage extends Component
             Log::info('Catalog Page Products', [
                 'products' => $this->products->toArray(),
                 'filters' => [
-                    'categories' => $this->categories,
+                    'brands' => $this->brands,
                     'priceMin' => $this->priceMin,
                     'priceMax' => $this->priceMax,
                     'weights' => $this->weights,
@@ -187,7 +169,7 @@ class CatalogPage extends Component
 
             return view('livewire.catalog-page', [
                 'products' => $this->products,
-                'collections' => $this->collections,
+                'availableBrands' => $this->availableBrands,
                 'availableWeights' => $this->availableWeights,
                 'minPrice' => $this->priceRange['min'],
                 'maxPrice' => $this->priceRange['max'],
@@ -199,7 +181,7 @@ class CatalogPage extends Component
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'filters' => [
-                    'categories' => $this->categories,
+                    'brands' => $this->brands,
                     'priceMin' => $this->priceMin,
                     'priceMax' => $this->priceMax,
                     'weights' => $this->weights,
@@ -210,7 +192,7 @@ class CatalogPage extends Component
 
             return view('livewire.catalog-page', [
                 'products' => Product::where('status', 'published')->paginate($this->perPage),
-                'collections' => Collection::whereHas('products')->get(),
+                'availableBrands' => Brand::whereHas('products')->get(),
                 'availableWeights' => [],
                 'minPrice' => null,
                 'maxPrice' => null,
