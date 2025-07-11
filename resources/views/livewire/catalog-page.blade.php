@@ -132,9 +132,9 @@
 
                         <!-- Active Range -->
                         <div class="flex absolute top-0 items-center h-6" style="left: {{ $maxPrice > 0 ? ($priceMin ?? $minPrice) / $maxPrice * 248 + 4 : 4 }}px; width: {{ $maxPrice > 0 ? (($priceMax ?? $maxPrice) - ($priceMin ?? $minPrice)) / $maxPrice * 248 : 248 }}px;" aria-hidden="true">
-                            <input type="range" wire:model.live.debounce.500ms="priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-6 h-6 bg-green-600 rounded-2xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Минимальная цена" />
+                            <input type="range" wire:model.live.debounce.500ms="priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-6 h-6 bg-green-600 rounded-2xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 z-10" aria-label="Минимальная цена" />
                             <div class="h-0.5 bg-green-600 flex-1"></div>
-                            <input type="range" wire:model.live.debounce.500ms="priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-6 h-6 bg-green-600 rounded-2xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Максимальная цена" />
+                            <input type="range" wire:model.live.debounce.500ms="priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-6 h-6 bg-green-600 rounded-2xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 z-10" aria-label="Максимальная цена" />
                         </div>
                     </div>
                 </div>
