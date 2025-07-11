@@ -74,14 +74,13 @@
                                      class="w-full h-48 object-contain mb-2">
                             @endif
 
-                            <h2 class="text-lg font-bold">
-                                {{ $product->attribute_data['name']->getValue($locale) ?? 'N/A' }}
-                            </h2>
+                                <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $product->translateAttribute('name') }}</h2>
 
 
 
 
-                            <p class="font-semibold mt-2">
+
+                                <p class="font-semibold mt-2">
                                 <x-product-price :product="$product" />
                             </p>
 
