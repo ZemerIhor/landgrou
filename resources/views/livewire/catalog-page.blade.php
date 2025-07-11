@@ -78,9 +78,7 @@
                                 {{ $product->attribute_data['name']->getValue($locale) ?? 'N/A' }}
                             </h2>
 
-                            <p class="text-sm mt-1">
-                                {{ \Illuminate\Support\Str::limit(strip_tags($product->attribute_data['description']->getValue($locale) ?? ''), 100) }}
-                            </p>
+
 
 
                             <p class="font-semibold mt-2">
@@ -91,31 +89,7 @@
                                 <p class="text-sm mt-1">{{ __('Бренд') }}: {{ $product->brand->translateAttribute('name') ?? $product->brand->name ?? 'N/A' }}</p>
                             @endif
 
-                            @if ($product->variants->isNotEmpty())
-                                <div class="text-sm mt-2">
-                                    <h3>{{ __('Варіанти') }}</h3>
-                                    @foreach ($product->variants as $variant)
-                                        <div>
-                                            <p>{{ __('SKU') }}: {{ $variant->sku ?? 'N/A' }}</p>
-                                            <p>{{ __('Наявність') }}: {{ $variant->stock ?? 0 }} {{ __('шт.') }}</p>
-                                            @if ($variant->prices->isNotEmpty())
-                                                <p>{{ __('Ціни') }}:</p>
-                                                <ul>
-                                                    @foreach ($variant->prices as $price)
-                                                        <li>
-                                                            {{ $price->currency->code }}:
-                                                            {{ number_format($price->price->value / 100, 2) }}
-                                                            @if ($price->compare_price->value > 0)
-                                                                ({{ __('Порівняльна ціна') }}: {{ number_format($price->compare_price->value / 100, 2) }})
-                                                            @endif
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            @endif
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
+
                         </a>
 
                         <div class="mt-3">
