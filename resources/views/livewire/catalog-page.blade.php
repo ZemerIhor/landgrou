@@ -60,7 +60,7 @@
 
         <!-- Sort Dropdown -->
         <div class="relative">
-            <select wire:model="sort" class="flex gap-4 items-center self-stretch px-4 my-auto text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 w-[180px] hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Сортировка">
+            <select wire:model.live="sort" class="flex gap-4 items-center self-stretch px-4 my-auto text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 w-[180px] hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Сортировка">
                 <option value="name_asc">{{ __('Название А-Я') }}</option>
                 <option value="name_desc">{{ __('Название Я-А') }}</option>
                 <option value="price_asc">{{ __('Цена: низкая к высокой') }}</option>
@@ -70,10 +70,10 @@
 
         <!-- View Toggle -->
         <div class="flex gap-1 items-center self-stretch p-1 my-auto rounded-2xl bg-neutral-200 min-h-10" role="group" aria-label="Вид отображения">
-            <button wire:click="setView('grid')" class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 {{ $view === 'grid' ? 'bg-green-600' : '' }}" aria-label="Вид сетки" aria-pressed="{{ $view === 'grid' ? 'true' : 'false' }}">
+            <button wire:click="setView('grid')" class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 {{ $view === 'grid' ? 'bg-green-600 text-white' : 'bg-neutral-200 text-zinc-800' }}" aria-label="Вид сетки" aria-pressed="{{ $view === 'grid' ? 'true' : 'false' }}">
                 <div class="flex self-stretch my-auto w-6 min-h-6" aria-hidden="true">🟦</div>
             </button>
-            <button wire:click="setView('list')" class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 {{ $view === 'list' ? 'bg-green-600' : '' }}" aria-label="Вид списка" aria-pressed="{{ $view === 'list' ? 'true' : 'false' }}">
+            <button wire:click="setView('list')" class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 {{ $view === 'list' ? 'bg-green-600 text-white' : 'bg-neutral-200 text-zinc-800' }}" aria-label="Вид списка" aria-pressed="{{ $view === 'list' ? 'true' : 'false' }}">
                 <div class="flex self-stretch my-auto w-6 min-h-6" aria-hidden="true">📄</div>
             </button>
         </div>
@@ -107,19 +107,35 @@
                 <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0" />
             </div>
 
-            <!-- Price Filter -->
+            <!-- Price Filter (Range Slider) -->
             <section class="py-4 w-full rounded-2xl bg-neutral-200">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-expanded="true" aria-controls="price-filter">
                     <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Цена') }}</span>
                     <div class="flex shrink-0 self-stretch my-auto w-4 h-4 rotate-[-3.1415925661670165rad]" aria-hidden="true"></div>
                 </button>
-                <div id="price-filter" class="w-full max-w-[280px]">
-                    <div class="flex gap-2 justify-center items-center px-4 w-full text-xs font-semibold text-zinc-800">
-                        <label for="price-min" class="sr-only">{{ __('Минимальная цена') }}</label>
-                        <input type="number" id="price-min" wire:model.debounce.500ms="priceMin" placeholder="{{ $minPrice }}" min="0" step="0.01" class="self-stretch my-auto text-zinc-800 bg-transparent border-none outline-none focus:ring-2 focus:ring-green-600 rounded" />
-                        <span class="self-stretch my-auto text-zinc-800" aria-hidden="true">-</span>
-                        <label for="price-max" class="sr-only">{{ __('Максимальная цена') }}</label>
-                        <input type="number" id="price-max" wire:model.debounce.500ms="priceMax" placeholder="{{ $maxPrice }}" min="0" step="0.01" class="self-stretch my-auto text-zinc-800 bg-transparent border-none outline-none focus:ring-2 focus:ring-green-600 rounded" />
+                <div id="price-filter" class="flex relative flex-col gap-2 items-start mx-auto my-0 w-[280px] max-md:w-full max-md:max-w-[280px]">
+                    <!-- Price Display -->
+                    <header class="flex gap-2 justify-center items-center px-4 w-[280px] max-md:w-full max-md:max-w-[280px]" aria-label="Диапазон цен">
+                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Минимальная цена">
+                            {{ $priceMin ?? $minPrice }}
+                        </span>
+                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-hidden="true">-</span>
+                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Максимальная цена">
+                            {{ $priceMax ?? $maxPrice }}
+                        </span>
+                    </header>
+
+                    <!-- Range Slider -->
+                    <div class="relative h-6 w-[280px] max-md:w-full max-md:max-w-[280px]" role="group" aria-label="Фильтр цен">
+                        <!-- Background Track -->
+                        <div class="absolute left-4 shrink-0 h-0.5 rounded-sm bg-neutral-400 top-[11px] w-[248px]" aria-hidden="true"></div>
+
+                        <!-- Active Range -->
+                        <div class="flex absolute top-0 items-center h-6" style="left: {{ ($priceMin ?? $minPrice) / $maxPrice * 248 + 4 }}px; width: {{ (($priceMax ?? $maxPrice) - ($priceMin ?? $minPrice)) / $maxPrice * 248 }}px;" aria-hidden="true">
+                            <input type="range" wire:model.live.debounce.500ms="priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-6 h-6 bg-green-600 rounded-2xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Минимальная цена" />
+                            <div class="h-0.5 bg-green-600 flex-1"></div>
+                            <input type="range" wire:model.live.debounce.500ms="priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-6 h-6 bg-green-600 rounded-2xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Максимальная цена" />
+                        </div>
                     </div>
                 </div>
             </section>
@@ -145,9 +161,10 @@
                 </div>
             @endif
 
-            <div class="{{ $view == 'grid' ? 'flex flex-wrap gap-2 items-center w-full min-h-[360px] max-md:max-w-full' : 'flex flex-col gap-6' }}">
+            <!-- Grid or List view based on $view -->
+            <div class="{{ $view == 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6' : 'flex flex-col gap-6' }}">
                 @forelse ($products as $product)
-                    <article wire:key="product-{{ $product->id }}" class="overflow-hidden flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60">
+                    <article wire:key="product-{{ $product->id }}" class="overflow-hidden rounded-3xl bg-neutral-200 min-w-60">
                         <div class="flex relative flex-col w-full min-h-[153px]">
                             @if ($product->thumbnail)
                                 <div class="flex overflow-hidden absolute top-2/4 left-2/4 z-0 flex-col px-1.5 max-w-full -translate-x-2/4 -translate-y-2/4 h-[163px] w-[300px]">

@@ -28,6 +28,10 @@ class CatalogPage extends Component
     {
         $this->locale = app()->getLocale();
         $this->currency = Currency::where('code', config('lunar.currency'))->first() ?? Currency::first();
+        Log::info('Catalog Page Mounted', [
+            'locale' => $this->locale,
+            'currency' => $this->currency->code,
+        ]);
     }
 
     public function getProductsProperty()
@@ -165,6 +169,8 @@ class CatalogPage extends Component
             'brands' => $this->brands,
             'priceMin' => $this->priceMin,
             'priceMax' => $this->priceMax,
+            'sort' => $this->sort,
+            'view' => $this->view,
         ]);
     }
 
@@ -192,11 +198,19 @@ class CatalogPage extends Component
     public function setView($view)
     {
         $this->view = $view;
+        Log::info('View Changed', [
+            'view' => $this->view,
+        ]);
+        $this->resetPage();
     }
 
     public function updated($property)
     {
         if (in_array($property, ['brands', 'priceMin', 'priceMax', 'sort'])) {
+            Log::info('Property Updated', [
+                'property' => $property,
+                'value' => $this->$property,
+            ]);
             $this->applyFilters();
         }
     }
