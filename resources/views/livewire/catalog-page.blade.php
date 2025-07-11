@@ -190,9 +190,9 @@
             </div>
 
             <!-- Pagination -->
-{{--            <nav class="flex flex-wrap gap-2 justify-center items-center pt-10 w-full max-md:max-w-full" aria-label="Навигация по страницам">--}}
-{{--                {{ $products->links('vendor.livewire.tailwind') }}--}}
-{{--            </nav>--}}
+            <nav class="flex flex-wrap gap-2 justify-center items-center pt-10 w-full max-md:max-w-full" aria-label="Навигация по страницам">
+                {{ $products->links() }}
+            </nav>
         </section>
     </div>
 </main>

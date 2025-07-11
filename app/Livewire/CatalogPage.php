@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use Lunar\Models\Brand;
 use Lunar\Models\Currency;
 use Lunar\Models\Product;
+use Lunar\Models\ProductVariant;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
@@ -43,16 +44,11 @@ class CatalogPage extends Component
                 $query->whereHas('prices', function ($priceQuery) {
                     $priceQuery->where('currency_id', $this->currency->id);
 
-                    // Use float and assume prices are stored in base currency units (e.g., UAH)
+                    // Ensure prices are treated as decimals (UAH)
                     $priceMin = $this->priceMin !== null ? max(0, (float) $this->priceMin) : 0;
                     $priceMax = $this->priceMax !== null ? max(0, (float) $this->priceMax) : PHP_INT_MAX;
 
-                    if ($this->priceMin !== null) {
-                        $priceQuery->where('price', '>=', $priceMin);
-                    }
-                    if ($this->priceMax !== null) {
-                        $priceQuery->where('price', '<=', $priceMax);
-                    }
+                    $priceQuery->whereBetween('price', [$priceMin, $priceMax]);
                 });
             });
         }
@@ -65,30 +61,67 @@ class CatalogPage extends Component
                 $productsQuery->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(attribute_data, '$.name.value.{$this->locale}')) DESC");
                 break;
             case 'price_asc':
-                $productsQuery->select('lunar_products.*')
-                    ->join('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
-                    ->join('lunar_prices', function ($join) {
+                $productsQuery->select('lunar_products.*', \DB::raw('MIN(lunar_prices.price) as min_price'))
+                    ->leftJoin('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
+                    ->leftJoin('lunar_prices', function ($join) {
                         $join->on('lunar_product_variants.id', '=', 'lunar_prices.priceable_id')
-                            ->where('lunar_prices.priceable_type', '=', 'Lunar\\Models\\ProductVariant')
+                            ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                             ->where('lunar_prices.currency_id', '=', $this->currency->id);
                     })
-                    ->groupBy('lunar_products.id')
-                    ->orderByRaw('MIN(lunar_prices.price) ASC');
+                    ->groupBy(
+                        'lunar_products.id',
+                        'lunar_products.status',
+                        'lunar_products.brand_id',
+                        'lunar_products.attribute_data',
+                        'lunar_products.created_at',
+                        'lunar_products.updated_at',
+                        'lunar_products.deleted_at'
+                    )
+                    ->orderBy('min_price', 'ASC');
                 break;
             case 'price_desc':
-                $productsQuery->select('lunar_products.*')
-                    ->join('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
-                    ->join('lunar_prices', function ($join) {
+                $productsQuery->select('lunar_products.*', \DB::raw('MAX(lunar_prices.price) as max_price'))
+                    ->leftJoin('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
+                    ->leftJoin('lunar_prices', function ($join) {
                         $join->on('lunar_product_variants.id', '=', 'lunar_prices.priceable_id')
-                            ->where('lunar_prices.priceable_type', '=', 'Lunar\\Models\\ProductVariant')
+                            ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                             ->where('lunar_prices.currency_id', '=', $this->currency->id);
                     })
-                    ->groupBy('lunar_products.id')
-                    ->orderByRaw('MAX(lunar_prices.price) DESC');
+                    ->groupBy(
+                        'lunar_products.id',
+                        'lunar_products.status',
+                        'lunar_products.brand_id',
+                        'lunar_products.attribute_data',
+                        'lunar_products.created_at',
+                        'lunar_products.updated_at',
+                        'lunar_products.deleted_at'
+                    )
+                    ->orderBy('max_price', 'DESC');
                 break;
         }
 
-        return $productsQuery->paginate($this->perPage);
+        $products = $productsQuery->paginate($this->perPage);
+
+        Log::info('Products Retrieved', [
+            'total' => $products->total(),
+            'current_page' => $products->currentPage(),
+            'items' => array_map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->translateAttribute('name'),
+                    'prices' => $product->variants->map(function ($variant) {
+                        return $variant->prices->map(function ($price) {
+                            return [
+                                'currency_id' => $price->currency_id,
+                                'price' => $price->price,
+                            ];
+                        })->toArray();
+                    })->toArray(),
+                ];
+            }, $products->items()),
+        ]);
+
+        return $products;
     }
 
     public function getAvailableBrandsProperty()
@@ -99,12 +132,12 @@ class CatalogPage extends Component
     public function getPriceRangeProperty()
     {
         $minPrice = \DB::table('lunar_prices')
-            ->where('priceable_type', 'Lunar\\Models\\ProductVariant')
+            ->where('priceable_type', 'Lunar\Models\ProductVariant')
             ->where('currency_id', $this->currency->id)
             ->min('price') ?? 0;
 
         $maxPrice = \DB::table('lunar_prices')
-            ->where('priceable_type', 'Lunar\\Models\\ProductVariant')
+            ->where('priceable_type', 'Lunar\Models\ProductVariant')
             ->where('currency_id', $this->currency->id)
             ->max('price') ?? 0;
 
