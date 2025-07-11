@@ -82,15 +82,6 @@
                                 {{ \Illuminate\Support\Str::limit(strip_tags($product->attribute_data['description']->getValue($locale) ?? ''), 100) }}
                             </p>
 
-                            <ul class="text-sm mt-2">
-                                <li>{{ __('Калорійність') }}: {{ $product->attribute_data['calories']->getValue($locale) ?? 'N/A' }}</li>
-                                <li>{{ __('Вологість') }}: {{ $product->attribute_data['moisture']->getValue($locale) ?? 'N/A' }}</li>
-                                <li>{{ __('Міцність') }}: {{ $product->attribute_data['strength']->getValue($locale) ?? 'N/A' }}</li>
-                                <li>{{ __('Зольність') }}: {{ $product->attribute_data['ash']->getValue($locale) ?? 'N/A' }}</li>
-                                <li>{{ __('Розміри') }}: {{ $product->attribute_data['dimensions']->getValue($locale) ?? 'N/A' }}</li>
-                                <li>{{ __('Матеріал') }}: {{ $product->attribute_data['material']->getValue($locale) ?? 'N/A' }}</li>
-                                <li>{{ __('Упаковка') }}: {{ $product->attribute_data['packaging']->getValue($locale) ?? 'N/A' }}</li>
-                            </ul>
 
                             <p class="font-semibold mt-2">
                                 <x-product-price :product="$product" />
