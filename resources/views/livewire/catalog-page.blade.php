@@ -79,8 +79,7 @@
 
                                 <div class="p-4 w-full">
                                     <div class="w-full text-zinc-800">
-                                        <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $product->attribute_data['name']->getValue($locale) ?? 'N/A' }}</h2>
-                                        <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ strip_tags($product->attribute_data['description']->getValue($locale) ?? '') }}</p>
+                                        <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ strip_tags($product->translateAttribute('description')) }}</p>
                                     </div>
                                 </div>
 
