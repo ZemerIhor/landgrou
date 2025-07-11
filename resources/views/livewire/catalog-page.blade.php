@@ -25,8 +25,8 @@
             <!-- Active Filter Tags -->
             <div class="flex flex-1 shrink gap-0.5 items-center self-stretch my-auto text-xs font-bold leading-tight text-white basis-8 min-w-60">
                 @foreach ($categories as $categoryId)
-                    <button wire:click="removeCategory({{ $categoryId }})" class="flex gap-1 items-center pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-600" aria-label="Remove filter: {{ $collections->firstWhere('id', $categoryId)->translateAttribute('name') ?? '' }}">
-                        <span class="self-stretch my-auto text-white">{{ $collections->firstWhere('id', $categoryId)->translateAttribute('name') ?? '' }}</span>
+                    <button wire:click="removeCategory({{ $categoryId }})" class="flex gap-1 items-center pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-600" aria-label="Remove filter: {{ $collections->firstWhere('id', $categoryId)->translateAttribute('name') }}">
+                        <span class="self-stretch my-auto text-white">{{ $collections->firstWhere('id', $categoryId)->translateAttribute('name') }}</span>
                         <span class="self-stretch my-auto w-6 aspect-square">×</span>
                     </button>
                 @endforeach
@@ -78,7 +78,7 @@
                         @foreach ($collections as $collection)
                             <label class="flex gap-2 items-center px-4 py-2 w-full min-h-10 cursor-pointer hover:bg-neutral-300">
                                 <div class="flex shrink-0 self-stretch my-auto w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 {{ in_array($collection->id, $categories) ? 'bg-green-600' : 'bg-white' }}"></div>
-                                <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ $collection->translateAttribute('name') ?? '' }}</span>
+                                <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ $collection->translateAttribute('name') }}</span>
                                 <input type="checkbox" wire:model="categories" value="{{ $collection->id }}" class="sr-only" />
                             </label>
                         @endforeach
@@ -111,7 +111,7 @@
                 <hr class="w-full rounded-sm bg-zinc-300 border-0 h-px" />
             </div>
 
-            <!-- Weight Filter (using packaging as weight) -->
+            <!-- Weight Filter -->
             <section class="w-full rounded-2xl">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-400" aria-expanded="true" aria-controls="weight-options">
                     <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Вага') }}</span>
@@ -119,13 +119,13 @@
                 </button>
                 <div id="weight-options" class="flex pr-0.5 pb-2 w-full rounded-2xl bg-neutral-200">
                     <div class="flex-1 shrink self-start w-full text-xs font-semibold basis-0 text-zinc-800 max-h-64 overflow-y-auto scrollbar-thin">
-                        @foreach ($availableWeights as $weight)
-                            <label class="flex gap-2 items-center px-4 py-2 w-full min-h-10 cursor-pointer hover:bg-neutral-300">
-                                <div class="flex shrink-0 self-stretch my-auto w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 {{ in_array($weight, $weights) ? 'bg-green-600' : 'bg-white' }}"></div>
-{{--                                <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ $weight }}</span>--}}
-{{--                                <input type="checkbox" wire:model="weights" value="{{ $weight }}" class="sr-only" />--}}
-                            </label>
-                        @endforeach
+                        {{--                        @foreach ($availableWeights as $weight)--}}
+                        {{--                            <label class="flex gap-2 items-center px-4 py-2 w-full min-h-10 cursor-pointer hover:bg-neutral-300">--}}
+                        {{--                                <div class="flex shrink-0 self-stretch my-auto w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 {{ in_array($weight, $weights) ? 'bg-green-600' : 'bg-white' }}"></div>--}}
+                        {{--                                <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ $weight }}</span>--}}
+                        {{--                                <input type="checkbox" wire:model="weights" value="{{ $weight }}" class="sr-only" />--}}
+                        {{--                            </label>--}}
+                        {{--                        @endforeach--}}
                     </div>
                 </div>
             </section>
@@ -141,6 +141,7 @@
 
     <div class="{{ $view == 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6' : 'flex flex-col gap-6' }} mt-6">
         @foreach ($products as $product)
+
             <article class="overflow-hidden flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60" role="listitem">
                 <div class="block group">
                     <a href="{{ route('product.view', $product->defaultUrl->slug) }}" wire:navigate class="block">
@@ -160,40 +161,6 @@
                             <div class="w-full text-zinc-800">
                                 <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $product->translateAttribute('name') }}</h2>
                                 <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ strip_tags($product->translateAttribute('description')) }}</p>
-                                <ul class="mt-3 text-xs font-semibold leading-5 text-zinc-800">
-                                    <li>{{ __('Калорійність') }}: {{ $product->attribute_data['calories']->getValue($locale) ?? 'N/A' }}</li>
-                                    <li>{{ __('Вологість') }}: {{ $product->attribute_data['moisture']->getValue($locale) ?? 'N/A' }}</li>
-                                    <li>{{ __('Міцність') }}: {{ $product->attribute_data['strength']->getValue($locale) ?? 'N/A' }}</li>
-                                    <li>{{ __('Зольність') }}: {{ $product->attribute_data['ash']->getValue($locale) ?? 'N/A' }}</li>
-                                    <li>{{ __('Розміри') }}: {{ $product->attribute_data['dimensions']->getValue($locale) ?? 'N/A' }}</li>
-                                    <li>{{ __('Матеріал') }}: {{ $product->attribute_data['material']->getValue($locale) ?? 'N/A' }}</li>
-                                    <li>{{ __('Упаковка') }}: {{ $product->attribute_data['packaging']->getValue($locale) ?? 'N/A' }}</li>
-                                </ul>
-                                @if ($product->variants->isNotEmpty())
-                                    <div class="mt-3 text-xs font-semibold leading-5 text-zinc-800">
-                                        <h3>{{ __('Варіанти') }}</h3>
-                                        @foreach ($product->variants as $variant)
-                                            <div>
-                                                <p>{{ __('SKU') }}: {{ $variant->sku }}</p>
-                                                <p>{{ __('Наявність') }}: {{ $variant->stock }} {{ __('шт.') }}</p>
-                                                @if ($variant->prices->isNotEmpty())
-                                                    <p>{{ __('Ціни') }}:</p>
-                                                    <ul>
-                                                        @foreach ($variant->prices as $price)
-                                                            <li>
-                                                                {{ $price->currency->code }}:
-                                                                {{ number_format($price->price->value / 100, 2) }}
-                                                                @if ($price->compare_price->value > 0)
-                                                                    ({{ __('Порівняльна ціна') }}: {{ number_format($price->compare_price->value / 100, 2) }})
-                                                                @endif
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                @endif
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @endif
                             </div>
                         </div>
                     </a>
