@@ -107,36 +107,34 @@
                 <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0" />
             </div>
 
-            <!-- Price Filter (Custom Range Slider) -->
+            <!-- Price Filter (Simplified Range Slider) -->
             <section class="py-4 w-full rounded-2xl bg-neutral-200">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-expanded="true" aria-controls="price-filter">
                     <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Цена') }}</span>
                     <div class="flex shrink-0 self-stretch my-auto w-4 h-4 rotate-[-3.1415925661670165rad]" aria-hidden="true"></div>
                 </button>
-                <div id="price-filter" class="flex relative flex-col gap-2 items-start mx-auto my-0 w-[280px] max-md:w-full max-md:max-w-[280px]" x-data="{ priceMin: {{ $priceMin ?? $minPrice }}, priceMax: {{ $priceMax ?? $maxPrice }} }">
+                <div id="price-filter" class="flex flex-col gap-2 items-start mx-auto my-0 w-[280px] max-md:w-full max-md:max-w-[280px]">
                     <!-- Price Display -->
                     <header class="flex gap-2 justify-center items-center px-4 w-[280px] max-md:w-full max-md:max-w-[280px]" aria-label="Диапазон цен">
-                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Минимальная цена" x-text="priceMin.toFixed(2)"></span>
+                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Минимальная цена">
+                            {{ number_format($priceMin ?? $minPrice, 2) }}
+                        </span>
                         <span class="text-xs font-bold leading-5 text-zinc-800" aria-hidden="true">-</span>
-                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Максимальная цена" x-text="priceMax.toFixed(2)"></span>
+                        <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Максимальная цена">
+                            {{ number_format($priceMax ?? $maxPrice, 2) }}
+                        </span>
                     </header>
 
                     <!-- Range Slider -->
                     <div class="relative h-8 w-[280px] max-md:w-full max-md:max-w-[280px]" role="group" aria-label="Фильтр цен">
                         <!-- Background Track -->
-                        <div class="absolute left-0 shrink-0 h-1 rounded-sm bg-neutral-400 top-[14px] w-[280px]" aria-hidden="true"></div>
-
-                        <!-- Active Range -->
-                        <div class="absolute h-1 bg-green-600 top-[14px]" x-bind:style="{
-                            left: ({{ $maxPrice }} - {{ $minPrice }} > 0) ? `calc(${(priceMin - {{ $minPrice }}) / ({{ $maxPrice }} - {{ $minPrice }}) * 260px + 10px)` : '10px',
-                            width: ({{ $maxPrice }} - {{ $minPrice }} > 0) ? `calc(${(priceMax - priceMin) / ({{ $maxPrice }} - {{ $minPrice }}) * 260px)` : '260px'
-                        }" aria-hidden="true"></div>
+                        <div class="absolute left-0 top-3 h-1 rounded-sm bg-neutral-400 w-[280px]" aria-hidden="true"></div>
 
                         <!-- Min Slider -->
-                        <input type="range" wire:model.live.debounce.500ms="priceMin" x-model="priceMin" x-on:input="if (priceMin > priceMax) priceMin = priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-full h-8 top-0 left-0 cursor-pointer focus:outline-none" style="-webkit-appearance: none; background: transparent;" aria-label="Минимальная цена" />
+                        <input type="range" wire:model.live.debounce.500ms="priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-full h-8 top-0 left-0 cursor-pointer focus:outline-none z-10" style="-webkit-appearance: none; background: transparent;" aria-label="Минимальная цена" />
 
                         <!-- Max Slider -->
-                        <input type="range" wire:model.live.debounce.500ms="priceMax" x-model="priceMax" x-on:input="if (priceMax < priceMin) priceMax = priceMin" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-full h-8 top-0 left-0 cursor-pointer focus:outline-none" style="-webkit-appearance: none; background: transparent;" aria-label="Максимальная цена" />
+                        <input type="range" wire:model.live.debounce.500ms="priceMax" min="{{ $minPrice }}" max="{{ $maxPrice }}" step="0.01" class="absolute w-full h-8 top-0 left-0 cursor-pointer focus:outline-none z-10" style="-webkit-appearance: none; background: transparent;" aria-label="Максимальная цена" />
                     </div>
                 </div>
             </section>
@@ -213,9 +211,6 @@
             </nav>
         </section>
     </div>
-
-    <!-- Alpine.js for Range Slider -->
-
     <style>
         input[type="range"] {
             -webkit-appearance: none;
@@ -255,3 +250,4 @@
         }
     </style>
 </main>
+
