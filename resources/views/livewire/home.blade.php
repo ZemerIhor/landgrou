@@ -212,48 +212,89 @@
     </div>
 
 
-    <div class=" mx-auto px-[16px] sm:px-[28px] md:px-[50px]">
-        <section class="flex flex-col justify-center self-stretch py-10 text-base" aria-label="Tenders section">
-            <div class="main-container">
-                <h1 class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
-                    {{ isset($settings->tenders_title[app()->getLocale()]) ? $settings->tenders_title[app()->getLocale()] : __('messages.tenders.title') }}
-                </h1>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mt-5 w-full font-semibold leading-6 text-white max-md:max-w-full">
-                    @if (!empty($settings->tender_items[app()->getLocale()]))
-                        @foreach ($settings->tender_items[app()->getLocale()] as $tender)
-                            <article class="flex overflow-hidden relative p-4 rounded-3xl min-h-[210px]"
-                                     style="background-color: {{ isset($tender['background_color']) ? $tender['background_color'] : '#228F5D' }}"
-                                     aria-label="Tender for {{ isset($tender['title']) ? $tender['title'] : '' }}">
-                                @if (!empty($tender['background_pattern']))
-                                    <img src="{{ Storage::url($tender['background_pattern']) }}" alt="Background pattern"
-                                         class="object-contain absolute bottom-0 right-1 z-0 aspect-[1.68]" />
-                                @endif
-                                <div class="z-0 flex-1 p-4">
-                                    @if (!empty($tender['icon']))
-                                        <img src="{{ Storage::url($tender['icon']) }}" alt="{{ isset($tender['title']) ? $tender['title'] . ' icon' : 'Tender icon' }}"
-                                             class="object-contain w-10 aspect-square" />
-                                    @endif
-                                    <h2 class="mt-5 min-h-[88px] {{ isset($tender['background_color']) && str_contains($tender['background_color'], 'green') ? 'text-white' : 'text-green-600' }}">
-                                        {{ isset($tender['title']) ? $tender['title'] : '' }}
-                                    </h2>
-                                </div>
-                                <div class="flex z-0 shrink-0 gap-2.5 self-end w-14 h-14"></div>
-                            </article>
-                        @endforeach
-                    @else
-                        <p>{{ __('messages.tenders.no_items') }}</p>
-                    @endif
-                </div>
-                <div class="flex flex-wrap gap-5 items-center mt-5 w-full max-md:max-w-full max-md:flex-col">
-                    <div class="flex flex-1 shrink gap-4 items-center self-stretch my-auto font-semibold leading-none basis-12 min-h-6 justify-end text-zinc-800 max-md:max-w-full max-md:justify-center">
-                        <i class="fas fa-phone w-6 h-6 text-zinc-800"></i>
-                        <p class="text-zinc-800">{{ isset($settings->tenders_phone[app()->getLocale()]) ? $settings->tenders_phone[app()->getLocale()] : '' }}</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>
+    <section
+        class="flex flex-col justify-center self-stretch px-12 py-20 text-base bg-zinc-100 max-md:px-5"
+        aria-labelledby="tenders-heading"
+    >
+        <h2
+            id="tenders-heading"
+            class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full"
+        >
+            {{ $settings->tenders_title[app()->getLocale()] ?? 'Тендери' }}
+        </h2>
 
+        <div
+            class="flex flex-wrap gap-2 mt-5 w-full font-semibold leading-6 text-white max-md:max-w-full"
+            role="list"
+            aria-label="Список тендерів"
+        >
+            @foreach ($settings->tender_items[app()->getLocale()] ?? [] as $item)
+                <article
+                    class="flex overflow-hidden relative grow shrink self-start p-4 rounded-3xl min-h-[210px] min-w-60 w-[310px]"
+                    role="listitem"
+                    style="background-color: {{ $item['background_color'] ?? '#34C759' }};"
+                >
+                    @if (!empty($item['decorative_image']))
+                        <img
+                            src="{{ $item['decorative_image'] }}"
+                            alt="Декоративне зображення для тендеру {{ $item['title'] }}"
+                            class="object-contain absolute bottom-0 right-1 z-0 self-start aspect-[1.68] h-[485px] min-w-60 w-[352px]"
+                            style="fill: {{ $item['background_color'] ?? '#34C759' }};"
+                        />
+                    @endif
+                    <div class="z-0 flex-1 shrink p-4 basis-0 min-w-60">
+                        @if (!empty($item['icon']))
+                            <img
+                                src="{{ $item['icon'] }}"
+                                alt="Іконка категорії {{ $item['title'] }}"
+                                class="object-contain w-10 aspect-square"
+                            />
+                        @endif
+                        <div class="flex items-end mt-5 w-full min-h-[88px]">
+                            <h3 class="flex-1 shrink basis-0 {{ str_starts_with($item['background_color'] ?? '#34C759', '#') && in_array(strtolower(substr($item['background_color'], 1)), ['34c759', '4ade80']) ? 'text-white' : 'text-green-600' }}">
+                                {{ $item['title'] }}
+                            </h3>
+                        </div>
+                    </div>
+                    <div
+                        class="flex z-0 shrink-0 gap-2.5 self-end w-14 h-14"
+                        aria-label="Кнопки навігації"
+                    ></div>
+                </article>
+            @endforeach
+        </div>
+
+        <footer class="flex flex-wrap gap-5 items-center mt-5 w-full max-md:max-w-full">
+            <address
+                class="flex flex-wrap flex-1 shrink gap-4 items-start self-stretch my-auto font-semibold leading-none basis-12 min-h-6 min-w-60 text-zinc-800 max-md:max-w-full not-italic"
+            >
+                <img
+                    src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/e5a7947040ad43f0eb4757a8de8cd3a74f5f891f?placeholderIfAbsent=true"
+                    alt="Іконка телефону"
+                    class="object-contain shrink-0 w-6 aspect-square"
+                />
+                <div class="text-zinc-800">
+                    {{ $settings->tenders_phone[app()->getLocale()] ?? 'Відділ тендерів +38 099 900-14-30' }}
+                </div>
+            </address>
+
+            <button
+                class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors duration-200"
+                type="button"
+                aria-label="Переглянути більше тендерів"
+            >
+      <span class="self-stretch my-auto text-current">
+        Більше
+      </span>
+                <img
+                    src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/5fcdfc213ad7c52f7cde2c5630712bbd498037c1?placeholderIfAbsent=true"
+                    alt=""
+                    class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square"
+                    aria-hidden="true"
+                />
+            </button>
+        </footer>
+    </section>
 
       <livewire:components.blog-section />
      <livewire:components.feedback-form-block />
