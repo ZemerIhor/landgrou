@@ -139,7 +139,7 @@
                 flex-direction: column;
                 gap: 20px;
                 align-items: flex-start;
-                min-width: 220px;
+             flex-grow: 1;
             }
 
             @media (max-width: 640px) {
