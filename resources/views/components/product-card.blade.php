@@ -1,11 +1,11 @@
 @props(['product'])
 
-<article class="overflow-hidden flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60" role="listitem">
-    <div class="block group">
+<article class="overflow-hidden flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60 h-full" role="listitem">
+    <div class="flex flex-col justify-between group h-full">
         <!-- Оборачиваем в ссылку только изображение и название -->
-        <a href="{{ route('product.view', $product->defaultUrl->slug) }}" wire:navigate class="block">
-            <div class="flex relative flex-col w-full min-h-[153px]">
-                <div class="flex overflow-hidden absolute top-0 left-0 z-0 flex-col max-w-full h-[163px] w-full">
+        <a href="{{ route('product.view', $product->defaultUrl->slug) }}" wire:navigate class="flex flex-col h-full">
+            <div class="flex relative flex-col w-full h-[163px] ">
+                <div class="flex overflow-hidden absolute top-0 left-0 z-0 flex-col max-w-full w-full">
                     @if ($product->thumbnail)
                         <img src="{{ $product->thumbnail->getUrl() }}"
                              alt="{{ $product->translateAttribute('name') }}"
@@ -26,7 +26,7 @@
             </div>
         </a>
 
-        <div class="flex gap-4 justify-between items-center mt-4 px-4 pb-4 w-full">
+        <div class="flex gap-4 justify-between items-end mt-4 px-4 pb-4 w-full">
             <span class="text-base font-bold leading-tight text-zinc-800">
                 <x-product-price :product="$product" />
             </span>

@@ -1,5 +1,6 @@
-<div class="relative mt-5 w-full container mx-auto overflow-hidden rounded-2xl" aria-label="Hero Banner">
-    <div class="flex transition-transform duration-500 ease-in-out" id="hero-slider">
+<div class="relative mt-5 w-full mx-auto overflow-hidden  home-slider-main" aria-label="Hero Banner">
+    <div class="relative mx-auto opacity-0 invisible transition-opacity duration-300" style="width: 90%"  id="slider-wrap"> 
+    <div class="flex  opacity-0 invisible transition-opacity duration-300" id="hero-slider" style="gap:20px;" >
         @php
             $locale = app()->getLocale(); // Получаем текущую локаль (en или uk)
             $heroSlides = $settings->hero_slides[$locale] ?? [];
@@ -7,8 +8,9 @@
 
         @if (!empty($heroSlides) && is_array($heroSlides))
             @foreach ($heroSlides as $index => $slide)
-                <div class="min-w-full flex items-center justify-center bg-black bg-cover bg-center"
-                     style="background-image: url('{{ isset($slide['background_image']) ? Storage::url($slide['background_image']) : '' }}');">
+                <div class="w-full shrink-0 justify-center rounded-2xl items-center bg-black bg-cover bg-center" data-visible="{{ $index }}"
+                     style="background-image: url('{{ isset($slide['background_image']) ? Storage::url($slide['background_image']) : '' }}'); height: 480px; ">
+
                     <div class="text-center text-white p-8">
                         <div class="flex justify-center mb-4">
                             <svg width="30" height="41" viewBox="0 0 30 41" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -16,14 +18,16 @@
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M6.98582 11.3063C6.98582 12.9453 7.28461 14.1529 7.79541 15.3605C8.39293 16.8844 9.17361 17.7949 10.3783 18.7629C10.6482 18.9642 10.7638 19.108 11.0048 19.338C11.1301 19.4626 11.1879 19.4818 11.3132 19.5968C13.0769 21.1973 14.4551 23.6413 12.9901 25.9224C12.4793 26.7179 11.8529 27.0725 11.7565 27.3888C11.8529 27.523 11.8818 27.5421 12.0553 27.5038C12.1806 27.4655 12.3926 27.3792 12.4793 27.3313C13.4431 26.9096 13.7708 26.7371 14.5515 25.9512C15.0334 25.424 15.602 24.4272 15.7754 23.7468C16.3537 21.552 15.3899 18.9834 14.0985 17.2582C13.5877 16.6065 12.807 15.4851 12.5661 14.7088C12.2095 13.6066 12.9323 13.8079 11.2457 13.3861C9.80969 13.0219 8.87482 12.3414 8.06526 11.1338C7.4388 10.2233 7.38097 9.49493 7.19787 9.27449C7.07256 9.82078 6.98582 10.6354 6.98582 11.3063Z" fill="white"/>
                             </svg>
                         </div>
-                        <h2 class="text-5xl font-bold">{{ $slide['heading'] ?? 'LAND GROU' }}</h2>
-                        <p class="mt-4 text-xl">{!! $slide['subheading'] ?? 'Українська компанія з видобування й переробки <span class="text-green-500">торфу</span>' !!}</p>
+                        <div class="flex-column gap-2 justify-center mb-5"> 
+                        <h1 class="text-5xl font-bold">{{ $slide['heading'] ?? 'LAND GROU' }}</h1>
+                        <p class="mt-4 text-xl">{!!$slide['subheading'] ?? 'Українська компанія з видобування й <br> переробки <span class="text-green-500">торфу</span>' !!}</p>
                         <p class="mt-2 text-sm">{{ $slide['extra_text'] ?? 'Keep warm' }}</p>
+                        </div>
                         <div class="flex justify-center mt-6 gap-4">
-                            <a href="#" class="px-6 py-3 border border-white rounded-full text-white hover:bg-white hover:text-black transition">
+                            <a href="#" class="px-6 py-3 border-2 border-white rounded-2xl text-white hover:bg-white hover:text-black transition">
                                 Каталог →
                             </a>
-                            <a href="#" class="px-6 py-3 bg-green-600 text-white rounded-full hover:bg-green-700 transition">
+                            <a href="#" class="px-6 py-3 bg-green-600 text-white rounded-2xl hover:bg-green-700 transition">
                                 Купити зараз →
                             </a>
                         </div>
@@ -36,6 +40,7 @@
             </div>
         @endif
     </div>
+   
 
     <!-- Navigation Arrows -->
     @if (!empty($heroSlides) && is_array($heroSlides) && count($heroSlides) > 1)
@@ -57,14 +62,15 @@
     <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
         @if (!empty($heroSlides) && is_array($heroSlides))
             @foreach ($heroSlides as $index => $slide)
-                <span class="w-3 h-1.5 rounded-full {{ $index === 0 ? 'bg-green-500' : 'bg-white/50' }}"
+                <span class="w-4 h-1 rounded-full cursor-pointer {{ $index === 0 ? 'bg-green-500' : 'bg-white/50' }}"
                       data-slide="{{ $index }}" onclick="goToSlide({{ $index }})"></span>
             @endforeach
         @endif
     </div>
+     </div>
 </div>
 
-<script>
+<!-- <script>
     let currentSlide = 0;
     const slider = document.getElementById('hero-slider');
     const slides = document.querySelectorAll('#hero-slider > div');
@@ -92,4 +98,59 @@
     }
 
     updateSlider(); // Инициализация при загрузке
+</script> -->
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let currentSlide = 1; // Починаємо з другого
+    const slider = document.getElementById('hero-slider');
+    const slides = document.querySelectorAll('#hero-slider > div');
+    const indicators = document.querySelectorAll('[data-slide]');
+    const sliderWrap = document.getElementById('slider-wrap');
+    const gap = 20;
+
+    function getSlideWidth() {
+        return slider.parentElement.offsetWidth;
+    }
+
+    function updateSlider(applyTransition = true) {
+        const slideWidth = getSlideWidth();
+        slider.style.transition = applyTransition ? 'transform 0.5s ease-in-out' : 'none';
+        slider.style.transform = `translateX(-${currentSlide * (slideWidth + gap)}px)`;
+
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('bg-green-500', index === currentSlide);
+            indicator.classList.toggle('bg-white/50', index !== currentSlide);
+        });
+    }
+
+    // приховуємо transition на першому рендері
+    updateSlider(false);
+
+    // ⏱ Після 1 кадру виводимо і вмикаємо transition
+    requestAnimationFrame(() => {
+        // Відображаємо слайдер (прибираємо opacity-0 invisible)
+        slider.classList.remove('opacity-0', 'invisible');
+        sliderWrap.classList.remove('opacity-0', 'invisible'); // пагінацію вкл
+
+        // Додаємо плавність до наступних змін
+        slider.style.transition = 'transform 0.5s ease-in-out';
+        updateSlider(true);
+    });
+
+    // Функції для стрілок
+    window.moveSlide = function (direction) {
+        currentSlide = (currentSlide + direction + slides.length) % slides.length;
+        updateSlider();
+    };
+
+    window.goToSlide = function (index) {
+        currentSlide = index;
+        updateSlider();
+    };
+
+    // Оновлення на зміну розміру
+    window.addEventListener('resize', () => updateSlider(false));
+});
 </script>

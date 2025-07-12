@@ -9,6 +9,13 @@ module.exports = {
         'grid-cols-4', 'grid-cols-5', 'grid-cols-6',
         'grid-cols-7', 'grid-cols-8', 'grid-cols-9',
         'grid-cols-10', 'grid-cols-11', 'grid-cols-12',
+        'w-[80%]',
+        'w-[98vw]',
+        'mx-[1vw]',
+        'mx-[2%]',
+        'shrink-0',
+        'min-w-[98vw]',
+        'min-w-[80vw]',
     ],
     theme: {
         extend: {},
