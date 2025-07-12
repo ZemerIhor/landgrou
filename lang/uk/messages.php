@@ -68,20 +68,29 @@ return [
         'no_items' => 'Пункти FAQ відсутні',
     ],
     'feedback_form' => [
+        'aria_label' => 'Форма зворотного зв’язку', // Suggested
         'title' => 'Зв’яжіться з нами',
         'description' => 'Заповніть форму, і ми зв’яжемося з вами найближчим часом.',
+        'contact_info' => 'Контактна інформація',
         'name_placeholder' => 'Ім’я',
         'phone_placeholder' => 'Телефон',
-        'comment_placeholder' => 'Введіть ваш коментар...',
         'comment_label' => 'Коментар',
+        'comment_placeholder' => 'Введіть ваш коментар...',
+        'comment_help' => 'Додаткова інформація або коментарі',
         'privacy_agreement' => 'Погоджуюсь з',
         'privacy_policy_link' => 'Політикою конфіденційності',
         'back_button' => 'Назад',
         'submit_button' => 'Замовити дзвінок',
-        'close_button_aria_label' => 'Закрити форму',
+        'submit_loading' => 'Відправлення...', // Taken from contact_form.submit_loading
+        'image_aria_label' => 'Зображення форми зворотного зв’язку', // Suggested
         'no_image' => 'Зображення не завантажено',
-        'contact_info' => 'Контактна інформація',
-        'comment_help' => 'Додаткова інформація або коментарі',
+        'close_button_aria_label' => 'Закрити форму',
+        'thank_you' => 'Дякуємо за ваше повідомлення!', // Taken from contact_form.thank_you
+        'order_processed' => 'Ваше повідомлення успішно надіслано. Ми зв’яжемося з вами незабаром.', // Taken from contact_form.order_processed
+        'error_occurred' => 'Сталася помилка', // Taken from contact_form.error_occurred
+        'try_again' => 'Щось пішло не так. Спробуйте ще раз.', // Taken from contact_form.try_again
+        'try_again_button' => 'Спробувати ще раз', // Taken from contact_form.try_again_button
+        'continue_button' => 'Продовжити', // Suggested
     ],
     'tenders' => [
         'title' => 'Тендери',
