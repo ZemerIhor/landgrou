@@ -40,12 +40,11 @@
         </section>
     </div>
 
-    
-    
+
+
 
     <div class=" px-[16px] sm:px-[28px] md:px-[50px] py-[80px] mx-auto">
         <section class="flex overflow-hidden flex-col font-bold" aria-labelledby="advantages-title">
-            <div class="main-container">
                 <div class="flex flex-col items-center">
                     <h1 id="advantages-title" class="text-4xl leading-none text-center text-zinc-800 max-md:max-w-full">
                         {{ isset($settings->comparison_title[app()->getLocale()]) ? $settings->comparison_title[app()->getLocale()] : __('messages.advantages.title') }}
@@ -86,11 +85,10 @@
                         @endif
                     </div>
                 </div>
-            </div>
         </section>
     </div>
-  
-    
+
+
 
  <livewire:components.reviews-section />
 

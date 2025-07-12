@@ -28,7 +28,7 @@
         </section>
 
         <!-- Navigation sections and contacts -->
-        <section class="nav-contacts">
+        <section class="nav-contacts flex flex-wrap">
             <!-- Меню футера -->
             @if (app()->getLocale() === 'en')
                 <nav class="menu" aria-label="{{ __('messages.footer.main_navigation') }}">
