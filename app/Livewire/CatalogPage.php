@@ -7,7 +7,6 @@ use Livewire\WithPagination;
 use Lunar\Models\Brand;
 use Lunar\Models\Currency;
 use Lunar\Models\Product;
-use Lunar\Models\ProductVariant;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
@@ -24,6 +23,11 @@ class CatalogPage extends Component
     public $locale;
     public $currency;
 
+    protected $listeners = [
+        'updatePriceMin' => 'updatePriceMin',
+        'updatePriceMax' => 'updatePriceMax',
+    ];
+
     public function mount(): void
     {
         $this->locale = app()->getLocale();
@@ -34,6 +38,18 @@ class CatalogPage extends Component
             'minPrice' => $this->priceRange['min'],
             'maxPrice' => $this->priceRange['max'],
         ]);
+    }
+
+    public function updatePriceMin($value)
+    {
+        $this->priceMin = (float) $value;
+        $this->applyFilters();
+    }
+
+    public function updatePriceMax($value)
+    {
+        $this->priceMax = (float) $value;
+        $this->applyFilters();
     }
 
     public function getProductsProperty()
@@ -50,13 +66,19 @@ class CatalogPage extends Component
                 $query->whereHas('prices', function ($priceQuery) {
                     $priceQuery->where('currency_id', $this->currency->id);
 
-                    // Ensure prices are treated as decimals (UAH)
-                    $priceMin = $this->priceMin !== null ? max(0, (float) $this->priceMin) : 0;
-                    $priceMax = $this->priceMax !== null ? max(0, (float) $this->priceMax) : PHP_INT_MAX;
+                    // Предполагаем, что цены хранятся в копейках
+                    $priceMin = $this->priceMin !== null ? max(0, (float) $this->priceMin * 100) : 0;
+                    $priceMax = $this->priceMax !== null ? max(0, (float) $this->priceMax * 100) : PHP_INT_MAX;
 
                     $priceQuery->whereBetween('price', [$priceMin, $priceMax]);
                 });
             });
+            Log::info('Price Filter Applied', [
+                'priceMin' => $this->priceMin,
+                'priceMax' => $this->priceMax,
+                'convertedPriceMin' => $this->priceMin !== null ? (float) $this->priceMin * 100 : null,
+                'convertedPriceMax' => $this->priceMax !== null ? (float) $this->priceMax * 100 : null,
+            ]);
         }
 
         switch ($this->sort) {
@@ -145,7 +167,7 @@ class CatalogPage extends Component
         $maxPrice = \DB::table('lunar_prices')
             ->where('priceable_type', 'Lunar\Models\ProductVariant')
             ->where('currency_id', $this->currency->id)
-            ->max('price') ?? 1000; // Default to 1000 if no prices found
+            ->max('price') ?? 100000; // 1000 UAH в копейках
 
         Log::info('Price Range Calculated', [
             'minPrice' => $minPrice,
@@ -153,19 +175,19 @@ class CatalogPage extends Component
         ]);
 
         return [
-            'min' => floor($minPrice),
-            'max' => ceil($maxPrice),
+            'min' => floor($minPrice / 100), // Преобразуем в гривны
+            'max' => ceil($maxPrice / 100),
         ];
     }
 
     public function applyFilters()
     {
-        // Validate price inputs
-        if ($this->priceMin !== null && $this->priceMin < 0) {
-            $this->priceMin = null;
+        // Валидация цен
+        if ($this->priceMin !== null) {
+            $this->priceMin = max(0, (float) $this->priceMin);
         }
-        if ($this->priceMax !== null && $this->priceMax < 0) {
-            $this->priceMax = null;
+        if ($this->priceMax !== null) {
+            $this->priceMax = max(0, (float) $this->priceMax);
         }
         if ($this->priceMin !== null && $this->priceMax !== null && $this->priceMin > $this->priceMax) {
             [$this->priceMin, $this->priceMax] = [$this->priceMax, $this->priceMin];
