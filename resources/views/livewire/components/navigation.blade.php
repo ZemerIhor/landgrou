@@ -195,7 +195,7 @@
                     class="sm:hidden bg-white shadow-lg absolute top-14 left-0 w-full z-50"
                     x-on:click.away="mobileMenu = false"
                 >
-                    <nav class="flex flex-col items-center gap-4 py-6 text-base font-semibold text-zinc-800" role="navigation" aria-label="{{ __('messages.nav.mobile_navigation') }}">
+                    <nav class="flex flex-col items-center gap-4 px-2 py-6 text-base font-semibold text-zinc-800" role="navigation" aria-label="{{ __('messages.nav.mobile_navigation') }}">
                         <!-- Mobile Menu Items -->
                         @if(app()->getLocale() === 'en')
                             <x-filament-menu-builder::menu slug="en-header-menu" class="mobile-menu-items" />

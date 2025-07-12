@@ -74,9 +74,9 @@
                                              alt="{{ isset($item['alt']) ? $item['alt'] : '' }}"
                                              class="object-cover absolute inset-0 size-full" />
                                     @endif
-                                    <div class="flex relative gap-2 items-end p-4 max-md:flex-col">
+                                    <div class="flex relative gap-2 items-end p-4 max-md:flex-col items-center w-full mt-auto">
                                         <p class="text-4xl leading-none">{{ isset($item['value']) ? $item['value'] : '' }}</p>
-                                        <p class="text-2xl leading-tight w-[189px]">{!! isset($item['unit']) ? $item['unit'] : '' !!}</p>
+                                        <p class="text-2xl leading-tight">{!! isset($item['unit']) ? $item['unit'] : '' !!}</p>
                                     </div>
                                 </div>
                             @endforeach
