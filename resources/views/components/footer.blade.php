@@ -28,7 +28,7 @@
         </section>
 
         <!-- Navigation sections and contacts -->
-        <section class="nav-contacts flex flex-wrap">
+        <section class="nav-contacts flex flex-wrap justify-between">
             <!-- Меню футера -->
             @if (app()->getLocale() === 'en')
                 <nav class="menu" aria-label="{{ __('messages.footer.main_navigation') }}">
@@ -149,15 +149,6 @@
                 }
             }
 
-            .menu ul {
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                align-items: flex-start;
-                list-style: none;
-                margin: 0;
-                padding: 0;
-            }
 
             @media (max-width: 640px) {
                 .menu ul {
