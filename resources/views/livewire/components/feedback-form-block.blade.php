@@ -1,5 +1,5 @@
 
-<div class="container mx-auto ">
+<div class=" mx-auto px-[16px] sm:px-[28px] md:px-[50px] py-[80px]  ">
     <!-- Form Block -->
     <section class="flex flex-col justify-center self-stretch  min-h-[570px]" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
         <!-- <div class="main-container"> -->

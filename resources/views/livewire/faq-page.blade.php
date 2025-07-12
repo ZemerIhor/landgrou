@@ -126,8 +126,8 @@ order: -1;
     }
 </style>
 
-<div class="container mx-auto px-2">
-    <section class="py-10" aria-label="Frequently Asked Questions">
+<div class=" mx-auto px-[16px] sm:px-[28px] md:px-[50px]">
+    <section class="" aria-label="Frequently Asked Questions">
         <div class="main-container">
             <!-- Breadcrumbs -->
             <livewire:components.breadcrumbs

@@ -53,6 +53,40 @@
 
 }
 
+.pt-40 {
+  padding-top: 40px;
+}
+
+
+/* Приклад для 4 елементів на великих екранах */
+@media (min-width: 1280px) {
+  .product-card:nth-child(n + 5) {
+    display: none;
+  }
+}
+
+/* 3 елементи на середніх */
+@media (min-width: 769px) and (max-width: 1279px) {
+  .product-card:nth-child(n + 4) {
+    display: none;
+  }
+}
+
+/* 2 елементи на sm */
+@media (min-width: 640px) and (max-width: 768px) {
+  .product-card:nth-child(n + 4) {
+    display: none;
+  }
+}
+
+/* 1 елемент на дуже маленьких */
+@media (max-width: 639px) {
+  .product-card:nth-child(n + 3) {
+    display: none;
+  }
+}
+
+
 
 .swiper {
     position: relative;

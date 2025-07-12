@@ -1,3 +1,8 @@
+
+<div class=" mx-auto  px-[16px] sm:px-[28px] md:px-[50px]">
+    @if (isset($error))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {{ $error }}
 <main class="self-stretch px-12 pt-14 bg-zinc-100 max-md:px-5">
     <!-- Breadcrumbs Navigation -->
     <nav class="flex flex-wrap gap-2 items-center w-full text-xs font-semibold whitespace-nowrap min-h-[34px] max-md:max-w-full" aria-label="Breadcrumb">
@@ -32,6 +37,22 @@
             <span class="self-stretch my-auto">{{ __('товаров') }}</span>
         </div>
 
+
+            <nav class="flex flex-wrap gap-2 items-center pt-2 w-full max-md:max-w-full" role="navigation" aria-label="Active filters and sorting controls">
+            <!-- Active Filter Tags -->
+            <div class="flex flex-1 shrink gap-0.5 items-center self-stretch my-auto text-xs font-bold leading-tight text-white basis-8 min-w-60">
+                @foreach ($categories as $categoryId)
+                    <button wire:click="removeCategory({{ $categoryId }})" class="flex gap-1 items-center pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-600" aria-label="Remove filter: {{ $collections->firstWhere('id', $categoryId)->translateAttribute('name') }}">
+                        <span class="self-stretch my-auto text-white">{{ $collections->firstWhere('id', $categoryId)->translateAttribute('name') }}</span>
+                        <span class="self-stretch my-auto w-6 aspect-square">×</span>
+                    </button>
+                @endforeach
+                @foreach ($weights as $weight)
+                    <button wire:click="removeWeight('{{ $weight }}')" class="flex gap-1 items-center pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-600" aria-label="Remove filter: {{ $weight }}">
+                        <span class="self-stretch my-auto text-white">{{ $weight }}</span>
+                        <span class="self-stretch my-auto w-6 aspect-square">×</span>
+                    </button>
+
         <!-- Active Filter Tags -->
         <div class="flex flex-wrap flex-1 shrink gap-0.5 items-center self-stretch my-auto text-xs font-bold leading-tight text-white basis-8 min-w-60 max-md:max-w-full" role="group" aria-label="Активные фильтры">
             @if (!empty($brands))
@@ -57,6 +78,15 @@
                 </button>
             @endif
         </div>
+
+
+    <!-- <div class="rounded-none"> -->
+        <!-- Filter Tags and Controls Section -->
+
+        <div class="flex gap-2 "> 
+        <!-- Filters Panel -->
+        <aside class="w-56 max-w-full rounded-3xl bg-neutral-200 mt-4" aria-label="Product filters">
+            <!-- Product Type Filter -->
 
         <!-- Sort Dropdown -->
         <div class="relative">
@@ -84,6 +114,7 @@
         <!-- Filters Sidebar -->
         <aside class="rounded-3xl bg-neutral-200 min-w-60 w-[289px]" aria-label="Фильтры товаров">
             <!-- Brand Filter -->
+
             <section class="w-full rounded-2xl text-zinc-800">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-expanded="true" aria-controls="brand-options">
                     <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Бренд') }}</span>
@@ -182,6 +213,14 @@
                 </button>
             </div>
         </aside>
+    <!-- </div> -->
+
+    <div class="{{ $view == 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4' : 'flex flex-col gap-6' }} mt-4">
+        @foreach ($products as $product)
+
+            <article class="overflow-hidden h-full flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60" role="listitem">
+                <div class="flex flex-col justify-between group h-full">
+                    <a href="{{ route('product.view', $product->defaultUrl->slug) }}" wire:navigate class="block">
 
         <!-- Product Grid -->
         <section class="flex-1 shrink basis-0 min-w-60 max-md:max-w-full" aria-label="Список товаров">
@@ -230,6 +269,20 @@
                                 </div>
                             </div>
                         </div>
+                    </a>
+
+                    <div class="flex gap-4 justify-between items-end mt-4 px-4 pb-4 w-full">
+                        <span class="text-base font-bold leading-tight text-zinc-800">
+                            <x-product-price :product="$product" />
+                        </span>
+
+                        <livewire:components.add-to-cart :purchasable="$product->variants->first()" />
+                    </div>
+                </div>
+            </article>
+        @endforeach
+    </div>
+    </div>
                     </article>
                 @empty
                     <p>{{ __('Нет товаров по выбранным параметрам.') }}</p>

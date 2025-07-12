@@ -8,6 +8,7 @@
         <section class="header-section">
             <div class="logo"><x-brand.logo /></div>
 
+
             @if (!empty($footer->social_links))
                 <nav aria-label="{{ __('messages.footer.social_aria_label') }}" class="social-links">
                     @foreach ($footer->social_links as $link)
@@ -98,6 +99,7 @@
                     </svg>
                 </div>
             </button>
+
         </section>
 
         <style>
