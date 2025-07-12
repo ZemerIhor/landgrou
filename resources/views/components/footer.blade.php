@@ -3,20 +3,21 @@
     $currentLocale = app()->getLocale(); // Get current locale (e.g., 'en' or 'uk')
 @endphp
 
-<footer class="self-stretch bg-zinc-800 mt-auto px-[16px] sm:px-[28px] md:px-[50px]" role="contentinfo" aria-label="Site footer">
-    <div class="main-container  mx-auto ">
-        <section class="flex flex-wrap gap-10 justify-between items-end pt-11 pb-6 w-full max-md:max-w-full">
-            <x-brand.logo class="w-auto h-8 text-indigo-600" />
+<footer class="self-stretch bg-zinc-800 mt-auto px-[50px]" role="contentinfo" aria-label="Site footer">
+    <div class="main-container">
+        <section class="header-section">
+            <div class="logo"><x-brand.logo /></div>
+
 
             @if (!empty($footer->social_links))
-                <nav aria-label="Social media links" class="flex gap-5 items-start">
+                <nav aria-label="{{ __('messages.footer.social_aria_label') }}" class="social-links">
                     @foreach ($footer->social_links as $link)
                         @if (!empty($link['url']) && !empty($link['icon']))
-                            <a href="{{ $link['url'] }}" aria-label="Follow us on {{ $link['icon'] }}" target="_blank" rel="noopener noreferrer">
+                            <a href="{{ $link['url'] }}" aria-label="{{ __('messages.footer.follow_on') }} {{ $link['icon'] }}" target="_blank" rel="noopener noreferrer">
                                 <img
                                     src="{{ asset('images/icons/' . $link['icon'] . '.svg') }}"
                                     alt="{{ $link['icon'] }} icon"
-                                    class="object-contain shrink-0 w-6 aspect-square"
+                                    class="social-icon"
                                     role="img"
                                 />
                             </a>
@@ -27,56 +28,49 @@
         </section>
 
         <!-- Navigation sections and contacts -->
-        <section class="flex flex-wrap gap-10 justify-between items-start w-full text-base font-semibold leading-none text-white max-md:max-w-full">
-            @if (!empty($footer->sections[$currentLocale]))
-                <!-- Loop 2: Navigation sections -->
-                @foreach ($footer->sections[$currentLocale] as $section)
-                    @if (!empty($section['title']) && !empty($section['links']))
-                        <nav aria-label="{{ $section['title'] }}" class="w-auto">
-                            <h3 class="text-lg font-bold">{{ $section['title'] }}</h3>
-                            <ul class="space-y-5">
-                                <!-- Loop 3: Links within section -->
-                                @foreach ($section['links'] as $link)
-                                    @if (!empty($link['label']) && !empty($link['url']))
-                                        <li>
-                                            <a href="{{ $link['url'] }}"
-                                               class="gap-2 self-stretch mt-5 w-full text-white rounded-lg hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-zinc-800">
-                                                {{ $link['label'] }}
-                                            </a>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        </nav>
-                    @endif
-                @endforeach
+        <section class="nav-contacts">
+            <!-- Меню футера -->
+            @if (app()->getLocale() === 'en')
+                <nav class="menu" aria-label="{{ __('messages.footer.main_navigation') }}">
+                    <x-filament-menu-builder::menu slug="futer-en" />
+                </nav>
+            @elseif (app()->getLocale() === 'uk')
+                <nav class="menu" aria-label="{{ __('messages.footer.main_navigation') }}">
+                    <x-filament-menu-builder::menu slug="futer-ua" />
+                </nav>
+            @else
+                <nav class="menu" aria-label="{{ __('messages.footer.main_navigation') }}">
+                    <x-filament-menu-builder::menu slug="futer-en" />
+                </nav>
             @endif
 
-            <!-- Contact information -->
-            @if (!empty($footer->phone) || !empty($footer->email[$currentLocale]) || !empty($footer->address[$currentLocale]))
-                <section aria-label="Contact information" class="min-w-60 w-[357px]">
-                    <address class="not-italic">
-                        <div class="space-y-5">
+            <!-- Контактная информация -->
+            @if (isset($footer) && (!empty($footer->phone) || !empty($footer->email) || !empty($footer->address)))
+                <section class="contacts" aria-label="{{ __('messages.footer.contact_aria_label') }}">
+                    <address>
+                        <div class="contacts-list">
                             @if (!empty($footer->phone))
-                                <div>
+                                <div class="contact-item">
                                     <a href="tel:{{ $footer->phone }}"
-                                       class="gap-2 self-stretch w-full text-white rounded-lg hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-zinc-800">
+                                       class="contact-link"
+                                       aria-label="{{ __('messages.footer.phone_aria_label') }}">
                                         {{ $footer->phone }}
                                     </a>
                                 </div>
                             @endif
-                            @if (!empty($footer->email[$currentLocale]))
-                                <div>
-                                    <a href="mailto:{{ $footer->email[$currentLocale] ?? $footer->email['en'] ?? '' }}"
-                                       class="gap-2 self-stretch mt-5 w-full text-white rounded-lg hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-zinc-800">
-                                        {{ $footer->email[$currentLocale] ?? $footer->email['en'] ?? '' }}
+                            @if (!empty($footer->email))
+                                <div class="contact-item">
+                                    <a href="mailto:{{ is_array($footer->email) ? ($footer->email[app()->getLocale()] ?? $footer->email['en'] ?? '') : $footer->email }}"
+                                       class="contact-link"
+                                       aria-label="{{ __('messages.footer.email_aria_label') }}">
+                                        {{ is_array($footer->email) ? ($footer->email[app()->getLocale()] ?? $footer->email['en'] ?? '') : $footer->email }}
                                     </a>
                                 </div>
                             @endif
-                            @if (!empty($footer->address[$currentLocale]))
-                                <div>
-                                    <p class="flex-1 shrink gap-2 self-stretch mt-5 w-full leading-6 text-white rounded-lg basis-0">
-                                        {{ $footer->address[$currentLocale] ?? $footer->address['en'] ?? '' }}
+                            @if (!empty($footer->address))
+                                <div class="contact-item">
+                                    <p class="contact-text">
+                                        {{ is_array($footer->address) ? ($footer->address[app()->getLocale()] ?? $footer->address['en'] ?? '') : $footer->address }}
                                     </p>
                                 </div>
                             @endif
@@ -87,11 +81,253 @@
         </section>
 
         <!-- Copyright and scroll to top -->
-        <section class="flex relative gap-2.5 justify-center items-start py-6 w-full max-md:max-w-full">
-            <p class="z-0 my-auto text-xs font-semibold text-neutral-400">
-                {{ $footer->copyright_text[$currentLocale] ?? $footer->copyright_text['en'] ?? '© Всі права захищені' }}
+        <section class="footer-bottom">
+            <p class="copyright">
+                {{ is_array($footer->copyright_text) ? ($footer->copyright_text[app()->getLocale()] ?? $footer->copyright_text['en'] ?? '© All rights reserved') : ($footer->copyright_text ?? '© All rights reserved') }}
             </p>
-           
+            <button
+                type="button"
+                aria-label="{{ __('messages.footer.scroll_to_top') }}"
+                class="scroll-to-top"
+                onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+            >
+                <div class="scroll-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         xmlns="http://www.w3.org/2000/svg" class="icon">
+                        <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2"
+                              stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </button>
+
         </section>
+
+        <style>
+            .main-container {
+                max-width: 1280px;
+                margin: 0 auto;
+                padding: 0 8px;
+            }
+
+            .header-section {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                padding: 44px 0 24px;
+                width: 100%;
+            }
+
+            .logo {
+                width: auto;
+                height: 32px;
+            }
+
+            .social-links {
+                display: flex;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .social-icon {
+                width: 24px;
+                height: 24px;
+                object-fit: contain;
+            }
+
+            .nav-contacts {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                gap: 40px;
+                align-items: flex-start;
+                width: 100%;
+            }
+
+            @media (max-width: 768px) {
+                .nav-contacts {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            .menu {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+                min-width: 220px;
+            }
+
+            @media (max-width: 640px) {
+                .menu {
+                    gap: 16px;
+                    width: 100%;
+                }
+            }
+
+            .menu ul {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            @media (max-width: 640px) {
+                .menu ul {
+                    gap: 16px;
+                }
+            }
+
+            .menu li {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                width: 100%;
+                border-radius: 8px;
+            }
+
+            .menu a {
+                font-size: 16px;
+                font-weight: 700;
+                color: #FFFFFF;
+                text-decoration: none;
+            }
+
+            .menu a:hover {
+                color: #D1D5DB;
+            }
+
+            .menu a:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #18181B;
+            }
+
+            @media (max-width: 640px) {
+                .menu a {
+                    font-size: 14px;
+                }
+            }
+
+            .contacts {
+                min-width: 220px;
+                max-width: 357px;
+            }
+
+            .contacts address {
+                font-style: normal;
+            }
+
+            .contacts-list {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            @media (max-width: 640px) {
+                .contacts-list {
+                    gap: 16px;
+                }
+            }
+
+            .contact-item {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                width: 100%;
+                border-radius: 8px;
+            }
+
+            .contact-link {
+                font-size: 16px;
+                font-weight: 700;
+                color: #FFFFFF;
+                text-decoration: none;
+            }
+
+            .contact-link:hover {
+                color: #D1D5DB;
+            }
+
+            .contact-link:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #18181B;
+            }
+
+            @media (max-width: 640px) {
+                .contact-link {
+                    font-size: 14px;
+                }
+            }
+
+            .contact-text {
+                font-size: 16px;
+                font-weight: 700;
+                color: #FFFFFF;
+                line-height: 24px;
+                flex: 1 0 0;
+            }
+
+            @media (max-width: 640px) {
+                .contact-text {
+                    font-size: 14px;
+                }
+            }
+
+            .footer-bottom {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                gap: 10px;
+                padding: 24px 0;
+                width: 100%;
+                position: relative;
+            }
+
+            .copyright {
+                font-size: 12px;
+                font-weight: 600;
+                color: #D1D5DB;
+                margin: auto 0;
+            }
+
+            .scroll-to-top {
+                position: absolute;
+                top: 0;
+                right: 16px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 48px;
+                height: 48px;
+                background: #16A34A;
+                border-radius: 32px;
+                border: none;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+
+            .scroll-to-top:hover {
+                background: #15803D;
+            }
+
+            .scroll-to-top:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px #22C55E, 0 0 0 4px #18181B;
+            }
+
+            .scroll-icon {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 24px;
+                height: 24px;
+            }
+
+            .icon {
+                color: #FFFFFF;
+            }
+        </style>
     </div>
+
 </footer>

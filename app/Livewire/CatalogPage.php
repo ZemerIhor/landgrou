@@ -4,7 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithPagination;
-use Lunar\Models\Collection;
+use Lunar\Models\Brand;
 use Lunar\Models\Currency;
 use Lunar\Models\Product;
 use Illuminate\Support\Facades\Log;
@@ -15,59 +15,72 @@ class CatalogPage extends Component
     use WithPagination;
 
     public $perPage = 12;
-    public $categories = [];
+    public $brands = [];
     public $priceMin = null;
     public $priceMax = null;
-    public $weights = [];
     public $sort = 'name_asc';
     public $view = 'grid';
     public $locale;
     public $currency;
 
+    protected $listeners = [
+        'updatePriceMin' => 'updatePriceMin',
+        'updatePriceMax' => 'updatePriceMax',
+    ];
+
     public function mount(): void
     {
         $this->locale = app()->getLocale();
         $this->currency = Currency::where('code', config('lunar.currency'))->first() ?? Currency::first();
+        Log::info('Catalog Page Mounted', [
+            'locale' => $this->locale,
+            'currency' => $this->currency ? $this->currency->code : 'not found',
+            'minPrice' => $this->priceRange['min'],
+            'maxPrice' => $this->priceRange['max'],
+        ]);
     }
 
-    /**
-     * Computed property to return products with applied filters.
-     */
+    public function updatePriceMin($value)
+    {
+        $this->priceMin = (float) $value;
+        $this->applyFilters();
+    }
+
+    public function updatePriceMax($value)
+    {
+        $this->priceMax = (float) $value;
+        $this->applyFilters();
+    }
+
     public function getProductsProperty()
     {
         $productsQuery = Product::where('status', 'published')
-            ->with(['variants', 'thumbnail', 'collections', 'variants.prices']);
+            ->with(['variants', 'thumbnail', 'brand', 'variants.prices']);
 
-        // Category filter
-        if (!empty($this->categories)) {
-            $productsQuery->whereHas('collections', function ($query) {
-                $query->whereIn('id', $this->categories);
-            });
+        if (!empty($this->brands)) {
+            $productsQuery->whereIn('brand_id', $this->brands);
         }
 
-        // Price filter
-        if ($this->priceMin || $this->priceMax) {
-            $productsQuery->whereHas('variants.prices', function ($query) {
-                $query->where('currency_id', $this->currency->id);
-                if ($this->priceMin) {
-                    $query->where('price', '>=', (int)($this->priceMin * 100));
-                }
-                if ($this->priceMax) {
-                    $query->where('price', '<=', (int)($this->priceMax * 100));
-                }
+        if ($this->priceMin !== null || $this->priceMax !== null) {
+            $productsQuery->whereHas('variants', function ($query) {
+                $query->whereHas('prices', function ($priceQuery) {
+                    $priceQuery->where('currency_id', $this->currency->id);
+
+                    // Предполагаем, что цены хранятся в копейках
+                    $priceMin = $this->priceMin !== null ? max(0, (float) $this->priceMin * 100) : 0;
+                    $priceMax = $this->priceMax !== null ? max(0, (float) $this->priceMax * 100) : PHP_INT_MAX;
+
+                    $priceQuery->whereBetween('price', [$priceMin, $priceMax]);
+                });
             });
+            Log::info('Price Filter Applied', [
+                'priceMin' => $this->priceMin,
+                'priceMax' => $this->priceMax,
+                'convertedPriceMin' => $this->priceMin !== null ? (float) $this->priceMin * 100 : null,
+                'convertedPriceMax' => $this->priceMax !== null ? (float) $this->priceMax * 100 : null,
+            ]);
         }
 
-        // Weight filter (using 'packaging' instead of 'weight')
-        if (!empty($this->weights)) {
-            $productsQuery->where(function ($query) {
-                foreach ($this->weights as $weight) {
-                    $query->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(attribute_data, '$.packaging.value.{$this->locale}')) = ?", [$weight]);
-                }
-            });
-        }
-
-        // Sorting
         switch ($this->sort) {
             case 'name_asc':
                 $productsQuery->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(attribute_data, '$.name.value.{$this->locale}')) ASC");
@@ -76,78 +89,123 @@ class CatalogPage extends Component
                 $productsQuery->orderByRaw("JSON_UNQUOTE(JSON_EXTRACT(attribute_data, '$.name.value.{$this->locale}')) DESC");
                 break;
             case 'price_asc':
-                $productsQuery->select('lunar_products.*')
-                    ->addSelect(\DB::raw("(SELECT MIN(price) FROM lunar_prices WHERE priceable_id = lunar_product_variants.id AND priceable_type = 'Lunar\\Models\\ProductVariant' AND currency_id = {$this->currency->id} AND lunar_product_variants.product_id = lunar_products.id) as min_price"))
-                    ->join('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
-                    ->orderBy('min_price', 'asc');
+                $productsQuery->select('lunar_products.*', \DB::raw('MIN(lunar_prices.price) as min_price'))
+                    ->leftJoin('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
+                    ->leftJoin('lunar_prices', function ($join) {
+                        $join->on('lunar_product_variants.id', '=', 'lunar_prices.priceable_id')
+                            ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
+                            ->where('lunar_prices.currency_id', '=', $this->currency->id);
+                    })
+                    ->groupBy(
+                        'lunar_products.id',
+                        'lunar_products.status',
+                        'lunar_products.brand_id',
+                        'lunar_products.attribute_data',
+                        'lunar_products.created_at',
+                        'lunar_products.updated_at',
+                        'lunar_products.deleted_at'
+                    )
+                    ->orderBy('min_price', 'ASC');
                 break;
             case 'price_desc':
-                $productsQuery->select('lunar_products.*')
-                    ->addSelect(\DB::raw("(SELECT MAX(price) FROM lunar_prices WHERE priceable_id = lunar_product_variants.id AND priceable_type = 'Lunar\\Models\\ProductVariant' AND currency_id = {$this->currency->id} AND lunar_product_variants.product_id = lunar_products.id) as max_price"))
-                    ->join('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
-                    ->orderBy('max_price', 'desc');
+                $productsQuery->select('lunar_products.*', \DB::raw('MAX(lunar_prices.price) as max_price'))
+                    ->leftJoin('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
+                    ->leftJoin('lunar_prices', function ($join) {
+                        $join->on('lunar_product_variants.id', '=', 'lunar_prices.priceable_id')
+                            ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
+                            ->where('lunar_prices.currency_id', '=', $this->currency->id);
+                    })
+                    ->groupBy(
+                        'lunar_products.id',
+                        'lunar_products.status',
+                        'lunar_products.brand_id',
+                        'lunar_products.attribute_data',
+                        'lunar_products.created_at',
+                        'lunar_products.updated_at',
+                        'lunar_products.deleted_at'
+                    )
+                    ->orderBy('max_price', 'DESC');
                 break;
         }
 
-        return $productsQuery->paginate($this->perPage);
+        $products = $productsQuery->paginate($this->perPage);
+
+        Log::info('Products Retrieved', [
+            'total' => $products->total(),
+            'current_page' => $products->currentPage(),
+            'items' => array_map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'name' => $product->translateAttribute('name'),
+                    'prices' => $product->variants->map(function ($variant) {
+                        return $variant->prices->map(function ($price) {
+                            return [
+                                'currency_id' => $price->currency_id,
+                                'price' => $price->price,
+                            ];
+                        })->toArray();
+                    })->toArray(),
+                ];
+            }, $products->items()),
+        ]);
+
+        return $products;
     }
 
-    /**
-     * Computed property to return collections.
-     */
-    public function getCollectionsProperty()
+    public function getAvailableBrandsProperty()
     {
-        return Collection::whereHas('products')->get();
+        return Brand::whereHas('products')->get();
     }
 
-    /**
-     * Computed property to return available weights.
-     */
-    public function getAvailableWeightsProperty()
-    {
-        return Product::where('status', 'published')
-            ->get()
-            ->pluck('attribute_data.packaging')
-            ->filter()
-            ->map(fn ($packaging) => $packaging instanceof \Lunar\FieldTypes\TranslatedText ? $packaging->getValue($this->locale) : $packaging)
-            ->filter()
-            ->unique()
-            ->sort()
-            ->values()
-            ->toArray();
-    }
-
-    /**
-     * Computed property to return price range.
-     */
     public function getPriceRangeProperty()
     {
+        $minPrice = \DB::table('lunar_prices')
+            ->where('priceable_type', 'Lunar\Models\ProductVariant')
+            ->where('currency_id', $this->currency->id)
+            ->min('price') ?? 0;
+
+        $maxPrice = \DB::table('lunar_prices')
+            ->where('priceable_type', 'Lunar\Models\ProductVariant')
+            ->where('currency_id', $this->currency->id)
+            ->max('price') ?? 100000; // 1000 UAH в копейках
+
+        Log::info('Price Range Calculated', [
+            'minPrice' => $minPrice,
+            'maxPrice' => $maxPrice,
+        ]);
+
         return [
-            'min' => \DB::table('lunar_prices')
-                    ->where('priceable_type', 'Lunar\\Models\\ProductVariant')
-                    ->where('currency_id', $this->currency->id)
-                    ->min('price') / 100 ?? 0,
-            'max' => \DB::table('lunar_prices')
-                    ->where('priceable_type', 'Lunar\\Models\\ProductVariant')
-                    ->where('currency_id', $this->currency->id)
-                    ->max('price') / 100 ?? 0,
+            'min' => floor($minPrice / 100), // Преобразуем в гривны
+            'max' => ceil($maxPrice / 100),
         ];
     }
 
     public function applyFilters()
     {
+        // Валидация цен
+        if ($this->priceMin !== null) {
+            $this->priceMin = max(0, (float) $this->priceMin);
+        }
+        if ($this->priceMax !== null) {
+            $this->priceMax = max(0, (float) $this->priceMax);
+        }
+        if ($this->priceMin !== null && $this->priceMax !== null && $this->priceMin > $this->priceMax) {
+            [$this->priceMin, $this->priceMax] = [$this->priceMax, $this->priceMin];
+        }
+
         $this->resetPage();
+        Log::info('Filters Applied', [
+            'brands' => $this->brands,
+            'priceMin' => $this->priceMin,
+            'priceMax' => $this->priceMax,
+            'sort' => $this->sort,
+            'view' => $this->view,
+        ]);
     }
 
-    public function removeCategory($id)
+    public function removeBrand($id)
     {
-        $this->categories = array_diff($this->categories, [$id]);
-        $this->applyFilters();
-    }
-
-    public function removeWeight($weight)
-    {
-        $this->weights = array_diff($this->weights, [$weight]);
+        $this->brands = array_diff($this->brands, [$id]);
         $this->applyFilters();
     }
 
@@ -158,14 +216,30 @@ class CatalogPage extends Component
         $this->applyFilters();
     }
 
+    public function clearAllFilters()
+    {
+        $this->brands = [];
+        $this->priceMin = null;
+        $this->priceMax = null;
+        $this->applyFilters();
+    }
+
     public function setView($view)
     {
         $this->view = $view;
+        Log::info('View Changed', [
+            'view' => $this->view,
+        ]);
+        $this->resetPage();
     }
 
     public function updated($property)
     {
-        if (in_array($property, ['categories', 'priceMin', 'priceMax', 'weights', 'sort'])) {
+        if (in_array($property, ['brands', 'priceMin', 'priceMax', 'sort'])) {
+            Log::info('Property Updated', [
+                'property' => $property,
+                'value' => $this->$property,
+            ]);
             $this->applyFilters();
         }
     }
@@ -173,13 +247,12 @@ class CatalogPage extends Component
     public function render(): View
     {
         try {
-            Log::info('Catalog Page Products', [
-                'products' => $this->products->toArray(),
+            Log::info('Catalog Page Rendering', [
+                'products_count' => $this->products->total(),
                 'filters' => [
-                    'categories' => $this->categories,
+                    'brands' => $this->brands,
                     'priceMin' => $this->priceMin,
                     'priceMax' => $this->priceMax,
-                    'weights' => $this->weights,
                     'sort' => $this->sort,
                     'view' => $this->view,
                 ],
@@ -187,8 +260,7 @@ class CatalogPage extends Component
 
             return view('livewire.catalog-page', [
                 'products' => $this->products,
-                'collections' => $this->collections,
-                'availableWeights' => $this->availableWeights,
+                'availableBrands' => $this->availableBrands,
                 'minPrice' => $this->priceRange['min'],
                 'maxPrice' => $this->priceRange['max'],
                 'locale' => $this->locale,
@@ -199,10 +271,9 @@ class CatalogPage extends Component
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'filters' => [
-                    'categories' => $this->categories,
+                    'brands' => $this->brands,
                     'priceMin' => $this->priceMin,
                     'priceMax' => $this->priceMax,
-                    'weights' => $this->weights,
                     'sort' => $this->sort,
                     'view' => $this->view,
                 ],
@@ -210,10 +281,9 @@ class CatalogPage extends Component
 
             return view('livewire.catalog-page', [
                 'products' => Product::where('status', 'published')->paginate($this->perPage),
-                'collections' => Collection::whereHas('products')->get(),
-                'availableWeights' => [],
-                'minPrice' => null,
-                'maxPrice' => null,
+                'availableBrands' => Brand::whereHas('products')->get(),
+                'minPrice' => 0,
+                'maxPrice' => 1000,
                 'locale' => $this->locale,
                 'currency' => $this->currency,
             ])->with('error', __('messages.catalog.error') . ': ' . $e->getMessage());
