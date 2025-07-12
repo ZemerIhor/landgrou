@@ -40,7 +40,7 @@
         </button>
 
         <!-- Header Section -->
-        <header class="flex flex-col gap-3 items-start w-[440px] max-md:w-full">
+        <header class="flex flex-col gap-3 items-start w-[440px]  max-md:w-full header">
             <h1 id="form-title" class="text-xl font-bold leading-6 text-zinc-800 w-[440px] max-md:w-full max-sm:text-lg">
                 {{ __('messages.contact_form.title') }}
             </h1>

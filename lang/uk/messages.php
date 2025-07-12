@@ -77,7 +77,7 @@ return [
         'privacy_agreement' => 'Погоджуюсь з',
         'privacy_policy_link' => 'Політикою конфіденційності',
         'back_button' => 'Назад',
-        'submit_button' => 'Надіслати',
+        'submit_button' => 'Замовити дзвінок',
         'close_button_aria_label' => 'Закрити форму',
         'no_image' => 'Зображення не завантажено',
         'contact_info' => 'Контактна інформація',
