@@ -44,6 +44,15 @@
     max-height: 0;
 }
 
+.review {
+    background-color: #E6E6E6;
+}
+.review-card {
+    background-color: #F3F3F3;
+    box-shadow: 0 4px 10px #00000025;
+
+}
+
 
 .swiper {
     position: relative;
