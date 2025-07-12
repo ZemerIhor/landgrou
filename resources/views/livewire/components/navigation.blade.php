@@ -3,7 +3,7 @@
     <header class="shadow-xl h-[56px] px-[50px] flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
             :class="{ 'is-fixed': isScrolled }"
             role="banner">
-        <div class="main-container nav-header flex relative justify-between items-center py-2  w-full h-auto container mx-auto">
+        <div class="main-container nav-header flex relative justify-between items-center w-full h-auto container mx-auto">
             <!-- Logo -->
             <a href="{{ url('/') }}" class="flex items-center" aria-label="{{ __('messages.banner.catalog_button_aria_label') }}" wire:navigate>
                 <div>
@@ -102,7 +102,7 @@
                 <!-- Contact Button (Desktop) -->
                 <button
                     wire:click="$dispatch('openContactForm')"
-                    class="hidden sm:block px-3 py-1 text-sm font-bold text-green-600 rounded-2xl border-2 border-green-600 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600"
+                    class="hidden sm:block px-3 py-2 text-sm font-bold text-green-600 rounded-2xl border-2 border-green-600 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600"
                     aria-label="{{ __('messages.feedback_form.submit_button') }}"
                 >
                     {{ __('messages.feedback_form.submit_button') }}

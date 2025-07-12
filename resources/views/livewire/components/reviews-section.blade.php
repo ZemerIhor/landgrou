@@ -1,15 +1,15 @@
 
-<div class="container mx-auto px-[50px] py-[80px]">
+<div class="mx-auto px-[50px] py-[80px] review">
     <section class="flex flex-col " aria-label="{{ __('messages.reviews.section_aria_label') }}" role="main" aria-labelledby="reviews-heading">
-        <div class="main-container">
+        <!-- <div class="main-container"> -->
             <h2 id="reviews-heading" class="w-full text-2xl font-bold leading-7 text-left text-zinc-800 max-md:text-2xl max-md:text-center max-sm:text-xl">
                 {{ __('messages.reviews.title') }}
             </h2>
-            <div class="swiper reviews-swiper mt-5 w-full max-sm:max-w-full" role="region" aria-label="{{ __('messages.reviews.articles') }}">
+            <div class="swiper reviews-swiper pt-5 pb-5 w-full max-sm:max-w-full" role="region" aria-label="{{ __('messages.reviews.articles') }}">
                 <div class="swiper-wrapper">
                     @forelse ($reviews as $review)
                         <div class="swiper-slide">
-                            <article class="flex flex-col gap-3 p-6 rounded-3xl bg-neutral-200 max-md:max-w-full h-full">
+                            <article class="flex flex-col gap-3 p-6 rounded-3xl bg-neutral-200 max-md:max-w-full h-full review-card">
                                 <div class="flex flex-col gap-2 w-full">
                                     <h3 class="gap-2.5 w-full text-xl font-bold leading-6 flex-[1_0_0] text-zinc-800 max-md:text-lg max-sm:text-base">
                                         {{ $review['name'] ?? '' }}
@@ -37,7 +37,7 @@
             </div>
             @if (!empty($reviews))
                 <a href="{{ route('reviews') }}"
-                   class="flex gap-2 justify-center items-center self-center px-6 py-2.5 mt-5 text-base font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 w-fit mx-auto hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
+                   class="flex gap-2 justify-center items-center self-center px-6 py-2.5  text-base font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 w-fit mx-auto hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
                    aria-label="{{ __('messages.reviews.more_button_aria_label') }}"
                    wire:navigate>
                     <span class="self-stretch my-auto text-green-600">
@@ -48,7 +48,7 @@
                     </svg>
                 </a>
             @endif
-        </div>
+        <!-- </div> -->
     </section>
     <script>
 document.addEventListener('DOMContentLoaded', initSwiper);
@@ -76,7 +76,7 @@ function initSwiper() {
 
         new window.Swiper('.reviews-swiper', {
             slidesPerView: 2,
-            spaceBetween: 20,
+            spaceBetween: 8,
             loop: false,
             autoplay: {
                 delay: 3000,
@@ -85,7 +85,7 @@ function initSwiper() {
             breakpoints: {
                 768: {
                     slidesPerView: 3,
-                    spaceBetween: 20,
+                    spaceBetween: 8,
                 },
             },
             navigation: false,
