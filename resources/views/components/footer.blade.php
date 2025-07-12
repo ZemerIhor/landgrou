@@ -120,7 +120,7 @@
                 object-fit: contain;
             }
 
-            .nav-contacts {
+            .nav-contacts ul{
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
                 gap: 40px;
@@ -129,7 +129,7 @@
             }
 
             @media (max-width: 768px) {
-                .nav-contacts {
+                .nav-contacts ul{
                     grid-template-columns: 1fr;
                 }
             }
