@@ -30,17 +30,17 @@
         <section class="flex flex-wrap gap-10 justify-between items-start w-full text-base font-semibold leading-none text-white max-md:max-w-full">
             <!-- Меню футера -->
             @if (app()->getLocale() === 'en')
-                <div class="w-auto">
+                <nav class="flex relative flex-col gap-5 items-start max-md:w-full max-sm:gap-4" aria-label="Main navigation">
                     <x-filament-menu-builder::menu slug="futer-en" />
-                </div>
+                </nav>
             @elseif (app()->getLocale() === 'uk')
-                <div class="w-auto">
+                <nav class="flex relative flex-col gap-5 items-start max-md:w-full max-sm:gap-4" aria-label="Main navigation">
                     <x-filament-menu-builder::menu slug="futer-ua" />
-                </div>
+                </nav>
             @else
-                <div class="w-auto">
+                <nav class="flex relative flex-col gap-5 items-start max-md:w-full max-sm:gap-4" aria-label="Main navigation">
                     <x-filament-menu-builder::menu slug="futer-en" />
-                </div>
+                </nav>
             @endif
 
             <!-- Контактная информация -->
@@ -78,21 +78,16 @@
         </section>
 
         <style>
-            /* Стили для меню футера */
             .filament-menu-builder-menu {
-                @apply text-white;
+                @apply flex flex-col gap-5 items-start;
             }
 
-            .filament-menu-builder-menu h3 {
-                @apply text-lg font-bold mb-5;
+            .filament-menu-builder-menu > div {
+                @apply flex gap-2 items-center self-stretch rounded-lg;
             }
 
-            .filament-menu-builder-menu ul {
-                @apply space-y-5;
-            }
-
-            .filament-menu-builder-menu li a {
-                @apply gap-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-zinc-800;
+            .filament-menu-builder-menu a {
+                @apply text-base font-bold text-white max-sm:text-sm hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-zinc-900;
             }
         </style>
         <!-- Copyright and scroll to top -->
