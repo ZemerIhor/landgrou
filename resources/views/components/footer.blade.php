@@ -28,31 +28,22 @@
 
         <!-- Navigation sections and contacts -->
         <section class="flex flex-wrap gap-10 justify-between items-start w-full text-base font-semibold leading-none text-white max-md:max-w-full">
-            @if (!empty($footer->sections[$currentLocale]))
-                <!-- Loop 2: Navigation sections -->
-                @foreach ($footer->sections[$currentLocale] as $section)
-                    @if (!empty($section['title']) && !empty($section['links']))
-                        <nav aria-label="{{ $section['title'] }}" class="w-auto">
-                            <h3 class="text-lg font-bold">{{ $section['title'] }}</h3>
-                            <ul class="space-y-5">
-                                <!-- Loop 3: Links within section -->
-                                @foreach ($section['links'] as $link)
-                                    @if (!empty($link['label']) && !empty($link['url']))
-                                        <li>
-                                            <a href="{{ $link['url'] }}"
-                                               class="gap-2 self-stretch mt-5 w-full text-white rounded-lg hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-zinc-800">
-                                                {{ $link['label'] }}
-                                            </a>
-                                        </li>
-                                    @endif
-                                @endforeach
-                            </ul>
-                        </nav>
-                    @endif
-                @endforeach
+            <!-- Меню футера -->
+            @if (app()->getLocale() === 'en')
+                <div class="w-auto">
+                    <x-filament-menu-builder::menu slug="futer-en" />
+                </div>
+            @elseif (app()->getLocale() === 'uk')
+                <div class="w-auto">
+                    <x-filament-menu-builder::menu slug="futer-ua" />
+                </div>
+            @else
+                <div class="w-auto">
+                    <x-filament-menu-builder::menu slug="futer-en" />
+                </div>
             @endif
 
-            <!-- Contact information -->
+            <!-- Контактная информация -->
             @if (!empty($footer->phone) || !empty($footer->email[$currentLocale]) || !empty($footer->address[$currentLocale]))
                 <section aria-label="Contact information" class="min-w-60 w-[357px]">
                     <address class="not-italic">
@@ -86,6 +77,24 @@
             @endif
         </section>
 
+        <style>
+            /* Стили для меню футера */
+            .filament-menu-builder-menu {
+                @apply text-white;
+            }
+
+            .filament-menu-builder-menu h3 {
+                @apply text-lg font-bold mb-5;
+            }
+
+            .filament-menu-builder-menu ul {
+                @apply space-y-5;
+            }
+
+            .filament-menu-builder-menu li a {
+                @apply gap-2 text-white hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-zinc-800;
+            }
+        </style>
         <!-- Copyright and scroll to top -->
         <section class="flex relative gap-2.5 justify-center items-start py-6 w-full max-md:max-w-full">
             <p class="z-0 my-auto text-xs font-semibold text-neutral-400">
