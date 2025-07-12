@@ -282,10 +282,8 @@
 
         <!-- Contact Form and Image Section -->
         <section class="py-20" aria-labelledby="contact-form">
-            <div class="contacts-container">
                 <!-- Contact Form Component -->
                 <livewire:components.feedback-form-block />
-            </div>
         </section>
     </main>
 </div>

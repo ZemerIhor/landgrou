@@ -1,5 +1,5 @@
 
-<div class="container mx-auto px-[50px] py-[80px]  ">
+<div class="container mx-auto px-[50px] py-[80p ">
     <!-- Form Block -->
     <main class="flex flex-wrap gap-2 justify-center p-4">
         <section class="flex relative flex-col flex-1 shrink justify-center self-start px-20 rounded-3xl basis-0 bg-neutral-200 min-h-[570px] min-w-60 max-md:px-5 max-md:max-w-full" role="form" aria-labelledby="form-title">
