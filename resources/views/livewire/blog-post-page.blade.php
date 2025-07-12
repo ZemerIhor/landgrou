@@ -1,4 +1,4 @@
-<div class="container mx-auto px-4 py-6">
+<div class=" mx-auto px-[50px] py-6">
     <article class="max-w-3xl mx-auto bg-white rounded-2xl shadow-sm p-6 flex flex-col gap-6">
         <!-- Header -->
         <header class="flex flex-col gap-2">

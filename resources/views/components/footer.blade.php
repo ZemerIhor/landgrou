@@ -3,8 +3,8 @@
     $currentLocale = app()->getLocale(); // Get current locale (e.g., 'en' or 'uk')
 @endphp
 
-<footer class="self-stretch bg-zinc-800 mt-auto px-[50px]" role="contentinfo" aria-label="Site footer">
-    <div class="main-container container mx-auto px-2">
+<footer class="self-stretch bg-zinc-800 mt-auto px-[16px] sm:px-[28px] md:px-[50px]" role="contentinfo" aria-label="Site footer">
+    <div class="main-container  mx-auto ">
         <section class="flex flex-wrap gap-10 justify-between items-end pt-11 pb-6 w-full max-md:max-w-full">
             <x-brand.logo class="w-auto h-8 text-indigo-600" />
 
@@ -91,21 +91,7 @@
             <p class="z-0 my-auto text-xs font-semibold text-neutral-400">
                 {{ $footer->copyright_text[$currentLocale] ?? $footer->copyright_text['en'] ?? '© Всі права захищені' }}
             </p>
-            <button
-                type="button"
-                aria-label="Scroll to top of page"
-                class="flex absolute top-0 right-4 z-0 gap-2.5 justify-center items-center self-start px-3 w-12 h-12 bg-green-600 rounded-[32px] hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-zinc-800 transition-colors duration-200"
-                onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-            >
-                <div class="flex self-stretch my-auto w-6 min-h-6" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         xmlns="http://www.w3.org/2000/svg" class="text-white">
-                        <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2"
-                              stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-
-            </button>
+           
         </section>
     </div>
 </footer>

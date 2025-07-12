@@ -1,4 +1,4 @@
-<div class="flex flex-col container mx-auto w-full max-md:max-w-full">
+<div class="flex flex-col  mx-auto w-full max-md:max-w-full px-[16px] sm:px-[28px] md:px-[50px]">
     <!-- Breadcrumb Navigation -->
     @include('livewire.components.breadcrumbs', ['currentPage' => __('messages.breadcrumbs.blog')])
 

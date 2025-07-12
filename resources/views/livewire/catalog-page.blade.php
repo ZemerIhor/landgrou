@@ -1,4 +1,4 @@
-<div class="container mx-auto py-8">
+<div class=" mx-auto  px-[16px] sm:px-[28px] md:px-[50px]">
     @if (isset($error))
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {{ $error }}
@@ -19,9 +19,7 @@
 
     <h1 class="text-3xl font-bold mb-6 mt-4">{{ __('Каталог продуктів') }}</h1>
 
-    <div class="rounded-none max-w-[688px]">
-        <!-- Filter Tags and Controls Section -->
-        <nav class="flex flex-wrap gap-2 items-center pt-2 w-full max-md:max-w-full" role="navigation" aria-label="Active filters and sorting controls">
+            <nav class="flex flex-wrap gap-2 items-center pt-2 w-full max-md:max-w-full" role="navigation" aria-label="Active filters and sorting controls">
             <!-- Active Filter Tags -->
             <div class="flex flex-1 shrink gap-0.5 items-center self-stretch my-auto text-xs font-bold leading-tight text-white basis-8 min-w-60">
                 @foreach ($categories as $categoryId)
@@ -65,6 +63,10 @@
             </div>
         </nav>
 
+    <!-- <div class="rounded-none"> -->
+        <!-- Filter Tags and Controls Section -->
+
+        <div class="flex gap-2 "> 
         <!-- Filters Panel -->
         <aside class="w-56 max-w-full rounded-3xl bg-neutral-200 mt-4" aria-label="Product filters">
             <!-- Product Type Filter -->
@@ -137,13 +139,13 @@
                 </button>
             </div>
         </aside>
-    </div>
+    <!-- </div> -->
 
-    <div class="{{ $view == 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6' : 'flex flex-col gap-6' }} mt-6">
+    <div class="{{ $view == 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4' : 'flex flex-col gap-6' }} mt-4">
         @foreach ($products as $product)
 
-            <article class="overflow-hidden flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60" role="listitem">
-                <div class="block group">
+            <article class="overflow-hidden h-full flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60" role="listitem">
+                <div class="flex flex-col justify-between group h-full">
                     <a href="{{ route('product.view', $product->defaultUrl->slug) }}" wire:navigate class="block">
                         <div class="flex relative flex-col w-full min-h-[153px]">
                             <div class="flex overflow-hidden absolute top-1/2 left-1/2 z-0 flex-col px-1.5 max-w-full -translate-x-1/2 -translate-y-1/2 h-[163px] w-full">
@@ -165,7 +167,7 @@
                         </div>
                     </a>
 
-                    <div class="flex gap-4 justify-between items-center mt-4 px-4 pb-4 w-full">
+                    <div class="flex gap-4 justify-between items-end mt-4 px-4 pb-4 w-full">
                         <span class="text-base font-bold leading-tight text-zinc-800">
                             <x-product-price :product="$product" />
                         </span>
@@ -175,6 +177,7 @@
                 </div>
             </article>
         @endforeach
+    </div>
     </div>
 
     <div class="mt-8">

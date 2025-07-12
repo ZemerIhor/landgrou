@@ -1,6 +1,6 @@
 @props(['product'])
 
-<article class="overflow-hidden flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60 h-full" role="listitem">
+<article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200   lg:h-[378px] sm:h-[389px] " role="listitem">
     <div class="flex flex-col justify-between group h-full">
         <!-- Оборачиваем в ссылку только изображение и название -->
         <a href="{{ route('product.view', $product->defaultUrl->slug) }}" wire:navigate class="flex flex-col h-full">

@@ -406,7 +406,8 @@
     </style>
 </head>
 
-<body class="antialiased">
+<body class="antialiased relative body">
+    
     <div
          class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 px-[50px] sm:items-center py-4 sm:pt-0">
         @if (Route::has('login'))
@@ -604,6 +605,7 @@
             </div>
         </div>
     </div>
+     
 </body>
 
 </html>

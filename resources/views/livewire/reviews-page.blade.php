@@ -1,7 +1,16 @@
-<main class="box-border px-5 py-0 mx-auto my-0 w-full container">
-    <section class="relative mx-auto my-0 w-full" aria-label="Customer Reviews">
+<main class="box-border px-[16px] sm:px-[28px] md:px-[50px] py-0 mx-auto my-0 mb-[100px] w-full ">
+     <!-- Breadcrumbs -->
+            <livewire:components.breadcrumbs
+                :currentPage="__('messages.reviews.title')"
+                :items="[]"
+            />
+
+            <h1 class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full my-4">
+                {{ __('messages.reviews.title') }}
+            </h1>
+    <section class="relative flex flex-col justify-center items-center mx-auto my-0 w-full" aria-label="Customer Reviews">
         <div class="">
-            <div class="flex flex-col gap-2 justify-center items-start w-full">
+            <div class="flex flex-col gap-2 justify-center items-start max-w-[782px] ">
                 @foreach ($reviews as $review)
                     <article class="flex relative flex-col items-start w-full bg-white rounded-3xl shadow-xl">
                         <div class="box-border flex relative flex-col items-start p-10 w-full max-md:p-8 max-sm:p-5">

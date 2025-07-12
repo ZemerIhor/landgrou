@@ -1,6 +1,6 @@
 <div class="">
     <x-welcome-banner :settings="$settings" />
-    <div class="container px-[50px] mx-auto pt-[40px]">
+    <div class=" px-[50px] mx-auto pt-40">
         <section class="flex relative flex-col w-full gap-0.5 items-start self-stretch  pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0" aria-label="Company Advantages">
                 <div class="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] max-md:grid-cols-2 max-sm:grid-cols-1 gap-1 w-full">
                     @if (!empty($settings->advantages_cards[app()->getLocale()]))
@@ -23,11 +23,11 @@
                 </div>
         </section>
     </div>
-    <div class="container px-[50px] py-[80px] products  mx-auto ">
+    <div class=" px-[16px] sm:px-[28px] md:px-[50px]  py-[80px] products  mx-auto ">
         <section class="flex flex-col self-stretch" aria-label="Каталог">
             <div class="main-container">
-                <h2 class="text-2xl font-bold leading-tight text-black max-md:max-w-full">{{ __('messages.products.title') }}</h2>
-                <div class="flex flex-wrap gap-2 items-center mt-5 w-full h-[378px] max-md:max-w-full" role="list">
+                <h2 class="text-2xl pb-5 font-bold leading-tight text-black max-md:max-w-full">{{ __('messages.products.title') }}</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4  overflow-hidden gap-2 lg:h-[378px] sm:h-auto" role="list">
                     @if (!empty($allProducts))
                         @foreach ($allProducts as $product)
                             <x-product-card :product="$product" />
@@ -43,7 +43,7 @@
     
     
 
-    <div class="container px-[50px] py-[80px] mx-auto">
+    <div class=" px-[16px] sm:px-[28px] md:px-[50px] py-[80px] mx-auto">
         <section class="flex overflow-hidden flex-col font-bold" aria-labelledby="advantages-title">
             <div class="main-container">
                 <div class="flex flex-col items-center">
@@ -95,7 +95,7 @@
  <livewire:components.reviews-section />
 
      <section class="flex overflow-hidden flex-col bg-zinc-800 px-[50px] py-[80px]" role="main" aria-labelledby="about-heading">
-        <div class="container mx-auto">
+        <div class=" mx-auto">
             <div class="main-container relative">
                 <div class="flex justify-between h-full relative w-full max-md:flex-col max-md:items-start max-md:gap-10">
                     <!-- Part 1: Main Content -->
@@ -158,7 +158,7 @@
     </section>
 
 
-       <div class="container  mx-auto px-[50px]">
+       <div class="  mx-auto px-[16px] sm:px-[28px] md:px-[50px]">
         <section class="flex flex-col py-10" aria-label="Frequently Asked Questions">
             <div class="main-container">
                 <h1 class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
@@ -214,7 +214,7 @@
     </div>
 
 
-    <div class="container test mx-auto px-[50px]">
+    <div class=" mx-auto px-[16px] sm:px-[28px] md:px-[50px]">
         <section class="flex flex-col justify-center self-stretch py-10 text-base" aria-label="Tenders section">
             <div class="main-container">
                 <h1 class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
