@@ -1,125 +1,143 @@
 
 <div class="container mx-auto px-[50px] py-[80px]  ">
     <!-- Form Block -->
-    <section class="flex flex-col justify-center self-stretch  min-h-[570px]" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
-        <!-- <div class="main-container"> -->
-            <div class="flex flex-wrap gap-2 justify-center w-full max-md:max-w-full">
-                <div class="flex relative flex-col flex-1 shrink justify-center self-start px-[80px] rounded-3xl basis-0 bg-neutral-200 min-h-[570px] max-md:max-w-full">
-                    <form wire:submit="submit" class="z-0 w-full" aria-labelledby="feedback-form-title" novalidate>
-                        <header class="w-full text-zinc-800 max-md:max-w-full">
-                            <h1 id="feedback-form-title" class="text-xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
-                                {{ $settings['feedback_form_title'] }}
-                            </h1>
-                            <p class="mt-3 text-base font-semibold leading-none text-zinc-800 max-md:max-w-full">
-                                {{ $settings['feedback_form_description'] }}
-                            </p>
-                        </header>
-                        <fieldset class="z-0 mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full">
-                            <legend class="sr-only">{{ __('messages.feedback_form.contact_info') }}</legend>
-                            <div class="mb-4">
-                                <label for="name-input" class="sr-only">{{ __('messages.feedback_form.name_placeholder') }}</label>
-                                <input
-                                    type="text"
-                                    id="name-input"
-                                    wire:model="name"
-                                    placeholder="{{ __('messages.feedback_form.name_placeholder') }}"
-                                    class="overflow-hidden flex-1 shrink gap-2 self-stretch px-4 py-3.5 w-full rounded-2xl border border-solid border-[color:var(--Gray-400,#A9A9A9)] min-h-12 text-neutral-400 max-md:max-w-full focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent @error('name') border-red-500 @enderror"
-                                    aria-required="true"
-                                />
-                                @error('name') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                            </div>
-                            <div class="mb-4">
-                                <label for="phone-input" class="sr-only">{{ __('messages.feedback_form.phone_placeholder') }}</label>
-                                <input
-                                    type="tel"
-                                    id="phone-input"
-                                    wire:model="phone"
-                                    placeholder="{{ __('messages.feedback_form.phone_placeholder') }}"
-                                    class="overflow-hidden flex-1 shrink gap-2 self-stretch px-4 py-3.5 w-full rounded-2xl border border-solid border-[color:var(--Gray-400,#A9A9A9)] min-h-12 text-neutral-400 max-md:max-w-full focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent @error('phone') border-red-500 @enderror"
-                                    aria-required="true"
-                                />
-                                @error('phone') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                            </div>
-                            <div class="mb-4">
-                                <div class="flex flex-col px-4 py-3 w-full leading-6 rounded-2xl border border-solid border-[color:var(--Gray-400,#A9A9A9)] max-md:max-w-full focus-within:ring-2 focus-within:ring-green-600 focus-within:border-transparent @error('comment') border-red-500 @enderror">
-                                    <label for="comment-textarea" class="text-neutral-400 mb-2">{{ __('messages.feedback_form.comment_label') }}</label>
-                                    <textarea
-                                        id="comment-textarea"
-                                        wire:model="comment"
-                                        rows="3"
-                                        class="flex-1 resize-none border-none outline-none bg-transparent text-neutral-400 placeholder-neutral-400"
-                                        placeholder="{{ __('messages.feedback_form.comment_placeholder') }}"
-                                        aria-describedby="comment-help"
-                                        aria-required="true"
-                                    ></textarea>
-                                    <div id="comment-help" class="sr-only">{{ __('messages.feedback_form.comment_help') }}</div>
-                                </div>
-                                @error('comment') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                            </div>
-                        </fieldset>
-                        <footer class="flex z-0 flex-col mt-10 w-full max-md:max-w-full">
-                            <div class="flex gap-2 items-center self-start text-xs mb-4">
-                                <div class="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        id="privacy-checkbox"
-                                        wire:model="privacyAgreement"
-                                        class="w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 text-green-600 focus:ring-green-600 focus:ring-2 @error('privacyAgreement') border-red-500 @enderror"
-                                        required
-                                        aria-describedby="privacy-description"
-                                    />
-                                    <label for="privacy-checkbox" class="ml-2 text-xs font-semibold text-zinc-800">
-                                        {{ __('messages.feedback_form.privacy_agreement') }}
-                                        <a
-                                            href="{{ route('terms') }}"
-                                            class="text-indigo-500 underline hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                            aria-label="{{ __('messages.feedback_form.privacy_policy_link') }}"
-                                        >
-                                            {{ __('messages.feedback_form.privacy_policy_link') }}
-                                        </a>
-                                    </label>
-                                </div>
-                                @error('privacyAgreement') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                            </div>
-                            <div class="flex gap-4 items-center w-full text-base font-bold leading-snug whitespace-nowrap max-md:max-w-full" role="group">
-                                <button
-                                    type="button"
-                                    wire:click="goBack"
-                                    class="gap-2 px-6 py-2.5 text-green-600 rounded-2xl border-2 border-solid border-[color:var(--Primaries-700,#228F5D)] min-h-11 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 hover:bg-green-50 transition-colors"
-                                    aria-label="{{ __('messages.feedback_form.back_button') }}"
-                                >
-                                    {{ __('messages.feedback_form.back_button') }}
-                                </button>
-                                <button
-                                    type="submit"
-                                    wire:loading.attr="disabled"
-                                    x-bind:disabled="!$wire.name || !$wire.phone || !$wire.comment || !$wire.privacyAgreement"
-                                    class="gap-2 px-6 py-2.5 text-white bg-green-600 rounded-2xl min-h-11 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                    aria-label="{{ __('messages.feedback_form.submit_button') }}"
-                                >
-                                    <span wire:loading.remove>{{ __('messages.feedback_form.submit_button') }}</span>
-                                    <span wire:loading>{{ __('messages.feedback_form.submit_loading') }}</span>
-                                </button>
-                            </div>
-                        </footer>
-                    </form>
-                </div>
-                <aside class="flex-1 max-sm:-order-1 shrink min-w-60 max-md:max-w-full" aria-label="{{ __('messages.feedback_form.image_aria_label') }}">
-                    @if ($settings['feedback_form_image'])
-                        <img
-                            src="{{ $settings['feedback_form_image'] }}"
-                            alt="{{ __('messages.feedback_form.image_alt') }}"
-                            class="w-full rounded-3xl aspect-[1.03]"
-                        />
-                    @else
-                        <p>{{ __('messages.feedback_form.no_image') }}</p>
-                    @endif
-                </aside>
-            </div>
-        <!-- </div> -->
-    </section>
+    <main class="flex flex-wrap gap-2 justify-center p-4">
+        <section class="flex relative flex-col flex-1 shrink justify-center self-start px-20 rounded-3xl basis-0 bg-neutral-200 min-h-[570px] min-w-60 max-md:px-5 max-md:max-w-full" role="form" aria-labelledby="form-title">
+            <button type="button" class="flex absolute top-0 right-0 z-10 flex-col justify-center items-center self-start p-8 max-md:px-5" aria-label="Закрити форму">
+                <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ab93e5bbfd42aa72173a49be339c395bfb6e1ec3?placeholderIfAbsent=true" alt="Закрити" class="object-contain w-6 aspect-square" />
+            </button>
 
-    <!-- Modal Overlay -->
+            <header class="z-0 w-full text-zinc-800 max-md:max-w-full">
+                <h1 id="form-title" class="text-xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
+                    Форма зворотнього зв'язку
+                </h1>
+                <p class="mt-3 text-base font-semibold leading-none text-zinc-800 max-md:max-w-full">
+                    Заповніть поля
+                </p>
+            </header>
+
+            <form wire:submit="submit" class="z-0 mt-10 w-full max-md:max-w-full" aria-labelledby="form-title" novalidate>
+                <fieldset class="border-0 p-0 m-0">
+                    <legend class="sr-only">{{ __('messages.feedback_form.contact_info') }}</legend>
+
+                    <div class="mb-4">
+                        <label for="name" class="sr-only">{{ __('messages.feedback_form.name_placeholder') }}</label>
+                        <input
+                            type="text"
+                            id="name"
+                            wire:model="name"
+                            placeholder="{{ __('messages.feedback_form.name_placeholder') }}"
+                            required
+                            aria-required="true"
+                            class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full text-base font-semibold leading-none text-neutral-400 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-green-600 @error('name') border-red-500 @enderror"
+                        />
+                        @error('name') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="phone" class="sr-only">{{ __('messages.feedback_form.phone_placeholder') }}</label>
+                        <input
+                            type="tel"
+                            id="phone"
+                            wire:model="phone"
+                            placeholder="{{ __('messages.feedback_form.phone_placeholder') }}"
+                            required
+                            aria-required="true"
+                            class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full text-base font-semibold leading-none text-neutral-400 bg-transparent focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-green-600 @error('phone') border-red-500 @enderror"
+                        />
+                        @error('phone') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="comment" class="sr-only">{{ __('messages.feedback_form.comment_label') }}</label>
+                        <div class="flex flex-col px-4 py-3 w-full leading-6 rounded-2xl border border-solid border-neutral-400 max-md:max-w-full relative focus-within:ring-2 focus-within:ring-green-600 focus-within:border-green-600 @error('comment') border-red-500 @enderror">
+                        <textarea
+                            id="comment"
+                            wire:model="comment"
+                            placeholder="{{ __('messages.feedback_form.comment_placeholder') }}"
+                            rows="4"
+                            class="text-neutral-400 text-base font-semibold bg-transparent border-0 outline-none resize-none focus:ring-0 p-0"
+                            aria-required="true"
+                            aria-describedby="comment-help"
+                        ></textarea>
+                            <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ce6cffb288cbd7b018b1dadae4b444f45d8bcd95?placeholderIfAbsent=true" alt="" class="object-contain self-end w-6 aspect-square mt-2" aria-hidden="true" />
+                            <div id="comment-help" class="sr-only">{{ __('messages.feedback_form.comment_help') }}</div>
+                        </div>
+                        @error('comment') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+                    </div>
+                </fieldset>
+
+                <div class="flex z-0 flex-col mt-10 w-full max-md:max-w-full">
+                    <div class="flex gap-2 items-center self-start text-xs mb-4">
+                        <div class="relative">
+                            <input
+                                type="checkbox"
+                                id="privacy-agreement"
+                                wire:model="privacyAgreement"
+                                required
+                                aria-required="true"
+                                aria-describedby="privacy-text"
+                                class="sr-only peer"
+                            />
+                            <label
+                                for="privacy-agreement"
+                                class="flex shrink-0 w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 cursor-pointer peer-checked:bg-green-600 peer-checked:border-green-600 peer-focus:ring-2 peer-focus:ring-green-600 peer-focus:ring-offset-2 relative"
+                                aria-label="{{ __('messages.feedback_form.privacy_agreement') }}"
+                            >
+                                <svg class="w-4 h-4 text-white absolute top-0.5 left-0.5 hidden peer-checked:block" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                            </label>
+                        </div>
+                        <div id="privacy-text" class="flex gap-0.5 items-start min-w-60">
+                            <span class="font-semibold text-zinc-800">{{ __('messages.feedback_form.privacy_agreement') }}</span>
+                            <a
+                                href="{{ route('terms') }}"
+                                class="text-indigo-500 underline decoration-auto decoration-solid underline-offset-auto rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                aria-label="{{ __('messages.feedback_form.privacy_policy_link') }}"
+                            >
+                                {{ __('messages.feedback_form.privacy_policy_link') }}
+                            </a>
+                        </div>
+                        @error('privacyAgreement') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="flex gap-4 items-center w-full text-base font-bold leading-snug whitespace-nowrap max-md:max-w-full">
+                        <button
+                            type="button"
+                            wire:click="goBack"
+                            class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-green-600 rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
+                            aria-label="{{ __('messages.feedback_form.back_button') }}"
+                        >
+                            <span class="self-stretch my-auto text-green-600">{{ __('messages.feedback_form.back_button') }}</span>
+                        </button>
+                        <button
+                            type="submit"
+                            wire:loading.attr="disabled"
+                            x-bind:disabled="!$wire.name || !$wire.phone || !$wire.comment || !$wire.privacyAgreement"
+                            class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-white bg-green-600 rounded-2xl min-h-11 max-md:px-5 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            aria-label="{{ __('messages.feedback_form.submit_button') }}"
+                        >
+                            <span wire:loading.remove>{{ __('messages.feedback_form.submit_button') }}</span>
+                            <span wire:loading>{{ __('messages.feedback_form.submit_loading') }}</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <aside class="flex-1 shrink basis-40 min-w-60 max-md:max-w-full" aria-label="{{ __('messages.feedback_form.image_aria_label') }}">
+            @if ($settings['feedback_form_image'])
+                <img
+                    src="{{ $settings['feedback_form_image'] }}"
+                    alt="{{ __('messages.feedback_form.image_alt') }}"
+                    class="object-contain w-full rounded-3xl aspect-[1.03]"
+                />
+            @else
+                <p>{{ __('messages.feedback_form.no_image') }}</p>
+            @endif
+        </aside>
+    </main>
     <div x-show="$wire.state === 'success' || $wire.state === 'error'" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" x-cloak></div>
 
     <!-- Success Modal -->

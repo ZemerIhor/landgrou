@@ -1,5 +1,5 @@
 <main class="box-border px-5 py-0 mx-auto my-0 w-full container">
-    <section class="relative mx-auto my-0 w-full" aria-label="Customer Reviews">
+    <section class="relative mx-auto my-0 w-full mb-5" aria-label="Customer Reviews">
         <div class="">
             <div class="flex flex-col gap-2 justify-center items-start w-full">
                 @foreach ($reviews as $review)
