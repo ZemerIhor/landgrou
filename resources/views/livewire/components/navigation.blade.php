@@ -14,16 +14,11 @@
             <style>
                 /* Base styles for the menu container */
                 .desktop-menu {
-                    display: none;
                     align-items: center;
                 }
 
                 /* Show menu on medium screens and above (≥768px) */
-                @media (min-width: 768px) {
-                    .desktop-menu {
-                        display: flex;
-                    }
-                }
+
 
                 /* Style the menu's ul (assumed output of filament-menu-builder) */
                 .nav-header ul {
@@ -89,7 +84,7 @@
             </style>
 
             <!-- Desktop Menu -->
-            <div class="desktop-menu">
+            <div class="desktop-menu sm:hidden">
                 @if(app()->getLocale() === 'en')
                     <x-filament-menu-builder::menu slug="en-header-menu" />
                 @elseif(app()->getLocale() === 'uk')
