@@ -21,11 +21,8 @@ class Home extends Page implements HasForms
     use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
-
     protected static string $view = 'filament.pages.home';
-
     protected static string $settings = HomeSettings::class;
-
     protected static ?string $navigationLabel = 'Home Settings';
 
     public static function getSlug(): string
@@ -52,6 +49,8 @@ class Home extends Page implements HasForms
             'central_text_value' => $settings->central_text_value ?? ['en' => '', 'uk' => ''],
             'central_text_unit' => $settings->central_text_unit ?? ['en' => '', 'uk' => ''],
             'faq_items' => $settings->faq_items ?? ['en' => [], 'uk' => []],
+            'faq_main_image' => $settings->faq_main_image ?? null,
+            'faq_main_image_alt' => $settings->faq_main_image_alt ?? ['en' => '', 'uk' => ''],
             'feedback_form_title' => $settings->feedback_form_title ?? ['en' => '', 'uk' => ''],
             'feedback_form_description' => $settings->feedback_form_description ?? ['en' => '', 'uk' => ''],
             'feedback_form_image' => $settings->feedback_form_image,
@@ -222,12 +221,29 @@ class Home extends Page implements HasForms
                                         Textarea::make('answer')
                                             ->label(__('Відповідь'))
                                             ->maxLength(500),
+                                        FileUpload::make('icon')
+                                            ->label(__('Иконка'))
+                                            ->directory('home/faq/icons')
+                                            ->disk('public')
+                                            ->preserveFilenames()
+                                            ->maxSize(5120)
+                                            ->image(),
                                     ])
                                     ->maxItems(10)
                                     ->collapsible()
                                     ->reorderable()
                                     ->cloneable(),
+                                TextInput::make('faq_main_image_alt')
+                                    ->label(__('Альтернативный текст основного изображения FAQ'))
+                                    ->maxLength(255),
                             ]),
+                        FileUpload::make('faq_main_image')
+                            ->label(__('Основное изображение FAQ'))
+                            ->directory('home/faq')
+                            ->disk('public')
+                            ->preserveFilenames()
+                            ->maxSize(5120)
+                            ->image(),
                     ])
                     ->collapsible(),
 
@@ -247,7 +263,7 @@ class Home extends Page implements HasForms
                                             ->maxLength(255)
                                             ->required(),
                                         FileUpload::make('icon')
-                                            ->label(__('Іконка категорії'))
+                                            ->label(__('Иконка категории'))
                                             ->directory('home/tenders/icons')
                                             ->disk('public')
                                             ->preserveFilenames()
@@ -322,6 +338,7 @@ class Home extends Page implements HasForms
             $fileFields = [
                 'advantages_image_1', 'advantages_image_2', 'advantages_image_3',
                 'main_comparison_image', 'feedback_form_image', 'about_location_image',
+                'faq_main_image',
             ];
 
             foreach ($fileFields as $field) {
@@ -332,7 +349,7 @@ class Home extends Page implements HasForms
 
             $translatableArrays = [
                 'hero_slides', 'advantages_cards', 'comparison_items', 'faq_items',
-                'tender_items', 'review_items'
+                'tender_items', 'review_items',
             ];
 
             foreach ($translatableArrays as $field) {
@@ -377,6 +394,20 @@ class Home extends Page implements HasForms
 
             if (isset($data['tender_items']) && is_array($data['tender_items'])) {
                 foreach ($data['tender_items'] as $locale => &$items) {
+                    if (is_array($items)) {
+                        foreach ($items as &$item) {
+                            if (isset($item['icon'])) {
+                                $item['icon'] = is_array($item['icon']) ? ($item['icon'][0] ?? null) : $item['icon'];
+                            }
+                        }
+                        unset($item);
+                    }
+                }
+                unset($items);
+            }
+
+            if (isset($data['faq_items']) && is_array($data['faq_items'])) {
+                foreach ($data['faq_items'] as $locale => &$items) {
                     if (is_array($items)) {
                         foreach ($items as &$item) {
                             if (isset($item['icon'])) {

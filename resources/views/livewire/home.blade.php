@@ -156,61 +156,87 @@
     </section>
 
 
-       <div class="  mx-auto px-[16px] sm:px-[28px] md:px-[50px]">
-        <section class="flex flex-col py-10" aria-label="Frequently Asked Questions">
-            <div class="main-container">
-                <h1 class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
-                    {{ __('messages.faq.title') }}
-                </h1>
-                <div class="flex flex-wrap gap-5 justify-center mt-5 w-full max-sm:max-w-full">
-                    @if (!empty($settings->feedback_form_image))
-                        <img src="{{ Storage::url($settings->feedback_form_image) }}" alt="{{ isset($settings->feedback_form_image_alt[app()->getLocale()]) ? $settings->feedback_form_image_alt[app()->getLocale()] : '' }}"
-                             class="rounded-3xl max-w-xs" />
-                    @else
-                        <p>{{ __('messages.feedback_form.no_image') }}</p>
-                    @endif
-                    <div class="flex-1 shrink self-start basis-0 min-w-60 max-md:max-w-full">
-                        @if (!empty($settings->faq_items[app()->getLocale()]))
-                            @php $counter = 1; @endphp
-                            @foreach ($settings->faq_items[app()->getLocale()] as $faq)
-                                <article class="flex flex-wrap items-start px-4 py-2 w-full rounded-3xl bg-neutral-200 max-md:max-w-full mb-1">
-                                    <div class="flex-1 shrink pt-4 pb-2 pl-4 basis-0 min-w-60 text-zinc-800 max-md:max-w-full">
-                                        <h2 class="flex-1 shrink gap-2.5 self-stretch pb-2 w-full text-xl font-bold leading-6 basis-0 text-zinc-800 max-md:max-w-full cursor-pointer"
-                                            data-toggle="faq-{{ $counter }}">
-                                            {{ isset($faq['question']) ? $faq['question'] : '' }}
-                                        </h2>
-                                        <div class="flex w-full bg-zinc-300 min-h-px max-md:max-w-full"></div>
-                                        <p class="faq-answer max-h-0 overflow-hidden transition-all duration-300 ease-in-out text-base font-semibold leading-none text-zinc-800 max-md:max-w-full"
-                                           id="faq-{{ $counter }}">
-                                            {{ isset($faq['answer']) ? $faq['answer'] : '' }}
-                                        </p>
-                                    </div>
-                                    <button class="faq-toggle flex shrink-0 gap-2.5 w-14 h-14 items-center justify-center"
-                                            aria-label="Toggle answer" aria-expanded="false" data-toggle="faq-{{ $counter }}">
-                                        <svg class="arrow-close hidden"  width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M31.8034 27.2923L31.8034 11.8746L12.1966 31.4813L20.867 22.8109C24.8863 18.7917 31.7602 21.6083 31.8034 27.2923Z" fill="#228F5D"/>
-<path d="M31.8034 11.8746L21.5249 11.8746L16.3857 11.8746C22.0726 11.8951 24.9063 18.7716 20.8851 22.7929L12.1966 31.4813L31.8034 11.8746Z" fill="#228F5D"/>
-<path d="M10.2466 11.8741C10.2466 11.3219 10.6942 10.8742 11.2465 10.8742L31.8036 10.8742C32.3557 10.8744 32.8035 11.322 32.8035 11.8741V32.4313C32.8035 32.9834 32.3557 33.431 31.8036 33.4312C31.2514 33.4312 30.8038 32.9836 30.8038 32.4313L30.8031 27.2917C30.7609 22.5753 25.1441 20.2025 21.735 23.3625L21.5741 23.5179L12.9037 32.1883C12.5133 32.5787 11.8801 32.5787 11.4895 32.1883C11.1235 31.8222 11.1003 31.2428 11.4205 30.85L11.4895 30.774L20.1778 22.0857C23.5703 18.6932 21.1797 12.8921 16.382 12.8747L16.3813 12.874L11.2465 12.874C10.6942 12.874 10.2466 12.4264 10.2466 11.8741ZM25.169 19.923C27.2744 19.8727 29.3483 20.7308 30.8024 22.2556L30.8038 14.2882L25.169 19.923ZM21.4429 12.874C22.9628 14.3248 23.8188 16.3934 23.77 18.4936L29.3895 12.874H21.4429Z" fill="#228F5D"/>
-</svg>
+    <section class="flex flex-col px-12 py-20 bg-zinc-100 max-md:px-5" role="main" aria-labelledby="faq-title">
+        <header>
+            <h1 id="faq-title" class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
+                {{ isset($settings->faq_title[app()->getLocale()]) ? $settings->faq_title[app()->getLocale()] : __('messages.faq.title') }}
+            </h1>
+        </header>
 
-<svg class="arrow-open block" width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M12.1621 16.1244L12.2575 31.5418L31.7426 11.8141L23.126 20.538C19.1317 24.582 12.2405 21.8079 12.1621 16.1244L L12.1621 16.1244Z" fill="#228F5D"/>
-<path d="M12.2575 31.5418L22.5358 31.4782L27.6749 31.4464L L27.6749 31.4464C21.988 31.461 19.1118 24.6022 23.1081 20.5561L31.7426 11.8141L12.2575 31.5418Z" fill="#228F5D"/>
-<path d="M33.8138 31.4087C33.817 31.9264 33.4263 32.3543 32.9223 32.4086L32.8202 32.4148L12.2634 32.5419C11.7113 32.5451 11.2608 32.1003 11.2573 31.5482L11.1301 10.9914C11.1268 10.4393 11.5718 9.989 12.1238 9.98538C12.6761 9.98196 13.1264 10.4268 13.1299 10.9791L13.1624 16.1186C13.2337 20.8346 18.865 23.1726 22.2546 19.9916L22.4145 19.8352L31.0311 11.1114C31.4191 10.7185 32.0523 10.7147 32.4452 11.1026C32.8135 11.4664 32.8403 12.0457 32.5226 12.4404L32.454 12.5168L23.8196 21.2587C20.4481 24.6722 22.8747 30.4584 27.6724 30.4461L27.6731 30.4468L32.8078 30.415L32.9107 30.4192C33.415 30.4675 33.8106 30.8911 33.8138 31.4087ZM18.8419 23.4523C16.7368 23.5156 14.6576 22.6704 13.1942 21.1546L13.2421 29.1218L18.8419 23.4523ZM22.6116 30.4781C21.0827 29.0367 20.2139 26.9734 20.2497 24.873L14.665 30.5272L22.6116 30.4781Z" fill="#228F5D"/>
-</svg>
-                                    </button>
-                                </article>
-                                @php $counter++; @endphp
-                            @endforeach
-                        @else
-                            <p>{{ __('messages.faq.no_items') }}</p>
-                        @endif
-                    </div>
-                </div>
+        <div class="flex flex-wrap gap-5 justify-center mt-5 w-full max-md:max-w-full">
+            @if (!empty($settings->faq_main_image))
+                <img
+                    src="{{ Storage::url($settings->faq_main_image) }}"
+                    alt="{{ isset($settings->faq_main_image_alt[app()->getLocale()]) ? $settings->faq_main_image_alt[app()->getLocale()] : '' }}"
+                    class="object-contain rounded-3xl aspect-[0.71] min-w-60 w-[380px]"
+                />
+            @else
+                <p>{{ __('messages.faq.no_image') }}</p>
+            @endif
+
+            <div class="flex-1 shrink self-start basis-0 min-w-60 max-md:max-w-full">
+                @foreach ($settings->faq_items[app()->getLocale()] ?? [] as $index => $item)
+                    <article class="flex flex-wrap items-start px-4 py-2 mt-1 w-full rounded-3xl bg-neutral-200 max-md:max-w-full">
+                        <div class="flex gap-2.5 items-start self-stretch py-2 h-full w-[70px]">
+                            @if (!empty($item['icon']))
+                                <img
+                                    src="{{ Storage::url($item['icon']) }}"
+                                    alt="{{ __('messages.faq.icon_alt', ['question' => $item['question']]) }}"
+                                    class="object-contain rounded-xl aspect-[1.11] w-[70px]"
+                                />
+                            @else
+                                <p>{{ __('messages.faq.no_icon') }}</p>
+                            @endif
+                        </div>
+                        <div class="flex-1 shrink pt-4 pb-2 pl-4 basis-0 min-w-60 text-zinc-800 max-md:max-w-full">
+                            <button
+                                class="flex gap-2.5 justify-center items-center pb-2 w-full text-xl font-bold leading-6 max-md:max-w-full text-left"
+                                aria-expanded="false"
+                                aria-controls="answer-{{ $index }}"
+                                onclick="toggleFAQ(this, 'answer-{{ $index }}')"
+                            >
+                                <h2 class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800 max-md:max-w-full">
+                                    {{ $item['question'] }}
+                                </h2>
+                            </button>
+                            <div class="flex w-full bg-zinc-300 min-h-px max-md:max-w-full" role="separator"></div>
+                            <div
+                                id="answer-{{ $index }}"
+                                class="faq-answer"
+                                aria-hidden="true"
+                            >
+                                <div class="flex gap-2.5 items-center py-2 w-full text-base font-semibold leading-none rounded-2xl max-md:max-w-full">
+                                    <p class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800 max-md:max-w-full">
+                                        {{ $item['answer'] }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex shrink-0 gap-2.5 w-14 h-14 items-center justify-center">
+                            <svg class="arrow-icon w-6 h-6 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </div>
+                    </article>
+                @endforeach
             </div>
-        </section>
-    </div>
+        </div>
 
+        <footer class="flex justify-end mt-5">
+            <button
+                class="flex gap-2 justify-center items-center self-end px-6 py-2.5 text-base font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
+                aria-label="{{ __('messages.faq.show_more') }}"
+            >
+                <span class="self-stretch my-auto text-green-600">{{ __('messages.faq.show_more') }}</span>
+                <img
+                    src="{{ asset('images/more-icon.png') }}"
+                    alt=""
+                    class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square"
+                    role="presentation"
+                />
+            </button>
+        </footer>
+    </section>
 
     <section
         class="flex flex-col justify-center self-stretch px-12 py-20 text-base bg-zinc-100 max-md:px-5"
