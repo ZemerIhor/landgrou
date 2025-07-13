@@ -171,7 +171,7 @@
                 <!-- Mobile Menu Toggle -->
                 <button
                     x-on:click="mobileMenu = !mobileMenu"
-                    class="sm:hidden text-2xl cursor-pointer text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600"
+                    class="md:hidden text-2xl cursor-pointer text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600"
                     aria-label="{{ __('messages.nav.toggle_mobile_menu') }}"
                     :aria-expanded="mobileMenu"
                 >
