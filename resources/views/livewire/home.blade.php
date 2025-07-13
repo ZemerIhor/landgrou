@@ -190,20 +190,27 @@
                         </div>
                         <div class="flex-1 shrink pt-4 pb-2 pl-4 basis-0 min-w-60 text-zinc-800 max-md:max-w-full">
                             <button
-                                class="flex gap-2.5 justify-center items-center pb-2 w-full text-xl font-bold leading-6 max-md:max-w-full text-left"
+                                class="faq-toggle flex gap-2.5 justify-center items-center pb-2 w-full text-xl font-bold leading-6 max-md:max-w-full text-left"
                                 aria-expanded="false"
-                                aria-controls="answer-{{ $index }}"
-                                onclick="toggleFAQ(this, 'answer-{{ $index }}')"
+                                data-toggle="answer-{{ $index }}"
                             >
                                 <h2 class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800 max-md:max-w-full">
                                     {{ $item['question'] }}
                                 </h2>
+                                <div class="flex shrink-0 gap-2.5 w-14 h-14 items-center justify-center">
+                                    <svg class="arrow-open w-6 h-6 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                    <svg class="arrow-close w-6 h-6 text-zinc-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                    </svg>
+                                </div>
                             </button>
                             <div class="flex w-full bg-zinc-300 min-h-px max-md:max-w-full" role="separator"></div>
                             <div
                                 id="answer-{{ $index }}"
                                 class="faq-answer"
-                                aria-hidden="true"
+                                style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;"
                             >
                                 <div class="flex gap-2.5 items-center py-2 w-full text-base font-semibold leading-none rounded-2xl max-md:max-w-full">
                                     <p class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800 max-md:max-w-full">
@@ -211,11 +218,6 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="flex shrink-0 gap-2.5 w-14 h-14 items-center justify-center">
-                            <svg class="arrow-icon w-6 h-6 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
                         </div>
                     </article>
                 @endforeach
@@ -237,7 +239,6 @@
             </button>
         </footer>
     </section>
-
     <section
         class="flex flex-col justify-center self-stretch px-12 py-20 text-base bg-zinc-100 max-md:px-5"
         aria-labelledby="tenders-heading"
