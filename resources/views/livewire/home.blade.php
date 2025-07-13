@@ -236,7 +236,7 @@
                 >
                     @if (!empty($item['decorative_image']))
                         <img
-                            src="{{ $item['decorative_image'] }}"
+                            src="{{ asset($item['decorative_image']) }}"
                             alt="Декоративне зображення для тендеру {{ $item['title'] }}"
                             class="object-contain absolute bottom-0 right-1 z-0 self-start aspect-[1.68] h-[485px] min-w-60 w-[352px]"
                             style="fill: {{ $item['background_color'] ?? '#34C759' }};"
@@ -245,7 +245,7 @@
                     <div class="z-0 flex-1 shrink p-4 basis-0 min-w-60">
                         @if (!empty($item['icon']))
                             <img
-                                src="{{ $item['icon'] }}"
+                                src="{{ asset($item['icon']) }}"
                                 alt="Іконка категорії {{ $item['title'] }}"
                                 class="object-contain w-10 aspect-square"
                             />
@@ -283,9 +283,9 @@
                 type="button"
                 aria-label="Переглянути більше тендерів"
             >
-      <span class="self-stretch my-auto text-current">
-        Більше
-      </span>
+            <span class="self-stretch my-auto text-current">
+                Більше
+            </span>
                 <img
                     src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/5fcdfc213ad7c52f7cde2c5630712bbd498037c1?placeholderIfAbsent=true"
                     alt=""
