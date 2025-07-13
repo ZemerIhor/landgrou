@@ -2,7 +2,7 @@
 <div class="mx-auto px-[16px] sm:px-[28px] md:px-[50px] py-[80px] review">
     <section class="flex flex-col " aria-label="{{ __('messages.reviews.section_aria_label') }}" role="main" aria-labelledby="reviews-heading">
         <!-- <div class="main-container"> -->
-            <h2 id="reviews-heading" class="w-full text-2xl font-bold leading-7 text-left text-zinc-800 max-md:text-2xl max-md:text-center max-sm:text-xl">
+            <h2 id="reviews-heading" class="mb-4 w-full text-2xl font-bold leading-7 text-left text-zinc-800 max-md:text-2xl max-md:text-center max-sm:text-xl">
                 {{ __('messages.reviews.title') }}
             </h2>
             <div class="swiper reviews-swiper pt-5 pb-5 w-full max-sm:max-w-full" role="region" aria-label="{{ __('messages.reviews.articles') }}">
