@@ -182,7 +182,7 @@
                                 <img
                                     src="{{ Storage::url($item['icon']) }}"
                                     alt="{{ __('messages.faq.icon_alt', ['question' => $item['question']]) }}"
-                                    class="object-contain rounded-xl aspect-[1.11] w-[70px]"
+                                    class="object-contain rounded-xl faq-thumbnail"
                                 />
                             @else
                                 <p>{{ __('messages.faq.no_icon') }}</p>
