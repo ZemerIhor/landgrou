@@ -84,7 +84,7 @@
             </style>
 
             <!-- Desktop Menu -->
-            <div class="sm:flex desktop-menu hidden md:flex">
+            <div class="desktop-menu hidden lg:flex">
                 @if(app()->getLocale() === 'en')
                     <x-filament-menu-builder::menu slug="en-header-menu" />
                 @elseif(app()->getLocale() === 'uk')
@@ -171,7 +171,7 @@
                 <!-- Mobile Menu Toggle -->
                 <button
                     x-on:click="mobileMenu = !mobileMenu"
-                    class="md:hidden text-2xl cursor-pointer text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600"
+                    class="lg:hidden text-2xl cursor-pointer text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600"
                     aria-label="{{ __('messages.nav.toggle_mobile_menu') }}"
                     :aria-expanded="mobileMenu"
                 >
