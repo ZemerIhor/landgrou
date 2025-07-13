@@ -65,8 +65,10 @@ return [
     ],
     'faq' => [
         'title' => 'Frequently Asked Questions',
-        'more_button' => 'More',
-        'no_items' => 'No FAQ items available',
+        'no_image' => 'No image available',
+        'no_icon' => 'No icon available',
+        'show_more' => 'Show more',
+        'icon_alt' => 'Icon for question: :question',
     ],
     'feedback_form' => [
         'aria_label' => 'Feedback Form',
