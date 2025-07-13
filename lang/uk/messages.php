@@ -338,7 +338,15 @@ return [
         'saved' => 'Налаштування успішно збережено',
         'error' => 'Помилка збереження налаштувань',
     ],
-
+    'hero' => [
+        'aria_label' => 'Головний банер',
+        'default_heading' => 'LAND GROU',
+        'default_subheading' => 'Українська компанія з видобування й <br> переробки <span class="text-green-500">торфу</span>',
+        'default_extra_text' => 'Keep warm',
+        'catalog_button' => 'Каталог',
+        'buy_now_button' => 'Купити зараз',
+        'no_slides' => 'Слайди відсутні',
+    ],
 
 
 ];
