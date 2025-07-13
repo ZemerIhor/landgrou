@@ -1,36 +1,42 @@
 <div class="">
-    <x-welcome-banner :settings="$settings" />
+    <x-welcome-banner :settings="$settings"/>
     <div class=" px-[50px] mx-auto pt-40">
-        <section class="flex relative flex-col w-full gap-0.5 items-start self-stretch  pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0" aria-label="Company Advantages">
-                <div class="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] max-md:grid-cols-2 max-sm:grid-cols-1 gap-1 w-full">
-                    @if (!empty($settings->advantages_cards[app()->getLocale()]))
-                        @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
-                            <article class="flex flex-col gap-3 items-center p-6 rounded-3xl bg-zinc-800">
-                                <div class="flex flex-col gap-2 w-full text-center text-white">
-                                    <h2 class="text-base font-bold leading-5 max-sm:text-sm">{{ isset($card['title']) ? $card['title'] : '' }}</h2>
-                                    <p class="text-xs font-semibold leading-5 max-sm:text-xs">{{ isset($card['description']) ? $card['description'] : '' }}</p>
-                                </div>
-                            </article>
-                            @if ($index < 3 && !empty($settings->{'advantages_image_' . ($index + 1)}))
-                                <figure class="rounded-3xl max-md:h-[200px] max-sm:h-[180px]">
-                                    <img src="{{ Storage::url($settings->{'advantages_image_' . ($index + 1)}) }}" alt="Advantage image" class="object-cover w-full h-full rounded-3xl" />
-                                </figure>
-                            @endif
-                        @endforeach
-                    @else
-                        <p>{{ __('messages.advantages.no_cards') }}</p>
-                    @endif
-                </div>
+        <section
+            class="flex relative flex-col w-full gap-0.5 items-start self-stretch  pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0"
+            aria-label="Company Advantages">
+            <div
+                class="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] max-md:grid-cols-2 max-sm:grid-cols-1 gap-1 w-full">
+                @if (!empty($settings->advantages_cards[app()->getLocale()]))
+                    @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
+                        <article class="flex flex-col gap-3 items-center p-6 rounded-3xl bg-zinc-800">
+                            <div class="flex flex-col gap-2 w-full text-center text-white">
+                                <h2 class="text-base font-bold leading-5 max-sm:text-sm">{{ isset($card['title']) ? $card['title'] : '' }}</h2>
+                                <p class="text-xs font-semibold leading-5 max-sm:text-xs">{{ isset($card['description']) ? $card['description'] : '' }}</p>
+                            </div>
+                        </article>
+                        @if ($index < 3 && !empty($settings->{'advantages_image_' . ($index + 1)}))
+                            <figure class="rounded-3xl max-md:h-[200px] max-sm:h-[180px]">
+                                <img src="{{ Storage::url($settings->{'advantages_image_' . ($index + 1)}) }}"
+                                     alt="Advantage image" class="object-cover w-full h-full rounded-3xl"/>
+                            </figure>
+                        @endif
+                    @endforeach
+                @else
+                    <p>{{ __('messages.advantages.no_cards') }}</p>
+                @endif
+            </div>
         </section>
     </div>
     <div class=" px-[16px] sm:px-[28px] md:px-[50px]  py-[80px] products  mx-auto ">
         <section class="flex flex-col self-stretch" aria-label="Каталог">
             <div class="main-container">
                 <h2 class="text-2xl pb-5 font-bold leading-tight text-black max-md:max-w-full">{{ __('messages.products.title') }}</h2>
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4  overflow-hidden gap-2 lg:h-[378px] sm:h-auto" role="list">
+                <div
+                    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4  overflow-hidden gap-2 lg:h-[378px] sm:h-auto"
+                    role="list">
                     @if (!empty($allProducts))
                         @foreach ($allProducts as $product)
-                            <x-product-card :product="$product" />
+                            <x-product-card :product="$product"/>
                         @endforeach
                     @else
                         <p>{{ __('messages.products.no_items') }}</p>
@@ -41,75 +47,82 @@
     </div>
 
 
-
-
     <div class=" px-[16px] sm:px-[28px] md:px-[50px] py-[80px] mx-auto">
         <section class="flex overflow-hidden flex-col font-bold" aria-labelledby="advantages-title">
-                <div class="flex flex-col items-center">
-                    <h1 id="advantages-title" class="text-4xl leading-none text-center text-zinc-800 max-md:max-w-full">
-                        {{ isset($settings->comparison_title[app()->getLocale()]) ? $settings->comparison_title[app()->getLocale()] : __('messages.advantages.title') }}
-                    </h1>
-                    @if (!empty($settings->main_comparison_image) && is_string($settings->main_comparison_image))
-                       <div class="relative w-full">
+            <div class="flex flex-col items-center">
+                <h1 id="advantages-title" class="text-4xl leading-none text-center text-zinc-800 max-md:max-w-full">
+                    {{ isset($settings->comparison_title[app()->getLocale()]) ? $settings->comparison_title[app()->getLocale()] : __('messages.advantages.title') }}
+                </h1>
+                @if (!empty($settings->main_comparison_image) && is_string($settings->main_comparison_image))
+                    <div class="relative w-full">
                         <img src="{{ Storage::url($settings->main_comparison_image) }}"
                              alt="{{ isset($settings->main_comparison_alt[app()->getLocale()]) ? $settings->main_comparison_alt[app()->getLocale()] : 'Comparison of peat briquettes' }}"
-                             class="object-fill w-full min-h-60 mt-6 aspect-[4.13] rounded-[32px] max-md:max-w-full" />
-                        <span class="w-full flex absolute top-0 z-10 flex-col justify-center items-center self-center px-4 py-12 leading-none text-center whitespace-nowrap max-md:top-10"
-                              aria-label="Quantity of peat briquettes for comparison">
-                    <span class="text-8xl tracking-tighter text-white max-md:text-4xl">{{ isset($settings->central_text_value[app()->getLocale()]) ? $settings->central_text_value[app()->getLocale()] : '1t' }}</span>
-                    <span class="text-4xl text-white">{{ isset($settings->central_text_unit[app()->getLocale()]) ? $settings->central_text_unit[app()->getLocale()] : 'briquettes' }}</span>
+                             class="object-fill w-full min-h-60 mt-6 aspect-[4.13] rounded-[32px] max-md:max-w-full"/>
+                        <span
+                            class="w-full flex absolute top-0 z-10 flex-col justify-center items-center self-center px-4 py-12 leading-none text-center whitespace-nowrap max-md:top-10"
+                            aria-label="Quantity of peat briquettes for comparison">
+                    <span
+                        class="text-8xl tracking-tighter text-white max-md:text-4xl">{{ isset($settings->central_text_value[app()->getLocale()]) ? $settings->central_text_value[app()->getLocale()] : '1t' }}</span>
+                    <span
+                        class="text-4xl text-white">{{ isset($settings->central_text_unit[app()->getLocale()]) ? $settings->central_text_unit[app()->getLocale()] : 'briquettes' }}</span>
                 </span>
-                       </div>
+                    </div>
+                @endif
+            </div>
+            <!-- Part 2: Comparison Items and Central Text -->
+            <div class="flex relative flex-col self-center mt-2 w-full text-white max-md:max-w-full">
+                <div class="flex z-0 gap-2 justify-between items-center w-full min-h-60 max-md:gap-6">
+                    @if (!empty($settings->comparison_items[app()->getLocale()]))
+                        @foreach ($settings->comparison_items[app()->getLocale()] as $item)
+                            <div class="flex relative flex-col grow items-start self-stretch overflow-hidden
+ my-auto min-h-60 rounded-[32px] max-md:w-full">
+                                @if (!empty($item['image']) && is_string($item['image']))
+                                    <img src="{{ Storage::url($item['image']) }}"
+                                         alt="{{ isset($item['alt']) ? $item['alt'] : '' }}"
+                                         class="object-cover absolute inset-0 size-full"/>
+                                @endif
+                                <div
+                                    class="flex relative gap-2 items-end p-4 max-md:flex-col items-center w-full mt-auto">
+                                    <p class="text-4xl leading-none">{{ isset($item['value']) ? $item['value'] : '' }}</p>
+                                    <p class="text-2xl leading-tight">{!! isset($item['unit']) ? $item['unit'] : '' !!}</p>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <p class="text-center w-full">{{ __('messages.comparison.no_items') }}</p>
                     @endif
                 </div>
-                <!-- Part 2: Comparison Items and Central Text -->
-                <div class="flex relative flex-col self-center mt-2 w-full text-white max-md:max-w-full">
-                    <div class="flex z-0 gap-2 justify-between items-center w-full min-h-60 max-md:gap-6">
-                        @if (!empty($settings->comparison_items[app()->getLocale()]))
-                            @foreach ($settings->comparison_items[app()->getLocale()] as $item)
-                                <div class="flex relative flex-col grow items-start self-stretch overflow-hidden
- my-auto min-h-60 rounded-[32px] max-md:w-full">
-                                    @if (!empty($item['image']) && is_string($item['image']))
-                                        <img src="{{ Storage::url($item['image']) }}"
-                                             alt="{{ isset($item['alt']) ? $item['alt'] : '' }}"
-                                             class="object-cover absolute inset-0 size-full" />
-                                    @endif
-                                    <div class="flex relative gap-2 items-end p-4 max-md:flex-col items-center w-full mt-auto">
-                                        <p class="text-4xl leading-none">{{ isset($item['value']) ? $item['value'] : '' }}</p>
-                                        <p class="text-2xl leading-tight">{!! isset($item['unit']) ? $item['unit'] : '' !!}</p>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @else
-                            <p class="text-center w-full">{{ __('messages.comparison.no_items') }}</p>
-                        @endif
-                    </div>
-                </div>
+            </div>
         </section>
     </div>
 
 
+    <livewire:components.reviews-section/>
 
- <livewire:components.reviews-section />
-
-     <section class="flex overflow-hidden flex-col bg-zinc-800 px-[50px] py-[80px]" role="main" aria-labelledby="about-heading">
+    <section class="flex overflow-hidden flex-col bg-zinc-800 px-[50px] py-[80px]" role="main"
+             aria-labelledby="about-heading">
         <div class=" mx-auto">
             <div class="main-container relative">
-                <div class="flex justify-between h-full relative w-full max-md:flex-col max-md:items-start max-md:gap-10">
+                <div
+                    class="flex justify-between h-full relative w-full max-md:flex-col max-md:items-start max-md:gap-10">
                     <!-- Part 1: Main Content -->
-                    <article class="flex flex-col justify-between flex-1 shrink items-start font-bold basis-0 min-w-[15rem] max-md:w-full">
+                    <article
+                        class="flex flex-col justify-between flex-1 shrink items-start font-bold basis-0 min-w-[15rem] max-md:w-full">
                         <header class="w-full max-md:w-full max-md:max-w-none">
-                            <h1 id="about-heading" class="text-4xl leading-none text-white max-md:text-3xl max-md:w-full">
+                            <h1 id="about-heading"
+                                class="text-4xl leading-none text-white max-md:text-3xl max-md:w-full">
                                 {{ isset($settings->about_title[app()->getLocale()]) ? $settings->about_title[app()->getLocale()] : __('messages.about.title') }}
                             </h1>
                             <p class="mt-5 text-xl leading-6 text-white max-md:text-base max-md:w-full">{!! isset($settings->about_description[app()->getLocale()]) ? $settings->about_description[app()->getLocale()] : '' !!}</p>
                         </header>
-                        <nav class="flex gap-4 items-center mt-40 text-base leading-snug whitespace-nowrap max-md:mt-10 max-md:flex-wrap max-md:justify-start">
+                        <nav
+                            class="flex gap-4 items-center mt-40 text-base leading-snug whitespace-nowrap max-md:mt-10 max-md:flex-wrap max-md:justify-start">
                             @if (!empty($settings->about_more_link[app()->getLocale()]))
                                 <a href="{{ $settings->about_more_link[app()->getLocale()] }}"
                                    class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-green-600 rounded-2xl border-2 border-solid border-[color:var(--Primaries-700,#228F5D)] min-h-11 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-800"
                                    type="button" aria-label="{{ __('messages.about.more_button_aria_label') }}">
-                                    <span class="self-stretch my-auto text-green-600">{{ __('messages.about.more_button') }}</span>
+                                    <span
+                                        class="self-stretch my-auto text-green-600">{{ __('messages.about.more_button') }}</span>
                                 </a>
                             @endif
                             @if (!empty($settings->about_certificates_link[app()->getLocale()]))
@@ -122,8 +135,9 @@
                         </nav>
                     </article>
                     <!-- Part 2: Statistics and Image -->
-                    <aside class="flex gap-2 items-end self-start min-w-[15rem] max-md:w-full max-md:flex-col max-md:gap-6"
-                           aria-label="Company statistics and information">
+                    <aside
+                        class="flex gap-2 items-end self-start min-w-[15rem] max-md:w-full max-md:flex-col max-md:gap-6"
+                        aria-label="Company statistics and information">
                         <article class="min-w-[15rem] max-w-sm max-md:max-w-sm">
                             <header>
                                 <h2 class="text-4xl font-bold leading-none text-green-600 max-md:text-3xl">
@@ -142,8 +156,9 @@
                                     class="flex relative flex-col px-7 pb-4 w-full aspect-[0.57] pt-[473px] max-md:pt-24 max-md:pl-5">
                                     <img src="{{ Storage::url($settings->about_location_image) }}"
                                          alt="{{ isset($settings->about_location_caption[app()->getLocale()]) ? $settings->about_location_caption[app()->getLocale()] : '' }}"
-                                         class="object-cover absolute inset-0 w-full h-full" />
-                                    <figcaption class="relative z-10">{{ isset($settings->about_location_caption[app()->getLocale()]) ? $settings->about_location_caption[app()->getLocale()] : '' }}</figcaption>
+                                         class="object-cover absolute inset-0 w-full h-full"/>
+                                    <figcaption
+                                        class="relative z-10">{{ isset($settings->about_location_caption[app()->getLocale()]) ? $settings->about_location_caption[app()->getLocale()] : '' }}</figcaption>
                                 </div>
                             </figure>
                         @else
@@ -176,7 +191,8 @@
 
             <div class="flex-1 shrink self-start basis-0 min-w-60 max-md:max-w-full">
                 @foreach ($settings->faq_items[app()->getLocale()] ?? [] as $index => $item)
-                    <article class="flex flex-wrap items-start px-4 py-2 mt-1 w-full rounded-3xl bg-neutral-200 max-md:max-w-full">
+                    <article
+                        class="flex flex-wrap items-start px-4 py-2 mt-1 w-full rounded-3xl bg-neutral-200 max-md:max-w-full">
                         <div class="flex gap-2.5 items-start self-stretch py-2 h-full w-[70px]">
                             @if (!empty($item['icon']))
                                 <img
@@ -198,11 +214,15 @@
                                     {{ $item['question'] }}
                                 </h2>
                                 <div class="flex shrink-0 gap-2.5 w-14 h-14 items-center justify-center">
-                                    <svg class="arrow-open w-6 h-6 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    <svg class="arrow-open w-6 h-6 text-zinc-600" fill="none" stroke="currentColor"
+                                         viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M19 9l-7 7-7-7"></path>
                                     </svg>
-                                    <svg class="arrow-close w-6 h-6 text-zinc-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                    <svg class="arrow-close w-6 h-6 text-zinc-600 hidden" fill="none"
+                                         stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M5 15l7-7 7 7"></path>
                                     </svg>
                                 </div>
                             </button>
@@ -212,7 +232,8 @@
                                 class="faq-answer"
                                 style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;"
                             >
-                                <div class="flex gap-2.5 items-center py-2 w-full text-base font-semibold leading-none rounded-2xl max-md:max-w-full">
+                                <div
+                                    class="flex gap-2.5 items-center py-2 w-full text-base font-semibold leading-none rounded-2xl max-md:max-w-full">
                                     <p class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800 max-md:max-w-full">
                                         {{ $item['answer'] }}
                                     </p>
@@ -235,7 +256,9 @@
                 {{ __('messages.faq.show_more') }}
             </span>
                 <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.4697 1.1474C10.7626 0.854511 11.2374 0.854511 11.5303 1.1474L17.5303 7.1474C17.8232 7.4403 17.8232 7.91517 17.5303 8.20806L11.5303 14.2081C11.2374 14.501 10.7626 14.501 10.4697 14.2081C10.1768 13.9152 10.1768 13.4403 10.4697 13.1474L15.1893 8.42773H1C0.585786 8.42773 0.25 8.09195 0.25 7.67773C0.25 7.26352 0.585786 6.92773 1 6.92773H15.1893L10.4697 2.20806C10.1768 1.91517 10.1768 1.4403 10.4697 1.1474Z" fill="#228F5D"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M10.4697 1.1474C10.7626 0.854511 11.2374 0.854511 11.5303 1.1474L17.5303 7.1474C17.8232 7.4403 17.8232 7.91517 17.5303 8.20806L11.5303 14.2081C11.2374 14.501 10.7626 14.501 10.4697 14.2081C10.1768 13.9152 10.1768 13.4403 10.4697 13.1474L15.1893 8.42773H1C0.585786 8.42773 0.25 8.09195 0.25 7.67773C0.25 7.26352 0.585786 6.92773 1 6.92773H15.1893L10.4697 2.20806C10.1768 1.91517 10.1768 1.4403 10.4697 1.1474Z"
+                          fill="#228F5D"/>
                 </svg>
 
             </a>
@@ -277,23 +300,32 @@
                                   fill="{{ $item['background_color'] ?? '#34C759' }}"/>
                         </g>
                         <defs>
-                            <filter id="filter0_dd_2231_3718" x="0" y="-130.322" width="408" height="541" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                            <filter id="filter0_dd_2231_3718" x="0" y="-130.322" width="408" height="541"
+                                    filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
                                 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
-                                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                                <feMorphology radius="4" operator="erode" in="SourceAlpha" result="effect1_dropShadow_2231_3718"/>
+                                <feColorMatrix in="SourceAlpha" type="matrix"
+                                               values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                <feMorphology radius="4" operator="erode" in="SourceAlpha"
+                                              result="effect1_dropShadow_2231_3718"/>
                                 <feOffset/>
                                 <feGaussianBlur stdDeviation="2"/>
                                 <feComposite in2="hardAlpha" operator="out"/>
-                                <feColorMatrix type="matrix" values="0 0 0 0 0.0470588 0 0 0 0 0.0470588 0 0 0 0 0.0509804 0 0 0 0.05 0"/>
+                                <feColorMatrix type="matrix"
+                                               values="0 0 0 0 0.0470588 0 0 0 0 0.0470588 0 0 0 0 0.0509804 0 0 0 0.05 0"/>
                                 <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2231_3718"/>
-                                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                                <feMorphology radius="4" operator="erode" in="SourceAlpha" result="effect2_dropShadow_2231_3718"/>
+                                <feColorMatrix in="SourceAlpha" type="matrix"
+                                               values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                <feMorphology radius="4" operator="erode" in="SourceAlpha"
+                                              result="effect2_dropShadow_2231_3718"/>
                                 <feOffset/>
                                 <feGaussianBlur stdDeviation="16"/>
                                 <feComposite in2="hardAlpha" operator="out"/>
-                                <feColorMatrix type="matrix" values="0 0 0 0 0.0470588 0 0 0 0 0.0470588 0 0 0 0 0.0509804 0 0 0 0.15 0"/>
-                                <feBlend mode="normal" in2="effect1_dropShadow_2231_3718" result="effect2_dropShadow_2231_3718"/>
-                                <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_2231_3718" result="shape"/>
+                                <feColorMatrix type="matrix"
+                                               values="0 0 0 0 0.0470588 0 0 0 0 0.0470588 0 0 0 0 0.0509804 0 0 0 0.15 0"/>
+                                <feBlend mode="normal" in2="effect1_dropShadow_2231_3718"
+                                         result="effect2_dropShadow_2231_3718"/>
+                                <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_2231_3718"
+                                         result="shape"/>
                             </filter>
                         </defs>
                     </svg>
@@ -352,39 +384,41 @@
         </footer>
     </section>
 
-      <livewire:components.blog-section />
-      <div class="px-[16px] sm:px-[28px] md:px-[50px] py-[80px]  "> <livewire:components.feedback-form-block /></div>
+    <livewire:components.blog-section/>
+    <div class="px-[16px] sm:px-[28px] md:px-[50px] py-[80px]  ">
+        <livewire:components.feedback-form-block/>
+    </div>
 
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const buttons = document.querySelectorAll('.faq-toggle');
+    document.addEventListener('DOMContentLoaded', () => {
+        const buttons = document.querySelectorAll('.faq-toggle');
 
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
-            const targetId = button.dataset.toggle;
-            const answer = document.getElementById(targetId);
-            const openIcon = button.querySelector('.arrow-open');
-            const closeIcon = button.querySelector('.arrow-close');
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetId = button.dataset.toggle;
+                const answer = document.getElementById(targetId);
+                const openIcon = button.querySelector('.arrow-open');
+                const closeIcon = button.querySelector('.arrow-close');
 
-            const isVisible = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+                const isVisible = answer.style.maxHeight && answer.style.maxHeight !== '0px';
 
-            if (isVisible) {
-                // Закриваємо
-                answer.style.maxHeight = null;
-                button.setAttribute('aria-expanded', 'false');
-                openIcon.classList.remove('hidden');
-                closeIcon.classList.add('hidden');
-            } else {
-                // Відкриваємо
-                answer.style.maxHeight = answer.scrollHeight + 'px';
-                button.setAttribute('aria-expanded', 'true');
-                openIcon.classList.add('hidden');
-                closeIcon.classList.remove('hidden');
-            }
+                if (isVisible) {
+                    // Закриваємо
+                    answer.style.maxHeight = null;
+                    button.setAttribute('aria-expanded', 'false');
+                    openIcon.classList.remove('hidden');
+                    closeIcon.classList.add('hidden');
+                } else {
+                    // Відкриваємо
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                    button.setAttribute('aria-expanded', 'true');
+                    openIcon.classList.add('hidden');
+                    closeIcon.classList.remove('hidden');
+                }
+            });
         });
     });
-});
 </script>
 

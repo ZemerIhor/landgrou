@@ -337,4 +337,14 @@ return [
         'error' => 'Error saving settings',
     ],
 
+    'hero' => [
+        'aria_label' => 'Hero Banner',
+        'default_heading' => 'LAND GROU',
+        'default_subheading' => 'Ukrainian company for peat extraction and <br> processing <span class="text-green-500">peat</span>',
+        'default_extra_text' => 'Keep warm',
+        'catalog_button' => 'Catalog',
+        'buy_now_button' => 'Buy Now',
+        'no_slides' => 'No slides available',
+    ],
+
 ];
