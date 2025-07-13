@@ -26,7 +26,7 @@
                                 <a href="{{ route('catalog.view') }}" class="px-6 py-3 border-2 border-white rounded-2xl text-white hover:bg-white hover:text-black transition">
                                     {{ __('messages.hero.catalog_button') }} →
                                 </a>
-                                <a href="{{ route('buy-now') }}" class="px-6 py-3 bg-green-600 text-white rounded-2xl hover:bg-green-700 transition">
+                                <a href="" class="px-6 py-3 bg-green-600 text-white rounded-2xl hover:bg-green-700 transition">
                                     {{ __('messages.hero.buy_now_button') }} →
                                 </a>
                             </div>
