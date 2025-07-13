@@ -45,8 +45,8 @@
                 @endforeach
             @endif
             @if ($priceMin || $priceMax)
-                <button wire:click="clearPrice" class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Удалить фильтр: Цена">
-                    <span class="self-stretch my-auto text-white">{{ __('Цена') }}: {{ number_format($priceMin ?? 0, 2) }}-{{ number_format($priceMax ?? '∞', 2) }} UAH</span>
+                <button wire:click="clearPrice" class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-none border-2 border-neutral-400 min-h-10 hover:bg-neutral-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Удалить фильтр: Цена">
+                    <span class="self-stretch my-auto">{{ __('Цена') }}: {{ number_format($priceMin ?? 0, 2) }}-{{ number_format($priceMax ?? '∞', 2) }} UAH</span>
                     <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ba94ac2e61738f897029abe123360249f0f65ef9?placeholderIfAbsent=true" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" alt="Удалить фильтр" />
                 </button>
             @endif
@@ -107,65 +107,62 @@
                 <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0" />
             </div>
 
-            <!-- Price Filter (Custom Radio Buttons) -->
+            <!-- Price Filter (Range Sliders) -->
             <section class="py-4 w-full rounded-2xl bg-neutral-200">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-expanded="true" aria-controls="price-filter">
                     <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Цена') }}</span>
                     <div class="flex shrink-0 self-stretch my-auto w-4 h-4 rotate-[-3.1415925661670165rad]" aria-hidden="true"></div>
                 </button>
                 <div id="price-filter" class="flex flex-col gap-4 items-start mx-auto my-0 w-[280px] max-md:w-full max-md:max-w-[280px]">
-                    <!-- Price Min Selector -->
-                    <div class="flex flex-col gap-2 items-start w-full">
-                        <header class="flex gap-2 justify-center items-center px-4 w-full" aria-label="Минимальная цена">
-                            <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Минимальная цена">
-                                {{ __('Мин. цена') }}: {{ number_format($priceMin ?? $minPrice, 2) }} UAH
-                            </span>
-                        </header>
-                        <div class="relative h-6 w-full" role="radiogroup" aria-label="Выбор минимальной цены">
-                            <!-- Background Line -->
-                            <div class="absolute left-4 shrink-0 h-0.5 rounded-sm bg-neutral-400 top-[11px] w-[248px]" aria-hidden="true"></div>
-                            <!-- Radio Buttons -->
-                            <div class="flex absolute top-0 items-center h-6 justify-between w-[248px] left-4">
-                                @foreach ($priceSteps as $index => $step)
-                                    <div class="relative">
-                                        <input type="radio" id="priceMin-{{ $index }}" wire:model.debounce.500ms="priceMin" value="{{ $step }}" class="sr-only" aria-label="Минимальная цена: {{ $step }} UAH" />
-                                        <label for="priceMin-{{ $index }}" class="flex items-center justify-center w-6 h-6 rounded-2xl cursor-pointer {{ $priceMin == $step ? 'bg-green-600' : 'bg-neutral-400' }} hover:bg-green-500 transition-colors" title="Выбрать {{ $step }} UAH">
-                                            <span class="sr-only">{{ $step }} UAH</span>
-                                        </label>
-                                    </div>
-                                    @if ($index < count($priceSteps) - 1)
-                                        <div class="h-0.5 flex-[1_0_0] {{ $priceMin >= $step && $priceMin < $priceSteps[$index + 1] ? 'bg-green-600' : 'bg-neutral-400' }}" aria-hidden="true"></div>
-                                    @endif
-                                @endforeach
-                            </div>
+                    <!-- Price Range Display -->
+                    <div class="flex justify-between w-full px-4">
+                        <span class="text-xs font-bold leading-5 text-zinc-800" id="price-min-display">
+                            {{ __('Мин. цена') }}: <span>{{ number_format($priceMin ?? $minPrice, 2) }}</span> UAH
+                        </span>
+                        <span class="text-xs font-bold leading-5 text-zinc-800" id="price-max-display">
+                            {{ __('Макс. цена') }}: <span>{{ number_format($priceMax ?? $maxPrice, 2) }}</span> UAH
+                        </span>
+                    </div>
+                    <!-- Range Sliders -->
+                    <div class="relative w-full px-4">
+                        <div class="relative h-2 bg-neutral-400 rounded-full">
+                            <div class="absolute h-2 bg-green-600 rounded-full" id="range-fill" style="left: 0%; width: 100%;"></div>
+                            <input type="range"
+                                   wire:model.debounce.500ms="priceMin"
+                                   id="price-min"
+                                   min="{{ $minPrice }}"
+                                   max="{{ $maxPrice }}"
+                                   step="1"
+                                   value="{{ $priceMin ?? $minPrice }}"
+                                   class="absolute w-full h-2 opacity-0 cursor-pointer"
+                                   aria-label="Минимальная цена" />
+                            <input type="range"
+                                   wire:model.debounce.500ms="priceMax"
+                                   id="price-max"
+                                   min="{{ $minPrice }}"
+                                   max="{{ $maxPrice }}"
+                                   step="1"
+                                   value="{{ $priceMax ?? $maxPrice }}"
+                                   class="absolute w-full h-2 opacity-0 cursor-pointer"
+                                   aria-label="Максимальная цена" />
                         </div>
                     </div>
-
-                    <!-- Price Max Selector -->
-                    <div class="flex flex-col gap-2 items-start w-full">
-                        <header class="flex gap-2 justify-center items-center px-4 w-full" aria-label="Максимальная цена">
-                            <span class="text-xs font-bold leading-5 text-zinc-800" aria-label="Максимальная цена">
-                                {{ __('Макс. цена') }}: {{ number_format($priceMax ?? $maxPrice, 2) }} UAH
-                            </span>
-                        </header>
-                        <div class="relative h-6 w-full" role="radiogroup" aria-label="Выбор максимальной цены">
-                            <!-- Background Line -->
-                            <div class="absolute left-4 shrink-0 h-0.5 rounded-sm bg-neutral-400 top-[11px] w-[248px]" aria-hidden="true"></div>
-                            <!-- Radio Buttons -->
-                            <div class="flex absolute top-0 items-center h-6 justify-between w-[248px] left-4">
-                                @foreach ($priceSteps as $index => $step)
-                                    <div class="relative">
-                                        <input type="radio" id="priceMax-{{ $index }}" wire:model.debounce.500ms="priceMax" value="{{ $step }}" class="sr-only" aria-label="Максимальная цена: {{ $step }} UAH" />
-                                        <label for="priceMax-{{ $index }}" class="flex items-center justify-center w-6 h-6 rounded-2xl cursor-pointer {{ $priceMax == $step ? 'bg-green-600' : 'bg-neutral-400' }} hover:bg-green-500 transition-colors" title="Выбрать {{ $step }} UAH">
-                                            <span class="sr-only">{{ $step }} UAH</span>
-                                        </label>
-                                    </div>
-                                    @if ($index < count($priceSteps) - 1)
-                                        <div class="h-0.5 flex-[1_0_0] {{ $priceMax > $step && ($index + 1 < count($priceSteps) && $priceMax <= $priceSteps[$index + 1]) ? 'bg-green-600' : 'bg-neutral-400' }}" aria-hidden="true"></div>
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
+                    <!-- Manual Input Fields -->
+                    <div class="flex justify-between w-full px-4 gap-2">
+                        <input type="number"
+                               wire:model.debounce.500ms="priceMin"
+                               class="w-20 px-2 py-1 border rounded text-xs"
+                               placeholder="{{ $minPrice }}"
+                               aria-label="Ввести минимальную цену"
+                               min="{{ $minPrice }}"
+                               max="{{ $maxPrice }}" />
+                        <input type="number"
+                               wire:model.debounce.500ms="priceMax"
+                               class="w-20 px-2 py-1 border rounded text-xs"
+                               placeholder="{{ $maxPrice }}"
+                               aria-label="Ввести максимальную цену"
+                               min="{{ $minPrice }}"
+                               max="{{ $maxPrice }}" />
                     </div>
                 </div>
             </section>
@@ -244,10 +241,103 @@
     </div>
 
     <style>
-        /* Стили для кастомных радиобаттонов */
-        .price-selector input[type="radio"]:focus + label {
+        /* Стили для ползунков диапазона цен */
+        .range-slider-container {
+            position: relative;
+            height: 8px;
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+
+        .range-fill {
+            position: absolute;
+            height: 100%;
+            background: #16a34a;
+            border-radius: 4px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: transparent;
+            position: absolute;
+            top: 0;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #16a34a;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: #16a34a;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            cursor: pointer;
+        }
+
+        input[type="range"]:focus {
+            outline: none;
+        }
+
+        input[type="number"] {
+            border-color: #d1d5db;
+        }
+
+        input[type="number"]:focus {
             outline: 2px solid #16a34a;
             outline-offset: 2px;
         }
     </style>
+
+    <script>
+        document.addEventListener('livewire:initialized', function () {
+            const priceMinInput = document.getElementById('price-min');
+            const priceMaxInput = document.getElementById('price-max');
+            const priceMinDisplay = document.getElementById('price-min-display').querySelector('span');
+            const priceMaxDisplay = document.getElementById('price-max-display').querySelector('span');
+            const rangeFill = document.getElementById('range-fill');
+            const minPrice = parseFloat(priceMinInput.min);
+            const maxPrice = parseFloat(priceMaxInput.max);
+
+            function updateRangeFill() {
+                const minVal = parseFloat(priceMinInput.value);
+                const maxVal = parseFloat(priceMaxInput.value);
+                const minPercent = ((minVal - minPrice) / (maxPrice - minPrice)) * 100;
+                const maxPercent = ((maxVal - minPrice) / (maxPrice - minPrice)) * 100;
+                rangeFill.style.left = minPercent + '%';
+                rangeFill.style.width = (maxPercent - minPercent) + '%';
+                priceMinDisplay.textContent = minVal.toFixed(2);
+                priceMaxDisplay.textContent = maxVal.toFixed(2);
+            }
+
+            function syncSliders() {
+                const minVal = parseFloat(priceMinInput.value);
+                const maxVal = parseFloat(priceMaxInput.value);
+                if (minVal > maxVal) {
+                    priceMinInput.value = maxVal;
+                @this.set('priceMin', maxVal);
+                }
+                updateRangeFill();
+            }
+
+            priceMinInput.addEventListener('input', syncSliders);
+            priceMaxInput.addEventListener('input', syncSliders);
+
+            // Инициализация при загрузке
+            updateRangeFill();
+        });
+    </script>
 </main>
