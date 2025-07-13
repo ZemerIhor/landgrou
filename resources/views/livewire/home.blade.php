@@ -168,7 +168,7 @@
                 <img
                     src="{{ Storage::url($settings->faq_main_image) }}"
                     alt="{{ is_string($settings->faq_main_image_alt) ? $settings->faq_main_image_alt : '' }}"
-                    class="object-contain rounded-3xl aspect-[0.71] min-w-60 w-[380px]"
+                    class="rounded-3xl aspect-[0.71] min-w-60"
                 />
             @else
                 <p>{{ __('messages.faq.no_image') }}</p>
