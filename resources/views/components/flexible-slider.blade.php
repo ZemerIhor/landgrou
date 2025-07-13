@@ -33,7 +33,7 @@
             {{ $slot }}
         </div>
 
-        <div class="swiper-button-prev {{ $prevClass }} absolute  rounded-full transition-transform transform-gpu origin-center hover:scale-[1.03] ">
+        <div class="swiper-button-prev {{ $prevClass }} absolute bottom-[-10px] right-[50px] z-10  rounded-full transition-transform transform-gpu origin-center hover:scale-[1.03] ">
            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M12.1636 16.4466L12.259 31.8641L31.7441 12.1364L23.1275 20.8602C19.1332 24.9043 12.242 22.1302 12.1636 16.4466L-nan -nanL12.1636 16.4466Z" fill="#228F5D"/>
 <path d="M12.259 31.8641L22.5373 31.8005L27.6764 31.7687L-nan -nanL27.6764 31.7687C21.9895 31.7833 19.1133 24.9245 23.1096 20.8784L31.7441 12.1364L12.259 31.8641Z" fill="#228F5D"/>
@@ -44,7 +44,7 @@
 
 
         </div>
-        <div class="swiper-button-next {{ $nextClass }} absolute  rounded-full  transition-transform transform-gpu origin-center hover:scale-[1.03] ">
+        <div class="swiper-button-next {{ $nextClass }} absolute bottom-[-10px] right-0 top-auto left-auto z-10   rounded-full  transition-transform transform-gpu origin-center hover:scale-[1.03] ">
             <svg width="37" height="36" viewBox="0 0 37 36" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M28.3039 23.6143L28.3039 8.19658L8.69714 27.8033L17.3675 19.133C21.3868 15.1137 28.2607 17.9304 28.3039 23.6143Z" fill="#228F5D"/>
 <path d="M28.3039 8.19658L18.0254 8.19658L12.8862 8.19658C18.5731 8.21717 21.4068 15.0936 17.3856 19.1149L8.69714 27.8033L28.3039 8.19658Z" fill="#228F5D"/>
@@ -54,7 +54,7 @@
 
         </div>
 
-        <div class="swiper-pagination {{ $paginationClass }} absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2"></div>
+        <div class="swiper-pagination {{ $paginationClass }} absolute bottom-4 justify-center left-1/2 -translate-x-1/2 flex space-x-2"></div>
     </div>
     <style>
         .swiper-button-next:after, .swiper-button-prev:after {
@@ -62,7 +62,7 @@
             display: none;
         }
     </style>
-    @pushOnce('scripts')
+    <!-- @pushOnce('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 document.querySelectorAll('.swiper').forEach(function (el) {
@@ -75,5 +75,5 @@
                 });
             });
         </script>
-    @endpushOnce
+    @endpushOnce -->
 </div>

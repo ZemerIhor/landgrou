@@ -136,6 +136,9 @@
     display: block;
     background: transparent;
     padding: 0 !important;
+    top: auto !important;
+    transform: none !important;
+    left: auto !important;
  
 }
 .swiper-button-prev{
