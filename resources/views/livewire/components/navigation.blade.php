@@ -1,6 +1,6 @@
 
 <div x-data="{ isScrolled: false }" @scroll.window="isScrolled = (window.scrollY > 0)">
-    <header class="shadow-xl h-[56px] px-[50px] flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
+    <header class="shadow-xl h-[56px] flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
             :class="{ 'is-fixed': isScrolled }"
             role="banner">
         <div class="main-container nav-header flex relative justify-between items-center w-full h-auto container mx-auto">
@@ -195,7 +195,7 @@
                     class="sm:hidden bg-white shadow-lg absolute top-14 left-0 w-full z-50"
                     x-on:click.away="mobileMenu = false"
                 >
-                    <nav class="flex flex-col items-center gap-4 py-6 text-base font-semibold text-zinc-800" role="navigation" aria-label="{{ __('messages.nav.mobile_navigation') }}">
+                    <nav class="flex flex-col items-center gap-4 px-2 py-6 text-base font-semibold text-zinc-800" role="navigation" aria-label="{{ __('messages.nav.mobile_navigation') }}">
                         <!-- Mobile Menu Items -->
                         @if(app()->getLocale() === 'en')
                             <x-filament-menu-builder::menu slug="en-header-menu" class="mobile-menu-items" />

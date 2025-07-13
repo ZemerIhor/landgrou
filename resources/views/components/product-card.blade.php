@@ -4,8 +4,8 @@
     <div class="flex flex-col justify-between group h-full">
         <!-- Оборачиваем в ссылку только изображение и название -->
         <a href="{{ route('product.view', $product->defaultUrl->slug) }}" wire:navigate class="flex flex-col h-full">
-            <div class="flex relative flex-col w-full h-[163px] ">
-                <div class="flex overflow-hidden absolute top-0 left-0 z-0 flex-col max-w-full w-full">
+            <div class="flex relative flex-col w-full">
+                <div class="flex overflow-hidden flex-col max-w-full w-full">
                     @if ($product->thumbnail)
                         <img src="{{ $product->thumbnail->getUrl() }}"
                              alt="{{ $product->translateAttribute('name') }}"

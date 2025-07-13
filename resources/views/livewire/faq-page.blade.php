@@ -66,6 +66,7 @@ order: -1;
 
     .faq-answer {
         transition: all 0.3s ease-in-out;
+        max-height: 100%;
     }
 
     .faq-answer p {

@@ -1,5 +1,5 @@
 <div class="relative mt-5 w-full mx-auto overflow-hidden  home-slider-main" aria-label="Hero Banner">
-    <div class="relative mx-auto opacity-0 invisible transition-opacity duration-300" style="width: 90%"  id="slider-wrap"> 
+    <div class="relative mx-auto opacity-0 invisible transition-opacity duration-300" style="width: 90%"  id="slider-wrap">
     <div class="flex  opacity-0 invisible transition-opacity duration-300" id="hero-slider" style="gap:20px;" >
         @php
             $locale = app()->getLocale(); // Получаем текущую локаль (en или uk)
@@ -18,12 +18,12 @@
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M6.98582 11.3063C6.98582 12.9453 7.28461 14.1529 7.79541 15.3605C8.39293 16.8844 9.17361 17.7949 10.3783 18.7629C10.6482 18.9642 10.7638 19.108 11.0048 19.338C11.1301 19.4626 11.1879 19.4818 11.3132 19.5968C13.0769 21.1973 14.4551 23.6413 12.9901 25.9224C12.4793 26.7179 11.8529 27.0725 11.7565 27.3888C11.8529 27.523 11.8818 27.5421 12.0553 27.5038C12.1806 27.4655 12.3926 27.3792 12.4793 27.3313C13.4431 26.9096 13.7708 26.7371 14.5515 25.9512C15.0334 25.424 15.602 24.4272 15.7754 23.7468C16.3537 21.552 15.3899 18.9834 14.0985 17.2582C13.5877 16.6065 12.807 15.4851 12.5661 14.7088C12.2095 13.6066 12.9323 13.8079 11.2457 13.3861C9.80969 13.0219 8.87482 12.3414 8.06526 11.1338C7.4388 10.2233 7.38097 9.49493 7.19787 9.27449C7.07256 9.82078 6.98582 10.6354 6.98582 11.3063Z" fill="white"/>
                             </svg>
                         </div>
-                        <div class="flex-column gap-2 justify-center mb-5"> 
+                        <div class="flex-column gap-2 justify-center mb-5">
                         <h1 class="text-5xl font-bold">{{ $slide['heading'] ?? 'LAND GROU' }}</h1>
                         <p class="mt-4 text-xl">{!!$slide['subheading'] ?? 'Українська компанія з видобування й <br> переробки <span class="text-green-500">торфу</span>' !!}</p>
                         <p class="mt-2 text-sm">{{ $slide['extra_text'] ?? 'Keep warm' }}</p>
                         </div>
-                        <div class="flex justify-center mt-6 gap-4">
+                        <div class="flex justify-center mt-6 gap-4 max-md:flex-col">
                             <a href="#" class="px-6 py-3 border-2 border-white rounded-2xl text-white hover:bg-white hover:text-black transition">
                                 Каталог →
                             </a>
@@ -40,7 +40,7 @@
             </div>
         @endif
     </div>
-   
+
 
     <!-- Navigation Arrows -->
     @if (!empty($heroSlides) && is_array($heroSlides) && count($heroSlides) > 1)

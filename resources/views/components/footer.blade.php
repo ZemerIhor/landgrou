@@ -28,7 +28,7 @@
         </section>
 
         <!-- Navigation sections and contacts -->
-        <section class="nav-contacts">
+        <section class="nav-contacts flex flex-wrap justify-between">
             <!-- Меню футера -->
             @if (app()->getLocale() === 'en')
                 <nav class="menu" aria-label="{{ __('messages.footer.main_navigation') }}">
@@ -119,7 +119,7 @@
                 object-fit: contain;
             }
 
-            .nav-contacts {
+            .nav-contacts ul{
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
                 gap: 40px;
@@ -128,7 +128,7 @@
             }
 
             @media (max-width: 768px) {
-                .nav-contacts {
+                .nav-contacts ul{
                     grid-template-columns: 1fr;
                 }
             }
@@ -138,7 +138,7 @@
                 flex-direction: column;
                 gap: 20px;
                 align-items: flex-start;
-                min-width: 220px;
+             flex-grow: 1;
             }
 
             @media (max-width: 640px) {
@@ -148,15 +148,6 @@
                 }
             }
 
-            .menu ul {
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                align-items: flex-start;
-                list-style: none;
-                margin: 0;
-                padding: 0;
-            }
 
             @media (max-width: 640px) {
                 .menu ul {

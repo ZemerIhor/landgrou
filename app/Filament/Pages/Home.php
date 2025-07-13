@@ -39,8 +39,6 @@ class Home extends Page implements HasForms
     {
         $settings = app(HomeSettings::class);
 
-
-
         $this->data = [
             'hero_slides' => $settings->hero_slides ?? ['en' => [], 'uk' => []],
             'advantages_cards' => $settings->advantages_cards ?? ['en' => [], 'uk' => []],
@@ -233,31 +231,6 @@ class Home extends Page implements HasForms
                     ])
                     ->collapsible(),
 
-                Section::make(__('Форма зворотного зв’язку'))
-                    ->schema([
-                        Translate::make()
-                            ->locales(['en', 'uk'])
-                            ->schema([
-                                TextInput::make('feedback_form_title')
-                                    ->label(__('Заголовок'))
-                                    ->maxLength(255),
-                                Textarea::make('feedback_form_description')
-                                    ->label(__('Опис'))
-                                    ->maxLength(500),
-                                TextInput::make('feedback_form_image_alt')
-                                    ->label(__('Альтернативний текст зображення'))
-                                    ->maxLength(255),
-                            ]),
-                        FileUpload::make('feedback_form_image')
-                            ->label(__('Зображення'))
-                            ->directory('home/feedback')
-                            ->disk('public')
-                            ->preserveFilenames()
-                            ->maxSize(5120)
-                            ->image(),
-                    ])
-                    ->collapsible(),
-
                 Section::make(__('Тендери'))
                     ->schema([
                         Translate::make()
@@ -271,7 +244,27 @@ class Home extends Page implements HasForms
                                     ->schema([
                                         TextInput::make('title')
                                             ->label(__('Назва'))
-                                            ->maxLength(255),
+                                            ->maxLength(255)
+                                            ->required(),
+                                        FileUpload::make('icon')
+                                            ->label(__('Іконка категорії'))
+                                            ->directory('home/tenders/icons')
+                                            ->disk('public')
+                                            ->preserveFilenames()
+                                            ->maxSize(5120)
+                                            ->image(),
+                                        FileUpload::make('decorative_image')
+                                            ->label(__('Декоративне зображення'))
+                                            ->directory('home/tenders/decorative')
+                                            ->disk('public')
+                                            ->preserveFilenames()
+                                            ->maxSize(5120)
+                                            ->image(),
+                                        TextInput::make('background_color')
+                                            ->label(__('Колір фону (HEX, наприклад #34C759)'))
+                                            ->maxLength(7)
+                                            ->default('#34C759')
+                                            ->regex('/^#[0-9A-F]{6}$/i'),
                                     ])
                                     ->maxItems(5)
                                     ->collapsible()
@@ -331,10 +324,8 @@ class Home extends Page implements HasForms
         try {
             $data = $this->form->getState();
 
-            // Логирование данных для отладки
             Log::info('Home Settings Form Data', ['data' => $data]);
 
-            // Нормализация данных для FileUpload полей
             $fileFields = [
                 'advantages_image_1', 'advantages_image_2', 'advantages_image_3',
                 'main_comparison_image', 'feedback_form_image', 'about_location_image',
@@ -346,7 +337,6 @@ class Home extends Page implements HasForms
                 }
             }
 
-            // Нормализация переводимых массивов
             $translatableArrays = [
                 'hero_slides', 'advantages_cards', 'comparison_items', 'faq_items',
                 'tender_items', 'review_items'
@@ -364,7 +354,6 @@ class Home extends Page implements HasForms
                 }
             }
 
-            // Нормализация hero_slides
             if (isset($data['hero_slides']) && is_array($data['hero_slides'])) {
                 foreach ($data['hero_slides'] as $locale => &$slides) {
                     if (is_array($slides)) {
@@ -379,13 +368,29 @@ class Home extends Page implements HasForms
                 unset($slides);
             }
 
-            // Нормализация comparison_items
             if (isset($data['comparison_items']) && is_array($data['comparison_items'])) {
                 foreach ($data['comparison_items'] as $locale => &$items) {
                     if (is_array($items)) {
                         foreach ($items as &$item) {
                             if (isset($item['image'])) {
                                 $item['image'] = is_array($item['image']) ? ($item['image'][0] ?? null) : $item['image'];
+                            }
+                        }
+                        unset($item);
+                    }
+                }
+                unset($items);
+            }
+
+            if (isset($data['tender_items']) && is_array($data['tender_items'])) {
+                foreach ($data['tender_items'] as $locale => &$items) {
+                    if (is_array($items)) {
+                        foreach ($items as &$item) {
+                            if (isset($item['icon'])) {
+                                $item['icon'] = is_array($item['icon']) ? ($item['icon'][0] ?? null) : $item['icon'];
+                            }
+                            if (isset($item['decorative_image'])) {
+                                $item['decorative_image'] = is_array($item['decorative_image']) ? ($item['decorative_image'][0] ?? null) : $item['decorative_image'];
                             }
                         }
                         unset($item);
