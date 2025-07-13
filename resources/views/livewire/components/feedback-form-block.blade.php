@@ -104,14 +104,14 @@
                         </footer>
                     </form>
                 </div>
-                <aside class="flex-1 flex justify-center max-sm:-order-1 shrink min-w-60 max-md:max-w-full" aria-label="{{ __('messages.feedback_form.image_aria_label') }}">
+                <aside class="flex flex justify-center max-sm:-order-1 shrink min-w-60 max-md:max-w-full" aria-label="{{ __('messages.feedback_form.image_aria_label') }}">
                     @if ($settings['feedback_form_image'])
                         <img
                             src="{{ $settings['feedback_form_image'] }}"
                             alt="{{ __('messages.feedback_form.image_alt') }}"
                             class="w-full h-full rounded-3xl object-cover"
                         />
-                    @else 
+                    @else
                         <p>{{ __('messages.feedback_form.no_image') }}</p>
                         <!-- <img
                             src="https://imglife.pravda.com.ua/images/doc/a/1/a149538-depositphotos-l-amica-cats755.jpg"
