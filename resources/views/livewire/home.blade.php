@@ -229,9 +229,6 @@
             aria-label="Список тендерів"
         >
             @foreach ($settings->tender_items[app()->getLocale()] ?? [] as $item)
-                <?php
-                    dd($item)
-                    ?>
                 <article
                     class="flex overflow-hidden relative grow shrink self-start p-4 rounded-3xl min-h-[210px] min-w-60 w-[310px]"
                     role="listitem"
