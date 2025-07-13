@@ -21,7 +21,8 @@
         }
 
         body {
-            margin: 0
+            margin: 0;
+            background-color: #F3F3F3
         }
 
         a {

@@ -258,7 +258,8 @@
 
 
       <livewire:components.blog-section />
-     <livewire:components.feedback-form-block />
+      <div class="px-[16px] sm:px-[28px] md:px-[50px] py-[80px]  "> <livewire:components.feedback-form-block /></div>
+    
 </div>
 
 <script>

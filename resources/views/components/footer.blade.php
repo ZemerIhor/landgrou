@@ -69,7 +69,7 @@
                             @endif
                             @if (!empty($footer->address))
                                 <div class="contact-item">
-                                    <p class="contact-text">
+                                    <p class="footer-contact-text">
                                         {{ is_array($footer->address) ? ($footer->address[app()->getLocale()] ?? $footer->address['en'] ?? '') : $footer->address }}
                                     </p>
                                 </div>
@@ -85,21 +85,6 @@
             <p class="copyright">
                 {{ is_array($footer->copyright_text) ? ($footer->copyright_text[app()->getLocale()] ?? $footer->copyright_text['en'] ?? '© All rights reserved') : ($footer->copyright_text ?? '© All rights reserved') }}
             </p>
-            <button
-                type="button"
-                aria-label="{{ __('messages.footer.scroll_to_top') }}"
-                class="scroll-to-top"
-                onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-            >
-                <div class="scroll-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                         xmlns="http://www.w3.org/2000/svg" class="icon">
-                        <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2"
-                              stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-            </button>
-
         </section>
 
         <style>
@@ -260,7 +245,7 @@
                 }
             }
 
-            .contact-text {
+            .footer-contact-text {
                 font-size: 16px;
                 font-weight: 700;
                 color: #FFFFFF;
@@ -269,7 +254,7 @@
             }
 
             @media (max-width: 640px) {
-                .contact-text {
+                .footer-contact-text {
                     font-size: 14px;
                 }
             }

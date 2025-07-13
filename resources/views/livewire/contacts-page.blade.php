@@ -164,8 +164,8 @@
     }
 </style>
 
-<div class="mx-auto px-[50px]">
-    <main class="px-3 md:px-12 pt-14">
+<div class="mx-auto px-[16px] sm:px-[28px] md:px-[50px]">
+    <main class="">
         <!-- Breadcrumbs -->
         <livewire:components.breadcrumbs
             :currentPage="__('messages.contacts.title')"
@@ -180,11 +180,11 @@
         </header>
 
         <!-- Contact Information Section -->
-        <section class="mt-5 text-zinc-800" aria-labelledby="contact-info">
+        <section class="mt-5 text-zinc-800 " aria-labelledby="contact-info" >
             <h2 id="contact-info" class="sr-only">{{ __('messages.contacts.info') }}</h2>
 
             <!-- Main Contact Info -->
-            <article class="contacts-container contact-section">
+            <article class="contacts-container contact-section px-6 py-6" style="background-color: #ffffff">
                 <section>
                     <h3 class="contact-title">
                         {{ __('messages.contacts.address') }}
@@ -221,7 +221,7 @@
             </article>
 
             <!-- Export and Additional Contacts -->
-            <article class="contacts-container contact-section contact-section-alt mt-2">
+            <article class="contacts-container contact-section contact-section-alt mt-2 px-6 py-6">
                 <section>
                     <h3 class="contact-title">
                         {{ __('messages.contacts.export') }}
@@ -281,9 +281,10 @@
         </section>
 
         <!-- Contact Form and Image Section -->
-        <section class="py-20" aria-labelledby="contact-form">
+        <section class="py-20 " aria-labelledby="contact-form">
                 <!-- Contact Form Component -->
                 <livewire:components.feedback-form-block />
         </section>
+        
     </main>
 </div>
