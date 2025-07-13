@@ -168,7 +168,7 @@
                 <img
                     src="{{ Storage::url($settings->faq_main_image) }}"
                     alt="{{ is_string($settings->faq_main_image_alt) ? $settings->faq_main_image_alt : '' }}"
-                    class="rounded-3xl aspect-[0.71] min-w-60"
+                    class="rounded-3xl min-w-60 w-[380px]"
                 />
             @else
                 <p>{{ __('messages.faq.no_image') }}</p>
@@ -224,19 +224,23 @@
             </div>
         </div>
 
+
         <footer class="flex justify-end mt-5">
-            <button
-                class="flex gap-2 justify-center items-center self-end px-6 py-2.5 text-base font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
+            <a
+                href="{{ route('faq') }}"
+                class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors duration-200"
                 aria-label="{{ __('messages.faq.show_more') }}"
             >
-                <span class="self-stretch my-auto text-green-600">{{ __('messages.faq.show_more') }}</span>
+            <span class="self-stretch my-auto text-current">
+                {{ __('messages.faq.show_more') }}
+            </span>
                 <img
                     src="{{ asset('images/more-icon.png') }}"
                     alt=""
                     class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square"
-                    role="presentation"
+                    aria-hidden="true"
                 />
-            </button>
+            </a>
         </footer>
     </section>
     <section
