@@ -271,9 +271,10 @@
                     <div class="z-0 flex-1 shrink p-4 basis-0 min-w-60">
                         @if (!empty($item['icon']))
                             <img
-                                src="{{ asset($item['icon']) }}"
+                                src="{{ Storage::url($item['icon']) }}"
                                 alt="Іконка категорії {{ $item['title'] }}"
                                 class="object-contain w-10 aspect-square"
+                                onerror="this.style.display='none'"
                             />
                         @endif
                         <div class="flex items-end mt-5 w-full min-h-[88px]">
