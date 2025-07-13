@@ -124,27 +124,45 @@
 }
 .swiper-button-prev,
 .swiper-button-next {
-    width: 26px;
-    top: auto;
-    height: 56px;
-    margin-top: 0;
+    all: unset;
+    position: absolute;
+    width: 42px !important;
+    height: 42px !important;
     color: #228f5d;
-    --swiper-navigation-size: 24px;
-    z-index: 20;
+    /* --swiper-navigation-size: 24px; */
+    z-index: 99;
     cursor: pointer;
     pointer-events: auto;
     display: block;
     background: transparent;
+    padding: 0 !important;
+ 
 }
-.swiper-button-prev:after,
-.swiper-button-next:after {
-    font-size: 24px;
+.swiper-button-prev{
+    bottom: -6px !important;
+    right: 48px !important; 
+
+
+}
+.swiper-button-prev:hover,
+.swiper-button-next:hover{
+    scale: 1.03;
+}
+.swiper-button-next {
+    bottom: -6px !important; 
+    right: 0 !important;
+}
+.swiper-button-next:after,
+.swiper-button-prev:after {
+    content: "";
+    display: none;
 }
 .swiper-button-disabled {
     opacity: 0.35;
     cursor: not-allowed;
     pointer-events: none;
 }
+
 @media (max-width: 767px) {
     .swiper-pagination {
         position: static !important;
@@ -164,4 +182,11 @@
 
 .swiper-button-prev:after, .swiper-rtl .swiper-button-next:after {
     content: "";
+}
+
+
+@media (max-width: 663px) {
+  .custom-order {
+    order: 1 !important;
+  }
 }
