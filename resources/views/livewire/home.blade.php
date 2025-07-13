@@ -159,7 +159,7 @@
     <section class="flex flex-col px-12 py-20 bg-zinc-100 max-md:px-5" role="main" aria-labelledby="faq-title">
         <header>
             <h1 id="faq-title" class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
-                {{ isset($settings->faq_title[app()->getLocale()]) ? $settings->faq_title[app()->getLocale()] : __('messages.faq.title') }}
+                {{ is_string($settings->faq_title[app()->getLocale()] ?? null) ? $settings->faq_title[app()->getLocale()] : __('messages.faq.title') }}
             </h1>
         </header>
 
@@ -167,7 +167,7 @@
             @if (!empty($settings->faq_main_image))
                 <img
                     src="{{ Storage::url($settings->faq_main_image) }}"
-                    alt="{{ $settings->faq_main_image_alt ?? '' }}"
+                    alt="{{ is_string($settings->faq_main_image_alt) ? $settings->faq_main_image_alt : '' }}"
                     class="object-contain rounded-3xl aspect-[0.71] min-w-60 w-[380px]"
                 />
             @else
