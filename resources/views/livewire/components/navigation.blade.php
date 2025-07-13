@@ -81,6 +81,7 @@
                     transition: transform 0.3s ease, opacity 0.3s ease;
                 }
 
+
                 /* Placeholder to prevent content jump */
                 .header-placeholder {
                     transition: height 0.3s ease;
