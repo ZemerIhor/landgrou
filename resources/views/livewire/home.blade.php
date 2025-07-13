@@ -164,9 +164,6 @@
         </header>
 
         <div class="flex flex-wrap gap-5 justify-center mt-5 w-full max-md:max-w-full">
-            <?php
-                dd($settings)
-            ?>
             @if (!empty($settings->faq_main_image))
                 <img
                     src="{{ Storage::url($settings->faq_main_image) }}"
