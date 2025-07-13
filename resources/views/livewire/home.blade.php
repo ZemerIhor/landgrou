@@ -234,12 +234,10 @@
             <span class="self-stretch my-auto text-current">
                 {{ __('messages.faq.show_more') }}
             </span>
-                <img
-                    src="{{ asset('images/more-icon.png') }}"
-                    alt=""
-                    class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square"
-                    aria-hidden="true"
-                />
+                <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.4697 1.1474C10.7626 0.854511 11.2374 0.854511 11.5303 1.1474L17.5303 7.1474C17.8232 7.4403 17.8232 7.91517 17.5303 8.20806L11.5303 14.2081C11.2374 14.501 10.7626 14.501 10.4697 14.2081C10.1768 13.9152 10.1768 13.4403 10.4697 13.1474L15.1893 8.42773H1C0.585786 8.42773 0.25 8.09195 0.25 7.67773C0.25 7.26352 0.585786 6.92773 1 6.92773H15.1893L10.4697 2.20806C10.1768 1.91517 10.1768 1.4403 10.4697 1.1474Z" fill="#228F5D"/>
+                </svg>
+
             </a>
         </footer>
     </section>
