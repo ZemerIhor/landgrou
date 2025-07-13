@@ -15,6 +15,9 @@
         @apply appearance-none m-0;
     }
 }
+:root{
+    background-color: #F3F3F3;
+}
 #mobile-menu {
     transition: transform 0.3s ease-in-out;
 }

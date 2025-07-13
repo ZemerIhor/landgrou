@@ -1,9 +1,9 @@
 
-<div class=" mx-auto px-[16px] sm:px-[28px] md:px-[50px] py-[80px]  ">
+<div class=" mx-auto ">
     <!-- Form Block -->
     <section class="flex flex-col justify-center self-stretch  min-h-[570px]" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
         <!-- <div class="main-container"> -->
-            <div class="flex flex-wrap gap-2 justify-center w-full max-md:max-w-full">
+            <div class="flex flex-wrap gap-2 items-stretch justify-center w-full max-md:max-w-full">
                 <div class="flex relative flex-col flex-1 shrink justify-center self-start px-6 rounded-3xl basis-0 bg-neutral-200 min-h-[570px] max-md:max-w-full">
                     <form wire:submit="submit" class="z-0 w-full" aria-labelledby="feedback-form-title" novalidate>
                         <header class="w-full text-zinc-800 max-md:max-w-full">
@@ -104,15 +104,20 @@
                         </footer>
                     </form>
                 </div>
-                <aside class="flex-1 max-sm:-order-1 shrink min-w-60 max-md:max-w-full" aria-label="{{ __('messages.feedback_form.image_aria_label') }}">
+                <aside class="flex-1 flex justify-center max-sm:-order-1 shrink min-w-60 max-md:max-w-full" aria-label="{{ __('messages.feedback_form.image_aria_label') }}">
                     @if ($settings['feedback_form_image'])
                         <img
                             src="{{ $settings['feedback_form_image'] }}"
                             alt="{{ __('messages.feedback_form.image_alt') }}"
-                            class="w-full rounded-3xl aspect-[1.03]"
+                            class="w-full h-full rounded-3xl object-cover"
                         />
-                    @else
+                    @else 
                         <p>{{ __('messages.feedback_form.no_image') }}</p>
+                        <!-- <img
+                            src="https://imglife.pravda.com.ua/images/doc/a/1/a149538-depositphotos-l-amica-cats755.jpg"
+                            alt="test"
+                            class="w-full h-full rounded-3xl object-cover"
+                        /> -->
                     @endif
                 </aside>
             </div>

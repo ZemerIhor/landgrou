@@ -69,7 +69,7 @@
                             @endif
                             @if (!empty($footer->address))
                                 <div class="contact-item">
-                                    <p class="contact-text">
+                                    <p class="footer-contact-text">
                                         {{ is_array($footer->address) ? ($footer->address[app()->getLocale()] ?? $footer->address['en'] ?? '') : $footer->address }}
                                     </p>
                                 </div>
@@ -85,7 +85,6 @@
             <p class="copyright">
                 {{ is_array($footer->copyright_text) ? ($footer->copyright_text[app()->getLocale()] ?? $footer->copyright_text['en'] ?? '© All rights reserved') : ($footer->copyright_text ?? '© All rights reserved') }}
             </p>
-
         </section>
 
         <style>
@@ -237,7 +236,7 @@
                 }
             }
 
-            .contact-text {
+            .footer-contact-text {
                 font-size: 16px;
                 font-weight: 700;
                 color: #FFFFFF;
@@ -246,7 +245,7 @@
             }
 
             @media (max-width: 640px) {
-                .contact-text {
+                .footer-contact-text {
                     font-size: 14px;
                 }
             }
