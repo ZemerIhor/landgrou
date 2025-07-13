@@ -253,13 +253,6 @@ class Home extends Page implements HasForms
                                             ->preserveFilenames()
                                             ->maxSize(5120)
                                             ->image(),
-                                        FileUpload::make('decorative_image')
-                                            ->label(__('Декоративне зображення'))
-                                            ->directory('home/tenders/decorative')
-                                            ->disk('public')
-                                            ->preserveFilenames()
-                                            ->maxSize(5120)
-                                            ->image(),
                                         TextInput::make('background_color')
                                             ->label(__('Колір фону (HEX, наприклад #34C759)'))
                                             ->maxLength(7)
@@ -388,9 +381,6 @@ class Home extends Page implements HasForms
                         foreach ($items as &$item) {
                             if (isset($item['icon'])) {
                                 $item['icon'] = is_array($item['icon']) ? ($item['icon'][0] ?? null) : $item['icon'];
-                            }
-                            if (isset($item['decorative_image'])) {
-                                $item['decorative_image'] = is_array($item['decorative_image']) ? ($item['decorative_image'][0] ?? null) : $item['decorative_image'];
                             }
                         }
                         unset($item);

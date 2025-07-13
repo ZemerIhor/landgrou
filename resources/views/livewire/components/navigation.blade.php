@@ -14,16 +14,11 @@
             <style>
                 /* Base styles for the menu container */
                 .desktop-menu {
-                    display: none;
                     align-items: center;
                 }
 
                 /* Show menu on medium screens and above (≥768px) */
-                @media (min-width: 768px) {
-                    .desktop-menu {
-                        display: flex;
-                    }
-                }
+
 
                 /* Style the menu's ul (assumed output of filament-menu-builder) */
                 .nav-header ul {
@@ -81,6 +76,7 @@
                     transition: transform 0.3s ease, opacity 0.3s ease;
                 }
 
+
                 /* Placeholder to prevent content jump */
                 .header-placeholder {
                     transition: height 0.3s ease;
@@ -88,7 +84,7 @@
             </style>
 
             <!-- Desktop Menu -->
-            <div class="desktop-menu">
+            <div class="sm:flex desktop-menu hidden md:flex">
                 @if(app()->getLocale() === 'en')
                     <x-filament-menu-builder::menu slug="en-header-menu" />
                 @elseif(app()->getLocale() === 'uk')
@@ -175,7 +171,7 @@
                 <!-- Mobile Menu Toggle -->
                 <button
                     x-on:click="mobileMenu = !mobileMenu"
-                    class="sm:hidden text-2xl cursor-pointer text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600"
+                    class="md:hidden text-2xl cursor-pointer text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600"
                     aria-label="{{ __('messages.nav.toggle_mobile_menu') }}"
                     :aria-expanded="mobileMenu"
                 >

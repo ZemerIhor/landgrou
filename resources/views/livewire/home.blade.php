@@ -234,20 +234,47 @@
                     role="listitem"
                     style="background-color: {{ $item['background_color'] ?? '#34C759' }};"
                 >
-                    @if (!empty($item['decorative_image']))
-                        <img
-                            src="{{ $item['decorative_image'] }}"
-                            alt="Декоративне зображення для тендеру {{ $item['title'] }}"
-                            class="object-contain absolute bottom-0 right-1 z-0 self-start aspect-[1.68] h-[485px] min-w-60 w-[352px]"
-                            style="fill: {{ $item['background_color'] ?? '#34C759' }};"
-                        />
-                    @endif
+                    <svg
+                        width="384" height="211" viewBox="0 0 384 211" fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="object-contain absolute bottom-0 right-1 z-0 self-start aspect-[1.68] h-[485px] min-w-60 w-[352px]"
+                    >
+                        <g filter="url(#filter0_dd_2231_3718)">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                  d="M229.774 160.816C229.774 181.037 221.906 199.476 209.155 213.886C192.075 233.409 171.537 244.505 144.28 244.505C95.499 244.505 67.0722 205.226 59.0003 164.668C53.5022 139.103 57.2456 133.989 56.0758 119.114C55.7248 116.326 55.7248 115.163 53.5022 114.466C53.1512 114.466 53.1512 114.234 53.1512 114.35C53.1512 114.466 52.8003 114.35 52.8003 114.35C51.7474 114.35 52.8003 114.001 51.7474 114.466C48.4719 115.861 43.6756 127.482 42.6228 130.154C34.2001 153.28 29.1698 175.128 28 196.161V213.244C30.2227 247.061 42.2719 279.25 65.9022 311.443L77.9515 325.968C82.7478 331.197 88.1289 335.38 91.7555 338.866C95.499 342.584 99.4762 345.491 103.453 348.513C127.903 366.641 167.209 382.678 198.209 382.678H210.96C241.844 382.678 270.271 370.359 292.848 356.182C295.071 354.903 297.294 353.627 299.399 352C301.622 350.488 303.845 349.093 305.599 347.466C310.747 343.4 318.701 337.123 323.147 332.593L334.026 321.318C335.898 319.111 336.951 317.484 338.822 315.393C365.377 282.504 380 242.413 380 198.369C380 178.265 373.449 150.142 365.026 132.362C357.773 117.139 352.275 108.075 341.747 94.8267L339.797 92.0343C313.888 66.1796 293.199 49.8535 288.169 46.0188C285.244 44.043 283.373 42.5325 280.448 40.3243L272.844 33.9329C270.271 31.7251 268.516 30.0978 265.591 27.89L244.768 7.78574C232.836 -3.95126 228.742 -8.94852 220.787 -22.545C210.609 -39.2793 209.089 -56.3618 209.089 -76.5824C209.089 -87.8547 215.289 -109.702 205.462 -99.8243C199.964 -94.3625 188.032 -72.6313 184.288 -65.1938C178.907 -54.735 180.311 -59.2673 177.737 -49.0408C176.685 -45.9031 175.983 -43.4626 175.632 -40.4412L173.058 -20.3369C172.707 -16.5022 172.707 -13.0158 172.356 -9.6458L173.76 11.0395C178.556 49.7375 204 90.7932 220.436 121.671C220.305 121.343 229.774 142.245 229.774 160.816Z"
+                                  fill="{{ $item['background_color'] ?? '#34C759' }}"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                  d="M106.724 28.7047C106.724 48.5767 110.351 63.2191 116.551 77.8616C123.804 96.3387 133.28 107.379 147.902 119.116C151.178 121.556 152.582 123.299 155.506 126.089C157.027 127.599 157.729 127.832 159.25 129.226C180.657 148.633 197.386 178.266 179.604 205.924C173.404 215.57 165.801 219.87 164.631 223.705C165.801 225.331 166.152 225.564 168.257 225.099C169.778 224.634 172.352 223.588 173.404 223.007C185.103 217.894 189.08 215.802 198.556 206.273C204.405 199.882 211.307 187.796 213.412 179.545C220.431 152.933 208.733 121.789 193.058 100.871C186.857 92.9686 177.382 79.3721 174.457 69.9592C170.129 56.595 178.903 59.0355 158.431 53.9223C141 49.5063 129.653 41.2553 119.827 26.6129C112.223 15.5732 111.521 6.74124 109.298 4.06847C107.777 10.6922 106.724 20.5701 106.724 28.7047Z"
+                                  fill="{{ $item['background_color'] ?? '#34C759' }}"/>
+                        </g>
+                        <defs>
+                            <filter id="filter0_dd_2231_3718" x="0" y="-130.322" width="408" height="541" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                                <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                <feMorphology radius="4" operator="erode" in="SourceAlpha" result="effect1_dropShadow_2231_3718"/>
+                                <feOffset/>
+                                <feGaussianBlur stdDeviation="2"/>
+                                <feComposite in2="hardAlpha" operator="out"/>
+                                <feColorMatrix type="matrix" values="0 0 0 0 0.0470588 0 0 0 0 0.0470588 0 0 0 0 0.0509804 0 0 0 0.05 0"/>
+                                <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_2231_3718"/>
+                                <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                                <feMorphology radius="4" operator="erode" in="SourceAlpha" result="effect2_dropShadow_2231_3718"/>
+                                <feOffset/>
+                                <feGaussianBlur stdDeviation="16"/>
+                                <feComposite in2="hardAlpha" operator="out"/>
+                                <feColorMatrix type="matrix" values="0 0 0 0 0.0470588 0 0 0 0 0.0470588 0 0 0 0 0.0509804 0 0 0 0.15 0"/>
+                                <feBlend mode="normal" in2="effect1_dropShadow_2231_3718" result="effect2_dropShadow_2231_3718"/>
+                                <feBlend mode="normal" in="SourceGraphic" in2="effect2_dropShadow_2231_3718" result="shape"/>
+                            </filter>
+                        </defs>
+                    </svg>
                     <div class="z-0 flex-1 shrink p-4 basis-0 min-w-60">
                         @if (!empty($item['icon']))
                             <img
-                                src="{{ $item['icon'] }}"
+                                src="{{ Storage::url($item['icon']) }}"
                                 alt="Іконка категорії {{ $item['title'] }}"
                                 class="object-contain w-10 aspect-square"
+                                onerror="this.style.display='none'"
                             />
                         @endif
                         <div class="flex items-end mt-5 w-full min-h-[88px]">
@@ -283,9 +310,9 @@
                 type="button"
                 aria-label="Переглянути більше тендерів"
             >
-      <span class="self-stretch my-auto text-current">
-        Більше
-      </span>
+            <span class="self-stretch my-auto text-current">
+                Більше
+            </span>
                 <img
                     src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/5fcdfc213ad7c52f7cde2c5630712bbd498037c1?placeholderIfAbsent=true"
                     alt=""
@@ -298,7 +325,7 @@
 
       <livewire:components.blog-section />
       <div class="px-[16px] sm:px-[28px] md:px-[50px] py-[80px]  "> <livewire:components.feedback-form-block /></div>
-    
+
 </div>
 
 <script>
