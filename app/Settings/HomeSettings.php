@@ -16,8 +16,8 @@ class HomeSettings extends Settings
     public $comparison_title;
     public ?string $main_comparison_image = null;
     public $main_comparison_alt;
-    public ?string $faq_main_image; // Новое поле
-    public string $faq_main_image_alt; // Новое поле (строка)
+    public $faq_main_image; // Новое поле
+    public $faq_main_image_alt; // Новое поле (строка)
     public $comparison_items;
     public $central_text_value;
     public $central_text_unit;
