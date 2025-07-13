@@ -260,7 +260,7 @@
                     <img
                         src="{{ Storage::url($settings->map_image) }}"
                         alt="{{ data_get($settings, 'map_image_alt.' . app()->getLocale(), data_get($settings, 'map_image_alt.en', '')) }}"
-                        class="map-image"
+                        class="map-image max-h-[222px]"
                     />
                 @else
                     <p class="text-neutral-400">{{ __('messages.contacts.no_map_image') }}</p>

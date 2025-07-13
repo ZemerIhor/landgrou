@@ -1,7 +1,7 @@
 
 <div class=" mx-auto ">
     <!-- Form Block -->
-    <section class="flex flex-col justify-center self-stretch  min-h-[570px]" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
+    <section class="flex flex-col justify-center self-stretch  min-h-[570px] xl:h-[570px]" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
         <!-- <div class="main-container"> -->
             <div class="flex flex-wrap gap-2 items-stretch justify-center w-full max-md:max-w-full">
                 <div class="flex relative flex-col flex-1 shrink justify-center self-start px-6 rounded-3xl basis-0 bg-neutral-200 min-h-[570px] max-md:max-w-full">
@@ -111,13 +111,11 @@
                             alt="{{ __('messages.feedback_form.image_alt') }}"
                             class="w-full h-full rounded-3xl object-cover"
                         />
-                    @else
+
+                    @else 
+                       
                         <p>{{ __('messages.feedback_form.no_image') }}</p>
-                        <!-- <img
-                            src="https://imglife.pravda.com.ua/images/doc/a/1/a149538-depositphotos-l-amica-cats755.jpg"
-                            alt="test"
-                            class="w-full h-full rounded-3xl object-cover"
-                        /> -->
+                       
                     @endif
                 </aside>
             </div>

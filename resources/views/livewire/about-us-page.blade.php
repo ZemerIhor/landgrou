@@ -5,7 +5,7 @@
 <div class="max-w-full mx-auto">
     <div class="top-section">
         <header class="font-semibold">
-            <div class="flex relative flex-col items-center px-12 pt-14 pb-20 w-full min-h-[780px] max-md:px-5 max-md:max-w-full">
+            <div class="flex relative flex-col items-center pb-20 w-full min-h-[780px] max-md:px-5 max-md:max-w-full">
                 <!-- Фоновое изображение -->
                 @if (isset($settings->hero_background_image) && Storage::disk('public')->exists($settings->hero_background_image))
                     <img
@@ -21,7 +21,7 @@
                     />
                 @endif
 
-                <div class="container mx-auto px-2">
+                <div class="mx-auto w-full px-[16px] sm:px-[28px] md:px-[50px]">
                     <!-- Breadcrumbs -->
                     <nav aria-label="{{ __('messages.about_us.breadcrumbs_aria_label') }}" class="flex relative flex-wrap gap-2 items-center self-stretch w-full text-xs min-h-[34px] max-md:max-w-full">
                         <div class="flex gap-2 items-center self-stretch py-2 my-auto whitespace-nowrap text-neutral-400">
@@ -109,9 +109,9 @@
         </header>
 
         <!-- Advantages Section -->
-        <div class="container mx-auto px-2">
+        <div class="mx-auto px-[16px] sm:px-[28px] md:px-[50px]">
             <section aria-labelledby="advantages-title">
-                <div class="flex container mx-auto px-2 overflow-hidden flex-col justify-center py-10 w-full max-w-screen-xl text-center">
+                <div class="flex mx-auto items-center overflow-hidden  items-stretch flex-col justify-center py-10 w-full max-w-screen-xl text-center">
                     <h2 id="advantages-title" class="sr-only">{{ __('messages.about_us.advantages_title') }}</h2>
                     @php
                         $advantages = isset($settings->advantages) && is_array($settings->advantages) ? ($settings->advantages[app()->getLocale()] ?? []) : [];
@@ -120,11 +120,11 @@
                     @if (!empty($advantages))
                         <div class="flex flex-wrap gap-2 w-full max-md:max-w-full">
                             @foreach($advantages as $index => $advantage)
-                                <article class="flex flex-col flex-1 shrink self-end pt-6 pb-14 rounded-3xl basis-0 bg-neutral-800 min-h-[180px] shadow-[0_4px_8px_-1px_rgba(0,0,0,0.2),0_1px_1px_-1px_rgba(0,0,0,0.1)]">
+                                <article class="flex flex-col flex-1 shrink self-end p-6 items-center justify-center aspect-[1] rounded-3xl basis-0 bg-neutral-800 min-h-[180px] shadow-[0_4px_8px_-1px_rgba(0,0,0,0.2),0_1px_1px_-1px_rgba(0,0,0,0.1)]">
                                     <div class="self-center text-4xl leading-none text-green-600">
                                         {{ $advantage['value'] ?? '0' }}
                                     </div>
-                                    <div class="flex overflow-hidden flex-col items-start mt-3 w-full text-white">
+                                    <div class="flex overflow-hidden flex-col items-center mt-3 w-full text-white">
                                         @if (isset($advantage['title']) && is_string($advantage['title']))
                                             <h3 class="text-base font-bold leading-tight text-white">
                                                 {{ $advantage['title'] }}
@@ -141,13 +141,13 @@
                                     <img
                                         src="{{ Storage::url($advantage_images[$index]['image']) }}"
                                         alt="{{ is_array($advantage_images[$index]['alt']) ? ($advantage_images[$index]['alt'][app()->getLocale()] ?? $advantage_images[$index]['alt']['en'] ?? '') : ($advantage_images[$index]['alt'] ?? '') }}"
-                                        class="object-contain flex-1 shrink aspect-[1.06] basis-0 shadow-[0_4px_8px_-1px_rgba(0,0,0,0.2),0_1px_1px_-1px_rgba(0,0,0,0.1)] w-[190px]"
+                                        class="object-cover flex-1 rounded-3xl  h-full shrink aspect-[1] basis-0 shadow-[0_4px_8px_-1px_rgba(0,0,0,0.2),0_1px_1px_-1px_rgba(0,0,0,0.1)] w-[190px]"
                                     />
                                 @elseif (isset($advantage_images[$index]))
                                     <img
                                         src="{{ asset('images/fallback-advantage.jpg') }}"
                                         alt="{{ is_array($advantage_images[$index]['alt']) ? ($advantage_images[$index]['alt'][app()->getLocale()] ?? $advantage_images[$index]['alt']['en'] ?? '') : ($advantage_images[$index]['alt'] ?? '') }}"
-                                        class="object-contain flex-1 shrink aspect-[1.06] basis-0 shadow-[0_4px_8px_-1px_rgba(0,0,0,0.2),0_1px_1px_-1px_rgba(0,0,0,0.1)] w-[190px]"
+                                        class="object-cover flex-1 rounded-3xl h-full shrink aspect-[1] basis-0 shadow-[0_4px_8px_-1px_rgba(0,0,0,0.2),0_1px_1px_-1px_rgba(0,0,0,0.1)] w-[190px]"
                                     />
                                 @endif
                             @endforeach
@@ -160,8 +160,8 @@
         </div>
 
         <!-- Gallery Section -->
-        <section class="bg-zinc-100 mt-4" aria-labelledby="gallery-title">
-            <div class="container mx-auto px-2">
+        <section class="bg-zinc-100 px-[16px] sm:px-[28px] md:px-[50px] py-[80px]" aria-labelledby="gallery-title">
+            <div class="mx-auto">
                 @if (isset($settings->gallery_title) && (is_array($settings->gallery_title) ? isset($settings->gallery_title[app()->getLocale()]) : is_string($settings->gallery_title)))
                     <h2 id="gallery-title" class="text-4xl font-bold text-zinc-800">
                         {{ is_array($settings->gallery_title) ? $settings->gallery_title[app()->getLocale()] : $settings->gallery_title }}
@@ -176,7 +176,7 @@
                     $gallery_images = $settings->gallery_images ?? [];
                 @endphp
                 @if (!empty($gallery_images))
-                    <div class="mt-5 w-full h-[400px]">
+                    <div class="mt-5 py-6 w-full h-[400px]" id="about-us_gallery-swiper">
                         <x-flexible-slider :aria-label="__('messages.about_us.gallery_aria_label')" :config="[
                             'loop' => true,
                             'autoplay' => ['delay' => 3000],
@@ -188,13 +188,13 @@
                                         <img
                                             src="{{ Storage::url($image['image']) }}"
                                             alt="{{ is_array($image['alt']) ? ($image['alt'][app()->getLocale()] ?? $image['alt']['en'] ?? 'Gallery Image') : ($image['alt'] ?? 'Gallery Image') }}"
-                                            class="object-contain w-full aspect-square"
+                                            class="object-cover w-full h-full aspect-square"
                                         />
                                     @else
                                         <img
                                             src="{{ asset('images/fallback-gallery.jpg') }}"
                                             alt="{{ is_array($image['alt']) ? ($image['alt'][app()->getLocale()] ?? $image['alt']['en'] ?? 'Gallery Image') : ($image['alt'] ?? 'Gallery Image') }}"
-                                            class="object-contain w-full aspect-square"
+                                            class="object-cover w-full h-full  aspect-square"
                                         />
                                     @endif
                                 </div>
@@ -208,7 +208,7 @@
         </section>
 
         <!-- Certificates Section -->
-        <section class="bg-zinc-800 py-10" aria-labelledby="certificates-title">
+        <section class="bg-zinc-800 px-[16px] sm:px-[28px] md:px-[50px] py-[80px]" aria-labelledby="certificates-title">
             <div class="container mx-auto px-2">
                 @if (isset($settings->certificates_title) && (is_array($settings->certificates_title) ? isset($settings->certificates_title[app()->getLocale()]) : is_string($settings->certificates_title)))
                     <h2 id="certificates-title" class="text-3xl font-bold text-white">
