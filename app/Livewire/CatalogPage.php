@@ -179,44 +179,6 @@ class CatalogPage extends Component
         ];
     }
 
-    public function getPriceStepsProperty()
-    {
-        $minPrice = $this->priceRange['min'];
-        $maxPrice = $this->priceRange['max'];
-        $range = $maxPrice - $minPrice;
-
-        // Обработка краевого случая: если min и max равны
-        if ($range == 0) {
-            return [$minPrice];
-        }
-
-        // Определение шага на основе диапазона
-        if ($range <= 1000) {
-            $stepSize = 100;
-        } elseif ($range <= 10000) {
-            $stepSize = 1000;
-        } else {
-            $stepSize = 5000;
-        }
-
-        $priceSteps = [];
-        for ($i = 0; $i <= ceil($range / $stepSize); $i++) {
-            $stepValue = $minPrice + $i * $stepSize;
-            if ($stepValue <= $maxPrice) {
-                $priceSteps[] = round($stepValue, 2);
-            }
-        }
-
-        Log::info('Price Steps Generated', [
-            'priceSteps' => $priceSteps,
-            'minPrice' => $minPrice,
-            'maxPrice' => $maxPrice,
-            'stepSize' => $stepSize,
-        ]);
-
-        return $priceSteps;
-    }
-
     public function applyFilters()
     {
         if ($this->priceMin !== null) {
@@ -299,12 +261,11 @@ class CatalogPage extends Component
                 'availableBrands' => $this->availableBrands,
                 'minPrice' => $this->priceRange['min'],
                 'maxPrice' => $this->priceRange['max'],
-                'priceSteps' => $this->priceSteps,
                 'locale' => $this->locale,
                 'currency' => $this->currency,
             ]);
         } catch (\Exception $e) {
-            Log::error('Error loading Catalog Page', [
+            Log::info('Error loading Catalog Page', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'filters' => [
@@ -321,7 +282,6 @@ class CatalogPage extends Component
                 'availableBrands' => Brand::whereHas('products')->get(),
                 'minPrice' => 0,
                 'maxPrice' => 1000,
-                'priceSteps' => [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000],
                 'locale' => $this->locale,
                 'currency' => $this->currency,
             ])->with('error', __('messages.catalog.error') . ': ' . $e->getMessage());
