@@ -84,7 +84,7 @@
             </style>
 
             <!-- Desktop Menu -->
-            <div class="sm:hidden desktop-menu hidden md:flex">
+            <div class="sm:flex desktop-menu hidden md:flex">
                 @if(app()->getLocale() === 'en')
                     <x-filament-menu-builder::menu slug="en-header-menu" />
                 @elseif(app()->getLocale() === 'uk')
