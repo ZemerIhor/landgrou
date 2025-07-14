@@ -107,7 +107,7 @@
                 <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0" />
             </div>
 
-            <!-- Price Filter (Simple Range Inputs) -->
+            <!-- Price Filter (Range Sliders) -->
             <section class="py-4 w-full rounded-2xl bg-neutral-200">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-expanded="true" aria-controls="price-filter">
                     <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Цена') }}</span>
@@ -399,22 +399,30 @@
                 let minVal = parseFloat(priceMinInput.value);
                 let maxVal = parseFloat(priceMaxInput.value);
 
+                // Ограничиваем минимальную цену, чтобы не превышала максимальную
+                if (minVal > maxVal) {
+                    minVal = maxVal;
+                    priceMinInput.value = minVal;
+                    Livewire.dispatch('updatePriceMin', { value: minVal });
+                }
+
+                // Ограничиваем максимальную цену, чтобы не была меньше минимальной
+                if (maxVal < minVal) {
+                    maxVal = minVal;
+                    priceMaxInput.value = maxVal;
+                    Livewire.dispatch('updatePriceMax', { value: maxVal });
+                }
+
                 // Ограничиваем значения в пределах minPrice и maxPrice
-                if (isNaN(minVal) || minVal < minPrice) {
+                if (minVal < minPrice || isNaN(minVal)) {
                     minVal = minPrice;
                     priceMinInput.value = minVal;
+                    Livewire.dispatch('updatePriceMin', { value: minVal });
                 }
-                if (minVal > maxPrice) {
-                    minVal = maxPrice;
-                    priceMinInput.value = minVal;
-                }
-                if (isNaN(maxVal) || maxVal < minPrice) {
-                    maxVal = minPrice;
-                    priceMaxInput.value = maxVal;
-                }
-                if (maxVal > maxPrice) {
+                if (maxVal > maxPrice || isNaN(maxVal)) {
                     maxVal = maxPrice;
                     priceMaxInput.value = maxVal;
+                    Livewire.dispatch('updatePriceMax', { value: maxVal });
                 }
 
                 // Обновляем полосу заполнения
