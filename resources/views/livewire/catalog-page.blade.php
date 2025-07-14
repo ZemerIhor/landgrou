@@ -356,24 +356,10 @@
             const rangeFill = document.getElementById('range-fill');
             const minPrice = parseFloat(priceMinInput.min);
             const maxPrice = parseFloat(priceMaxInput.max);
-            const minGap = 1; // Минимальный зазор между ползунками в UAH
 
             function updateRangeFill() {
                 let minVal = parseFloat(priceMinInput.value);
                 let maxVal = parseFloat(priceMaxInput.value);
-
-                // Предотвращаем пересечение ползунков с минимальным зазором
-                if (minVal > maxVal - minGap) {
-                    if (event.target === priceMinInput) {
-                        minVal = maxVal - minGap;
-                        priceMinInput.value = minVal;
-                        Livewire.dispatch('updatePriceMin', { value: minVal });
-                    } else if (event.target === priceMaxInput) {
-                        maxVal = minVal + minGap;
-                        priceMaxInput.value = maxVal;
-                        Livewire.dispatch('updatePriceMax', { value: maxVal });
-                    }
-                }
 
                 // Ограничиваем значения в пределах minPrice и maxPrice
                 if (minVal < minPrice) {
@@ -409,9 +395,9 @@
                 if (isNaN(value) || value < minPrice) {
                     this.value = minPrice;
                     value = minPrice;
-                } else if (value > maxPrice - minGap) {
-                    this.value = maxPrice - minGap;
-                    value = maxPrice - minGap;
+                } else if (value > maxPrice) {
+                    this.value = maxPrice;
+                    value = maxPrice;
                 }
                 priceMinInput.value = value;
                 updateRangeFill();
@@ -419,9 +405,9 @@
 
             document.querySelector('input[wire\\:model\\.debounce\\.500ms="priceMax"]').addEventListener('input', function () {
                 let value = parseFloat(this.value);
-                if (isNaN(value) || value < minPrice + minGap) {
-                    this.value = minPrice + minGap;
-                    value = minPrice + minGap;
+                if (isNaN(value) || value < minPrice) {
+                    this.value = minPrice;
+                    value = minPrice;
                 } else if (value > maxPrice) {
                     this.value = maxPrice;
                     value = maxPrice;
