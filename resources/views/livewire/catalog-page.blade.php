@@ -248,6 +248,11 @@
         </section>
     </div>
 
+    <!-- Debug Output -->
+    <div class="px-4 text-xs text-gray-500">
+        Debug: minPrice={{ $minPrice }}, maxPrice={{ $maxPrice }}, priceMin={{ $priceMin }}, priceMax={{ $priceMax }}
+    </div>
+
     <style>
         /* Стили для ползунков диапазона цен */
         .range-slider-container {
@@ -372,16 +377,36 @@
             const minPrice = parseFloat(priceMinInput.min) || 0;
             const maxPrice = parseFloat(priceMaxInput.max) || 1000;
 
+            // Проверка, что элементы найдены
+            if (!priceMinInput || !priceMaxInput || !priceMinDisplay || !priceMaxDisplay || !rangeFill) {
+                console.error('Slider elements not found:', {
+                    priceMinInput: !!priceMinInput,
+                    priceMaxInput: !!priceMaxInput,
+                    priceMinDisplay: !!priceMinDisplay,
+                    priceMaxDisplay: !!priceMaxDisplay,
+                    rangeFill: !!rangeFill
+                });
+                return;
+            }
+
             function updateRangeFill() {
                 let minVal = parseFloat(priceMinInput.value);
                 let maxVal = parseFloat(priceMaxInput.value);
 
                 // Ограничиваем значения в пределах minPrice и maxPrice
-                if (minVal < minPrice || isNaN(minVal)) {
+                if (isNaN(minVal) || minVal < minPrice) {
                     minVal = minPrice;
                     priceMinInput.value = minVal;
                 }
-                if (maxVal > maxPrice || isNaN(maxVal)) {
+                if (minVal > maxPrice) {
+                    minVal = maxPrice;
+                    priceMinInput.value = minVal;
+                }
+                if (isNaN(maxVal) || maxVal < minPrice) {
+                    maxVal = minPrice;
+                    priceMaxInput.value = maxVal;
+                }
+                if (maxVal > maxPrice) {
                     maxVal = maxPrice;
                     priceMaxInput.value = maxVal;
                 }
@@ -397,6 +422,8 @@
                 // Обновляем aria-valuenow для доступности
                 priceMinInput.setAttribute('aria-valuenow', minVal);
                 priceMaxInput.setAttribute('aria-valuenow', maxVal);
+
+                console.log('Range updated:', { minVal, maxVal, minPercent, maxPercent });
             }
 
             // Обработчики событий для ползунков
@@ -410,33 +437,44 @@
             });
 
             // Обновление ползунков при вводе в поля
-            document.querySelector('input[wire\\:model\\.debounce\\.500ms="priceMin"]').addEventListener('input', function () {
-                let value = parseFloat(this.value);
-                if (isNaN(value) || value < minPrice) {
-                    this.value = minPrice;
-                    value = minPrice;
-                } else if (value > maxPrice) {
-                    this.value = maxPrice;
-                    value = maxPrice;
-                }
-                priceMinInput.value = value;
-                console.log('PriceMin Number Input:', value);
-                updateRangeFill();
-            });
+            const priceMinNumberInput = document.querySelector('input[wire\\:model\\.debounce\\.500ms="priceMin"]');
+            const priceMaxNumberInput = document.querySelector('input[wire\\:model\\.debounce\\.500ms="priceMax"]');
 
-            document.querySelector('input[wire\\:model\\.debounce\\.500ms="priceMax"]').addEventListener('input', function () {
-                let value = parseFloat(this.value);
-                if (isNaN(value) || value < minPrice) {
-                    this.value = minPrice;
-                    value = minPrice;
-                } else if (value > maxPrice) {
-                    this.value = maxPrice;
-                    value = maxPrice;
-                }
-                priceMaxInput.value = value;
-                console.log('PriceMax Number Input:', value);
-                updateRangeFill();
-            });
+            if (priceMinNumberInput) {
+                priceMinNumberInput.addEventListener('input', function () {
+                    let value = parseFloat(this.value);
+                    if (isNaN(value) || value < minPrice) {
+                        this.value = minPrice;
+                        value = minPrice;
+                    } else if (value > maxPrice) {
+                        this.value = maxPrice;
+                        value = maxPrice;
+                    }
+                    priceMinInput.value = value;
+                    console.log('PriceMin Number Input:', value);
+                    updateRangeFill();
+                });
+            } else {
+                console.error('PriceMin number input not found');
+            }
+
+            if (priceMaxNumberInput) {
+                priceMaxNumberInput.addEventListener('input', function () {
+                    let value = parseFloat(this.value);
+                    if (isNaN(value) || value < minPrice) {
+                        this.value = minPrice;
+                        value = minPrice;
+                    } else if (value > maxPrice) {
+                        this.value = maxPrice;
+                        value = maxPrice;
+                    }
+                    priceMaxInput.value = value;
+                    console.log('PriceMax Number Input:', value);
+                    updateRangeFill();
+                });
+            } else {
+                console.error('PriceMax number input not found');
+            }
 
             // Инициализация при загрузке
             updateRangeFill();
