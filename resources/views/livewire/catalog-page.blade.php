@@ -126,7 +126,7 @@
                     <!-- Range Sliders -->
                     <div class="relative w-full px-4 range-slider-container">
                         <div class="relative h-2 bg-neutral-400 rounded-full">
-                            <div class="absolute h-2 bg-green-600 rounded-full range-fill" id="range-fill" style="left: 0%; width: 100%;"></div>
+                            <div class="absolute h-2 bg-green-600 rounded-full range-fill" id="range-fill"></div>
                             <input type="range"
                                    wire:model.debounce.500ms="priceMin"
                                    id="price-min"
@@ -134,7 +134,7 @@
                                    max="{{ $maxPrice }}"
                                    step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
                                    value="{{ $priceMin ?? $minPrice }}"
-                                   class="absolute w-full h-2 cursor-pointer"
+                                   class="absolute w-full h-2 cursor-pointer z-10"
                                    aria-label="Минимальная цена"
                                    aria-valuemin="{{ $minPrice }}"
                                    aria-valuemax="{{ $maxPrice }}"
@@ -146,7 +146,7 @@
                                    max="{{ $maxPrice }}"
                                    step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
                                    value="{{ $priceMax ?? $maxPrice }}"
-                                   class="absolute w-full h-2 cursor-pointer"
+                                   class="absolute w-full h-2 cursor-pointer z-10"
                                    aria-label="Максимальная цена"
                                    aria-valuemin="{{ $minPrice }}"
                                    aria-valuemax="{{ $maxPrice }}"
@@ -276,7 +276,7 @@
             top: 0;
             margin: 0;
             cursor: pointer;
-            z-index: 2;
+            z-index: 10;
         }
 
         input[type="range"]::-webkit-slider-runnable-track {
@@ -300,6 +300,21 @@
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             margin-top: -4px;
+            position: relative;
+        }
+
+        input[type="range"]::-webkit-slider-thumb::after {
+            content: attr(aria-valuenow) " UAH";
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #16a34a;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
         }
 
         input[type="range"]::-moz-range-thumb {
@@ -354,23 +369,21 @@
             const priceMinDisplay = document.getElementById('price-min-display').querySelector('span');
             const priceMaxDisplay = document.getElementById('price-max-display').querySelector('span');
             const rangeFill = document.getElementById('range-fill');
-            const minPrice = parseFloat(priceMinInput.min);
-            const maxPrice = parseFloat(priceMaxInput.max);
+            const minPrice = parseFloat(priceMinInput.min) || 0;
+            const maxPrice = parseFloat(priceMaxInput.max) || 1000;
 
             function updateRangeFill() {
                 let minVal = parseFloat(priceMinInput.value);
                 let maxVal = parseFloat(priceMaxInput.value);
 
                 // Ограничиваем значения в пределах minPrice и maxPrice
-                if (minVal < minPrice) {
+                if (minVal < minPrice || isNaN(minVal)) {
                     minVal = minPrice;
                     priceMinInput.value = minVal;
-                    Livewire.dispatch('updatePriceMin', { value: minVal });
                 }
-                if (maxVal > maxPrice) {
+                if (maxVal > maxPrice || isNaN(maxVal)) {
                     maxVal = maxPrice;
                     priceMaxInput.value = maxVal;
-                    Livewire.dispatch('updatePriceMax', { value: maxVal });
                 }
 
                 const minPercent = ((minVal - minPrice) / (maxPrice - minPrice)) * 100;
@@ -386,8 +399,15 @@
                 priceMaxInput.setAttribute('aria-valuenow', maxVal);
             }
 
-            priceMinInput.addEventListener('input', updateRangeFill);
-            priceMaxInput.addEventListener('input', updateRangeFill);
+            // Обработчики событий для ползунков
+            priceMinInput.addEventListener('input', function () {
+                console.log('PriceMin Input:', priceMinInput.value);
+                updateRangeFill();
+            });
+            priceMaxInput.addEventListener('input', function () {
+                console.log('PriceMax Input:', priceMaxInput.value);
+                updateRangeFill();
+            });
 
             // Обновление ползунков при вводе в поля
             document.querySelector('input[wire\\:model\\.debounce\\.500ms="priceMin"]').addEventListener('input', function () {
@@ -400,6 +420,7 @@
                     value = maxPrice;
                 }
                 priceMinInput.value = value;
+                console.log('PriceMin Number Input:', value);
                 updateRangeFill();
             });
 
@@ -413,6 +434,7 @@
                     value = maxPrice;
                 }
                 priceMaxInput.value = value;
+                console.log('PriceMax Number Input:', value);
                 updateRangeFill();
             });
 
@@ -421,6 +443,7 @@
 
             // Повторная инициализация после обновления Livewire
             document.addEventListener('livewire:navigated', function () {
+                console.log('Livewire navigated');
                 updateRangeFill();
             });
         });
