@@ -45,8 +45,8 @@
                 @endforeach
             @endif
             @if ($priceMin || $priceMax)
-                <button wire:click="clearPrice" class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-none border-2 border-neutral-400 min-h-10 hover:bg-neutral-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Удалить фильтр: Цена">
-                    <span class="self-stretch my-auto">{{ __('Цена') }}: {{ number_format($priceMin ?? 0, 2) }}-{{ number_format($priceMax ?? '∞', 2) }} UAH</span>
+                <button wire:click="clearPrice" class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Удалить фильтр: Цена">
+                    <span class="self-stretch my-auto text-white">{{ __('Цена') }}: {{ number_format($priceMin ?? 0, 2) }}-{{ number_format($priceMax ?? '∞', 2) }} UAH</span>
                     <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ba94ac2e61738f897029abe123360249f0f65ef9?placeholderIfAbsent=true" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" alt="Удалить фильтр" />
                 </button>
             @endif
@@ -247,6 +247,7 @@
             height: 8px;
             background: #d1d5db;
             border-radius: 4px;
+            margin-top: 10px;
         }
 
         .range-fill {
@@ -266,6 +267,7 @@
             top: 0;
             margin: 0;
             cursor: pointer;
+            z-index: 2;
         }
 
         input[type="range"]::-webkit-slider-thumb {
@@ -277,6 +279,7 @@
             border-radius: 50%;
             border: 2px solid #fff;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         input[type="range"]::-moz-range-thumb {
@@ -286,19 +289,40 @@
             border-radius: 50%;
             border: 2px solid #fff;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         input[type="range"]:focus {
             outline: none;
         }
 
+        input[type="range"]:focus::-webkit-slider-thumb {
+            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.3);
+        }
+
+        input[type="range"]:focus::-moz-range-thumb {
+            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.3);
+        }
+
         input[type="number"] {
             border-color: #d1d5db;
+            transition: border-color 0.2s ease-in-out;
         }
 
         input[type="number"]:focus {
-            outline: 2px solid #16a34a;
-            outline-offset: 2px;
+            outline: none;
+            border-color: #16a34a;
+            box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.3);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
         }
     </style>
 
@@ -313,28 +337,54 @@
             const maxPrice = parseFloat(priceMaxInput.max);
 
             function updateRangeFill() {
-                const minVal = parseFloat(priceMinInput.value);
-                const maxVal = parseFloat(priceMaxInput.value);
+                let minVal = parseFloat(priceMinInput.value);
+                let maxVal = parseFloat(priceMaxInput.value);
+
+                // Предотвращаем пересечение ползунков
+                if (minVal > maxVal) {
+                    minVal = maxVal;
+                    priceMinInput.value = minVal;
+                    Livewire.dispatch('updatePriceMin', { value: minVal });
+                }
+
                 const minPercent = ((minVal - minPrice) / (maxPrice - minPrice)) * 100;
                 const maxPercent = ((maxVal - minPrice) / (maxPrice - minPrice)) * 100;
+
                 rangeFill.style.left = minPercent + '%';
                 rangeFill.style.width = (maxPercent - minPercent) + '%';
                 priceMinDisplay.textContent = minVal.toFixed(2);
                 priceMaxDisplay.textContent = maxVal.toFixed(2);
             }
 
-            function syncSliders() {
-                const minVal = parseFloat(priceMinInput.value);
-                const maxVal = parseFloat(priceMaxInput.value);
-                if (minVal > maxVal) {
-                    priceMinInput.value = maxVal;
-                @this.set('priceMin', maxVal);
-                }
-                updateRangeFill();
-            }
+            priceMinInput.addEventListener('input', updateRangeFill);
+            priceMaxInput.addEventListener('input', updateRangeFill);
 
-            priceMinInput.addEventListener('input', syncSliders);
-            priceMaxInput.addEventListener('input', syncSliders);
+            // Обновление ползунков при вводе в поля
+            document.querySelector('input[wire\\:model\\.debounce\\.500ms="priceMin"]').addEventListener('input', function () {
+                let value = parseFloat(this.value);
+                if (isNaN(value) || value < minPrice) {
+                    this.value = minPrice;
+                    value = minPrice;
+                } else if (value > maxPrice) {
+                    this.value = maxPrice;
+                    value = maxPrice;
+                }
+                priceMinInput.value = value;
+                updateRangeFill();
+            });
+
+            document.querySelector('input[wire\\:model\\.debounce\\.500ms="priceMax"]').addEventListener('input', function () {
+                let value = parseFloat(this.value);
+                if (isNaN(value) || value < minPrice) {
+                    this.value = minPrice;
+                    value = minPrice;
+                } else if (value > maxPrice) {
+                    this.value = maxPrice;
+                    value = maxPrice;
+                }
+                priceMaxInput.value = value;
+                updateRangeFill();
+            });
 
             // Инициализация при загрузке
             updateRangeFill();
