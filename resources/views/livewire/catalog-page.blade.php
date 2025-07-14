@@ -124,9 +124,9 @@
                         </span>
                     </div>
                     <!-- Range Sliders -->
-                    <div class="relative w-full px-4">
+                    <div class="relative w-full px-4 range-slider-container">
                         <div class="relative h-2 bg-neutral-400 rounded-full">
-                            <div class="absolute h-2 bg-green-600 rounded-full" id="range-fill" style="left: 0%; width: 100%;"></div>
+                            <div class="absolute h-2 bg-green-600 rounded-full range-fill" id="range-fill" style="left: 0%; width: 100%;"></div>
                             <input type="range"
                                    wire:model.debounce.500ms="priceMin"
                                    id="price-min"
@@ -134,7 +134,7 @@
                                    max="{{ $maxPrice }}"
                                    step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
                                    value="{{ $priceMin ?? $minPrice }}"
-                                   class="absolute w-full h-2 opacity-0 cursor-pointer"
+                                   class="absolute w-full h-2 cursor-pointer"
                                    aria-label="Минимальная цена"
                                    aria-valuemin="{{ $minPrice }}"
                                    aria-valuemax="{{ $maxPrice }}"
@@ -146,7 +146,7 @@
                                    max="{{ $maxPrice }}"
                                    step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
                                    value="{{ $priceMax ?? $maxPrice }}"
-                                   class="absolute w-full h-2 opacity-0 cursor-pointer"
+                                   class="absolute w-full h-2 cursor-pointer"
                                    aria-label="Максимальная цена"
                                    aria-valuemin="{{ $minPrice }}"
                                    aria-valuemax="{{ $maxPrice }}"
@@ -263,6 +263,7 @@
             height: 100%;
             background: #16a34a;
             border-radius: 4px;
+            z-index: 1;
         }
 
         input[type="range"] {
@@ -278,6 +279,16 @@
             z-index: 2;
         }
 
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 8px;
+            background: transparent;
+        }
+
+        input[type="range"]::-moz-range-track {
+            height: 8px;
+            background: transparent;
+        }
+
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
@@ -288,6 +299,7 @@
             border: 2px solid #fff;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-top: -4px; /* Центрирование ползунка */
         }
 
         input[type="range"]::-moz-range-thumb {
@@ -336,6 +348,7 @@
 
     <script>
         document.addEventListener('livewire:initialized', function () {
+            console.log('Livewire initialized');
             const priceMinInput = document.getElementById('price-min');
             const priceMaxInput = document.getElementById('price-max');
             const priceMinDisplay = document.getElementById('price-min-display').querySelector('span');
