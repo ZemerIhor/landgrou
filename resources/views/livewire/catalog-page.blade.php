@@ -107,7 +107,7 @@
                 <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0" />
             </div>
 
-            <!-- Price Filter (noUiSlider) -->
+            <!-- Price Filter (Simple Range Inputs) -->
             <section class="py-4 w-full rounded-2xl bg-neutral-200">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-expanded="true" aria-controls="price-filter">
                     <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Цена') }}</span>
@@ -123,9 +123,35 @@
                             {{ __('Макс. цена') }}: <span>{{ number_format($priceMax ?? $maxPrice, 2) }}</span> UAH
                         </span>
                     </div>
-                    <!-- noUiSlider Container -->
-                    <div class="w-full px-4">
-                        <div id="price-slider" class="h-2"></div>
+                    <!-- Range Sliders -->
+                    <div class="relative w-full px-4 range-slider-container">
+                        <div class="relative h-2 bg-neutral-400 rounded-full">
+                            <div class="absolute h-2 bg-green-600 rounded-full range-fill" id="range-fill"></div>
+                            <input type="range"
+                                   wire:model.debounce.500ms="priceMin"
+                                   id="price-min"
+                                   min="{{ $minPrice }}"
+                                   max="{{ $maxPrice }}"
+                                   step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
+                                   value="{{ $priceMin ?? $minPrice }}"
+                                   class="absolute w-full h-2 cursor-pointer z-10"
+                                   aria-label="Минимальная цена"
+                                   aria-valuemin="{{ $minPrice }}"
+                                   aria-valuemax="{{ $maxPrice }}"
+                                   aria-valuenow="{{ $priceMin ?? $minPrice }}" />
+                            <input type="range"
+                                   wire:model.debounce.500ms="priceMax"
+                                   id="price-max"
+                                   min="{{ $minPrice }}"
+                                   max="{{ $maxPrice }}"
+                                   step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
+                                   value="{{ $priceMax ?? $maxPrice }}"
+                                   class="absolute w-full h-2 cursor-pointer z-10"
+                                   aria-label="Максимальная цена"
+                                   aria-valuemin="{{ $minPrice }}"
+                                   aria-valuemax="{{ $maxPrice }}"
+                                   aria-valuenow="{{ $priceMax ?? $maxPrice }}" />
+                        </div>
                     </div>
                     <!-- Manual Input Fields -->
                     <div class="flex justify-between w-full px-4 gap-2">
@@ -229,45 +255,95 @@
         Debug: minPrice={{ $minPrice }}, maxPrice={{ $maxPrice }}, priceMin={{ $priceMin }}, priceMax={{ $priceMax }}
     </div>
 
-    <!-- noUiSlider CSS and JS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
-
     <style>
-        /* Стили для noUiSlider */
-        #price-slider {
-            margin: 10px 0;
-        }
-
-        .noUi-target {
+        /* Стили для ползунков диапазона цен */
+        .range-slider-container {
+            position: relative;
+            height: 8px;
             background: #d1d5db;
             border-radius: 4px;
-            border: none;
-            box-shadow: none;
+            margin-top: 10px;
         }
 
-        .noUi-connect {
+        .range-fill {
+            position: absolute;
+            height: 100%;
             background: #16a34a;
+            border-radius: 4px;
+            z-index: 1;
         }
 
-        .noUi-handle {
-            background: #16a34a;
-            border: 2px solid #fff;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: transparent;
+            position: absolute;
+            top: 0;
+            margin: 0;
             cursor: pointer;
+            z-index: 2;
         }
 
-        .noUi-handle::after, .noUi-handle::before {
-            display: none;
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 8px;
+            background: transparent;
         }
 
-        .noUi-tooltip {
+        input[type="range"]::-moz-range-track {
+            height: 8px;
+            background: transparent;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #16a34a;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-top: -4px;
+            position: relative;
+        }
+
+        input[type="range"]::-webkit-slider-thumb::after {
+            content: attr(aria-valuenow) " UAH";
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
             background: #16a34a;
             color: white;
             padding: 2px 6px;
             border-radius: 4px;
             font-size: 12px;
+            white-space: nowrap;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            background: #16a34a;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="range"]:focus {
+            outline: none;
+        }
+
+        input[type="range"]:focus::-webkit-slider-thumb {
+            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.3);
+        }
+
+        input[type="range"]:focus::-moz-range-thumb {
+            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.3);
         }
 
         input[type="number"] {
@@ -295,89 +371,118 @@
     <script>
         document.addEventListener('livewire:initialized', function () {
             console.log('Livewire initialized');
-            const slider = document.getElementById('price-slider');
+            const priceMinInput = document.getElementById('price-min');
+            const priceMaxInput = document.getElementById('price-max');
             const priceMinDisplay = document.getElementById('price-min-display').querySelector('span');
             const priceMaxDisplay = document.getElementById('price-max-display').querySelector('span');
-            const priceMinInput = document.getElementById('price-min-input');
-            const priceMaxInput = document.getElementById('price-max-input');
-            const minPrice = {{ $minPrice }};
-            const maxPrice = {{ $maxPrice }};
-            const step = {{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }};
+            const priceMinNumberInput = document.getElementById('price-min-input');
+            const priceMaxNumberInput = document.getElementById('price-max-input');
+            const rangeFill = document.getElementById('range-fill');
+            const minPrice = parseFloat(priceMinInput.min) || 0;
+            const maxPrice = parseFloat(priceMaxInput.max) || 1000;
 
             // Проверка, что элементы найдены
-            if (!slider || !priceMinDisplay || !priceMaxDisplay || !priceMinInput || !priceMaxInput) {
+            if (!priceMinInput || !priceMaxInput || !priceMinDisplay || !priceMaxDisplay || !rangeFill || !priceMinNumberInput || !priceMaxNumberInput) {
                 console.error('Slider elements not found:', {
-                    slider: !!slider,
+                    priceMinInput: !!priceMinInput,
+                    priceMaxInput: !!priceMaxInput,
                     priceMinDisplay: !!priceMinDisplay,
                     priceMaxDisplay: !!priceMaxDisplay,
-                    priceMinInput: !!priceMinInput,
-                    priceMaxInput: !!priceMaxInput
+                    rangeFill: !!rangeFill,
+                    priceMinNumberInput: !!priceMinNumberInput,
+                    priceMaxNumberInput: !!priceMaxNumberInput
                 });
                 return;
             }
 
-            // Инициализация noUiSlider
-            noUiSlider.create(slider, {
-                start: [{{ $priceMin ?? $minPrice }}, {{ $priceMax ?? $maxPrice }}],
-                connect: true,
-                range: {
-                    'min': minPrice,
-                    'max': maxPrice
-                },
-                step: step,
-                tooltips: [true, true],
-                format: {
-                    to: function (value) {
-                        return parseFloat(value).toFixed(2);
-                    },
-                    from: function (value) {
-                        return Number(value);
-                    }
-                }
-            });
+            function updateRangeFill() {
+                let minVal = parseFloat(priceMinInput.value);
+                let maxVal = parseFloat(priceMaxInput.value);
 
-            // Обновление значений при перемещении ползунков
-            slider.noUiSlider.on('update', function (values, handle) {
-                const minVal = parseFloat(values[0]);
-                const maxVal = parseFloat(values[1]);
+                // Ограничиваем значения в пределах minPrice и maxPrice
+                if (isNaN(minVal) || minVal < minPrice) {
+                    minVal = minPrice;
+                    priceMinInput.value = minVal;
+                }
+                if (minVal > maxPrice) {
+                    minVal = maxPrice;
+                    priceMinInput.value = minVal;
+                }
+                if (isNaN(maxVal) || maxVal < minPrice) {
+                    maxVal = minPrice;
+                    priceMaxInput.value = maxVal;
+                }
+                if (maxVal > maxPrice) {
+                    maxVal = maxPrice;
+                    priceMaxInput.value = maxVal;
+                }
+
+                // Обновляем полосу заполнения
+                const minPercent = ((minVal - minPrice) / (maxPrice - minPrice)) * 100;
+                const maxPercent = ((maxVal - minPrice) / (maxPrice - minPrice)) * 100;
+                rangeFill.style.left = minPercent + '%';
+                rangeFill.style.width = (maxPercent - minPercent) + '%';
+
+                // Обновляем отображаемые значения
                 priceMinDisplay.textContent = minVal.toFixed(2);
                 priceMaxDisplay.textContent = maxVal.toFixed(2);
-                priceMinInput.value = minVal;
-                priceMaxInput.value = maxVal;
-                Livewire.dispatch('updatePriceMin', { value: minVal });
-                Livewire.dispatch('updatePriceMax', { value: maxVal });
-                console.log('Slider updated:', { minVal, maxVal });
-            });
+                priceMinNumberInput.value = minVal.toFixed(2);
+                priceMaxNumberInput.value = maxVal.toFixed(2);
 
-            // Обновление ползунков при вводе в поля
+                // Обновляем aria-valuenow для доступности
+                priceMinInput.setAttribute('aria-valuenow', minVal);
+                priceMaxInput.setAttribute('aria-valuenow', maxVal);
+
+                console.log('Range updated:', { minVal, maxVal, minPercent, maxPercent });
+            }
+
+            // Обработчики событий для ползунков
             priceMinInput.addEventListener('input', function () {
-                let value = parseFloat(this.value);
-                if (isNaN(value) || value < minPrice) {
-                    value = minPrice;
-                } else if (value > maxPrice) {
-                    value = maxPrice;
-                }
-                this.value = value;
-                slider.noUiSlider.set([value, null]);
-                console.log('PriceMin Input:', value);
+                console.log('PriceMin Input:', this.value);
+                updateRangeFill();
             });
 
             priceMaxInput.addEventListener('input', function () {
+                console.log('PriceMax Input:', this.value);
+                updateRangeFill();
+            });
+
+            // Обработчики событий для полей ввода
+            priceMinNumberInput.addEventListener('input', function () {
                 let value = parseFloat(this.value);
                 if (isNaN(value) || value < minPrice) {
                     value = minPrice;
+                    this.value = minPrice;
                 } else if (value > maxPrice) {
                     value = maxPrice;
+                    this.value = maxPrice;
                 }
-                this.value = value;
-                slider.noUiSlider.set([null, value]);
-                console.log('PriceMax Input:', value);
+                priceMinInput.value = value;
+                console.log('PriceMin Number Input:', value);
+                updateRangeFill();
             });
+
+            priceMaxNumberInput.addEventListener('input', function () {
+                let value = parseFloat(this.value);
+                if (isNaN(value) || value < minPrice) {
+                    value = minPrice;
+                    this.value = minPrice;
+                } else if (value > maxPrice) {
+                    value = maxPrice;
+                    this.value = maxPrice;
+                }
+                priceMaxInput.value = value;
+                console.log('PriceMax Number Input:', value);
+                updateRangeFill();
+            });
+
+            // Инициализация при загрузке
+            updateRangeFill();
 
             // Повторная инициализация после обновления Livewire
             document.addEventListener('livewire:navigated', function () {
                 console.log('Livewire navigated');
-                slider.noUiSlider.set([{{ $priceMin ?? $minPrice }}, {{ $priceMax ?? $maxPrice }}]);
+                updateRangeFill();
             });
         });
     </script>
