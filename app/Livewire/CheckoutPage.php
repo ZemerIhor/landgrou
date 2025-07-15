@@ -23,6 +23,7 @@ class CheckoutPage extends Component
     public int $currentStep = 1;
     public ?string $chosenShipping = null;
     public ?string $paymentType = null;
+    public ?string $comment = ''; // Поле для комментария к заказу
 
     public array $shippingOptions = [];
     public array $npCities = [];
@@ -41,18 +42,39 @@ class CheckoutPage extends Component
         'goBackStep' => 'goBackStep',
     ];
 
+    /**
+     * Инициализация компонента
+     */
     public function mount(): void
     {
         $this->cart = CartSession::current() ?? abort(404);
 
+        // Проверяем наличие адреса доставки и создаем новый, если отсутствует
         if (!$this->cart->shippingAddress) {
-            $address = $this->cart->addresses()->create([
-                'type' => 'shipping',
-            ]);
-            $this->cart->setShippingAddress($address);
-            $this->shipping = $address;
+            try {
+                $address = $this->cart->addresses()->create([
+                    'type' => 'shipping',
+                ]);
+                $this->cart->setShippingAddress($address);
+                $this->shipping = $address;
+            } catch (\Exception $e) {
+                Log::error('Не удалось создать адрес доставки', [
+                    'error' => $e->getMessage(),
+                    'cart_id' => $this->cart->id,
+                ]);
+                abort(500, 'Не удалось инициализировать адрес доставки.');
+            }
         } else {
             $this->shipping = $this->cart->shippingAddress;
+        }
+
+        // Проверяем, что $shipping является валидным экземпляром CartAddress
+        if (!$this->shipping instanceof \Lunar\Models\CartAddress) {
+            Log::error('Адрес доставки не является валидным экземпляром CartAddress', [
+                'shipping' => $this->shipping,
+                'cart_id' => $this->cart->id,
+            ]);
+            abort(500, 'Адрес доставки недействителен.');
         }
 
         $this->chosenShipping = $this->shipping->shipping_option ?? null;
@@ -60,7 +82,8 @@ class CheckoutPage extends Component
         $this->loadShippingOptions();
         $this->currentStep = session('checkout_step', 1);
 
-        Log::info('Checkout Cart Data', [
+        // Логирование данных корзины
+        Log::info('Данные корзины при оформлении заказа', [
             'subTotal' => $this->cart->subTotal instanceof \Lunar\DataTypes\Price
                 ? ['value' => $this->cart->subTotal->value, 'formatted' => $this->cart->subTotal->formatted()]
                 : $this->cart->subTotal,
@@ -78,6 +101,9 @@ class CheckoutPage extends Component
         $this->validateCartPrices();
     }
 
+    /**
+     * Правила валидации
+     */
     public function rules(): array
     {
         return [
@@ -91,9 +117,13 @@ class CheckoutPage extends Component
             'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
             'chosenShipping' => 'required|string',
             'paymentType' => 'required|string|in:card,cash-on-delivery',
+            'comment' => 'nullable|string|max:500', // Валидация для комментария
         ];
     }
 
+    /**
+     * Загрузка вариантов доставки
+     */
     public function loadShippingOptions(): void
     {
         $currency = Currency::where('code', $this->cart->currency->code)->first() ?? Currency::first();
@@ -110,6 +140,9 @@ class CheckoutPage extends Component
         })->toArray();
     }
 
+    /**
+     * Проверка цен в корзине
+     */
     public function validateCartPrices(): void
     {
         foreach ($this->cart->lines as $line) {
@@ -124,6 +157,9 @@ class CheckoutPage extends Component
         }
     }
 
+    /**
+     * Обновление количества товара в корзине
+     */
     public function updateLineQuantity($lineId, $quantity): void
     {
         if ($quantity < 1) {
@@ -135,6 +171,9 @@ class CheckoutPage extends Component
         $this->cart->calculate();
     }
 
+    /**
+     * Сохранение адреса доставки
+     */
     public function saveAddress(): void
     {
         $this->validate([
@@ -146,12 +185,15 @@ class CheckoutPage extends Component
             'privacy_policy' => 'accepted',
         ]);
 
-        Log::info('Saving CartAddress', ['shipping' => $this->shipping->toArray()]);
+        Log::info('Сохранение адреса доставки', ['shipping' => $this->shipping->toArray()]);
         $this->shipping->save();
         $this->currentStep = $this->steps['delivery'];
         session(['checkout_step' => $this->currentStep]);
     }
 
+    /**
+     * Сохранение варианта доставки
+     */
     public function saveShippingOption(): void
     {
         $this->validate([
@@ -181,18 +223,31 @@ class CheckoutPage extends Component
         session(['checkout_step' => $this->currentStep]);
     }
 
+    /**
+     * Завершение оформления заказа
+     */
     public function checkout(): void
     {
         $this->validate([
             'paymentType' => 'required|string|in:card,cash-on-delivery',
+            'comment' => 'nullable|string|max:500',
         ]);
 
         if ($this->paymentType === 'cash-on-delivery') {
             $order = $this->cart->createOrder();
+            // Сохранение комментария в мета-данных заказа
+            if ($this->comment) {
+                $order->meta = array_merge($order->meta ?? [], ['comment' => $this->comment]);
+                $order->save();
+            }
             $this->redirect(route('order.confirmation', $order->id));
         }
+        // Добавить логику для оплаты картой, если требуется
     }
 
+    /**
+     * Обновление поискового запроса для города
+     */
     public function updatedCitySearchTerm(): void
     {
         $this->showCityDropdown = true;
@@ -228,7 +283,7 @@ class CheckoutPage extends Component
             isset($item['Addresses']) ? $item['Addresses'] : [$item]
             )->filter(fn($city) => isset($city['MainDescription']))->toArray();
         } else {
-            Log::error('Nova Poshta: error fetching cities', [
+            Log::error('Ошибка при получении городов от Новой Почты', [
                 'search_term' => $this->citySearchTerm,
                 'response' => $response->json(),
                 'errors' => $response->json('errors') ?? 'Нет деталей ошибки',
@@ -239,6 +294,9 @@ class CheckoutPage extends Component
         }
     }
 
+    /**
+     * Выбор города
+     */
     public function selectCity($cityName): void
     {
         $this->shipping->city = $cityName;
@@ -269,6 +327,9 @@ class CheckoutPage extends Component
         $this->loadShippingOptions();
     }
 
+    /**
+     * Обновление города доставки
+     */
     public function updatedShippingCity($cityName): void
     {
         $this->shipping->line_one = '';
@@ -294,6 +355,9 @@ class CheckoutPage extends Component
         $this->loadShippingOptions();
     }
 
+    /**
+     * Получение отделений Новой Почты
+     */
     public function fetchNovaPoshtaWarehouses(string $cityRef): void
     {
         $response = Http::post('https://api.novaposhta.ua/v2.0/json/', [
@@ -322,7 +386,7 @@ class CheckoutPage extends Component
                 $this->addError('shipping.line_one', __('messages.checkout.warehouse_empty_error'));
             }
         } else {
-            Log::error('Nova Poshta: error fetching warehouses', [
+            Log::error('Ошибка при получении отделений Новой Почты', [
                 'cityRef' => $cityRef,
                 'response' => $response->json(),
                 'errors' => $response->json('errors') ?? 'Нет деталей ошибки',
@@ -332,11 +396,28 @@ class CheckoutPage extends Component
         }
     }
 
+    /**
+     * Получение текущего варианта доставки
+     */
     public function getShippingOptionProperty()
     {
         return collect($this->shippingOptions)->firstWhere('identifier', $this->chosenShipping) ?? null;
     }
 
+    /**
+     * Возврат к предыдущему шагу
+     */
+    public function goBackStep(): void
+    {
+        if ($this->currentStep > 1) {
+            $this->currentStep--;
+            session(['checkout_step' => $this->currentStep]);
+        }
+    }
+
+    /**
+     * Рендеринг шаблона
+     */
     public function render(): View
     {
         return view('livewire.checkout-page', [
