@@ -8,6 +8,9 @@
         </h1>
     </header>
 
+    <!-- Дебаг-вывод для отладки -->
+    <p class="mt-4 text-sm text-gray-600">Текущее значение paymentType: {{ $paymentType }}</p>
+
     @if($shipping)
         <div class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full space-y-4">
             @foreach($shippingOptions as $option)
@@ -132,6 +135,74 @@
                     @error('shipping.line_one') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
             @endif
+
+            <!-- Выбор способа оплаты -->
+            <div class="mt-8">
+                <h2 class="text-base font-semibold text-zinc-800 mb-4">{{ __('messages.checkout.payment') }}</h2>
+                <fieldset class="flex flex-col gap-4 items-start">
+                    <legend class="sr-only">Оберіть спосіб оплати</legend>
+
+                    <!-- Оплата картой -->
+                    <div class="flex gap-2 items-center">
+                        <input type="radio"
+                               id="card-payment"
+                               name="payment-method"
+                               value="card"
+                               wire:model.live="paymentType"
+                               class="w-6 h-6 cursor-pointer border-[1.5px] border-neutral-400 focus:ring-2 focus:ring-green-600 rounded-full {{ $paymentType === 'card' ? 'bg-green-600 border-green-600' : '' }}"
+                               aria-describedby="card-payment-desc">
+                        <label for="card-payment"
+                               id="card-payment-desc"
+                               class="text-base font-bold leading-5 text-zinc-800 cursor-pointer">
+                            Сплатити карткою Visa/Mastercard
+                        </label>
+                    </div>
+
+                    <!-- Наложенный платеж -->
+                    <div class="flex gap-2 items-center">
+                        <input type="radio"
+                               id="cash-payment"
+                               name="payment-method"
+                               value="cash-on-delivery"
+                               wire:model.live="paymentType"
+                               class="w-6 h-6 cursor-pointer border-[1.5px] border-neutral-400 focus:ring-2 focus:ring-green-600 rounded-full {{ $paymentType === 'cash-on-delivery' ? 'bg-green-600 border-green-600' : '' }}"
+                               aria-describedby="cash-payment-desc">
+                        <label for="cash-payment"
+                               id="cash-payment-desc"
+                               class="text-base font-bold leading-5 text-zinc-800 cursor-pointer">
+                            Накладений платіж
+                        </label>
+                    </div>
+                </fieldset>
+                @error('paymentType')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Поле для комментария -->
+            <div class="mt-4">
+                <label for="comment" class="block text-sm font-medium text-zinc-800 mb-1">{{ __('messages.checkout.comment') }}</label>
+                <div class="flex flex-col items-end px-4 py-3 rounded-2xl border border-solid border-neutral-400">
+                    <textarea id="comment"
+                              name="comment"
+                              wire:model.live="comment"
+                              placeholder="Коментар"
+                              class="relative self-stretch text-base font-bold leading-5 h-[90px] text-neutral-400 bg-transparent border-none outline-none resize-none comment-textarea"
+                              aria-label="Коментар до замовлення"></textarea>
+                    <button type="button"
+                            class="flex-shrink-0 p-1 rounded hover:bg-gray-100 focus:outline-2 focus:outline-gray-400"
+                            aria-label="Очистити коментар"
+                            wire:click="$set('comment', '')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M8.21967 19.8869L19.8869 8.21967C20.1798 7.92678 20.6547 7.92678 20.9476 8.21967C21.2405 8.51256 21.2405 8.98744 20.9476 9.28033L9.28033 20.9476C8.98744 21.2405 8.51256 21.2405 8.21967 20.9476C7.92678 20.6547 7.92678 20.1798 8.21967 19.8869Z" fill="#8C8C8C"></path>
+                            <path d="M13.4477 19.4583L19.1215 13.7845C19.4144 13.4916 19.8892 13.4916 20.1821 13.7845C20.475 14.0774 20.475 14.5523 20.1821 14.8452L14.5084 20.5189C14.2155 20.8118 13.7406 20.8118 13.4477 20.5189C13.1548 20.226 13.1548 19.7512 13.4477 19.4583Z" fill="#8C8C8C"></path>
+                        </svg>
+                    </button>
+                </div>
+                @error('comment')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
         </div>
     @else
         <p class="mt-10 text-sm text-red-600">Адрес доставки недоступен. Пожалуйста, попробуйте снова или обратитесь в поддержку.</p>
@@ -151,14 +222,15 @@
             type="submit"
             wire:loading.attr="disabled"
             class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-white bg-green-600 rounded-2xl min-h-11 max-md:px-5 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label="{{ __('messages.checkout.continue') }}"
+            aria-label="{{ __('messages.checkout.confirm_order') }}"
             @if(
                 !$chosenShipping ||
+                !$paymentType ||
                 ($chosenShipping === 'nova-poshta' && (empty($shipping->city) || empty($shipping->line_one))) ||
                 ($chosenShipping === 'courier' && (empty($shipping->city) || empty($shipping->line_one)))
             ) disabled @endif
         >
-            <span wire:loading.remove>{{ __('messages.checkout.continue') }}</span>
+            <span wire:loading.remove>{{ __('messages.checkout.confirm_order') }}</span>
             <span wire:loading>{{ __('messages.checkout.saving') }}</span>
         </button>
     </div>
@@ -171,20 +243,21 @@
             </div>
             <span class="flex-1 shrink basis-0 text-neutral-400">{{ __('messages.checkout.personal_info') }}</span>
         </div>
-        <div class="flex gap-4 items-start mt-4 max-w-full min-h-[22px] w-[440px]">
-            <div class="flex flex-col justify-center items-center text-center text-white rounded-2xl bg-neutral-400 h-[22px] w-[22px]" aria-label="{{ __('messages.checkout.step_3') }}">
-                <span class="text-white">3</span>
-            </div>
-            <span class="flex-1 shrink basis-0 text-neutral-400">{{ __('messages.checkout.payment') }}</span>
-        </div>
     </nav>
 </form>
 
 <style>
     /* Стили для радиокнопок */
+    input[type="radio"] {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        margin: 0;
+    }
+
     input[type="radio"]:checked {
-        background-color: #10b981;
-        border-color: #10b981;
+        background-color: #228F5D;
+        border-color: #228F5D;
     }
 
     input[type="radio"]:focus {
@@ -198,8 +271,29 @@
         outline-offset: 2px;
     }
 
+    /* Стили фокуса для доступности */
+    .btn-primary:focus,
+    .btn-secondary:focus {
+        outline: 2px solid #228F5D;
+        outline-offset: 2px;
+    }
+
+    .comment-textarea:focus {
+        outline: 2px solid #228F5D;
+        border-color: #228F5D;
+    }
+
+    /* Эффекты наведения */
+    .btn-primary:hover {
+        background-color: #1e7a4f;
+    }
+
+    .btn-secondary:hover {
+        background-color: #f0fdf4;
+    }
+
     /* Стили для placeholder */
-    input::placeholder, select:invalid {
+    input::placeholder, select:invalid, textarea::placeholder {
         color: #a3a3a3;
     }
 </style>

@@ -1,5 +1,6 @@
+
 <div>
-    <div class=" mx-auto px-[50px] py-12 sm:px-6 lg:px-8">
+    <div class="mx-auto px-[50px] py-12 sm:px-6 lg:px-8">
         <livewire:components.breadcrumbs :currentPage="__('messages.breadcrumbs.catalog')" :items="[]" />
 
         <div class="flex flex-wrap gap-8">
@@ -11,10 +12,6 @@
 
                 @if($currentStep === $steps['delivery'])
                     @include('partials.checkout.shipping_option')
-                @endif
-
-                @if($currentStep === $steps['payment'])
-                    @include('partials.checkout.payment')
                 @endif
             </section>
 
