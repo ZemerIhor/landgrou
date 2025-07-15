@@ -12,9 +12,7 @@
                     @include('partials.checkout.shipping_option')
                 @endif
 
-                @if($currentStep === $steps['payment'])
-                    @include('partials.checkout.payment')
-                @endif
+
             </section>
 
             <!-- Basket Section -->
