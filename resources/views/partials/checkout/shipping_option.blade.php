@@ -1,4 +1,3 @@
-
 <form wire:submit.prevent="saveShippingOption" class="bg-white p-8 max-md:p-5">
     <header class="flex gap-4 items-start w-full text-base font-semibold leading-none max-md:max-w-full">
         <div class="flex flex-col justify-center items-center text-center text-white whitespace-nowrap rounded-2xl bg-zinc-800 h-[22px] w-[22px]" aria-label="{{ __('messages.checkout.step_2') }}">
@@ -8,10 +7,6 @@
             {{ __('messages.checkout.delivery') }}
         </h1>
     </header>
-
-    <!-- Дебаг-вывод для отладки -->
-    <p class="mt-4 text-sm text-gray-600">Текущее значение paymentType: {{ $paymentType }}</p>
-    <p class="mt-2 text-sm text-gray-600">Статус shipping: {{ $shipping ? 'Инициализирован' : 'Не инициализирован (null)' }}</p>
 
     @if($shipping)
         <div class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full space-y-4">
@@ -138,7 +133,6 @@
                 </div>
             @endif
 
-
             <!-- Поле для комментария -->
             <div class="mt-4">
                 <label for="comment" class="block text-sm font-medium text-zinc-800 mb-1">{{ __('messages.checkout.comment') }}</label>
@@ -185,7 +179,6 @@
             aria-label="{{ __('messages.checkout.confirm_order') }}"
             @if(
                 !$chosenShipping ||
-                !$paymentType ||
                 ($chosenShipping === 'nova-poshta' && (empty($shipping->city) || empty($shipping->line_one))) ||
                 ($chosenShipping === 'courier' && (empty($shipping->city) || empty($shipping->line_one)))
             ) disabled @endif

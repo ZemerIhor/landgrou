@@ -22,7 +22,6 @@ class CheckoutPage extends Component
 
     public int $currentStep = 1;
     public ?string $chosenShipping = null;
-    public ?string $paymentType = 'card'; // Установлено значение по умолчанию
     public ?string $comment = '';
 
     public array $shippingOptions = [];
@@ -67,7 +66,7 @@ class CheckoutPage extends Component
                 if (!$existingAddress) {
                     $address = $this->cart->addresses()->create([
                         'type' => 'shipping',
-                        'country_id' => 1, // Укажите ID страны по умолчанию, если требуется
+                        'country_id' => 1, // ID страны по умолчанию
                     ]);
                     Log::info('Создан новый адрес доставки', [
                         'cart_id' => $this->cart->id,
@@ -105,6 +104,13 @@ class CheckoutPage extends Component
         $this->loadShippingOptions();
         $this->currentStep = session('checkout_step', 1);
 
+        // Дополнительное логирование для отладки первого шага
+        Log::info('Инициализация компонента CheckoutPage', [
+            'current_step' => $this->currentStep,
+            'shipping_initialized' => $this->shipping instanceof \Lunar\Models\CartAddress,
+            'shipping_data' => $this->shipping ? $this->shipping->toArray() : null,
+        ]);
+
         // Логирование данных корзины
         Log::info('Данные корзины при оформлении заказа', [
             'subTotal' => $this->cart->subTotal instanceof \Lunar\DataTypes\Price
@@ -139,7 +145,6 @@ class CheckoutPage extends Component
             'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable',
             'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
             'chosenShipping' => 'required|string',
-            'paymentType' => 'required|string|in:card,cash-on-delivery',
             'comment' => 'nullable|string|max:500',
         ];
     }
@@ -260,7 +265,6 @@ class CheckoutPage extends Component
             'chosenShipping' => 'required|string',
             'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable',
             'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
-            'paymentType' => 'required|string|in:card,cash-on-delivery',
             'comment' => 'nullable|string|max:500',
         ]);
 
@@ -277,21 +281,55 @@ class CheckoutPage extends Component
         $this->shipping->shipping_option = $this->chosenShipping;
         $this->shipping->save();
         $this->cart->setShippingAddress($this->shipping);
+
+        // Устанавливаем billing address, копируя данные из shipping address
+        $billingAddress = CartAddress::where('cart_id', $this->cart->id)
+            ->where('type', 'billing')
+            ->first();
+
+        if (!$billingAddress) {
+            $billingAddress = $this->cart->addresses()->create([
+                'type' => 'billing',
+                'country_id' => $this->shipping->country_id,
+                'first_name' => $this->shipping->first_name,
+                'last_name' => $this->shipping->last_name,
+                'contact_phone' => $this->shipping->contact_phone,
+                'contact_email' => $this->shipping->contact_email,
+                'company' => $this->shipping->company,
+                'city' => $this->shipping->city,
+                'line_one' => $this->shipping->line_one,
+            ]);
+            Log::info('Создан новый адрес для выставления счета', [
+                'cart_id' => $this->cart->id,
+                'billing_address_id' => $billingAddress->id,
+            ]);
+        }
+
+        $this->cart->setBillingAddress($billingAddress);
         $this->cart->shippingTotal = new \Lunar\DataTypes\Price(0, $this->cart->currency, 1);
         $this->cart->calculate();
         $this->loadShippingOptions();
 
         // Оформление заказа
-        if ($this->paymentType === 'cash-on-delivery') {
+        try {
             $order = $this->cart->createOrder();
             if ($this->comment) {
                 $order->meta = array_merge($order->meta ?? [], ['comment' => $this->comment]);
                 $order->save();
             }
-            $this->redirect(route('order.confirmation', $order->id));
-        } else {
-            // Перенаправление на страницу оплаты Stripe
-            $this->redirect(route('checkout.stripe', ['cart' => $this->cart->id]));
+
+            // Очистка корзины
+            CartSession::forget();
+
+            // Перенаправление на главную страницу
+            $this->redirect('/');
+        } catch (\Exception $e) {
+            Log::error('Ошибка при создании заказа', [
+                'cart_id' => $this->cart->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            $this->addError('order', 'Не удалось создать заказ. Пожалуйста, попробуйте снова.');
         }
     }
 
@@ -494,6 +532,13 @@ class CheckoutPage extends Component
      */
     public function render(): View
     {
+        // Логирование для отладки рендеринга
+        Log::info('Рендеринг CheckoutPage', [
+            'current_step' => $this->currentStep,
+            'shipping_exists' => $this->shipping instanceof \Lunar\Models\CartAddress,
+            'cart_id' => $this->cart ? $this->cart->id : null,
+        ]);
+
         return view('livewire.checkout-page', [
             'shippingOption' => $this->shippingOption,
             'steps' => $this->steps,
