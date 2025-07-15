@@ -153,39 +153,40 @@
             <span class="flex-1 shrink basis-0 text-neutral-400">{{ __('messages.checkout.payment') }}</span>
         </div>
     </nav>
+    <style>
+        /* Custom checkbox styling */
+        input[type="checkbox"]:checked + .checkmark {
+            background-color: #10b981;
+            border-color: #10b981;
+        }
+
+        input[type="checkbox"]:checked + .checkmark::after {
+            content: "✓";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        input[type="checkbox"]:focus + .checkmark {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        /* Input focus styles */
+        input:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        /* Placeholder styling */
+        input::placeholder {
+            color: #a3a3a3;
+        }
+    </style>
+
 </form>
 
-<style>
-    /* Custom checkbox styling */
-    input[type="checkbox"]:checked + .checkmark {
-        background-color: #10b981;
-        border-color: #10b981;
-    }
-
-    input[type="checkbox"]:checked + .checkmark::after {
-        content: "✓";
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 12px;
-        font-weight: bold;
-    }
-
-    input[type="checkbox"]:focus + .checkmark {
-        outline: 2px solid #3b82f6;
-        outline-offset: 2px;
-    }
-
-    /* Input focus styles */
-    input:focus {
-        outline: 2px solid #3b82f6;
-        outline-offset: 2px;
-    }
-
-    /* Placeholder styling */
-    input::placeholder {
-        color: #a3a3a3;
-    }
-</style>
