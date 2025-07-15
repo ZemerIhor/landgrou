@@ -85,6 +85,7 @@ class CheckoutPage extends Component
             'shipping.last_name' => 'required|string|max:255',
             'shipping.contact_phone' => 'required|string|max:30',
             'shipping.contact_email' => 'required|email|max:255',
+            'shipping.company' => 'nullable|string|max:255',
             'privacy_policy' => 'accepted',
             'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable',
             'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
@@ -141,6 +142,7 @@ class CheckoutPage extends Component
             'shipping.last_name' => 'required|string|max:255',
             'shipping.contact_phone' => 'required|string|max:30',
             'shipping.contact_email' => 'required|email|max:255',
+            'shipping.company' => 'nullable|string|max:255',
             'privacy_policy' => 'accepted',
         ]);
 
@@ -328,12 +330,6 @@ class CheckoutPage extends Component
             $this->npWarehouses = [];
             $this->addError('shipping.line_one', __('messages.checkout.warehouse_load_error'));
         }
-    }
-
-    public function goBackStep(): void
-    {
-        $this->currentStep = max(1, $this->currentStep - 1);
-        session(['checkout_step' => $this->currentStep]);
     }
 
     public function getShippingOptionProperty()
