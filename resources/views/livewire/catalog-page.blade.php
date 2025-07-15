@@ -157,7 +157,6 @@
                     <div class="flex justify-between w-full px-4 gap-2">
                         <input type="number"
                                wire:model.debounce.500ms="priceMin"
-                               id="price-min-input"
                                class="w-20 px-2 py-1 border rounded text-xs"
                                placeholder="{{ $minPrice }}"
                                aria-label="Ввести минимальную цену"
@@ -166,7 +165,6 @@
                                step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}" />
                         <input type="number"
                                wire:model.debounce.500ms="priceMax"
-                               id="price-max-input"
                                class="w-20 px-2 py-1 border rounded text-xs"
                                placeholder="{{ $maxPrice }}"
                                aria-label="Ввести максимальную цену"
@@ -250,11 +248,6 @@
         </section>
     </div>
 
-    <!-- Debug Output -->
-    <div class="px-4 text-xs text-gray-500">
-        Debug: minPrice={{ $minPrice }}, maxPrice={{ $maxPrice }}, priceMin={{ $priceMin }}, priceMax={{ $priceMax }}
-    </div>
-
     <style>
         /* Стили для ползунков диапазона цен */
         .range-slider-container {
@@ -283,7 +276,7 @@
             top: 0;
             margin: 0;
             cursor: pointer;
-            z-index: 2;
+            z-index: 10;
         }
 
         input[type="range"]::-webkit-slider-runnable-track {
@@ -375,109 +368,70 @@
             const priceMaxInput = document.getElementById('price-max');
             const priceMinDisplay = document.getElementById('price-min-display').querySelector('span');
             const priceMaxDisplay = document.getElementById('price-max-display').querySelector('span');
-            const priceMinNumberInput = document.getElementById('price-min-input');
-            const priceMaxNumberInput = document.getElementById('price-max-input');
             const rangeFill = document.getElementById('range-fill');
             const minPrice = parseFloat(priceMinInput.min) || 0;
             const maxPrice = parseFloat(priceMaxInput.max) || 1000;
-
-            // Проверка, что элементы найдены
-            if (!priceMinInput || !priceMaxInput || !priceMinDisplay || !priceMaxDisplay || !rangeFill || !priceMinNumberInput || !priceMaxNumberInput) {
-                console.error('Slider elements not found:', {
-                    priceMinInput: !!priceMinInput,
-                    priceMaxInput: !!priceMaxInput,
-                    priceMinDisplay: !!priceMinDisplay,
-                    priceMaxDisplay: !!priceMaxDisplay,
-                    rangeFill: !!rangeFill,
-                    priceMinNumberInput: !!priceMinNumberInput,
-                    priceMaxNumberInput: !!priceMaxNumberInput
-                });
-                return;
-            }
 
             function updateRangeFill() {
                 let minVal = parseFloat(priceMinInput.value);
                 let maxVal = parseFloat(priceMaxInput.value);
 
-                // Ограничиваем минимальную цену, чтобы не превышала максимальную
-                if (minVal > maxVal) {
-                    minVal = maxVal;
-                    priceMinInput.value = minVal;
-                    Livewire.dispatch('updatePriceMin', { value: minVal });
-                }
-
-                // Ограничиваем максимальную цену, чтобы не была меньше минимальной
-                if (maxVal < minVal) {
-                    maxVal = minVal;
-                    priceMaxInput.value = maxVal;
-                    Livewire.dispatch('updatePriceMax', { value: maxVal });
-                }
-
                 // Ограничиваем значения в пределах minPrice и maxPrice
                 if (minVal < minPrice || isNaN(minVal)) {
                     minVal = minPrice;
                     priceMinInput.value = minVal;
-                    Livewire.dispatch('updatePriceMin', { value: minVal });
                 }
                 if (maxVal > maxPrice || isNaN(maxVal)) {
                     maxVal = maxPrice;
                     priceMaxInput.value = maxVal;
-                    Livewire.dispatch('updatePriceMax', { value: maxVal });
                 }
 
-                // Обновляем полосу заполнения
                 const minPercent = ((minVal - minPrice) / (maxPrice - minPrice)) * 100;
                 const maxPercent = ((maxVal - minPrice) / (maxPrice - minPrice)) * 100;
+
                 rangeFill.style.left = minPercent + '%';
                 rangeFill.style.width = (maxPercent - minPercent) + '%';
-
-                // Обновляем отображаемые значения
                 priceMinDisplay.textContent = minVal.toFixed(2);
                 priceMaxDisplay.textContent = maxVal.toFixed(2);
-                priceMinNumberInput.value = minVal.toFixed(2);
-                priceMaxNumberInput.value = maxVal.toFixed(2);
 
                 // Обновляем aria-valuenow для доступности
                 priceMinInput.setAttribute('aria-valuenow', minVal);
                 priceMaxInput.setAttribute('aria-valuenow', maxVal);
-
-                console.log('Range updated:', { minVal, maxVal, minPercent, maxPercent });
             }
 
             // Обработчики событий для ползунков
             priceMinInput.addEventListener('input', function () {
-                console.log('PriceMin Input:', this.value);
+                console.log('PriceMin Input:', priceMinInput.value);
                 updateRangeFill();
             });
-
             priceMaxInput.addEventListener('input', function () {
-                console.log('PriceMax Input:', this.value);
+                console.log('PriceMax Input:', priceMaxInput.value);
                 updateRangeFill();
             });
 
-            // Обработчики событий для полей ввода
-            priceMinNumberInput.addEventListener('input', function () {
+            // Обновление ползунков при вводе в поля
+            document.querySelector('input[wire\\:model\\.debounce\\.500ms="priceMin"]').addEventListener('input', function () {
                 let value = parseFloat(this.value);
                 if (isNaN(value) || value < minPrice) {
-                    value = minPrice;
                     this.value = minPrice;
+                    value = minPrice;
                 } else if (value > maxPrice) {
-                    value = maxPrice;
                     this.value = maxPrice;
+                    value = maxPrice;
                 }
                 priceMinInput.value = value;
                 console.log('PriceMin Number Input:', value);
                 updateRangeFill();
             });
 
-            priceMaxNumberInput.addEventListener('input', function () {
+            document.querySelector('input[wire\\:model\\.debounce\\.500ms="priceMax"]').addEventListener('input', function () {
                 let value = parseFloat(this.value);
                 if (isNaN(value) || value < minPrice) {
-                    value = minPrice;
                     this.value = minPrice;
+                    value = minPrice;
                 } else if (value > maxPrice) {
-                    value = maxPrice;
                     this.value = maxPrice;
+                    value = maxPrice;
                 }
                 priceMaxInput.value = value;
                 console.log('PriceMax Number Input:', value);
