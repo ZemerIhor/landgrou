@@ -9,9 +9,6 @@
         </h1>
     </header>
 
-    <!-- Дебаг-вывод для диагностики -->
-    <p class="mt-4 text-sm text-gray-600">Статус shipping: {{ $shipping ? 'Инициализирован' : 'Не инициализирован (null)' }}</p>
-
     @if($shipping)
         <div class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full space-y-4">
             <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
