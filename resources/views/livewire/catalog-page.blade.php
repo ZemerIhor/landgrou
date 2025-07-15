@@ -44,13 +44,13 @@
                     @endif
                 @endforeach
             @endif
-            @if ($priceMin || $priceMax)
+            @if ($priceMax)
                 <button wire:click="clearPrice" class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Удалить фильтр: Цена">
-                    <span class="self-stretch my-auto text-white">{{ __('Цена') }}: {{ number_format($priceMin ?? 0, 2) }}-{{ number_format($priceMax ?? $maxPrice, 2) }} UAH</span>
+                    <span class="self-stretch my-auto text-white">{{ __('Цена до') }}: {{ number_format($priceMax, 2) }} UAH</span>
                     <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ba94ac2e61738f897029abe123360249f0f65ef9?placeholderIfAbsent=true" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" alt="Удалить фильтр" />
                 </button>
             @endif
-            @if (!empty($brands) || $priceMin || $priceMax)
+            @if (!empty($brands) || $priceMax)
                 <button wire:click="clearAllFilters" class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-red-500 min-h-10 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Сбросить все фильтры">
                     <span class="self-stretch my-auto text-white">{{ __('Сбросить все') }}</span>
                     <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ba94ac2e61738f897029abe123360249f0f65ef9?placeholderIfAbsent=true" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" alt="Сбросить фильтры" />
@@ -107,64 +107,39 @@
                 <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0" />
             </div>
 
-            <!-- Price Filter (Range Sliders) -->
+            <!-- Price Filter (Single Slider) -->
             <section class="py-4 w-full rounded-2xl bg-neutral-200">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-expanded="true" aria-controls="price-filter">
-                    <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Цена') }}</span>
+                    <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Цена до') }}</span>
                     <div class="flex shrink-0 self-stretch my-auto w-4 h-4 rotate-[-3.1415925661670165rad]" aria-hidden="true"></div>
                 </button>
                 <div id="price-filter" class="flex flex-col gap-4 items-start mx-auto my-0 w-[280px] max-md:w-full max-md:max-w-[280px]">
-                    <!-- Price Range Display -->
-                    <div class="flex justify-between w-full px-4">
-                        <span class="text-xs font-bold leading-5 text-zinc-800" id="price-min-display">
-                            {{ __('Мин. цена') }}: <span>{{ number_format($priceMin ?? $minPrice, 2) }}</span> UAH
-                        </span>
+                    <!-- Price Display -->
+                    <div class="w-full px-4">
                         <span class="text-xs font-bold leading-5 text-zinc-800" id="price-max-display">
-                            {{ __('Макс. цена') }}: <span>{{ number_format($priceMax ?? $maxPrice, 2) }}</span> UAH
+                            {{ __('Цена до') }}: <span>{{ number_format($priceMax ?? $maxPrice, 2) }}</span> UAH
                         </span>
                     </div>
-                    <!-- Range Sliders -->
-                    <div class="relative w-full px-4 range-slider-container">
-                        <div class="relative h-2 bg-neutral-400 rounded-full">
-                            <div class="absolute h-2 bg-green-600 rounded-full range-fill" id="range-fill"></div>
-                            <input type="range"
-                                   wire:model.debounce.500ms="priceMin"
-                                   id="price-min"
-                                   min="{{ $minPrice }}"
-                                   max="{{ $maxPrice }}"
-                                   step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
-                                   value="{{ $priceMin ?? $minPrice }}"
-                                   class="absolute w-full h-2 cursor-pointer z-10"
-                                   aria-label="Минимальная цена"
-                                   aria-valuemin="{{ $minPrice }}"
-                                   aria-valuemax="{{ $maxPrice }}"
-                                   aria-valuenow="{{ $priceMin ?? $minPrice }}" />
-                            <input type="range"
-                                   wire:model.debounce.500ms="priceMax"
-                                   id="price-max"
-                                   min="{{ $minPrice }}"
-                                   max="{{ $maxPrice }}"
-                                   step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
-                                   value="{{ $priceMax ?? $maxPrice }}"
-                                   class="absolute w-full h-2 cursor-pointer z-10"
-                                   aria-label="Максимальная цена"
-                                   aria-valuemin="{{ $minPrice }}"
-                                   aria-valuemax="{{ $maxPrice }}"
-                                   aria-valuenow="{{ $priceMax ?? $maxPrice }}" />
-                        </div>
-                    </div>
-                    <!-- Manual Input Fields -->
-                    <div class="flex justify-between w-full px-4 gap-2">
-                        <input type="number"
-                               wire:model.debounce.500ms="priceMin"
-                               class="w-20 px-2 py-1 border rounded text-xs"
-                               placeholder="{{ $minPrice }}"
-                               aria-label="Ввести минимальную цену"
+                    <!-- Price Slider -->
+                    <div class="w-full px-4">
+                        <input type="range"
+                               wire:model.debounce.500ms="priceMax"
+                               id="price-max"
                                min="{{ $minPrice }}"
                                max="{{ $maxPrice }}"
-                               step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}" />
+                               step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
+                               value="{{ $priceMax ?? $maxPrice }}"
+                               class="w-full h-2 cursor-pointer"
+                               aria-label="Максимальная цена"
+                               aria-valuemin="{{ $minPrice }}"
+                               aria-valuemax="{{ $maxPrice }}"
+                               aria-valuenow="{{ $priceMax ?? $maxPrice }}" />
+                    </div>
+                    <!-- Manual Input Field -->
+                    <div class="w-full px-4">
                         <input type="number"
                                wire:model.debounce.500ms="priceMax"
+                               id="price-max-input"
                                class="w-20 px-2 py-1 border rounded text-xs"
                                placeholder="{{ $maxPrice }}"
                                aria-label="Ввести максимальную цену"
@@ -248,45 +223,34 @@
         </section>
     </div>
 
+    <!-- Debug Output -->
+    <div class="px-4 text-xs text-gray-500">
+        Debug: minPrice={{ $minPrice }}, maxPrice={{ $maxPrice }}, priceMax={{ $priceMax }}
+    </div>
+
     <style>
-        /* Стили для ползунков диапазона цен */
-        .range-slider-container {
-            position: relative;
-            height: 8px;
-            background: #d1d5db;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
-
-        .range-fill {
-            position: absolute;
-            height: 100%;
-            background: #16a34a;
-            border-radius: 4px;
-            z-index: 1;
-        }
-
+        /* Стили для ползунка цены */
         input[type="range"] {
             -webkit-appearance: none;
             appearance: none;
             width: 100%;
             height: 8px;
-            background: transparent;
-            position: absolute;
-            top: 0;
-            margin: 0;
+            background: #d1d5db;
+            border-radius: 4px;
+            outline: none;
             cursor: pointer;
-            z-index: 10;
         }
 
         input[type="range"]::-webkit-slider-runnable-track {
             height: 8px;
-            background: transparent;
+            background: #d1d5db;
+            border-radius: 4px;
         }
 
         input[type="range"]::-moz-range-track {
             height: 8px;
-            background: transparent;
+            background: #d1d5db;
+            border-radius: 4px;
         }
 
         input[type="range"]::-webkit-slider-thumb {
@@ -364,87 +328,75 @@
     <script>
         document.addEventListener('livewire:initialized', function () {
             console.log('Livewire initialized');
-            const priceMinInput = document.getElementById('price-min');
             const priceMaxInput = document.getElementById('price-max');
-            const priceMinDisplay = document.getElementById('price-min-display').querySelector('span');
             const priceMaxDisplay = document.getElementById('price-max-display').querySelector('span');
-            const rangeFill = document.getElementById('range-fill');
-            const minPrice = parseFloat(priceMinInput.min) || 0;
+            const priceMaxNumberInput = document.getElementById('price-max-input');
+            const minPrice = parseFloat(priceMaxInput.min) || 0;
             const maxPrice = parseFloat(priceMaxInput.max) || 1000;
 
-            function updateRangeFill() {
-                let minVal = parseFloat(priceMinInput.value);
-                let maxVal = parseFloat(priceMaxInput.value);
-
-                // Ограничиваем значения в пределах minPrice и maxPrice
-                if (minVal < minPrice || isNaN(minVal)) {
-                    minVal = minPrice;
-                    priceMinInput.value = minVal;
-                }
-                if (maxVal > maxPrice || isNaN(maxVal)) {
-                    maxVal = maxPrice;
-                    priceMaxInput.value = maxVal;
-                }
-
-                const minPercent = ((minVal - minPrice) / (maxPrice - minPrice)) * 100;
-                const maxPercent = ((maxVal - minPrice) / (maxPrice - minPrice)) * 100;
-
-                rangeFill.style.left = minPercent + '%';
-                rangeFill.style.width = (maxPercent - minPercent) + '%';
-                priceMinDisplay.textContent = minVal.toFixed(2);
-                priceMaxDisplay.textContent = maxVal.toFixed(2);
-
-                // Обновляем aria-valuenow для доступности
-                priceMinInput.setAttribute('aria-valuenow', minVal);
-                priceMaxInput.setAttribute('aria-valuenow', maxVal);
+            // Проверка, что элементы найдены
+            if (!priceMaxInput || !priceMaxDisplay || !priceMaxNumberInput) {
+                console.error('Slider elements not found:', {
+                    priceMaxInput: !!priceMaxInput,
+                    priceMaxDisplay: !!priceMaxDisplay,
+                    priceMaxNumberInput: !!priceMaxNumberInput
+                });
+                return;
             }
 
-            // Обработчики событий для ползунков
-            priceMinInput.addEventListener('input', function () {
-                console.log('PriceMin Input:', priceMinInput.value);
-                updateRangeFill();
-            });
-            priceMaxInput.addEventListener('input', function () {
-                console.log('PriceMax Input:', priceMaxInput.value);
-                updateRangeFill();
-            });
+            function updatePriceDisplay() {
+                let maxVal = parseFloat(priceMaxInput.value);
 
-            // Обновление ползунков при вводе в поля
-            document.querySelector('input[wire\\:model\\.debounce\\.500ms="priceMin"]').addEventListener('input', function () {
-                let value = parseFloat(this.value);
-                if (isNaN(value) || value < minPrice) {
-                    this.value = minPrice;
-                    value = minPrice;
-                } else if (value > maxPrice) {
-                    this.value = maxPrice;
-                    value = maxPrice;
+                // Ограничиваем значение в пределах minPrice и maxPrice
+                if (isNaN(maxVal) || maxVal < minPrice) {
+                    maxVal = minPrice;
+                    priceMaxInput.value = maxVal;
+                    Livewire.dispatch('updatePriceMax', { value: maxVal });
                 }
-                priceMinInput.value = value;
-                console.log('PriceMin Number Input:', value);
-                updateRangeFill();
+                if (maxVal > maxPrice) {
+                    maxVal = maxPrice;
+                    priceMaxInput.value = maxVal;
+                    Livewire.dispatch('updatePriceMax', { value: maxVal });
+                }
+
+                // Обновляем отображаемое значение
+                priceMaxDisplay.textContent = maxVal.toFixed(2);
+                priceMaxNumberInput.value = maxVal.toFixed(2);
+
+                // Обновляем aria-valuenow для доступности
+                priceMaxInput.setAttribute('aria-valuenow', maxVal);
+
+                console.log('PriceMax updated:', { maxVal });
+            }
+
+            // Обработчик события для ползунка
+            priceMaxInput.addEventListener('input', function () {
+                console.log('PriceMax Input:', this.value);
+                updatePriceDisplay();
             });
 
-            document.querySelector('input[wire\\:model\\.debounce\\.500ms="priceMax"]').addEventListener('input', function () {
+            // Обработчик события для поля ввода
+            priceMaxNumberInput.addEventListener('input', function () {
                 let value = parseFloat(this.value);
                 if (isNaN(value) || value < minPrice) {
-                    this.value = minPrice;
                     value = minPrice;
+                    this.value = minPrice;
                 } else if (value > maxPrice) {
-                    this.value = maxPrice;
                     value = maxPrice;
+                    this.value = maxPrice;
                 }
                 priceMaxInput.value = value;
                 console.log('PriceMax Number Input:', value);
-                updateRangeFill();
+                updatePriceDisplay();
             });
 
             // Инициализация при загрузке
-            updateRangeFill();
+            updatePriceDisplay();
 
             // Повторная инициализация после обновления Livewire
             document.addEventListener('livewire:navigated', function () {
                 console.log('Livewire navigated');
-                updateRangeFill();
+                updatePriceDisplay();
             });
         });
     </script>
