@@ -8,6 +8,7 @@ use Lunar\Models\Brand;
 use Lunar\Models\Currency;
 use Lunar\Models\Product;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 class CatalogPage extends Component
@@ -16,7 +17,6 @@ class CatalogPage extends Component
 
     public $perPage = 12;
     public $brands = [];
-    public $priceMin = null;
     public $priceMax = null;
     public $sort = 'name_asc';
     public $view = 'grid';
@@ -24,7 +24,6 @@ class CatalogPage extends Component
     public $currency;
 
     protected $listeners = [
-        'updatePriceMin' => 'updatePriceMin',
         'updatePriceMax' => 'updatePriceMax',
     ];
 
@@ -40,15 +39,10 @@ class CatalogPage extends Component
         ]);
     }
 
-    public function updatePriceMin($value)
-    {
-        $this->priceMin = (float) $value;
-        $this->applyFilters();
-    }
-
     public function updatePriceMax($value)
     {
         $this->priceMax = (float) $value;
+        Log::debug('PriceMax Updated', ['priceMax' => $this->priceMax]);
         $this->applyFilters();
     }
 
@@ -61,21 +55,16 @@ class CatalogPage extends Component
             $productsQuery->whereIn('brand_id', $this->brands);
         }
 
-        if ($this->priceMin !== null || $this->priceMax !== null) {
+        if ($this->priceMax !== null) {
             $productsQuery->whereHas('variants', function ($query) {
                 $query->whereHas('prices', function ($priceQuery) {
                     $priceQuery->where('currency_id', $this->currency->id);
-
-                    $priceMin = $this->priceMin !== null ? max(0, (float) $this->priceMin * 100) : 0;
-                    $priceMax = $this->priceMax !== null ? max(0, (float) $this->priceMax * 100) : PHP_INT_MAX;
-
-                    $priceQuery->whereBetween('price', [$priceMin, $priceMax]);
+                    $priceMax = max(0, (float) $this->priceMax * 100);
+                    $priceQuery->where('price', '<=', $priceMax);
                 });
             });
             Log::info('Price Filter Applied', [
-                'priceMin' => $this->priceMin,
                 'priceMax' => $this->priceMax,
-                'convertedPriceMin' => $this->priceMin !== null ? (float) $this->priceMin * 100 : null,
                 'convertedPriceMax' => $this->priceMax !== null ? (float) $this->priceMax * 100 : null,
             ]);
         }
@@ -158,43 +147,41 @@ class CatalogPage extends Component
 
     public function getPriceRangeProperty()
     {
-        $minPrice = \DB::table('lunar_prices')
-            ->where('priceable_type', 'Lunar\Models\ProductVariant')
-            ->where('currency_id', $this->currency->id)
-            ->min('price') ?? 0;
+        return Cache::remember('price_range_' . $this->currency->id, now()->addHours(1), function () {
+            $minPrice = \DB::table('lunar_prices')
+                ->where('priceable_type', 'Lunar\Models\ProductVariant')
+                ->where('currency_id', $this->currency->id)
+                ->min('price') ?? 0;
 
-        $maxPrice = \DB::table('lunar_prices')
-            ->where('priceable_type', 'Lunar\Models\ProductVariant')
-            ->where('currency_id', $this->currency->id)
-            ->max('price') ?? 100000; // 1000 UAH в копейках
+            $maxPrice = \DB::table('lunar_prices')
+                ->where('priceable_type', 'Lunar\Models\ProductVariant')
+                ->where('currency_id', $this->currency->id)
+                ->max('price') ?? 100000;
 
-        Log::info('Price Range Calculated', [
-            'minPrice' => $minPrice,
-            'maxPrice' => $maxPrice,
-        ]);
+            Log::info('Price Range Calculated', [
+                'minPrice' => $minPrice,
+                'maxPrice' => $maxPrice,
+            ]);
 
-        return [
-            'min' => floor($minPrice / 100),
-            'max' => ceil($maxPrice / 100),
-        ];
+            return [
+                'min' => floor($minPrice / 100),
+                'max' => ceil($maxPrice / 100),
+            ];
+        });
     }
 
     public function applyFilters()
     {
-        if ($this->priceMin !== null) {
-            $this->priceMin = max(0, (float) $this->priceMin);
-        }
         if ($this->priceMax !== null) {
             $this->priceMax = max(0, (float) $this->priceMax);
-        }
-        if ($this->priceMin !== null && $this->priceMax !== null && $this->priceMin > $this->priceMax) {
-            [$this->priceMin, $this->priceMax] = [$this->priceMax, $this->priceMin];
+            if ($this->priceMax > $this->priceRange['max']) {
+                $this->priceMax = $this->priceRange['max'];
+            }
         }
 
         $this->resetPage();
         Log::info('Filters Applied', [
             'brands' => $this->brands,
-            'priceMin' => $this->priceMin,
             'priceMax' => $this->priceMax,
             'sort' => $this->sort,
             'view' => $this->view,
@@ -209,7 +196,6 @@ class CatalogPage extends Component
 
     public function clearPrice()
     {
-        $this->priceMin = null;
         $this->priceMax = null;
         $this->applyFilters();
     }
@@ -217,7 +203,6 @@ class CatalogPage extends Component
     public function clearAllFilters()
     {
         $this->brands = [];
-        $this->priceMin = null;
         $this->priceMax = null;
         $this->applyFilters();
     }
@@ -233,7 +218,7 @@ class CatalogPage extends Component
 
     public function updated($property)
     {
-        if (in_array($property, ['brands', 'priceMin', 'priceMax', 'sort'])) {
+        if (in_array($property, ['brands', 'priceMax', 'sort'])) {
             Log::info('Property Updated', [
                 'property' => $property,
                 'value' => $this->$property,
@@ -249,7 +234,6 @@ class CatalogPage extends Component
                 'products_count' => $this->products->total(),
                 'filters' => [
                     'brands' => $this->brands,
-                    'priceMin' => $this->priceMin,
                     'priceMax' => $this->priceMax,
                     'sort' => $this->sort,
                     'view' => $this->view,
@@ -265,12 +249,11 @@ class CatalogPage extends Component
                 'currency' => $this->currency,
             ]);
         } catch (\Exception $e) {
-            Log::info('Error loading Catalog Page', [
+            Log::error('Error loading Catalog Page', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'filters' => [
                     'brands' => $this->brands,
-                    'priceMin' => $this->priceMin,
                     'priceMax' => $this->priceMax,
                     'sort' => $this->sort,
                     'view' => $this->view,

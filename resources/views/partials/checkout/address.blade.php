@@ -1,4 +1,5 @@
-<form wire:submit.prevent="saveAddress" class="bg-white p-8 rounded-3xl border border-gray-100 max-md:p-5">
+
+<form wire:submit.prevent="saveAddress" class="bg-white p-8 max-md:p-5">
     <header class="flex gap-4 items-start w-full text-base font-semibold leading-none max-md:max-w-full">
         <div class="flex flex-col justify-center items-center text-center text-white whitespace-nowrap rounded-2xl bg-zinc-800 h-[22px] w-[22px]" aria-label="{{ __('messages.checkout.step_1') }}">
             <span class="text-white">1</span>
@@ -8,83 +9,87 @@
         </h1>
     </header>
 
-    <div class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full space-y-4">
-        <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
-            <input
-                type="text"
-                id="firstName"
-                wire:model="shipping.first_name"
-                placeholder="{{ __('messages.checkout.first_name') }}"
-                class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
-                aria-label="{{ __('messages.checkout.first_name') }}"
-                required
-            />
-            @error('shipping.first_name')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+    @if($shipping)
+        <div class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full space-y-4">
+            <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
+                <input
+                    type="text"
+                    id="firstName"
+                    wire:model="shipping.first_name"
+                    placeholder="{{ __('messages.checkout.first_name') }}"
+                    class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
+                    aria-label="{{ __('messages.checkout.first_name') }}"
+                    required
+                />
+                @error('shipping.first_name')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
-            <input
-                type="text"
-                id="lastName"
-                wire:model="shipping.last_name"
-                placeholder="{{ __('messages.checkout.last_name') }}"
-                class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
-                aria-label="{{ __('messages.checkout.last_name') }}"
-                required
-            />
-            @error('shipping.last_name')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+            <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
+                <input
+                    type="text"
+                    id="lastName"
+                    wire:model="shipping.last_name"
+                    placeholder="{{ __('messages.checkout.last_name') }}"
+                    class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
+                    aria-label="{{ __('messages.checkout.last_name') }}"
+                    required
+                />
+                @error('shipping.last_name')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
-            <input
-                type="tel"
-                id="phone"
-                wire:model="shipping.contact_phone"
-                placeholder="{{ __('messages.checkout.phone') }}"
-                class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
-                aria-label="{{ __('messages.checkout.phone') }}"
-                required
-            />
-            @error('shipping.contact_phone')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+            <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
+                <input
+                    type="tel"
+                    id="phone"
+                    wire:model="shipping.contact_phone"
+                    placeholder="{{ __('messages.checkout.phone') }}"
+                    class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
+                    aria-label="{{ __('messages.checkout.phone') }}"
+                    required
+                />
+                @error('shipping.contact_phone')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
-            <input
-                type="email"
-                id="email"
-                wire:model="shipping.contact_email"
-                placeholder="{{ __('messages.checkout.email') }}"
-                class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
-                aria-label="{{ __('messages.checkout.email') }}"
-                required
-            />
-            @error('shipping.contact_email')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+            <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
+                <input
+                    type="email"
+                    id="email"
+                    wire:model="shipping.contact_email"
+                    placeholder="{{ __('messages.checkout.email') }}"
+                    class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
+                    aria-label="{{ __('messages.checkout.email') }}"
+                    required
+                />
+                @error('shipping.contact_email')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
 
-        <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
-            <input
-                type="text"
-                id="company"
-                wire:model="shipping.company"
-                placeholder="{{ __('messages.checkout.company') }}"
-                class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
-                aria-label="{{ __('messages.checkout.company') }}"
-            />
-            @error('shipping.company')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
+            <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
+                <input
+                    type="text"
+                    id="company"
+                    wire:model="shipping.company"
+                    placeholder="{{ __('messages.checkout.company') }}"
+                    class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
+                    aria-label="{{ __('messages.checkout.company') }}"
+                />
+                @error('shipping.company')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
         </div>
-    </div>
+    @else
+        <p class="mt-10 text-sm text-red-600">Адрес доставки недоступен. Пожалуйста, попробуйте снова или обратитесь в поддержку.</p>
+    @endif
 
-    <!-- Privacy Policy Checkbox -->
+    <!-- Чекбокс для политики конфиденциальности -->
     <div class="flex flex-col mt-10 w-full max-md:max-w-full">
         <div class="flex gap-2 items-center self-start text-xs">
             <div class="flex shrink-0 self-stretch my-auto w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 relative">
@@ -111,7 +116,7 @@
             @enderror
         </div>
 
-        <!-- Navigation Buttons -->
+        <!-- Кнопки навигации -->
         <div class="flex gap-4 items-center mt-4 w-full text-base font-bold leading-snug whitespace-nowrap max-md:max-w-full">
             <button
                 type="button"
@@ -134,7 +139,7 @@
         </div>
     </div>
 
-    <!-- Step Indicators -->
+    <!-- Индикаторы шагов -->
     <nav class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap max-md:max-w-full" aria-label="{{ __('messages.checkout.steps') }}">
         <div class="flex gap-4 items-start max-w-full min-h-[22px] w-[440px]">
             <div class="flex flex-col justify-center items-center text-center text-white rounded-2xl bg-neutral-400 h-[22px] w-[22px]" aria-label="{{ __('messages.checkout.step_2') }}">
@@ -153,7 +158,7 @@
 </form>
 
 <style>
-    /* Custom checkbox styling */
+    /* Стили для чекбокса */
     input[type="checkbox"]:checked + .checkmark {
         background-color: #10b981;
         border-color: #10b981;
@@ -175,13 +180,13 @@
         outline-offset: 2px;
     }
 
-    /* Input focus styles */
+    /* Стили фокуса для инпутов */
     input:focus {
         outline: 2px solid #3b82f6;
         outline-offset: 2px;
     }
 
-    /* Placeholder styling */
+    /* Стили для placeholder */
     input::placeholder {
         color: #a3a3a3;
     }

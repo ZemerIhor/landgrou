@@ -141,6 +141,7 @@ return [
         'home' => 'Home',
         'blog' => 'Blog',
         'aria_label' => 'Breadcrumb Navigation',
+        'catalog' => 'Catalog',
     ],
     'language' => [
         'current' => 'Language',

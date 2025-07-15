@@ -1,9 +1,9 @@
 
 <div x-data="{ isScrolled: false }" @scroll.window="isScrolled = (window.scrollY > 0)">
-    <header class="shadow-xl h-[56px] flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
+    <header id="header" class="shadow-xl  flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
             :class="{ 'is-fixed': isScrolled }"
             role="banner">
-        <div class="main-container nav-header flex relative justify-between items-center w-full h-auto container mx-auto">
+        <div class="nav-header flex relative justify-between items-center w-full h-auto container mx-auto">
             <!-- Logo -->
             <a href="{{ url('/') }}" class="flex items-center" aria-label="{{ __('messages.banner.catalog_button_aria_label') }}" wire:navigate>
                 <div>
