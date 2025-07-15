@@ -384,7 +384,7 @@
     </section>
 
     <livewire:components.blog-section/>
-    <div class="px-[16px] sm:px-[28px] md:px-[50px] py-[80px]  container mx-auto">
+    <div class="px-2 container mx-auto">
         <livewire:components.feedback-form-block/>
     </div>
 
