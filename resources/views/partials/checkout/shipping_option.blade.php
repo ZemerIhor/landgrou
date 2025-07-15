@@ -138,48 +138,6 @@
                 </div>
             @endif
 
-            <!-- Выбор способа оплаты -->
-            <div class="mt-8">
-                <h2 class="text-base font-semibold text-zinc-800 mb-4">{{ __('messages.checkout.payment') }}</h2>
-                <fieldset class="flex flex-col gap-4 items-start">
-                    <legend class="sr-only">Оберіть спосіб оплати</legend>
-
-                    <!-- Оплата картой -->
-                    <div class="flex gap-2 items-center">
-                        <input type="radio"
-                               id="card-payment"
-                               name="payment-method"
-                               value="card"
-                               wire:model.live="paymentType"
-                               class="w-6 h-6 cursor-pointer border-[1.5px] border-neutral-400 focus:ring-2 focus:ring-green-600 rounded-full"
-                               aria-describedby="card-payment-desc">
-                        <label for="card-payment"
-                               id="card-payment-desc"
-                               class="text-base font-bold leading-5 text-zinc-800 cursor-pointer">
-                            Сплатити карткою Visa/Mastercard
-                        </label>
-                    </div>
-
-                    <!-- Наложенный платеж -->
-                    <div class="flex gap-2 items-center">
-                        <input type="radio"
-                               id="cash-payment"
-                               name="payment-method"
-                               value="cash-on-delivery"
-                               wire:model.live="paymentType"
-                               class="w-6 h-6 cursor-pointer border-[1.5px] border-neutral-400 focus:ring-2 focus:ring-green-600 rounded-full"
-                               aria-describedby="cash-payment-desc">
-                        <label for="cash-payment"
-                               id="cash-payment-desc"
-                               class="text-base font-bold leading-5 text-zinc-800 cursor-pointer">
-                            Накладений платіж
-                        </label>
-                    </div>
-                </fieldset>
-                @error('paymentType')
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
 
             <!-- Поле для комментария -->
             <div class="mt-4">
