@@ -1,4 +1,5 @@
 <form wire:submit.prevent="saveAddress" class="bg-white p-8 max-md:p-5">
+
     <header class="flex gap-4 items-start w-full text-base font-semibold leading-none max-md:max-w-full">
         <div class="flex flex-col justify-center items-center text-center text-white whitespace-nowrap rounded-2xl bg-zinc-800 h-[22px] w-[22px]" aria-label="{{ __('messages.checkout.step_1') }}">
             <span class="text-white">1</span>

@@ -1,192 +1,128 @@
-<form wire:submit.prevent="saveAddress" class="bg-white p-8 max-md:p-5">
-    <!-- Breadcrumbs Navigation -->
-    <livewire:components.breadcrumbs :currentPage="__('messages.breadcrumbs.checkout')" :items="[]" />
+<div>
+    <div class=" mx-auto px-[50px] py-12 sm:px-6 lg:px-8">
+        <livewire:components.breadcrumbs :currentPage="__('messages.breadcrumbs.catalog')" :items="[]" />
 
-    <header class="flex gap-4 items-start w-full text-base font-semibold leading-none max-md:max-w-full">
-        <div class="flex flex-col justify-center items-center text-center text-white whitespace-nowrap rounded-2xl bg-zinc-800 h-[22px] w-[22px]" aria-label="{{ __('messages.checkout.step_1') }}">
-            <span class="text-white">1</span>
-        </div>
-        <h1 id="form-heading" class="flex-1 shrink basis-0 text-zinc-800">
-            {{ __('messages.checkout.personal_info') }}
-        </h1>
-    </header>
+        <div class="flex flex-wrap gap-8">
+            <!-- Form Section -->
+            <section class="flex-1 shrink self-start px-8 py-8 bg-white rounded-3xl border border-gray-100 min-w-60 max-md:px-5 max-md:max-w-full" role="main" aria-labelledby="form-heading">
+                @if($currentStep === $steps['personal_info'])
+                    @include('partials.checkout.address')
+                @endif
 
-    <div class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full space-y-4">
-        <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
-            <input
-                type="text"
-                id="firstName"
-                wire:model="shipping.first_name"
-                placeholder="{{ __('messages.checkout.first_name') }}"
-                class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
-                aria-label="{{ __('messages.checkout.first_name') }}"
-                required
-            />
-            @error('shipping.first_name')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+                @if($currentStep === $steps['delivery'])
+                    @include('partials.checkout.shipping_option')
+                @endif
 
-        <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
-            <input
-                type="text"
-                id="lastName"
-                wire:model="shipping.last_name"
-                placeholder="{{ __('messages.checkout.last_name') }}"
-                class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
-                aria-label="{{ __('messages.checkout.last_name') }}"
-                required
-            />
-            @error('shipping.last_name')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+                @if($currentStep === $steps['payment'])
+                    @include('partials.checkout.payment')
+                @endif
+            </section>
 
-        <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
-            <input
-                type="tel"
-                id="phone"
-                wire:model="shipping.contact_phone"
-                placeholder="{{ __('messages.checkout.phone') }}"
-                class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
-                aria-label="{{ __('messages.checkout.phone') }}"
-                required
-            />
-            @error('shipping.contact_phone')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+            <!-- Basket Section -->
+            <aside class="p-8 bg-white rounded-3xl min-w-60 w-[487px] max-md:px-5 max-md:max-w-full" role="complementary" aria-labelledby="order-heading">
+                <div class="w-full max-md:max-w-full">
+                    <h2 id="order-heading" class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
+                        {{ __('messages.cart.order_summary') }}
+                    </h2>
 
-        <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
-            <input
-                type="email"
-                id="email"
-                wire:model="shipping.contact_email"
-                placeholder="{{ __('messages.checkout.email') }}"
-                class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
-                aria-label="{{ __('messages.checkout.email') }}"
-                required
-            />
-            @error('shipping.contact_email')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+                    <hr class="flex mt-4 w-full bg-zinc-300 min-h-px max-md:max-w-full" />
 
-        <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
-            <input
-                type="text"
-                id="company"
-                wire:model="shipping.company"
-                placeholder="{{ __('messages.checkout.company') }}"
-                class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
-                aria-label="{{ __('messages.checkout.company') }}"
-            />
-            @error('shipping.company')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
-    </div>
+                    <!-- Cart Items -->
+                    @forelse ($cart->lines as $line)
+                        <article class="flex gap-6 items-start mt-4 w-full max-md:max-w-full" wire:key="cart_line_{{ $line->id }}">
+                            <img
+                                src="{{ $line->purchasable->getThumbnail() ? $line->purchasable->getThumbnail()->getUrl() : asset('images/fallback-product.jpg') }}"
+                                alt="{{ $line->purchasable->getDescription() ?? 'Product Image' }}"
+                                class="object-contain shrink-0 w-20 rounded-2xl aspect-square"
+                            />
+                            <div class="flex-1 shrink basis-0 min-w-60">
+                                <h3 class="text-xs font-semibold leading-5 text-zinc-800">
+                                    {{ $line->purchasable->getDescription() ?? '' }}
+                                </h3>
 
-    <!-- Privacy Policy Checkbox -->
-    <div class="flex flex-col mt-10 w-full max-md:max-w-full">
-        <div class="flex gap-2 items-center self-start text-xs">
-            <div class="flex shrink-0 self-stretch my-auto w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 relative">
-                <input
-                    type="checkbox"
-                    id="privacy-policy"
-                    wire:model="privacy_policy"
-                    class="w-full h-full opacity-0 absolute cursor-pointer"
-                    required
-                    aria-describedby="privacy-policy-label"
-                />
-                <div class="checkmark absolute inset-0 bg-white border border-neutral-400 rounded"></div>
-            </div>
-            <label for="privacy-policy" id="privacy-policy-label" class="flex gap-0.5 items-start self-stretch my-auto min-w-60 cursor-pointer">
-                <span class="font-semibold text-zinc-800">{{ __('messages.checkout.agree_to') }}</span>
-                <a href="{{ route('privacy-policy') }}" class="flex gap-2 justify-center items-center text-indigo-500 underline rounded-lg" aria-label="{{ __('messages.checkout.privacy_policy') }}">
-                    <span class="self-stretch my-auto text-indigo-500 underline decoration-auto decoration-solid underline-offset-auto">
-                        {{ __('messages.checkout.privacy_policy') }}
-                    </span>
-                </a>
-            </label>
-            @error('privacy_policy')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+                                <div class="flex gap-5 items-center mt-3 w-full">
+                                    <p class="flex-1 shrink self-stretch my-auto text-xs font-semibold basis-0 text-neutral-400">
+                                        {{ __('messages.cart.id') }}: {{ $line->purchasable->sku ?? 'N/A' }}
+                                    </p>
+                                    <div class="flex gap-1 items-center self-stretch my-auto text-base font-bold leading-tight text-right text-zinc-800">
+                                        <span class="self-stretch my-auto text-zinc-800">{{ $line->subTotal instanceof \Lunar\DataTypes\Price ? $line->subTotal->formatted() : number_format($line->subTotal, 2) }}</span>
+                                        <span class="self-stretch my-auto text-zinc-800">₴</span>
+                                    </div>
+                                </div>
 
-        <!-- Navigation Buttons -->
-        <div class="flex gap-4 items-center mt-4 w-full text-base font-bold leading-snug whitespace-nowrap max-md:max-w-full">
-            <button
-                type="button"
-                wire:click="goBackStep"
-                class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-green-600 rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                aria-label="{{ __('messages.checkout.back') }}"
-            >
-                <span class="self-stretch my-auto text-green-600">{{ __('messages.checkout.back') }}</span>
-            </button>
+                                <div class="flex justify-between items-end mt-3 w-full">
+                                    <div class="flex gap-2 items-center px-2 rounded-2xl bg-neutral-200 min-h-11" role="group" aria-label="{{ __('messages.cart.quantity') }}">
+                                        <button
+                                            type="button"
+                                            wire:click="updateLineQuantity('{{ $line->id }}', {{ $line->quantity - 1 }})"
+                                            class="flex gap-2.5 items-center self-stretch my-auto w-6 hover:bg-neutral-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            aria-label="{{ __('messages.cart.decrease_quantity') }}"
+                                            @if($line->quantity <= 1) disabled @endif
+                                        >
+                                            <svg class="w-6 h-6 text-zinc-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                                            </svg>
+                                        </button>
 
-            <button
-                type="submit"
-                class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-white bg-green-600 rounded-2xl min-h-11 max-md:px-5 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                aria-label="{{ __('messages.checkout.continue') }}"
-                wire:loading.attr="disabled"
-            >
-                <span wire:loading.remove>{{ __('messages.checkout.continue') }}</span>
-                <span wire:loading>{{ __('messages.checkout.saving') }}</span>
-            </button>
+                                        <div class="flex gap-2.5 justify-center items-center self-stretch my-auto text-base font-semibold leading-none whitespace-nowrap text-zinc-800">
+                                            <span class="self-stretch my-auto text-zinc-800">{{ $line->quantity }}</span>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            wire:click="updateLineQuantity('{{ $line->id }}', {{ $line->quantity + 1 }})"
+                                            class="flex gap-2.5 items-center self-stretch my-auto w-6 hover:bg-neutral-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            aria-label="{{ __('messages.cart.increase_quantity') }}"
+                                        >
+                                            <svg class="w-6 h-6 text-zinc-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                        @error('lines.' . $loop->index . '.quantity')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    @empty
+                        <p class="text-sm text-gray-500 mt-4">{{ __('messages.cart.empty') }}</p>
+                    @endforelse
+                </div>
+
+                <!-- Order Summary -->
+                <footer class="mt-4 w-full text-base font-bold leading-tight text-neutral-400 max-md:max-w-full">
+                    <hr class="flex w-full bg-zinc-300 min-h-px max-md:max-w-full" />
+
+                    <div class="flex gap-10 justify-between items-center mt-4 w-full min-h-[19px] max-md:max-w-full">
+                        <span class="self-stretch my-auto text-neutral-400">{{ __('messages.cart.sub_total') }}</span>
+                        <div class="flex gap-1 items-center self-stretch my-auto text-right">
+                            <span class="self-stretch my-auto text-neutral-400">{{ $cart->subTotal instanceof \Lunar\DataTypes\Price ? $cart->subTotal->formatted() : number_format($cart->subTotal, 2) }}</span>
+                            <span class="self-stretch my-auto text-neutral-400">₴</span>
+                        </div>
+                    </div>
+
+                    @if ($shippingOption)
+                        <div class="flex gap-10 justify-between items-center mt-4 w-full min-h-[19px] max-md:max-w-full">
+                            <span class="self-stretch my-auto text-neutral-400">{{ __('messages.cart.shipping') }}</span>
+                            <div class="flex gap-1 items-center self-stretch my-auto text-right">
+                                <span class="self-stretch my-auto text-neutral-400">{{ $shippingOption['formatted_price'] ?? '0.00' }}</span>
+                                <span class="self-stretch my-auto text-neutral-400">₴</span>
+                            </div>
+                        </div>
+                    @endif
+
+                    <hr class="flex mt-4 w-full bg-zinc-300 min-h-px max-md:max-w-full" />
+
+                    <div class="flex gap-10 justify-between items-center mt-4 w-full min-h-[19px] text-zinc-800 max-md:max-w-full">
+                        <span class="self-stretch my-auto text-zinc-800">{{ __('messages.cart.total') }}</span>
+                        <div class="flex gap-1 items-center self-stretch my-auto text-right">
+                            <span class="self-stretch my-auto text-zinc-800">{{ $cart->total instanceof \Lunar\DataTypes\Price ? $cart->total->formatted() : number_format($cart->total, 2) }}</span>
+                            <span class="self-stretch my-auto text-zinc-800">₴</span>
+                        </div>
+                    </div>
+                </footer>
+            </aside>
         </div>
     </div>
-
-    <!-- Step Indicators -->
-    <nav class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap max-md:max-w-full" aria-label="{{ __('messages.checkout.steps') }}">
-        <div class="flex gap-4 items-start max-w-full min-h-[22px] w-[440px]">
-            <div class="flex flex-col justify-center items-center text-center text-white rounded-2xl bg-neutral-400 h-[22px] w-[22px]" aria-label="{{ __('messages.checkout.step_2') }}">
-                <span class="text-white">2</span>
-            </div>
-            <span class="flex-1 shrink basis-0 text-neutral-400">{{ __('messages.checkout.delivery') }}</span>
-        </div>
-
-        <div class="flex gap-4 items-start mt-4 max-w-full min-h-[22px] w-[440px]">
-            <div class="flex flex-col justify-center items-center text-center text-white rounded-2xl bg-neutral-400 h-[22px] w-[22px]" aria-label="{{ __('messages.checkout.step_3') }}">
-                <span class="text-white">3</span>
-            </div>
-            <span class="flex-1 shrink basis-0 text-neutral-400">{{ __('messages.checkout.payment') }}</span>
-        </div>
-    </nav>
-    <style>
-        /* Custom checkbox styling */
-        input[type="checkbox"]:checked + .checkmark {
-            background-color: #10b981;
-            border-color: #10b981;
-        }
-
-        input[type="checkbox"]:checked + .checkmark::after {
-            content: "✓";
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        input[type="checkbox"]:focus + .checkmark {
-            outline: 2px solid #3b82f6;
-            outline-offset: 2px;
-        }
-
-        /* Input focus styles */
-        input:focus {
-            outline: 2px solid #3b82f6;
-            outline-offset: 2px;
-        }
-
-        /* Placeholder styling */
-        input::placeholder {
-            color: #a3a3a3;
-        }
-    </style>
-
-</form>
-
+</div>
