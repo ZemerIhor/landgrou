@@ -1,6 +1,6 @@
 <div class="">
     <x-welcome-banner :settings="$settings"/>
-    <div class=" px-[50px] mx-auto pt-40">
+    <div class=" px-[50px] mx-auto pt-40 container">
         <section
             class="flex relative flex-col w-full gap-0.5 items-start self-stretch  pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0"
             aria-label="Company Advantages">
@@ -27,7 +27,7 @@
             </div>
         </section>
     </div>
-    <div class=" px-[16px] sm:px-[28px] md:px-[50px]  py-[80px] products  mx-auto ">
+    <div class=" px-[16px] sm:px-[28px] md:px-[50px]  py-[80px] products container mx-auto ">
         <section class="flex flex-col self-stretch" aria-label="Каталог">
             <div class="main-container">
                 <h2 class="text-2xl pb-5 font-bold leading-tight text-black max-md:max-w-full">{{ __('messages.products.title') }}</h2>
@@ -47,7 +47,7 @@
     </div>
 
 
-    <div class=" px-[16px] sm:px-[28px] md:px-[50px] py-[80px] mx-auto">
+    <div class=" px-[16px] sm:px-[28px] md:px-[50px] py-[80px] container mx-auto">
         <section class="flex overflow-hidden flex-col font-bold" aria-labelledby="advantages-title">
             <div class="flex flex-col items-center">
                 <h1 id="advantages-title" class="text-4xl leading-none text-center text-zinc-800 max-md:max-w-full">
@@ -101,7 +101,7 @@
 
     <section class="flex overflow-hidden flex-col bg-zinc-800 px-[50px] py-[80px]" role="main"
              aria-labelledby="about-heading">
-        <div class=" mx-auto">
+        <div class=" mx-auto container">
             <div class="main-container relative">
                 <div
                     class="flex justify-between h-full relative w-full max-md:flex-col max-md:items-start max-md:gap-10">
@@ -384,7 +384,7 @@
     </section>
 
     <livewire:components.blog-section/>
-    <div class="px-[16px] sm:px-[28px] md:px-[50px] py-[80px]  ">
+    <div class="px-[16px] sm:px-[28px] md:px-[50px] py-[80px]  container mx-auto">
         <livewire:components.feedback-form-block/>
     </div>
 
