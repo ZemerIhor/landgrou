@@ -147,7 +147,7 @@ class CheckoutPage extends Component
             'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
             'shipping.line_one' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
             'shipping.postcode' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
-            'chosenShipping' => 'required|string',
+            'chosenShipping' => 'required|string|in:pickup,nova-poshta,courier',
             'comment' => 'nullable|string|max:500',
             'shippingIsBilling' => 'boolean',
         ];
@@ -313,7 +313,7 @@ class CheckoutPage extends Component
         }
 
         $this->validate([
-            'chosenShipping' => 'required|string',
+            'chosenShipping' => 'required|string|in:pickup,nova-poshta,courier',
             'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
             'shipping.line_one' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
             'shipping.postcode' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
@@ -324,6 +324,14 @@ class CheckoutPage extends Component
             'cart_id' => $this->cart->id,
             'chosen_shipping' => $this->chosenShipping,
         ]);
+
+        if (!$this->chosenShipping) {
+            Log::error('Опция доставки не выбрана', [
+                'cart_id' => $this->cart->id,
+            ]);
+            $this->addError('chosenShipping', __('messages.checkout.shipping_option_not_found'));
+            return;
+        }
 
         $option = ShippingManifest::getOptions($this->cart)->first(
             fn($opt) => $opt->getIdentifier() === $this->chosenShipping
@@ -339,22 +347,24 @@ class CheckoutPage extends Component
         }
 
         // Устанавливаем опцию доставки
-        CartSession::setShippingOption($option);
-        $this->shipping->shipping_option = $this->chosenShipping;
-
-        // Устанавливаем значения по умолчанию для pickup
-        if ($this->chosenShipping === 'pickup') {
-            $this->shipping->city = $this->shipping->city ?? 'Не требуется';
-            $this->shipping->line_one = $this->shipping->line_one ?? 'Самовывоз';
-            $this->shipping->postcode = $this->shipping->postcode ?? '00000';
-        }
-
-        // Сохраняем адрес доставки
         try {
+            CartSession::setShippingOption($option);
+            $this->cart->refresh(); // Обновляем корзину после установки опции
+            $this->shipping->shipping_option = $this->chosenShipping;
+
+            // Устанавливаем значения по умолчанию для pickup
+            if ($this->chosenShipping === 'pickup') {
+                $this->shipping->city = $this->shipping->city ?? 'Не требуется';
+                $this->shipping->line_one = $this->shipping->line_one ?? 'Самовывоз';
+                $this->shipping->postcode = $this->shipping->postcode ?? '00000';
+            }
+
             $this->shipping->save();
+            $this->cart->setShippingAddress($this->shipping); // Повторно устанавливаем адрес после сохранения
             Log::info('Адрес доставки сохранен', [
                 'cart_id' => $this->cart->id,
                 'shipping_option' => $this->shipping->shipping_option,
+                'shipping_data' => $this->shipping->toArray(),
             ]);
         } catch (\Exception $e) {
             Log::error('Ошибка при сохранении адреса доставки', [
@@ -365,8 +375,6 @@ class CheckoutPage extends Component
             $this->addError('shipping', 'Не удалось сохранить адрес доставки.');
             return;
         }
-
-        $this->cart->setShippingAddress($this->shipping);
 
         // Устанавливаем billing address, если еще не установлен
         if ($this->shippingIsBilling) {
@@ -429,6 +437,8 @@ class CheckoutPage extends Component
                 'cart_id' => $this->cart->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
+                'shipping_option' => $this->shipping->shipping_option,
+                'cart_shipping_address' => $this->cart->shippingAddress ? $this->cart->shippingAddress->toArray() : null,
             ]);
             $this->addError('order', 'Не удалось создать заказ. Пожалуйста, попробуйте снова.');
         }

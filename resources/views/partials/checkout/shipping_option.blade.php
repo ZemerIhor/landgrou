@@ -18,6 +18,7 @@
                         value="{{ $option['identifier'] }}"
                         class="w-5 h-5 text-green-600 border-neutral-400 focus:ring-green-600"
                         aria-label="{{ $option['description'] }}"
+                        required
                     />
                     <span class="ml-4">
                         <p class="text-sm font-medium text-zinc-800">{{ $option['description'] }}</p>
@@ -48,6 +49,7 @@
                             placeholder="{{ __('messages.checkout.enter_city') }}"
                             class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
                             aria-label="{{ __('messages.checkout.enter_city') }}"
+                            required
                         />
                     </div>
                     @if(!empty($npCities) && $showCityDropdown)
@@ -74,6 +76,7 @@
                             class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
                             aria-label="{{ __('messages.checkout.select_warehouse') }}"
                             @if(empty($npWarehouses)) disabled @endif
+                            required
                         >
                             <option value="">{{ __('messages.checkout.select_warehouse') }}</option>
                             @foreach($npWarehouses as $warehouse)
@@ -97,6 +100,7 @@
                             placeholder="{{ __('messages.checkout.enter_postcode') }}"
                             class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
                             aria-label="{{ __('messages.checkout.enter_postcode') }}"
+                            required
                         />
                     </div>
                     @error('shipping.postcode') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
@@ -115,6 +119,7 @@
                             placeholder="{{ __('messages.checkout.enter_city') }}"
                             class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
                             aria-label="{{ __('messages.checkout.enter_city') }}"
+                            required
                         />
                     </div>
                     @if(!empty($npCities) && $showCityDropdown)
@@ -142,6 +147,7 @@
                             placeholder="{{ __('messages.checkout.enter_address') }}"
                             class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
                             aria-label="{{ __('messages.checkout.enter_address') }}"
+                            required
                         />
                     </div>
                     @error('shipping.line_one') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
@@ -157,6 +163,7 @@
                             placeholder="{{ __('messages.checkout.enter_postcode') }}"
                             class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
                             aria-label="{{ __('messages.checkout.enter_postcode') }}"
+                            required
                         />
                     </div>
                     @error('shipping.postcode') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
