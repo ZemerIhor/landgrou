@@ -354,7 +354,7 @@
 
         <footer class="flex flex-wrap gap-5 items-center mt-5 w-full max-md:max-w-full">
             <a href="tel:{{ $settings->tenders_phone[app()->getLocale()] ?? 'Відділ тендерів +38 099 900-14-30' }}"
-                class="flex flex-wrap flex-1 shrink gap-4 items-start self-stretch my-auto font-semibold leading-none basis-12 min-h-6 min-w-60 justify-end text-zinc-800 max-md:max-w-full not-italic"
+                class="flex flex-wrap flex-1 shrink gap-4 items-start self-stretch my-auto font-semibold leading-none basis-12 min-h-6 min-w-60 justify-end items-center text-zinc-800 max-md:max-w-full not-italic"
             >
 
                 <svg   class="object-contain shrink-0 w-6 aspect-square" width="22" height="24" viewBox="0 0 22 24" fill="none" xmlns="http://www.w3.org/2000/svg">
