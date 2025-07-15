@@ -354,7 +354,7 @@
 
         <footer class="flex flex-wrap gap-5 items-center mt-5 w-full max-md:max-w-full">
             <address
-                class="flex flex-wrap flex-1 shrink gap-4 items-start self-stretch my-auto font-semibold leading-none basis-12 min-h-6 min-w-60 text-zinc-800 max-md:max-w-full not-italic"
+                class="flex flex-wrap flex-1 shrink gap-4 items-start self-stretch my-auto font-semibold leading-none basis-12 min-h-6 min-w-60 justify-end text-zinc-800 max-md:max-w-full not-italic"
             >
                 <img
                     src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/e5a7947040ad43f0eb4757a8de8cd3a74f5f891f?placeholderIfAbsent=true"
