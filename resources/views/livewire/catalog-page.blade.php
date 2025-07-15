@@ -1,20 +1,6 @@
-<main class="container mx-auto px-5">
+<main class="self-stretch px-12 pt-14 bg-zinc-100 max-md:px-5">
     <!-- Breadcrumbs Navigation -->
-    <nav class="flex flex-wrap gap-2 items-center w-full text-xs font-semibold whitespace-nowrap min-h-[34px] max-md:max-w-full" aria-label="Breadcrumb">
-        <div class="flex gap-2 items-center self-stretch py-2 my-auto text-neutral-400">
-            <a href="/" class="self-stretch my-auto text-neutral-400 hover:text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
-                {{ __('Главная') }}
-            </a>
-        </div>
-        <div class="flex gap-2 items-center self-stretch py-2 my-auto text-zinc-800">
-            <div class="flex flex-col justify-center self-stretch my-auto w-1.5" aria-hidden="true">
-                <span class="text-zinc-800">/</span>
-            </div>
-            <span class="self-stretch my-auto text-zinc-800" aria-current="page">
-                {{ __('Каталог') }}
-            </span>
-        </div>
-    </nav>
+    <x-breadcrumbs :currentPage="__('messages.breadcrumbs.catalog')" :items="[]" />
 
     <!-- Page Title -->
     <header>
@@ -70,24 +56,22 @@
 
         <!-- View Toggle -->
         <div class="flex gap-1 items-center self-stretch p-1 my-auto rounded-2xl bg-neutral-200 min-h-10" role="group" aria-label="Вид отображения">
-            <button wire:click="setView('grid')" class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 {{ $view === 'grid' ? 'bg-green-600 text-white' : 'bg-neutral-200 text-zinc-800' }}" aria-label="Вид сетки" aria-pressed="{{ $view === 'grid' ? 'true' : 'false' }}">
+            <button wire:click="setView('grid')" class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Вид сетки" aria-pressed="{{ $view === 'grid' ? 'true' : 'false' }}">
                 <div class="flex self-stretch my-auto w-6 min-h-6" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M22 8.52V3.98C22 2.57 21.36 2 19.77 2H15.73C14.14 2 13.5 2.57 13.5 3.98V8.51C13.5 9.93 14.14 10.49 15.73 10.49H19.77C21.36 10.5 22 9.93 22 8.52Z" stroke="#228F5D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M22 19.77V15.73C22 14.14 21.36 13.5 19.77 13.5H15.73C14.14 13.5 13.5 14.14 13.5 15.73V19.77C13.5 21.36 14.14 22 15.73 22H19.77C21.36 22 22 21.36 22 19.77Z" stroke="#228F5D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M10.5 8.52V3.98C10.5 2.57 9.86 2 8.27 2H4.23C2.64 2 2 2.57 2 3.98V8.51C2 9.93 2.64 10.49 4.23 10.49H8.27C9.86 10.5 10.5 9.93 10.5 8.52Z" stroke="#228F5D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M10.5 19.77V15.73C10.5 14.14 9.86 13.5 8.27 13.5H4.23C2.64 13.5 2 14.14 2 15.73V19.77C2 21.36 2.64 22 4.23 22H8.27C9.86 22 10.5 21.36 10.5 19.77Z" stroke="#228F5D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-view {{ $view === 'grid' ? 'icon-active' : '' }}">
+                        <path d="M22 8.52V3.98C22 2.57 21.36 2 19.77 2H15.73C14.14 2 13.5 2.57 13.5 3.98V8.51C13.5 9.93 14.14 10.49 15.73 10.49H19.77C21.36 10.5 22 9.93 22 8.52Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M22 19.77V15.73C22 14.14 21.36 13.5 19.77 13.5H15.73C14.14 13.5 13.5 14.14 13.5 15.73V19.77C13.5 21.36 14.14 22 15.73 22H19.77C21.36 22 22 21.36 22 19.77Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10.5 8.52V3.98C10.5 2.57 9.86 2 8.27 2H4.23C2.64 2 2 2.57 2 3.98V8.51C2 9.93 2.64 10.49 4.23 10.49H8.27C9.86 10.5 10.5 9.93 10.5 8.52Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10.5 19.77V15.73C10.5 14.14 9.86 13.5 8.27 13.5H4.23C2.64 13.5 2 14.14 2 15.73V19.77C2 21.36 2.64 22 4.23 22H8.27C9.86 22 10.5 21.36 10.5 19.77Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-
                 </div>
             </button>
-            <button wire:click="setView('list')" class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 {{ $view === 'list' ? 'bg-green-600 text-white' : 'bg-neutral-200 text-zinc-800' }}" aria-label="Вид списка" aria-pressed="{{ $view === 'list' ? 'true' : 'false' }}">
+            <button wire:click="setView('list')" class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Вид списка" aria-pressed="{{ $view === 'list' ? 'true' : 'false' }}">
                 <div class="flex self-stretch my-auto w-6 min-h-6" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-view {{ $view === 'list' ? 'icon-active' : '' }}">
                         <path d="M19.9 13.5H4.1C2.6 13.5 2 14.14 2 15.73V19.77C2 21.36 2.6 22 4.1 22H19.9C21.4 22 22 21.36 22 19.77V15.73C22 14.14 21.4 13.5 19.9 13.5Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M19.9 2H4.1C2.6 2 2 2.64 2 4.23V8.27C2 9.86 2.6 10.5 4.1 10.5H19.9C21.4 10.5 22 9.86 22 8.27V4.23C22 2.64 21.4 2 19.9 2Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-
                 </div>
             </button>
         </div>
@@ -186,7 +170,7 @@
             @endif
 
             <!-- Grid or List view based on $view -->
-            <div class="{{ $view == 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6' : 'flex flex-col gap-6' }}">
+            <div class="{{ $view == 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6' : 'flex flex-col gap-6' }}">
                 @forelse ($products as $product)
                     <article wire:key="product-{{ $product->id }}" class="overflow-hidden rounded-3xl bg-neutral-200 min-w-60">
                         <div class="flex relative flex-col w-full min-h-[153px]">
@@ -237,6 +221,10 @@
         </section>
     </div>
 
+    <!-- Debug Output -->
+    <div class="px-4 text-xs text-gray-500">
+        Debug: minPrice={{ $minPrice }}, maxPrice={{ $maxPrice }}, priceMax={{ $priceMax }}
+    </div>
 
     <style>
         /* Стили для ползунка цены */
@@ -332,6 +320,19 @@
 
         input[type="number"] {
             -moz-appearance: textfield;
+        }
+
+        /* Стили для SVG-иконок в переключателе вида */
+        .icon-view {
+            stroke: #333333; /* Нейтральный цвет по умолчанию */
+        }
+
+        button[aria-pressed="true"] .icon-view {
+            stroke: #16a34a; /* Зелёный цвет для активной кнопки */
+        }
+
+        button:hover .icon-view {
+            stroke: #16a34a; /* Зелёный цвет при наведении */
         }
     </style>
 
