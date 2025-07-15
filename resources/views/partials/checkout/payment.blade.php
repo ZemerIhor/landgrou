@@ -1,3 +1,4 @@
+
 <form wire:submit.prevent="checkout" class="bg-white p-8 max-md:p-5">
     <header class="flex gap-4 items-start w-full text-base font-semibold leading-none max-md:max-w-full">
         <div class="flex flex-col justify-center items-center text-center text-white whitespace-nowrap rounded-2xl bg-zinc-800 h-[22px] w-[22px]" aria-label="{{ __('messages.checkout.step_3') }}">
@@ -20,11 +21,11 @@
                            id="card-payment"
                            name="payment-method"
                            value="card"
-                           wire:model="paymentType"
-                           class="sr-only radio-button"
+                           wire:model.live="paymentType"
+                           class="w-6 h-6 cursor-pointer radio-button"
                            aria-describedby="card-payment-desc">
                     <label for="card-payment"
-                           class="flex justify-center items-center w-6 h-6 rounded-full border-[1.5px] cursor-pointer {{ $paymentType === 'card' ? 'radio-selected' : 'radio-unselected' }}"
+                           class="absolute top-0 left-0 flex justify-center items-center w-6 h-6 rounded-full border-[1.5px] cursor-pointer {{ $paymentType === 'card' ? 'radio-selected' : 'radio-unselected' }}"
                            tabindex="0"
                            role="radio"
                            aria-checked="{{ $paymentType === 'card' ? 'true' : 'false' }}">
@@ -33,7 +34,7 @@
                 </div>
                 <label for="card-payment"
                        id="card-payment-desc"
-                       class="relative text-base font-bold leading-5 text-zinc-800 cursor-pointer">
+                       class="relative text-base font-bold leading-5 text-zinc-800 cursor-pointer ml-8">
                     Сплатити карткою Visa/Mastercard
                 </label>
             </div>
@@ -45,11 +46,11 @@
                            id="cash-payment"
                            name="payment-method"
                            value="cash-on-delivery"
-                           wire:model="paymentType"
-                           class="sr-only radio-button"
+                           wire:model.live="paymentType"
+                           class="w-6 h-6 cursor-pointer radio-button"
                            aria-describedby="cash-payment-desc">
                     <label for="cash-payment"
-                           class="flex justify-center items-center w-6 h-6 rounded-full border-[1.5px] cursor-pointer {{ $paymentType === 'cash-on-delivery' ? 'radio-selected' : 'radio-unselected' }}"
+                           class="absolute top-0 left-0 flex justify-center items-center w-6 h-6 rounded-full border-[1.5px] cursor-pointer {{ $paymentType === 'cash-on-delivery' ? 'radio-selected' : 'radio-unselected' }}"
                            tabindex="0"
                            role="radio"
                            aria-checked="{{ $paymentType === 'cash-on-delivery' ? 'true' : 'false' }}">
@@ -58,7 +59,7 @@
                 </div>
                 <label for="cash-payment"
                        id="cash-payment-desc"
-                       class="relative text-base font-bold leading-5 text-zinc-800 cursor-pointer">
+                       class="relative text-base font-bold leading-5 text-zinc-800 cursor-pointer ml-8">
                     Накладений платіж
                 </label>
             </div>
@@ -71,7 +72,7 @@
         <div class="flex flex-col items-end px-4 py-3 rounded-2xl border border-solid border-neutral-400 mt-4">
             <textarea id="comment"
                       name="comment"
-                      wire:model="comment"
+                      wire:model.live="comment"
                       placeholder="Коментар"
                       class="relative self-stretch text-base font-bold leading-5 h-[90px] text-neutral-400 bg-transparent border-none outline-none resize-none comment-textarea"
                       aria-label="Коментар до замовлення"></textarea>
@@ -89,7 +90,7 @@
         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
         @enderror
 
-        <!-- Условный контент для выбранного способа оплаты -->
+        <!-- Условный контент -->
         @if ($paymentType === 'card')
             <div class="mt-4">
                 <livewire:stripe.payment :cart="$cart" :returnUrl="route('checkout.view')" />
@@ -190,5 +191,13 @@
 
     .btn-secondary:hover {
         background-color: #f0fdf4;
+    }
+
+    /* Убираем стандартный вид радиокнопок */
+    input[type="radio"] {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        margin: 0;
     }
 </style>

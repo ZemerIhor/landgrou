@@ -22,8 +22,8 @@ class CheckoutPage extends Component
 
     public int $currentStep = 1;
     public ?string $chosenShipping = null;
-    public ?string $paymentType = null;
-    public ?string $comment = ''; // Поле для комментария к заказу
+    public ?string $paymentType = 'card'; // Установлено значение по умолчанию
+    public ?string $comment = '';
 
     public array $shippingOptions = [];
     public array $npCities = [];
@@ -47,20 +47,44 @@ class CheckoutPage extends Component
      */
     public function mount(): void
     {
-        $this->cart = CartSession::current() ?? abort(404);
+        // Получаем текущую корзину
+        $this->cart = CartSession::current();
+        if (!$this->cart) {
+            Log::error('Корзина не найдена в сессии', [
+                'session_id' => session()->getId(),
+            ]);
+            abort(404, 'Корзина не найдена.');
+        }
 
-        // Проверяем наличие адреса доставки и создаем новый, если отсутствует
+        // Проверяем наличие связи shippingAddress
+        $this->cart->load('shippingAddress'); // Подгружаем связь явно
         if (!$this->cart->shippingAddress) {
             try {
-                $address = $this->cart->addresses()->create([
-                    'type' => 'shipping',
-                ]);
+                // Проверяем, существует ли запись в таблице cart_addresses
+                $existingAddress = CartAddress::where('cart_id', $this->cart->id)
+                    ->where('type', 'shipping')
+                    ->first();
+
+                if (!$existingAddress) {
+                    $address = $this->cart->addresses()->create([
+                        'type' => 'shipping',
+                        'country_id' => 1, // Укажите ID страны по умолчанию, если требуется
+                    ]);
+                    Log::info('Создан новый адрес доставки', [
+                        'cart_id' => $this->cart->id,
+                        'address_id' => $address->id,
+                    ]);
+                } else {
+                    $address = $existingAddress;
+                }
+
                 $this->cart->setShippingAddress($address);
                 $this->shipping = $address;
             } catch (\Exception $e) {
-                Log::error('Не удалось создать адрес доставки', [
-                    'error' => $e->getMessage(),
+                Log::error('Ошибка при создании адреса доставки', [
                     'cart_id' => $this->cart->id,
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
                 ]);
                 abort(500, 'Не удалось инициализировать адрес доставки.');
             }
@@ -71,8 +95,8 @@ class CheckoutPage extends Component
         // Проверяем, что $shipping является валидным экземпляром CartAddress
         if (!$this->shipping instanceof \Lunar\Models\CartAddress) {
             Log::error('Адрес доставки не является валидным экземпляром CartAddress', [
-                'shipping' => $this->shipping,
                 'cart_id' => $this->cart->id,
+                'shipping' => $this->shipping,
             ]);
             abort(500, 'Адрес доставки недействителен.');
         }
