@@ -23,6 +23,7 @@ class CheckoutPage extends Component
     public int $currentStep = 1;
     public ?string $chosenShipping = null;
     public ?string $comment = '';
+    public bool $shippingIsBilling = true; // Добавлено из второго примера
 
     public array $shippingOptions = [];
     public array $npCities = [];
@@ -146,6 +147,7 @@ class CheckoutPage extends Component
             'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
             'chosenShipping' => 'required|string',
             'comment' => 'nullable|string|max:500',
+            'shippingIsBilling' => 'boolean',
         ];
     }
 
@@ -240,10 +242,50 @@ class CheckoutPage extends Component
             'shipping.contact_email' => 'required|email|max:255',
             'shipping.company' => 'nullable|string|max:255',
             'privacy_policy' => 'accepted',
+            'shippingIsBilling' => 'boolean',
         ]);
 
         Log::info('Сохранение адреса доставки', ['shipping' => $this->shipping->toArray()]);
         $this->shipping->save();
+        $this->cart->setShippingAddress($this->shipping);
+
+        // Если адрес доставки совпадает с адресом для выставления счета
+        if ($this->shippingIsBilling) {
+            $billingAddress = CartAddress::where('cart_id', $this->cart->id)
+                ->where('type', 'billing')
+                ->first();
+
+            if (!$billingAddress) {
+                $billingAddress = $this->cart->addresses()->create([
+                    'type' => 'billing',
+                    'country_id' => $this->shipping->country_id,
+                    'first_name' => $this->shipping->first_name,
+                    'last_name' => $this->shipping->last_name,
+                    'contact_phone' => $this->shipping->contact_phone,
+                    'contact_email' => $this->shipping->contact_email,
+                    'company' => $this->shipping->company,
+                    'city' => $this->shipping->city,
+                    'line_one' => $this->shipping->line_one,
+                ]);
+                Log::info('Создан новый адрес для выставления счета', [
+                    'cart_id' => $this->cart->id,
+                    'billing_address_id' => $billingAddress->id,
+                ]);
+            } else {
+                $billingAddress->fill([
+                    'country_id' => $this->shipping->country_id,
+                    'first_name' => $this->shipping->first_name,
+                    'last_name' => $this->shipping->last_name,
+                    'contact_phone' => $this->shipping->contact_phone,
+                    'contact_email' => $this->shipping->contact_email,
+                    'company' => $this->shipping->company,
+                    'city' => $this->shipping->city,
+                    'line_one' => $this->shipping->line_one,
+                ])->save();
+            }
+            $this->cart->setBillingAddress($billingAddress);
+        }
+
         $this->currentStep = $this->steps['delivery'];
         session(['checkout_step' => $this->currentStep]);
     }
@@ -282,30 +324,32 @@ class CheckoutPage extends Component
         $this->shipping->save();
         $this->cart->setShippingAddress($this->shipping);
 
-        // Устанавливаем billing address, копируя данные из shipping address
-        $billingAddress = CartAddress::where('cart_id', $this->cart->id)
-            ->where('type', 'billing')
-            ->first();
+        // Устанавливаем billing address, если еще не установлен
+        if (!$this->cart->billingAddress && $this->shippingIsBilling) {
+            $billingAddress = CartAddress::where('cart_id', $this->cart->id)
+                ->where('type', 'billing')
+                ->first();
 
-        if (!$billingAddress) {
-            $billingAddress = $this->cart->addresses()->create([
-                'type' => 'billing',
-                'country_id' => $this->shipping->country_id,
-                'first_name' => $this->shipping->first_name,
-                'last_name' => $this->shipping->last_name,
-                'contact_phone' => $this->shipping->contact_phone,
-                'contact_email' => $this->shipping->contact_email,
-                'company' => $this->shipping->company,
-                'city' => $this->shipping->city,
-                'line_one' => $this->shipping->line_one,
-            ]);
-            Log::info('Создан новый адрес для выставления счета', [
-                'cart_id' => $this->cart->id,
-                'billing_address_id' => $billingAddress->id,
-            ]);
+            if (!$billingAddress) {
+                $billingAddress = $this->cart->addresses()->create([
+                    'type' => 'billing',
+                    'country_id' => $this->shipping->country_id,
+                    'first_name' => $this->shipping->first_name,
+                    'last_name' => $this->shipping->last_name,
+                    'contact_phone' => $this->shipping->contact_phone,
+                    'contact_email' => $this->shipping->contact_email,
+                    'company' => $this->shipping->company,
+                    'city' => $this->shipping->city,
+                    'line_one' => $this->shipping->line_one,
+                ]);
+                Log::info('Создан новый адрес для выставления счета', [
+                    'cart_id' => $this->cart->id,
+                    'billing_address_id' => $billingAddress->id,
+                ]);
+            }
+            $this->cart->setBillingAddress($billingAddress);
         }
 
-        $this->cart->setBillingAddress($billingAddress);
         $this->cart->shippingTotal = new \Lunar\DataTypes\Price(0, $this->cart->currency, 1);
         $this->cart->calculate();
         $this->loadShippingOptions();
