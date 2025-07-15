@@ -6,8 +6,8 @@
             <section class="flex-1 shrink self-start px-8 py-8 bg-white rounded-3xl border border-gray-100 min-w-60 max-md:px-5 max-md:max-w-full" role="main" aria-labelledby="form-heading">
                 @if($currentStep === $steps['personal_info'])
                     @include('partials.checkout.address')
-                @endif
 
+                @endif
                 @if($currentStep === $steps['delivery'])
                     @include('partials.checkout.shipping_option')
                 @endif
