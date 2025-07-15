@@ -175,11 +175,11 @@
                     <article wire:key="product-{{ $product->id }}" class="overflow-hidden rounded-3xl bg-neutral-200 min-w-60">
                         <div class="flex relative flex-col w-full min-h-[153px]">
                             @if ($product->thumbnail)
-                                <div class="flex overflow-hidden absolute top-2/4 left-2/4 z-0 flex-col px-1.5 max-w-full -translate-x-2/4 -translate-y-2/4 h-[163px] w-[300px]">
+                                <div class="flex overflow-hidden h-[163px] w-[300px]">
                                     <a href="{{ route('product.view', $product->defaultUrl->slug ?? '') }}">
                                         <img src="{{ $product->thumbnail->getUrl() }}"
                                              alt="{{ $product->attribute_data['name']->getValue($locale) ?? 'Product' }}"
-                                             class="object-contain w-full aspect-[1.77]" />
+                                             class="w-full" />
                                     </a>
                                 </div>
                             @endif
