@@ -1,3 +1,4 @@
+
 <form wire:submit.prevent="saveShippingOption" class="bg-white p-8 max-md:p-5">
     <header class="flex gap-4 items-start w-full text-base font-semibold leading-none max-md:max-w-full">
         <div class="flex flex-col justify-center items-center text-center text-white whitespace-nowrap rounded-2xl bg-zinc-800 h-[22px] w-[22px]" aria-label="{{ __('messages.checkout.step_2') }}">
@@ -10,6 +11,7 @@
 
     <!-- Дебаг-вывод для отладки -->
     <p class="mt-4 text-sm text-gray-600">Текущее значение paymentType: {{ $paymentType }}</p>
+    <p class="mt-2 text-sm text-gray-600">Статус shipping: {{ $shipping ? 'Инициализирован' : 'Не инициализирован (null)' }}</p>
 
     @if($shipping)
         <div class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full space-y-4">
@@ -149,7 +151,7 @@
                                name="payment-method"
                                value="card"
                                wire:model.live="paymentType"
-                               class="w-6 h-6 cursor-pointer border-[1.5px] border-neutral-400 focus:ring-2 focus:ring-green-600 rounded-full {{ $paymentType === 'card' ? 'bg-green-600 border-green-600' : '' }}"
+                               class="w-6 h-6 cursor-pointer border-[1.5px] border-neutral-400 focus:ring-2 focus:ring-green-600 rounded-full"
                                aria-describedby="card-payment-desc">
                         <label for="card-payment"
                                id="card-payment-desc"
@@ -165,7 +167,7 @@
                                name="payment-method"
                                value="cash-on-delivery"
                                wire:model.live="paymentType"
-                               class="w-6 h-6 cursor-pointer border-[1.5px] border-neutral-400 focus:ring-2 focus:ring-green-600 rounded-full {{ $paymentType === 'cash-on-delivery' ? 'bg-green-600 border-green-600' : '' }}"
+                               class="w-6 h-6 cursor-pointer border-[1.5px] border-neutral-400 focus:ring-2 focus:ring-green-600 rounded-full"
                                aria-describedby="cash-payment-desc">
                         <label for="cash-payment"
                                id="cash-payment-desc"
@@ -253,11 +255,24 @@
         -webkit-appearance: none;
         -moz-appearance: none;
         margin: 0;
+        position: relative;
     }
 
     input[type="radio"]:checked {
         background-color: #228F5D;
         border-color: #228F5D;
+    }
+
+    input[type="radio"]:checked::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        background-color: #228F5D;
+        border-radius: 50%;
     }
 
     input[type="radio"]:focus {
