@@ -35,6 +35,7 @@ class CheckoutPage extends Component
     public array $steps = [
         'personal_info' => 1,
         'delivery' => 2,
+        'payment' => 3,
     ];
 
     protected $listeners = [
@@ -140,7 +141,7 @@ class CheckoutPage extends Component
             'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
             'chosenShipping' => 'required|string',
             'paymentType' => 'required|string|in:card,cash-on-delivery',
-            'comment' => 'nullable|string|max:500',
+            'comment' => 'nullable|string|max:500', // Валидация для комментария
         ];
     }
 
@@ -149,13 +150,6 @@ class CheckoutPage extends Component
      */
     public function loadShippingOptions(): void
     {
-        if (!$this->cart instanceof \Lunar\Models\Cart) {
-            Log::error('Корзина недействительна при загрузке вариантов доставки', [
-                'cart_id' => $this->cart ? $this->cart->id : null,
-            ]);
-            return;
-        }
-
         $currency = Currency::where('code', $this->cart->currency->code)->first() ?? Currency::first();
 
         $this->shippingOptions = ShippingManifest::getOptions($this->cart)->map(function ($option) use ($currency) {
@@ -175,13 +169,6 @@ class CheckoutPage extends Component
      */
     public function validateCartPrices(): void
     {
-        if (!$this->cart instanceof \Lunar\Models\Cart) {
-            Log::error('Корзина недействительна при проверке цен', [
-                'cart_id' => $this->cart ? $this->cart->id : null,
-            ]);
-            return;
-        }
-
         foreach ($this->cart->lines as $line) {
             if ($line->subTotal->value <= 0) {
                 Log::warning('Товар в корзине имеет нулевую цену', [
@@ -199,13 +186,6 @@ class CheckoutPage extends Component
      */
     public function updateLineQuantity($lineId, $quantity): void
     {
-        if (!$this->cart instanceof \Lunar\Models\Cart) {
-            Log::error('Корзина недействительна при обновлении количества товара', [
-                'cart_id' => $this->cart ? $this->cart->id : null,
-            ]);
-            return;
-        }
-
         if ($quantity < 1) {
             $this->cart->lines()->where('id', $lineId)->delete();
         } else {
@@ -220,14 +200,6 @@ class CheckoutPage extends Component
      */
     public function saveAddress(): void
     {
-        if (!$this->shipping instanceof \Lunar\Models\CartAddress) {
-            Log::error('Попытка сохранения адреса доставки с null значением', [
-                'cart_id' => $this->cart ? $this->cart->id : null,
-            ]);
-            $this->addError('shipping', 'Адрес доставки недействителен.');
-            return;
-        }
-
         $this->validate([
             'shipping.first_name' => 'required|string|max:255',
             'shipping.last_name' => 'required|string|max:255',
@@ -244,24 +216,14 @@ class CheckoutPage extends Component
     }
 
     /**
-     * Сохранение варианта доставки и оформление заказа
+     * Сохранение варианта доставки
      */
     public function saveShippingOption(): void
     {
-        if (!$this->shipping instanceof \Lunar\Models\CartAddress) {
-            Log::error('Попытка сохранения варианта доставки с null адресом', [
-                'cart_id' => $this->cart ? $this->cart->id : null,
-            ]);
-            $this->addError('shipping', 'Адрес доставки недействителен.');
-            return;
-        }
-
         $this->validate([
             'chosenShipping' => 'required|string',
             'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable',
             'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
-            'paymentType' => 'required|string|in:card,cash-on-delivery',
-            'comment' => 'nullable|string|max:500',
         ]);
 
         $option = ShippingManifest::getOptions($this->cart)->first(
@@ -281,18 +243,30 @@ class CheckoutPage extends Component
         $this->cart->calculate();
         $this->loadShippingOptions();
 
-        // Оформление заказа
+        $this->currentStep = $this->steps['payment'];
+        session(['checkout_step' => $this->currentStep]);
+    }
+
+    /**
+     * Завершение оформления заказа
+     */
+    public function checkout(): void
+    {
+        $this->validate([
+            'paymentType' => 'required|string|in:card,cash-on-delivery',
+            'comment' => 'nullable|string|max:500',
+        ]);
+
         if ($this->paymentType === 'cash-on-delivery') {
             $order = $this->cart->createOrder();
+            // Сохранение комментария в мета-данных заказа
             if ($this->comment) {
                 $order->meta = array_merge($order->meta ?? [], ['comment' => $this->comment]);
                 $order->save();
             }
             $this->redirect(route('order.confirmation', $order->id));
-        } else {
-            // Перенаправление на страницу оплаты Stripe
-            $this->redirect(route('checkout.stripe', ['cart' => $this->cart->id]));
         }
+        // Добавить логику для оплаты картой, если требуется
     }
 
     /**
@@ -300,14 +274,6 @@ class CheckoutPage extends Component
      */
     public function updatedCitySearchTerm(): void
     {
-        if (!$this->shipping instanceof \Lunar\Models\CartAddress) {
-            Log::error('Попытка обновления citySearchTerm с null адресом доставки', [
-                'cart_id' => $this->cart ? $this->cart->id : null,
-            ]);
-            $this->addError('shipping', 'Адрес доставки недействителен.');
-            return;
-        }
-
         $this->showCityDropdown = true;
         $this->shipping->line_one = '';
         $this->npWarehouses = [];
@@ -357,14 +323,6 @@ class CheckoutPage extends Component
      */
     public function selectCity($cityName): void
     {
-        if (!$this->shipping instanceof \Lunar\Models\CartAddress) {
-            Log::error('Попытка выбора города с null адресом доставки', [
-                'cart_id' => $this->cart ? $this->cart->id : null,
-            ]);
-            $this->addError('shipping', 'Адрес доставки недействителен.');
-            return;
-        }
-
         $this->shipping->city = $cityName;
         $this->citySearchTerm = $cityName;
         $this->showCityDropdown = false;
@@ -398,14 +356,6 @@ class CheckoutPage extends Component
      */
     public function updatedShippingCity($cityName): void
     {
-        if (!$this->shipping instanceof \Lunar\Models\CartAddress) {
-            Log::error('Попытка обновления shipping.city с null адресом доставки', [
-                'cart_id' => $this->cart ? $this->cart->id : null,
-            ]);
-            $this->addError('shipping', 'Адрес доставки недействителен.');
-            return;
-        }
-
         $this->shipping->line_one = '';
         $this->npWarehouses = [];
 
