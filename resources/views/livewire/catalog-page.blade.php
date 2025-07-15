@@ -175,7 +175,7 @@
                     <article wire:key="product-{{ $product->id }}" class="overflow-hidden rounded-3xl bg-neutral-200 min-w-60">
                         <div class="flex relative flex-col w-full min-h-[153px]">
                             @if ($product->thumbnail)
-                                <div class="flex overflow-hidden h-[163px] w-[300px]">
+                                <div class="flex overflow-hidden h-[163px]">
                                     <a href="{{ route('product.view', $product->defaultUrl->slug ?? '') }}">
                                         <img src="{{ $product->thumbnail->getUrl() }}"
                                              alt="{{ $product->attribute_data['name']->getValue($locale) ?? 'Product' }}"
@@ -183,7 +183,12 @@
                                     </a>
                                 </div>
                             @endif
-                            <div class="flex z-0 gap-2.5 self-end w-14 min-h-14" aria-hidden="true"></div>
+                                <div class="absolute top-2 right-2 flex z-0 gap-2.5 w-14 min-h-14" aria-hidden="true">
+                                    <svg width="23" height="23" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21.8027 0.196716C22.3548 0.196925 22.8027 0.644626 22.8027 1.19672V21.7534C22.8027 22.3055 22.3548 22.7531 21.8027 22.7534C21.2507 22.7531 20.8038 22.3054 20.8037 21.7534L20.8027 16.6137C20.7603 11.8976 15.1435 9.52508 11.7344 12.685L11.5732 12.8403L2.90332 21.5102C2.51284 21.9007 1.87979 21.9006 1.48926 21.5102C1.12332 21.1441 1.09979 20.565 1.41992 20.1723L1.48926 20.0961L10.1777 11.4077C13.5696 8.01515 11.1791 2.21438 6.38184 2.19672H1.24609C0.693885 2.19672 0.246217 1.7489 0.246094 1.19672C0.246171 0.644497 0.693857 0.196716 1.24609 0.196716H21.8027ZM15.1689 9.24554C17.2741 9.19543 19.3478 10.053 20.8018 11.5776L20.8037 3.61078L15.1689 9.24554ZM11.4424 2.19672C12.9621 3.64751 13.8183 5.71579 13.7695 7.81586L19.3887 2.19672H11.4424Z" fill="white"/>
+                                    </svg>
+
+                                </div>
                         </div>
                         <div class="p-4 w-full">
                             <div class="w-full text-zinc-800">
