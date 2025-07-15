@@ -86,6 +86,21 @@
                     @endif
                     @error('shipping.line_one') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
+
+                <div class="mt-4">
+                    <label for="np-postcode" class="block text-sm font-medium text-zinc-800 mb-1">{{ __('messages.checkout.postcode') }}</label>
+                    <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
+                        <input
+                            type="text"
+                            id="np-postcode"
+                            wire:model="shipping.postcode"
+                            placeholder="{{ __('messages.checkout.enter_postcode') }}"
+                            class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
+                            aria-label="{{ __('messages.checkout.enter_postcode') }}"
+                        />
+                    </div>
+                    @error('shipping.postcode') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                </div>
             @endif
 
             <!-- Курьер -->
@@ -123,13 +138,28 @@
                         <input
                             type="text"
                             id="courier-address"
-                            wire:model.lazy="shipping.line_one"
+                            wire:model="shipping.line_one"
                             placeholder="{{ __('messages.checkout.enter_address') }}"
                             class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
                             aria-label="{{ __('messages.checkout.enter_address') }}"
                         />
                     </div>
                     @error('shipping.line_one') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="mt-4">
+                    <label for="courier-postcode" class="block text-sm font-medium text-zinc-800 mb-1">{{ __('messages.checkout.postcode') }}</label>
+                    <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
+                        <input
+                            type="text"
+                            id="courier-postcode"
+                            wire:model="shipping.postcode"
+                            placeholder="{{ __('messages.checkout.enter_postcode') }}"
+                            class="flex-1 shrink self-stretch my-auto basis-0 text-neutral-400 bg-transparent border-none outline-none"
+                            aria-label="{{ __('messages.checkout.enter_postcode') }}"
+                        />
+                    </div>
+                    @error('shipping.postcode') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                 </div>
             @endif
 
@@ -179,8 +209,8 @@
             aria-label="{{ __('messages.checkout.confirm_order') }}"
             @if(
                 !$chosenShipping ||
-                ($chosenShipping === 'nova-poshta' && (empty($shipping->city) || empty($shipping->line_one))) ||
-                ($chosenShipping === 'courier' && (empty($shipping->city) || empty($shipping->line_one)))
+                ($chosenShipping === 'nova-poshta' && (empty($shipping->city) || empty($shipping->line_one) || empty($shipping->postcode))) ||
+                ($chosenShipping === 'courier' && (empty($shipping->city) || empty($shipping->line_one) || empty($shipping->postcode)))
             ) disabled @endif
         >
             <span wire:loading.remove>{{ __('messages.checkout.confirm_order') }}</span>

@@ -23,7 +23,7 @@ class CheckoutPage extends Component
     public int $currentStep = 1;
     public ?string $chosenShipping = null;
     public ?string $comment = '';
-    public bool $shippingIsBilling = true; // Добавлено из второго примера
+    public bool $shippingIsBilling = true;
 
     public array $shippingOptions = [];
     public array $npCities = [];
@@ -105,7 +105,7 @@ class CheckoutPage extends Component
         $this->loadShippingOptions();
         $this->currentStep = session('checkout_step', 1);
 
-        // Дополнительное логирование для отладки первого шага
+        // Дополнительное логирование для отладки
         Log::info('Инициализация компонента CheckoutPage', [
             'current_step' => $this->currentStep,
             'shipping_initialized' => $this->shipping instanceof \Lunar\Models\CartAddress,
@@ -123,7 +123,7 @@ class CheckoutPage extends Component
             'lines' => $this->cart->lines->map(fn($line) => [
                 'id' => $line->id,
                 'subTotal' => $line->subTotal instanceof \Lunar\DataTypes\Price
-                    ? ['value' => $line->subTotal->value, 'formatted' => $line->subTotal->formatted()]
+                    ? ['value' => $line->subTotal->value, 'formatted' => $this->cart->subTotal->formatted()]
                     : $line->subTotal,
             ])->toArray(),
         ]);
@@ -144,7 +144,8 @@ class CheckoutPage extends Component
             'shipping.company' => 'nullable|string|max:255',
             'privacy_policy' => 'accepted',
             'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable',
-            'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
+            'shipping.line_one' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
+            'shipping.postcode' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
             'chosenShipping' => 'required|string',
             'comment' => 'nullable|string|max:500',
             'shippingIsBilling' => 'boolean',
@@ -264,8 +265,9 @@ class CheckoutPage extends Component
                     'contact_phone' => $this->shipping->contact_phone,
                     'contact_email' => $this->shipping->contact_email,
                     'company' => $this->shipping->company,
-                    'city' => $this->shipping->city,
-                    'line_one' => $this->shipping->line_one,
+                    'city' => $this->shipping->city ?? 'Не требуется',
+                    'line_one' => $this->shipping->line_one ?? 'Самовывоз',
+                    'postcode' => $this->shipping->postcode ?? '00000',
                 ]);
                 Log::info('Создан новый адрес для выставления счета', [
                     'cart_id' => $this->cart->id,
@@ -279,8 +281,9 @@ class CheckoutPage extends Component
                     'contact_phone' => $this->shipping->contact_phone,
                     'contact_email' => $this->shipping->contact_email,
                     'company' => $this->shipping->company,
-                    'city' => $this->shipping->city,
-                    'line_one' => $this->shipping->line_one,
+                    'city' => $this->shipping->city ?? 'Не требуется',
+                    'line_one' => $this->shipping->line_one ?? 'Самовывоз',
+                    'postcode' => $this->shipping->postcode ?? '00000',
                 ])->save();
             }
             $this->cart->setBillingAddress($billingAddress);
@@ -306,7 +309,8 @@ class CheckoutPage extends Component
         $this->validate([
             'chosenShipping' => 'required|string',
             'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable',
-            'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
+            'shipping.line_one' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
+            'shipping.postcode' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
             'comment' => 'nullable|string|max:500',
         ]);
 
@@ -321,11 +325,19 @@ class CheckoutPage extends Component
 
         CartSession::setShippingOption($option);
         $this->shipping->shipping_option = $this->chosenShipping;
+
+        // Устанавливаем значения по умолчанию для pickup
+        if ($this->chosenShipping === 'pickup') {
+            $this->shipping->city = $this->shipping->city ?? 'Не требуется';
+            $this->shipping->line_one = $this->shipping->line_one ?? 'Самовывоз';
+            $this->shipping->postcode = $this->shipping->postcode ?? '00000';
+        }
+
         $this->shipping->save();
         $this->cart->setShippingAddress($this->shipping);
 
         // Устанавливаем billing address, если еще не установлен
-        if (!$this->cart->billingAddress && $this->shippingIsBilling) {
+        if ($this->shippingIsBilling) {
             $billingAddress = CartAddress::where('cart_id', $this->cart->id)
                 ->where('type', 'billing')
                 ->first();
@@ -339,13 +351,26 @@ class CheckoutPage extends Component
                     'contact_phone' => $this->shipping->contact_phone,
                     'contact_email' => $this->shipping->contact_email,
                     'company' => $this->shipping->company,
-                    'city' => $this->shipping->city,
-                    'line_one' => $this->shipping->line_one,
+                    'city' => $this->shipping->city ?? 'Не требуется',
+                    'line_one' => $this->shipping->line_one ?? 'Самовывоз',
+                    'postcode' => $this->shipping->postcode ?? '00000',
                 ]);
                 Log::info('Создан новый адрес для выставления счета', [
                     'cart_id' => $this->cart->id,
                     'billing_address_id' => $billingAddress->id,
                 ]);
+            } else {
+                $billingAddress->fill([
+                    'country_id' => $this->shipping->country_id,
+                    'first_name' => $this->shipping->first_name,
+                    'last_name' => $this->shipping->last_name,
+                    'contact_phone' => $this->shipping->contact_phone,
+                    'contact_email' => $this->shipping->contact_email,
+                    'company' => $this->shipping->company,
+                    'city' => $this->shipping->city ?? 'Не требуется',
+                    'line_one' => $this->shipping->line_one ?? 'Самовывоз',
+                    'postcode' => $this->shipping->postcode ?? '00000',
+                ])->save();
             }
             $this->cart->setBillingAddress($billingAddress);
         }
