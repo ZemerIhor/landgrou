@@ -1,6 +1,6 @@
 <main class="self-stretch px-12 pt-14 bg-zinc-100 max-md:px-5">
     <!-- Breadcrumbs Navigation -->
-    <x-breadcrumbs :currentPage="__('messages.breadcrumbs.catalog')" :items="[]" />
+    <livewire:components.breadcrumbs :currentPage="__('messages.breadcrumbs.catalog')" :items="[]" />
 
     <!-- Page Title -->
     <header>
