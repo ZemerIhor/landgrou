@@ -8,7 +8,7 @@ function initApp() {
     // Инициализация hero-слайдера
     function initializeHeroSlider() {
         console.log('Инициализация hero-slider');
-        let currentSlide = 0;
+        let currentSlide = 1; // Начинаем со второго слайда (индекс 1)
         const slider = document.getElementById('hero-slider');
         const slides = document.querySelectorAll('#hero-slider > div');
         const indicators = document.querySelectorAll('.hero-indicator');
@@ -114,22 +114,18 @@ function initApp() {
         }
     }
 
-    // Обработка элементов с data-toggle
+    // Обработка элементов с data-toggle (ваш оригинальный код)
     document.querySelectorAll('[data-toggle]').forEach(button => {
-        button.removeEventListener('click', toggleHandler); // Удаляем старый обработчик
-        button.addEventListener('click', toggleHandler);
-        function toggleHandler() {
+        button.addEventListener('click', () => {
             const targetId = button.getAttribute('data-toggle');
             const answer = document.getElementById(targetId);
             const isExpanded = button.getAttribute('aria-expanded') === 'true';
 
-            if (answer) {
-                answer.classList.toggle('max-h-0');
-                answer.classList.toggle('max-h-96');
-                button.setAttribute('aria-expanded', !isExpanded);
-                console.log(`Переключение элемента с data-toggle, targetId: ${targetId}`);
-            }
-        }
+            answer.classList.toggle('max-h-0');
+            answer.classList.toggle('max-h-96');
+            button.setAttribute('aria-expanded', !isExpanded);
+            console.log(`Переключение элемента с data-toggle, targetId: ${targetId}`);
+        });
     });
 
     // Вызов инициализации
