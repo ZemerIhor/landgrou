@@ -1,6 +1,6 @@
-<div class="relative mt-5 w-full mx-auto overflow-hidden home-slider-main" aria-label="Головний банер">
-    <div class="relative mx-auto transition-opacity duration-300" style="width: 90%" id="slider-wrap">
-        <div class="flex duration-300" id="hero-slider" style="gap: 20px;">
+<div class="relative mt-5 w-full mx-auto overflow-hidden home-slider-main" aria-label="{{ __('messages.hero.aria_label') }}">
+    <div class="relative mx-auto opacity-0 invisible transition-opacity duration-300" style="width: 90%" id="slider-wrap">
+        <div class="flex opacity-0 invisible transition-opacity duration-300" id="hero-slider" style="gap: 20px;">
             @php
                 $locale = app()->getLocale();
                 $heroSlides = $settings->hero_slides[$locale] ?? [];
@@ -18,16 +18,16 @@
                                 </svg>
                             </div>
                             <div class="flex flex-col gap-2 justify-center mb-5">
-                                <h1 class="text-5xl font-bold">{{ $slide['heading'] ?? 'VIVID ENEGE' }}</h1>
-                                <p class="mt-4 text-xl">{!! $slide['subheading'] ?? 'Українська компанія з видобування й переробки торфу' !!}</p>
-                                <p class="mt-2 text-sm">{{ $slide['extra_text'] ?? 'Keep warm' }}</p>
+                                <h1 class="text-5xl font-bold">{{ $slide['heading'] ?? __('messages.hero.default_heading') }}</h1>
+                                <p class="mt-4 text-xl">{!! $slide['subheading'] ?? __('messages.hero.default_subheading') !!}</p>
+                                <p class="mt-2 text-sm">{{ $slide['extra_text'] ?? __('messages.hero.default_extra_text') }}</p>
                             </div>
                             <div class="flex justify-center mt-6 gap-4 max-md:flex-col">
                                 <a href="{{ route('catalog.view') }}" class="px-6 py-3 border-2 border-white rounded-2xl text-white hover:bg-white hover:text-black transition">
-                                    Каталог →
+                                    {{ __('messages.hero.catalog_button') }} →
                                 </a>
                                 <a href="#" class="px-6 py-3 bg-green-600 text-white rounded-2xl hover:bg-green-700 transition">
-                                    Купити зараз →
+                                    {{ __('messages.hero.buy_now_button') }} →
                                 </a>
                             </div>
                         </div>
@@ -35,19 +35,19 @@
                 @endforeach
             @else
                 <div class="min-w-full flex items-center justify-center bg-gray-200 text-gray-500 p-10">
-                    Немає слайдів
+                    {{ __('messages.hero.no_slides') }}
                 </div>
             @endif
         </div>
 
         <!-- Navigation Arrows -->
         @if (!empty($heroSlides) && is_array($heroSlides) && count($heroSlides) > 1)
-            <button class="absolute top-1/2 left-4 transform -translate-y-1/2 rounded-full p-2 hero-prev">
+            <button class="absolute top-1/2 left-4 transform -translate-y-1/2 rounded-full p-2" onclick="moveSlide(-1)">
                 <svg width="15" height="46" viewBox="0 0 15 46" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12.999 43.9977L4.40193 28.9524C2.29391 25.2633 2.29391 20.7344 4.40193 17.0453L12.999 2" stroke="white" stroke-width="4" stroke-linecap="round"/>
                 </svg>
             </button>
-            <button class="absolute top-1/2 right-4 transform -translate-y-1/2 rounded-full p-2 hero-next">
+            <button class="absolute top-1/2 right-4 transform -translate-y-1/2 rounded-full p-2" onclick="moveSlide(1)">
                 <svg width="15" height="46" viewBox="0 0 15 46" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2.00098 2.00229L10.5981 17.0476C12.7061 20.7367 12.7061 25.2656 10.5981 28.9547L2.00098 44" stroke="white" stroke-width="4" stroke-linecap="round"/>
                 </svg>
@@ -58,10 +58,91 @@
         <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
             @if (!empty($heroSlides) && is_array($heroSlides))
                 @foreach ($heroSlides as $index => $slide)
-                    <span class="w-4 h-1 rounded-full cursor-pointer hero-indicator {{ $index === 0 ? 'bg-green-500' : 'bg-white/50' }}"
-                          data-slide="{{ $index }}"></span>
+                    <span class="w-4 h-1 rounded-full cursor-pointer {{ $index === 0 ? 'bg-green-500' : 'bg-white/50' }}"
+                          data-slide="{{ $index }}" onclick="goToSlide({{ $index }})"></span>
                 @endforeach
             @endif
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Hero Slider
+        let currentSlide = 1; // Починаємо з второго
+        const slider = document.getElementById('hero-slider');
+        const slides = document.querySelectorAll('#hero-slider > div');
+        const indicators = document.querySelectorAll('[data-slide]');
+        const sliderWrap = document.getElementById('slider-wrap');
+        const gap = 20;
+
+        function getSlideWidth() {
+            return slider.parentElement.offsetWidth;
+        }
+
+        function updateSlider(applyTransition = true) {
+            if (slides.length === 0) return;
+            const slideWidth = getSlideWidth();
+            slider.style.transition = applyTransition ? 'transform 0.5s ease-in-out' : 'none';
+            slider.style.transform = `translateX(-${currentSlide * (slideWidth + gap)}px)`;
+
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('bg-green-500', index === currentSlide);
+                indicator.classList.toggle('bg-white/50', index !== currentSlide);
+            });
+        }
+
+        // Инициализация hero-slider без transition
+        updateSlider(false);
+
+        // После первого кадра включаем видимость и transition
+        requestAnimationFrame(() => {
+            slider.classList.remove('opacity-0', 'invisible');
+            sliderWrap.classList.remove('opacity-0', 'invisible');
+            slider.style.transition = 'transform 0.5s ease-in-out';
+            updateSlider(true);
+        });
+
+        // Функции для стрелок
+        window.moveSlide = function(direction) {
+            if (slides.length === 0) return;
+            currentSlide = (currentSlide + direction + slides.length) % slides.length;
+            updateSlider();
+        };
+
+        window.goToSlide = function(index) {
+            if (slides.length === 0) return;
+            currentSlide = index;
+            updateSlider();
+        };
+
+        // Обновление на изменение размера
+        window.addEventListener('resize', () => updateSlider(false));
+
+        // Инициализация Swiper и hero-slider при загрузке страницы
+        initializeReviewSwiper();
+
+        // Повторная инициализация при SPA-навигации (Livewire)
+        document.addEventListener('livewire:navigated', () => {
+            console.log('Livewire navigated, reinitializing sliders');
+            // Уничтожаем Swiper
+            if (reviewSwiper) {
+                reviewSwiper.destroy(true, true);
+                reviewSwiper = null;
+            }
+            // Переинициализируем Swiper
+            initializeReviewSwiper();
+
+            // Переинициализация hero-slider
+            currentSlide = 1;
+            updateSlider(false);
+            requestAnimationFrame(() => {
+                slider.classList.remove('opacity-0', 'invisible');
+                sliderWrap.classList.remove('opacity-0', 'invisible');
+                slider.style.transition = 'transform 0.5s ease-in-out';
+                updateSlider(true);
+            });
+        });
+    });
+</script>
