@@ -13,16 +13,6 @@ function initApp () {
             answer.classList.toggle('max-h-96');
             button.setAttribute('aria-expanded', !isExpanded);
         });
-
-        document.querySelectorAll('.swiper').forEach(function (el) {
-        const config = JSON.parse(el.dataset.swiperConfig || '{}');
-        const swiper = new Swiper(el, config);
-  console.log('Swiper config:', config);
-    console.log('Navigation config:', config.navigation);
-        setTimeout(() => {
-            swiper.update();
-        }, 100);
-    });
     });
 }
 
