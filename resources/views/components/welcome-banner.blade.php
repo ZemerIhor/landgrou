@@ -121,7 +121,6 @@
         window.addEventListener('resize', () => updateSlider(false));
 
         // Инициализация Swiper и hero-slider при загрузке страницы
-        initializeReviewSwiper();
 
         // Повторная инициализация при SPA-навигации (Livewire)
         document.addEventListener('livewire:navigated', () => {
