@@ -8,7 +8,7 @@
         </h1>
     </header>
 
-    @if($shipping)
+    @if($shippingData)
         <div class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full space-y-4">
             @foreach($shippingOptions as $option)
                 <label class="flex items-center p-4 border rounded-2xl border-neutral-400 hover:bg-zinc-50 cursor-pointer">

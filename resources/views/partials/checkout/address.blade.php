@@ -8,7 +8,7 @@
         </h1>
     </header>
 
-    @if($shipping)
+
         <div class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full space-y-4">
             <div class="flex overflow-hidden gap-2 items-center px-4 py-3.5 w-full rounded-2xl border border-solid border-neutral-400 min-h-12 max-md:max-w-full">
                 <input
@@ -130,9 +130,6 @@
                 @enderror
             </div>
         </div>
-    @else
-        <p class="mt-10 text-sm text-red-600">Адрес доставки недоступен. Пожалуйста, попробуйте снова или обратитесь в поддержку.</p>
-    @endif
 
     <!-- Кнопки навигации -->
     <div class="flex gap-4 items-center mt-4 w-full text-base font-bold leading-snug whitespace-nowrap max-md:max-w-full">
