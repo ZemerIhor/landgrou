@@ -68,5 +68,108 @@
 <<<<<<< HEAD
 =======
 
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Swiper для .reviews-swiper
+        let reviewSwiper = null;
+        function initializeReviewSwiper() {
+            if (document.querySelector('.reviews-swiper')) {
+                if (reviewSwiper) {
+                    reviewSwiper.destroy(true, true); // Уничтожаем существующий Swiper
+                }
+                reviewSwiper = new Swiper('.reviews-swiper', {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                });
+            }
+        }
 
+<<<<<<< HEAD
 >>>>>>> ec33959 (home blade change)
+=======
+        // Hero Slider
+        let currentSlide = 1; // Починаємо з второго
+        const slider = document.getElementById('hero-slider');
+        const slides = document.querySelectorAll('#hero-slider > div');
+        const indicators = document.querySelectorAll('[data-slide]');
+        const sliderWrap = document.getElementById('slider-wrap');
+        const gap = 20;
+
+        function getSlideWidth() {
+            return slider.parentElement.offsetWidth;
+        }
+
+        function updateSlider(applyTransition = true) {
+            if (slides.length === 0) return;
+            const slideWidth = getSlideWidth();
+            slider.style.transition = applyTransition ? 'transform 0.5s ease-in-out' : 'none';
+            slider.style.transform = `translateX(-${currentSlide * (slideWidth + gap)}px)`;
+
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('bg-green-500', index === currentSlide);
+                indicator.classList.toggle('bg-white/50', index !== currentSlide);
+            });
+        }
+
+        // Инициализация hero-slider без transition
+        updateSlider(false);
+
+        // После первого кадра включаем видимость и transition
+        requestAnimationFrame(() => {
+            slider.classList.remove('opacity-0', 'invisible');
+            sliderWrap.classList.remove('opacity-0', 'invisible');
+            slider.style.transition = 'transform 0.5s ease-in-out';
+            updateSlider(true);
+        });
+
+        // Функции для стрелок
+        window.moveSlide = function(direction) {
+            if (slides.length === 0) return;
+            currentSlide = (currentSlide + direction + slides.length) % slides.length;
+            updateSlider();
+        };
+
+        window.goToSlide = function(index) {
+            if (slides.length === 0) return;
+            currentSlide = index;
+            updateSlider();
+        };
+
+        // Обновление на изменение размера
+        window.addEventListener('resize', () => updateSlider(false));
+
+        // Инициализация Swiper и hero-slider при загрузке страницы
+        initializeReviewSwiper();
+
+        // Повторная инициализация при SPA-навигации (Livewire)
+        document.addEventListener('livewire:navigated', () => {
+            console.log('Livewire navigated, reinitializing sliders');
+            // Уничтожаем Swiper
+            if (reviewSwiper) {
+                reviewSwiper.destroy(true, true);
+                reviewSwiper = null;
+            }
+            // Переинициализируем Swiper
+            initializeReviewSwiper();
+
+            // Переинициализация hero-slider
+            currentSlide = 1;
+            updateSlider(false);
+            requestAnimationFrame(() => {
+                slider.classList.remove('opacity-0', 'invisible');
+                sliderWrap.classList.remove('opacity-0', 'invisible');
+                slider.style.transition = 'transform 0.5s ease-in-out';
+                updateSlider(true);
+            });
+        });
+    });
+</script>
+>>>>>>> eb6b7a9 (home blade change)
