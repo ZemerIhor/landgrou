@@ -42,12 +42,12 @@
 
         <!-- Navigation Arrows -->
         @if (!empty($heroSlides) && is_array($heroSlides) && count($heroSlides) > 1)
-            <button class="absolute top-1/2 left-4 transform -translate-y-1/2 rounded-full p-2" onclick="moveSlide(-1)">
+            <button class="absolute top-1/2 left-4 transform -translate-y-1/2 rounded-full p-2 hero-prev">
                 <svg width="15" height="46" viewBox="0 0 15 46" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12.999 43.9977L4.40193 28.9524C2.29391 25.2633 2.29391 20.7344 4.40193 17.0453L12.999 2" stroke="white" stroke-width="4" stroke-linecap="round"/>
                 </svg>
             </button>
-            <button class="absolute top-1/2 right-4 transform -translate-y-1/2 rounded-full p-2" onclick="moveSlide(1)">
+            <button class="absolute top-1/2 right-4 transform -translate-y-1/2 rounded-full p-2 hero-next">
                 <svg width="15" height="46" viewBox="0 0 15 46" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2.00098 2.00229L10.5981 17.0476C12.7061 20.7367 12.7061 25.2656 10.5981 28.9547L2.00098 44" stroke="white" stroke-width="4" stroke-linecap="round"/>
                 </svg>
@@ -58,8 +58,8 @@
         <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
             @if (!empty($heroSlides) && is_array($heroSlides))
                 @foreach ($heroSlides as $index => $slide)
-                    <span class="w-4 h-1 rounded-full cursor-pointer {{ $index === 0 ? 'bg-green-500' : 'bg-white/50' }}"
-                          data-slide="{{ $index }}" onclick="goToSlide({{ $index }})"></span>
+                    <span class="w-4 h-1 rounded-full cursor-pointer hero-indicator {{ $index === 0 ? 'bg-green-500' : 'bg-white/50' }}"
+                          data-slide="{{ $index }}"></span>
                 @endforeach
             @endif
         </div>
@@ -69,11 +69,13 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Hero Slider
-        let currentSlide = 0; // Start from the first slide for consistency
+        let currentSlide = 0;
         const slider = document.getElementById('hero-slider');
         const slides = document.querySelectorAll('#hero-slider > div');
-        const indicators = document.querySelectorAll('[data-slide]');
+        const indicators = document.querySelectorAll('.hero-indicator');
         const sliderWrap = document.getElementById('slider-wrap');
+        const prevButton = document.querySelector('.hero-prev');
+        const nextButton = document.querySelector('.hero-next');
         const gap = 20;
 
         function getSlideWidth() {
@@ -103,31 +105,49 @@
             updateSlider(true);
         });
 
-        // Functions for arrows
-        window.moveSlide = function(direction) {
+        // Navigation functions
+        function moveSlide(direction) {
             if (slides.length === 0) return;
             currentSlide = (currentSlide + direction + slides.length) % slides.length;
             updateSlider();
-        };
+        }
 
-        window.goToSlide = function(index) {
+        function goToSlide(index) {
             if (slides.length === 0) return;
-            currentSlide = index;
+            currentSlide = parseInt(index, 10);
             updateSlider();
-        };
+        }
+
+        // Attach event listeners to navigation buttons
+        if (prevButton) {
+            prevButton.addEventListener('click', () => moveSlide(-1));
+        }
+        if (nextButton) {
+            nextButton.addEventListener('click', () => moveSlide(1));
+        }
+
+        // Attach event listeners to indicators
+        indicators.forEach(indicator => {
+            indicator.addEventListener('click', () => {
+                const index = parseInt(indicator.getAttribute('data-slide'), 10);
+                goToSlide(index);
+            });
+        });
 
         // Update on resize
         window.addEventListener('resize', () => updateSlider(false));
 
-        // Placeholder for Swiper initialization (adapt to your actual review swiper selector)
+        // Placeholder for Swiper initialization
         window.initializeReviewSwiper = function() {
             if (typeof Swiper === 'undefined') {
                 console.error('Swiper не найден. Убедитесь, что библиотека подключена.');
                 return;
             }
-            // Example: Initialize Swiper for a reviews section (replace '.reviews-swiper' with your actual class)
             window.reviewSwiper = new Swiper('.reviews-swiper', {
-                // Your Swiper options here, e.g., slidesPerView: 3, loop: true, etc.
+                slidesPerView: 3,
+                spaceBetween: 20,
+                loop: true,
+                // Add other Swiper options as needed
             });
             console.log('Swiper для отзывов успешно инициализирован');
         };
@@ -142,13 +162,13 @@
             // Safely destroy Swiper if defined
             if (typeof reviewSwiper !== 'undefined' && reviewSwiper) {
                 reviewSwiper.destroy(true, true);
-                reviewSwiper = null; // Explicitly nullify after destroy
+                window.reviewSwiper = null;
             }
 
             // Reinitialize Swiper
             initializeReviewSwiper();
 
-            // Reinitialize hero-slider safely
+            // Reinitialize hero-slider
             currentSlide = 0;
             updateSlider(false);
             requestAnimationFrame(() => {
@@ -156,6 +176,21 @@
                 sliderWrap.classList.remove('opacity-0', 'invisible');
                 slider.style.transition = 'transform 0.5s ease-in-out';
                 updateSlider(true);
+
+                // Reattach event listeners to ensure they persist after Livewire navigation
+                if (prevButton) {
+                    prevButton.removeEventListener('click', () => moveSlide(-1));
+                    prevButton.addEventListener('click', () => moveSlide(-1));
+                }
+                if (nextButton) {
+                    nextButton.removeEventListener('click', () => moveSlide(1));
+                    nextButton.addEventListener('click', () => moveSlide(1));
+                }
+                indicators.forEach(indicator => {
+                    const index = parseInt(indicator.getAttribute('data-slide'), 10);
+                    indicator.removeEventListener('click', () => goToSlide(index));
+                    indicator.addEventListener('click', () => goToSlide(index));
+                });
             });
         });
     });
