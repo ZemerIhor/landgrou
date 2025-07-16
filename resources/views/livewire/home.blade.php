@@ -55,7 +55,7 @@
         </section>
     </div>
 
-    <div class="container mx-auto px-[16px] sm:px-[28px] md:px-[50px] py-[80px] mx-auto">
+    <div class="container mx-auto px-12 mx-auto">
         <section class="flex overflow-hidden flex-col font-bold" aria-labelledby="advantages-title">
             <div class="flex flex-col items-center">
                 <h1 id="advantages-title" class="text-4xl leading-none text-center text-zinc-800 max-md:max-w-full">
@@ -364,7 +364,7 @@
 
 
     <livewire:components.blog-section/>
-    <div class="px-2 container mx-auto">
+    <div class="px-12 py-[80px] container mx-auto">
         <livewire:components.feedback-form-block/>
     </div>
 

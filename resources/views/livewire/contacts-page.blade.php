@@ -164,7 +164,7 @@
     }
 </style>
 
-<div class="mx-auto px-[16px] sm:px-[28px] md:px-[50px]">
+<div class="mx-auto px-12 container">
     <main class="">
         <!-- Breadcrumbs -->
         <livewire:components.breadcrumbs
