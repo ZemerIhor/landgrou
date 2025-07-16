@@ -14,6 +14,7 @@ use App\Filament\Resources\ReviewResource;
 use App\Livewire\Components\Breadcrumbs;
 use App\Livewire\Elements\PromoBoxElement;
 use App\Modifiers\ShippingModifier;
+use App\Pipelines\Order\Creation\CustomFillOrderFromCart;
 use Filament\SpatieLaravelTranslatablePlugin;
 use Geosem42\Filamentor\FilamentorPlugin;
 use Illuminate\Support\Facades\Blade;
