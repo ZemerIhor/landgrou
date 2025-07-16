@@ -3,7 +3,7 @@
     <header id="header" class="shadow-xl  flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
             :class="{ 'is-fixed': isScrolled }"
             role="banner">
-        <div class="nav-header flex relative justify-between items-center w-full h-auto container mx-auto">
+        <div class="nav-header flex relative px-12 justify-between items-center w-full h-auto container mx-auto">
             <!-- Logo -->
             <a href="{{ url('/') }}" class="flex items-center" aria-label="{{ __('messages.banner.catalog_button_aria_label') }}" wire:navigate>
                 <div>

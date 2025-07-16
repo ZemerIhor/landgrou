@@ -186,7 +186,7 @@
     content: "";
 }
 
-@media (max-width: 1014px) {
+@media (max-width: 10123px) {
     #header {
         height: 67px;
     }
@@ -231,4 +231,67 @@
     background: #333;
     z-index: -1;
     height: 100%;
+} 
+.about-us-advantages:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: #333;
+    z-index: -1;
+    height: 100%;
+} 
+.about-us-gallery:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: #e6e6e6;
+    z-index: -1;
+    height: 100%;
+} 
+
+.about-us-certificate:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: #333;
+    z-index: -1;
+    height: 100%;
+} 
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(224px, 1fr));
+  gap: 1rem;
+  grid-auto-rows: 378px;
+  align-items: stretch;
 }
+.card {
+    display: flex;
+    flex-direction: column;
+  max-width: 289px; 
+  width: 100%;
+  margin: 0 auto;
+  height: 100%
+}
+.card-footer {
+  margin-top: auto; /* 🔑 притискає низ */
+}
+@media (max-width: 688px) {
+    .catalog-grid{
+        grid-auto-rows: 397px;
+    }
+    .card {
+  max-width: 224px; 
+ 
+}
+    
+}
+

@@ -111,7 +111,7 @@
         </header>
 
         <!-- Advantages Section -->
-        <div class="mx-auto px-[16px] sm:px-[28px] md:px-[50px]">
+        <div class="mx-auto px-12 container relative about-us-advantages">
             <section aria-labelledby="advantages-title">
                 <div
                     class="flex mx-auto  overflow-hidden  items-stretch flex-col justify-center py-10 w-full max-w-screen-xl text-center">
@@ -121,7 +121,7 @@
                         $advantage_images = $settings->advantage_images ?? [];
                     @endphp
                     @if (!empty($advantages))
-                        <div class="flex flex-wrap sm:flex-nowrap gap-2 w-full max-md:max-w-full wrap-advantage">
+                        <div class="flex flex-wrap sm:flex-nowrap gap-2 w-full max-md:max-w-full  justify-between wrap-advantage">
                             @foreach($advantages as $index => $advantage)
                                 <article
                                     class="flex flex-col flex-1  p-6 items-stretch justify-center min-w-[0] aspect-[1] rounded-3xl basis-0 bg-neutral-800 h-[180px] max-w-[190px] shadow-[0_4px_8px_-1px_rgba(0,0,0,0.2),0_1px_1px_-1px_rgba(0,0,0,0.1)]">
@@ -167,9 +167,9 @@
         </div>
 
         <!-- Gallery Section -->
-        <section class="bg-zinc-100 ps-[16px] sm:ps-[28px] md:ps-[50px] py-[80px] relative overflow-hidden"
+        <section class="bg-zinc-100 m-auto  relative overflow-hidden about-us-gallery"
             aria-labelledby="gallery-title">
-            <div class="mx-auto">
+            <div class="py-4 px-12 container m-auto">
                 @if (isset($settings->gallery_title) && (is_array($settings->gallery_title) ? isset($settings->gallery_title[app()->getLocale()]) : is_string($settings->gallery_title)))
                     <h2 id="gallery-title" class="text-4xl font-bold text-zinc-800">
                         {{ is_array($settings->gallery_title) ? $settings->gallery_title[app()->getLocale()] : $settings->gallery_title }}
@@ -211,7 +211,7 @@
                 @endif
             </div>
 
-            <div class="absolute z-[0]  left-[50px] bottom-0">
+            <div class="absolute z-[0]  left-1/2 transform -translate-x-1/2 bottom-0">
                 <svg class="bg-shape" viewBox="0 0 1236 556" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g filter="url(#filter0_dd_125_12566)">
                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -256,8 +256,8 @@
         </section>
 
         <!-- Certificates Section -->
-        <section class="bg-zinc-800 px-[16px] sm:px-[28px] md:px-[50px] py-[80px]" aria-labelledby="certificates-title">
-            <div class="container mx-auto px-2">
+        <section class="container relative mx-auto about-us-certificate px-12 py-4" aria-labelledby="certificates-title">
+            <div class="">
                 @if (isset($settings->certificates_title) && (is_array($settings->certificates_title) ? isset($settings->certificates_title[app()->getLocale()]) : is_string($settings->certificates_title)))
                     <h2 id="certificates-title" class="text-3xl font-bold text-white">
                         {{ is_array($settings->certificates_title) ? $settings->certificates_title[app()->getLocale()] : $settings->certificates_title }}
