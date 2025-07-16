@@ -65,3 +65,8 @@
         </div>
     </div>
 </div>
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> ec33959 (home blade change)
