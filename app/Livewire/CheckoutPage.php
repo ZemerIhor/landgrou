@@ -22,8 +22,8 @@ class CheckoutPage extends Component
 
     public int $currentStep = 1;
     public ?string $chosenShipping = null;
-    public ?string $paymentType = 'card'; // Установлено значение по умолчанию
     public ?string $comment = '';
+    public bool $shippingIsBilling = true;
 
     public array $shippingOptions = [];
     public array $npCities = [];
@@ -35,7 +35,6 @@ class CheckoutPage extends Component
     public array $steps = [
         'personal_info' => 1,
         'delivery' => 2,
-        'payment' => 3,
     ];
 
     protected $listeners = [
@@ -68,7 +67,7 @@ class CheckoutPage extends Component
                 if (!$existingAddress) {
                     $address = $this->cart->addresses()->create([
                         'type' => 'shipping',
-                        'country_id' => 1, // Укажите ID страны по умолчанию, если требуется
+                        'country_id' => 1, // ID страны по умолчанию
                     ]);
                     Log::info('Создан новый адрес доставки', [
                         'cart_id' => $this->cart->id,
@@ -106,6 +105,14 @@ class CheckoutPage extends Component
         $this->loadShippingOptions();
         $this->currentStep = session('checkout_step', 1);
 
+        // Дополнительное логирование для отладки
+        Log::info('Инициализация компонента CheckoutPage', [
+            'current_step' => $this->currentStep,
+            'shipping_initialized' => $this->shipping instanceof \Lunar\Models\CartAddress,
+            'shipping_data' => $this->shipping ? $this->shipping->toArray() : null,
+            'chosen_shipping' => $this->chosenShipping,
+        ]);
+
         // Логирование данных корзины
         Log::info('Данные корзины при оформлении заказа', [
             'subTotal' => $this->cart->subTotal instanceof \Lunar\DataTypes\Price
@@ -137,11 +144,12 @@ class CheckoutPage extends Component
             'shipping.contact_email' => 'required|email|max:255',
             'shipping.company' => 'nullable|string|max:255',
             'privacy_policy' => 'accepted',
-            'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable',
-            'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
-            'chosenShipping' => 'required|string',
-            'paymentType' => 'required|string|in:card,cash-on-delivery',
-            'comment' => 'nullable|string|max:500', // Валидация для комментария
+            'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
+            'shipping.line_one' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
+            'shipping.postcode' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
+            'chosenShipping' => 'required|string|in:pickup,nova-poshta,courier',
+            'comment' => 'nullable|string|max:500',
+            'shippingIsBilling' => 'boolean',
         ];
     }
 
@@ -150,6 +158,13 @@ class CheckoutPage extends Component
      */
     public function loadShippingOptions(): void
     {
+        if (!$this->cart instanceof \Lunar\Models\Cart) {
+            Log::error('Корзина недействительна при загрузке вариантов доставки', [
+                'cart_id' => $this->cart ? $this->cart->id : null,
+            ]);
+            return;
+        }
+
         $currency = Currency::where('code', $this->cart->currency->code)->first() ?? Currency::first();
 
         $this->shippingOptions = ShippingManifest::getOptions($this->cart)->map(function ($option) use ($currency) {
@@ -162,6 +177,11 @@ class CheckoutPage extends Component
                 'collect' => $option->collect ?? false,
             ];
         })->toArray();
+
+        Log::info('Опции доставки загружены', [
+            'cart_id' => $this->cart->id,
+            'options' => array_column($this->shippingOptions, 'identifier'),
+        ]);
     }
 
     /**
@@ -169,6 +189,13 @@ class CheckoutPage extends Component
      */
     public function validateCartPrices(): void
     {
+        if (!$this->cart instanceof \Lunar\Models\Cart) {
+            Log::error('Корзина недействительна при проверке цен', [
+                'cart_id' => $this->cart ? $this->cart->id : null,
+            ]);
+            return;
+        }
+
         foreach ($this->cart->lines as $line) {
             if ($line->subTotal->value <= 0) {
                 Log::warning('Товар в корзине имеет нулевую цену', [
@@ -186,6 +213,13 @@ class CheckoutPage extends Component
      */
     public function updateLineQuantity($lineId, $quantity): void
     {
+        if (!$this->cart instanceof \Lunar\Models\Cart) {
+            Log::error('Корзина недействительна при обновлении количества товара', [
+                'cart_id' => $this->cart ? $this->cart->id : null,
+            ]);
+            return;
+        }
+
         if ($quantity < 1) {
             $this->cart->lines()->where('id', $lineId)->delete();
         } else {
@@ -200,6 +234,14 @@ class CheckoutPage extends Component
      */
     public function saveAddress(): void
     {
+        if (!$this->shipping instanceof \Lunar\Models\CartAddress) {
+            Log::error('Попытка сохранения адреса доставки с null значением', [
+                'cart_id' => $this->cart ? $this->cart->id : null,
+            ]);
+            $this->addError('shipping', 'Адрес доставки недействителен.');
+            return;
+        }
+
         $this->validate([
             'shipping.first_name' => 'required|string|max:255',
             'shipping.last_name' => 'required|string|max:255',
@@ -207,66 +249,199 @@ class CheckoutPage extends Component
             'shipping.contact_email' => 'required|email|max:255',
             'shipping.company' => 'nullable|string|max:255',
             'privacy_policy' => 'accepted',
+            'shippingIsBilling' => 'boolean',
         ]);
 
         Log::info('Сохранение адреса доставки', ['shipping' => $this->shipping->toArray()]);
         $this->shipping->save();
+        $this->cart->setShippingAddress($this->shipping);
+
+        // Если адрес доставки совпадает с адресом для выставления счета
+        if ($this->shippingIsBilling) {
+            $billingAddress = CartAddress::where('cart_id', $this->cart->id)
+                ->where('type', 'billing')
+                ->first();
+
+            if (!$billingAddress) {
+                $billingAddress = $this->cart->addresses()->create([
+                    'type' => 'billing',
+                    'country_id' => $this->shipping->country_id,
+                    'first_name' => $this->shipping->first_name,
+                    'last_name' => $this->shipping->last_name,
+                    'contact_phone' => $this->shipping->contact_phone,
+                    'contact_email' => $this->shipping->contact_email,
+                    'company' => $this->shipping->company,
+                    'city' => $this->shipping->city ?? 'Не требуется',
+                    'line_one' => $this->shipping->line_one ?? 'Самовывоз',
+                    'postcode' => $this->shipping->postcode ?? '00000',
+                ]);
+                Log::info('Создан новый адрес для выставления счета', [
+                    'cart_id' => $this->cart->id,
+                    'billing_address_id' => $billingAddress->id,
+                ]);
+            } else {
+                $billingAddress->fill([
+                    'country_id' => $this->shipping->country_id,
+                    'first_name' => $this->shipping->first_name,
+                    'last_name' => $this->shipping->last_name,
+                    'contact_phone' => $this->shipping->contact_phone,
+                    'contact_email' => $this->shipping->contact_email,
+                    'company' => $this->shipping->company,
+                    'city' => $this->shipping->city ?? 'Не требуется',
+                    'line_one' => $this->shipping->line_one ?? 'Самовывоз',
+                    'postcode' => $this->shipping->postcode ?? '00000',
+                ])->save();
+            }
+            $this->cart->setBillingAddress($billingAddress);
+        }
+
         $this->currentStep = $this->steps['delivery'];
         session(['checkout_step' => $this->currentStep]);
     }
 
     /**
-     * Сохранение варианта доставки
+     * Сохранение варианта доставки и оформление заказа
      */
     public function saveShippingOption(): void
     {
+        if (!$this->shipping instanceof \Lunar\Models\CartAddress) {
+            Log::error('Попытка сохранения варианта доставки с null адресом', [
+                'cart_id' => $this->cart ? $this->cart->id : null,
+            ]);
+            $this->addError('shipping', 'Адрес доставки недействителен.');
+            return;
+        }
+
         $this->validate([
-            'chosenShipping' => 'required|string',
-            'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable',
-            'shipping.line_one' => $this->chosenShipping === 'nova-poshta' ? 'required|string|max:255' : 'nullable|string|max:255',
+            'chosenShipping' => 'required|string|in:pickup,nova-poshta,courier',
+            'shipping.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
+            'shipping.line_one' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
+            'shipping.postcode' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
+            'comment' => 'nullable|string|max:500',
         ]);
+
+        Log::info('Выбрана опция доставки', [
+            'cart_id' => $this->cart->id,
+            'chosen_shipping' => $this->chosenShipping,
+        ]);
+
+        if (!$this->chosenShipping) {
+            Log::error('Опция доставки не выбрана', [
+                'cart_id' => $this->cart->id,
+            ]);
+            $this->addError('chosenShipping', __('messages.checkout.shipping_option_not_found'));
+            return;
+        }
 
         $option = ShippingManifest::getOptions($this->cart)->first(
             fn($opt) => $opt->getIdentifier() === $this->chosenShipping
         );
 
         if (!$option) {
+            Log::error('Опция доставки не найдена', [
+                'cart_id' => $this->cart->id,
+                'chosen_shipping' => $this->chosenShipping,
+            ]);
             $this->addError('chosenShipping', __('messages.checkout.shipping_option_not_found'));
             return;
         }
 
-        CartSession::setShippingOption($option);
-        $this->shipping->shipping_option = $this->chosenShipping;
-        $this->shipping->save();
-        $this->cart->setShippingAddress($this->shipping);
+        // Устанавливаем опцию доставки
+        try {
+            CartSession::setShippingOption($option);
+            $this->cart->refresh(); // Обновляем корзину после установки опции
+            $this->shipping->shipping_option = $this->chosenShipping;
+
+            // Устанавливаем значения по умолчанию для pickup
+            if ($this->chosenShipping === 'pickup') {
+                $this->shipping->city = $this->shipping->city ?? 'Не требуется';
+                $this->shipping->line_one = $this->shipping->line_one ?? 'Самовывоз';
+                $this->shipping->postcode = $this->shipping->postcode ?? '00000';
+            }
+
+            $this->shipping->save();
+            $this->cart->setShippingAddress($this->shipping); // Повторно устанавливаем адрес после сохранения
+            Log::info('Адрес доставки сохранен', [
+                'cart_id' => $this->cart->id,
+                'shipping_option' => $this->shipping->shipping_option,
+                'shipping_data' => $this->shipping->toArray(),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Ошибка при сохранении адреса доставки', [
+                'cart_id' => $this->cart->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            $this->addError('shipping', 'Не удалось сохранить адрес доставки.');
+            return;
+        }
+
+        // Устанавливаем billing address, если еще не установлен
+        if ($this->shippingIsBilling) {
+            $billingAddress = CartAddress::where('cart_id', $this->cart->id)
+                ->where('type', 'billing')
+                ->first();
+
+            if (!$billingAddress) {
+                $billingAddress = $this->cart->addresses()->create([
+                    'type' => 'billing',
+                    'country_id' => $this->shipping->country_id,
+                    'first_name' => $this->shipping->first_name,
+                    'last_name' => $this->shipping->last_name,
+                    'contact_phone' => $this->shipping->contact_phone,
+                    'contact_email' => $this->shipping->contact_email,
+                    'company' => $this->shipping->company,
+                    'city' => $this->shipping->city ?? 'Не требуется',
+                    'line_one' => $this->shipping->line_one ?? 'Самовывоз',
+                    'postcode' => $this->shipping->postcode ?? '00000',
+                ]);
+                Log::info('Создан новый адрес для выставления счета', [
+                    'cart_id' => $this->cart->id,
+                    'billing_address_id' => $billingAddress->id,
+                ]);
+            } else {
+                $billingAddress->fill([
+                    'country_id' => $this->shipping->country_id,
+                    'first_name' => $this->shipping->first_name,
+                    'last_name' => $this->shipping->last_name,
+                    'contact_phone' => $this->shipping->contact_phone,
+                    'contact_email' => $this->shipping->contact_email,
+                    'company' => $this->shipping->company,
+                    'city' => $this->shipping->city ?? 'Не требуется',
+                    'line_one' => $this->shipping->line_one ?? 'Самовывоз',
+                    'postcode' => $this->shipping->postcode ?? '00000',
+                ])->save();
+            }
+            $this->cart->setBillingAddress($billingAddress);
+        }
+
         $this->cart->shippingTotal = new \Lunar\DataTypes\Price(0, $this->cart->currency, 1);
         $this->cart->calculate();
         $this->loadShippingOptions();
 
-        $this->currentStep = $this->steps['payment'];
-        session(['checkout_step' => $this->currentStep]);
-    }
-
-    /**
-     * Завершение оформления заказа
-     */
-    public function checkout(): void
-    {
-        $this->validate([
-            'paymentType' => 'required|string|in:card,cash-on-delivery',
-            'comment' => 'nullable|string|max:500',
-        ]);
-
-        if ($this->paymentType === 'cash-on-delivery') {
+        // Оформление заказа
+        try {
             $order = $this->cart->createOrder();
-            // Сохранение комментария в мета-данных заказа
             if ($this->comment) {
                 $order->meta = array_merge($order->meta ?? [], ['comment' => $this->comment]);
                 $order->save();
             }
-            $this->redirect(route('order.confirmation', $order->id));
+
+            // Очистка корзины
+            CartSession::forget();
+
+            // Перенаправление на главную страницу
+            $this->redirect('/');
+        } catch (\Exception $e) {
+            Log::error('Ошибка при создании заказа', [
+                'cart_id' => $this->cart->id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'shipping_option' => $this->shipping->shipping_option,
+                'cart_shipping_address' => $this->cart->shippingAddress ? $this->cart->shippingAddress->toArray() : null,
+            ]);
+            $this->addError('order', 'Не удалось создать заказ. Пожалуйста, попробуйте снова.');
         }
-        // Добавить логику для оплаты картой, если требуется
     }
 
     /**
@@ -274,6 +449,14 @@ class CheckoutPage extends Component
      */
     public function updatedCitySearchTerm(): void
     {
+        if (!$this->shipping instanceof \Lunar\Models\CartAddress) {
+            Log::error('Попытка обновления citySearchTerm с null адресом доставки', [
+                'cart_id' => $this->cart ? $this->cart->id : null,
+            ]);
+            $this->addError('shipping', 'Адрес доставки недействителен.');
+            return;
+        }
+
         $this->showCityDropdown = true;
         $this->shipping->line_one = '';
         $this->npWarehouses = [];
@@ -323,6 +506,14 @@ class CheckoutPage extends Component
      */
     public function selectCity($cityName): void
     {
+        if (!$this->shipping instanceof \Lunar\Models\CartAddress) {
+            Log::error('Попытка выбора города с null адресом доставки', [
+                'cart_id' => $this->cart ? $this->cart->id : null,
+            ]);
+            $this->addError('shipping', 'Адрес доставки недействителен.');
+            return;
+        }
+
         $this->shipping->city = $cityName;
         $this->citySearchTerm = $cityName;
         $this->showCityDropdown = false;
@@ -356,6 +547,14 @@ class CheckoutPage extends Component
      */
     public function updatedShippingCity($cityName): void
     {
+        if (!$this->shipping instanceof \Lunar\Models\CartAddress) {
+            Log::error('Попытка обновления shipping.city с null адресом доставки', [
+                'cart_id' => $this->cart ? $this->cart->id : null,
+            ]);
+            $this->addError('shipping', 'Адрес доставки недействителен.');
+            return;
+        }
+
         $this->shipping->line_one = '';
         $this->npWarehouses = [];
 
@@ -444,6 +643,14 @@ class CheckoutPage extends Component
      */
     public function render(): View
     {
+        // Логирование для отладки рендеринга
+        Log::info('Рендеринг CheckoutPage', [
+            'current_step' => $this->currentStep,
+            'shipping_exists' => $this->shipping instanceof \Lunar\Models\CartAddress,
+            'cart_id' => $this->cart ? $this->cart->id : null,
+            'chosen_shipping' => $this->chosenShipping,
+        ]);
+
         return view('livewire.checkout-page', [
             'shippingOption' => $this->shippingOption,
             'steps' => $this->steps,

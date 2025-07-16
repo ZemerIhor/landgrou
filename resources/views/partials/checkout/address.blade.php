@@ -1,4 +1,3 @@
-
 <form wire:submit.prevent="saveAddress" class="bg-white p-8 max-md:p-5">
     <header class="flex gap-4 items-start w-full text-base font-semibold leading-none max-md:max-w-full">
         <div class="flex flex-col justify-center items-center text-center text-white whitespace-nowrap rounded-2xl bg-zinc-800 h-[22px] w-[22px]" aria-label="{{ __('messages.checkout.step_1') }}">
@@ -84,59 +83,77 @@
                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
+
+            <!-- Чекбокс для совпадения адресов доставки и выставления счета -->
+            <div class="flex gap-2 items-center self-start text-xs">
+                <div class="flex shrink-0 self-stretch my-auto w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 relative">
+                    <input
+                        type="checkbox"
+                        id="shipping-is-billing"
+                        wire:model="shippingIsBilling"
+                        class="w-full h-full opacity-0 absolute cursor-pointer"
+                        aria-describedby="shipping-is-billing-label"
+                    />
+                    <div class="checkmark absolute inset-0 bg-white border border-neutral-400 rounded"></div>
+                </div>
+                <label for="shipping-is-billing" id="shipping-is-billing-label" class="flex gap-0.5 items-start self-stretch my-auto min-w-60 cursor-pointer">
+                    <span class="font-semibold text-zinc-800">{{ __('messages.checkout.shipping_is_billing') }}</span>
+                </label>
+                @error('shippingIsBilling')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Чекбокс для политики конфиденциальности -->
+            <div class="flex gap-2 items-center self-start text-xs">
+                <div class="flex shrink-0 self-stretch my-auto w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 relative">
+                    <input
+                        type="checkbox"
+                        id="privacy-policy"
+                        wire:model="privacy_policy"
+                        class="w-full h-full opacity-0 absolute cursor-pointer"
+                        required
+                        aria-describedby="privacy-policy-label"
+                    />
+                    <div class="checkmark absolute inset-0 bg-white border border-neutral-400 rounded"></div>
+                </div>
+                <label for="privacy-policy" id="privacy-policy-label" class="flex gap-0.5 items-start self-stretch my-auto min-w-60 cursor-pointer">
+                    <span class="font-semibold text-zinc-800">{{ __('messages.checkout.agree_to') }}</span>
+                    <a href="{{ route('privacy-policy') }}" class="flex gap-2 justify-center items-center text-indigo-500 underline rounded-lg" aria-label="{{ __('messages.checkout.privacy_policy') }}">
+                        <span class="self-stretch my-auto text-indigo-500 underline decoration-auto decoration-solid underline-offset-auto">
+                            {{ __('messages.checkout.privacy_policy') }}
+                        </span>
+                    </a>
+                </label>
+                @error('privacy_policy')
+                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
         </div>
     @else
         <p class="mt-10 text-sm text-red-600">Адрес доставки недоступен. Пожалуйста, попробуйте снова или обратитесь в поддержку.</p>
     @endif
 
-    <!-- Чекбокс для политики конфиденциальности -->
-    <div class="flex flex-col mt-10 w-full max-md:max-w-full">
-        <div class="flex gap-2 items-center self-start text-xs">
-            <div class="flex shrink-0 self-stretch my-auto w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 relative">
-                <input
-                    type="checkbox"
-                    id="privacy-policy"
-                    wire:model="privacy_policy"
-                    class="w-full h-full opacity-0 absolute cursor-pointer"
-                    required
-                    aria-describedby="privacy-policy-label"
-                />
-                <div class="checkmark absolute inset-0 bg-white border border-neutral-400 rounded"></div>
-            </div>
-            <label for="privacy-policy" id="privacy-policy-label" class="flex gap-0.5 items-start self-stretch my-auto min-w-60 cursor-pointer">
-                <span class="font-semibold text-zinc-800">{{ __('messages.checkout.agree_to') }}</span>
-                <a href="{{ route('privacy-policy') }}" class="flex gap-2 justify-center items-center text-indigo-500 underline rounded-lg" aria-label="{{ __('messages.checkout.privacy_policy') }}">
-                    <span class="self-stretch my-auto text-indigo-500 underline decoration-auto decoration-solid underline-offset-auto">
-                        {{ __('messages.checkout.privacy_policy') }}
-                    </span>
-                </a>
-            </label>
-            @error('privacy_policy')
-            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+    <!-- Кнопки навигации -->
+    <div class="flex gap-4 items-center mt-4 w-full text-base font-bold leading-snug whitespace-nowrap max-md:max-w-full">
+        <button
+            type="button"
+            wire:click="goBackStep"
+            class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-green-600 rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+            aria-label="{{ __('messages.checkout.back') }}"
+        >
+            <span class="self-stretch my-auto text-green-600">{{ __('messages.checkout.back') }}</span>
+        </button>
 
-        <!-- Кнопки навигации -->
-        <div class="flex gap-4 items-center mt-4 w-full text-base font-bold leading-snug whitespace-nowrap max-md:max-w-full">
-            <button
-                type="button"
-                wire:click="goBackStep"
-                class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-green-600 rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                aria-label="{{ __('messages.checkout.back') }}"
-            >
-                <span class="self-stretch my-auto text-green-600">{{ __('messages.checkout.back') }}</span>
-            </button>
-
-            <button
-                type="submit"
-                class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-white bg-green-600 rounded-2xl min-h-11 max-md:px-5 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                aria-label="{{ __('messages.checkout.continue') }}"
-                wire:loading.attr="disabled"
-            >
-                <span wire:loading.remove>{{ __('messages.checkout.continue') }}</span>
-                <span wire:loading>{{ __('messages.checkout.saving') }}</span>
-            </button>
-        </div>
+        <button
+            type="submit"
+            class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-white bg-green-600 rounded-2xl min-h-11 max-md:px-5 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+            aria-label="{{ __('messages.checkout.continue') }}"
+            wire:loading.attr="disabled"
+        >
+            <span wire:loading.remove>{{ __('messages.checkout.continue') }}</span>
+            <span wire:loading>{{ __('messages.checkout.saving') }}</span>
+        </button>
     </div>
 
     <!-- Индикаторы шагов -->
@@ -146,13 +163,6 @@
                 <span class="text-white">2</span>
             </div>
             <span class="flex-1 shrink basis-0 text-neutral-400">{{ __('messages.checkout.delivery') }}</span>
-        </div>
-
-        <div class="flex gap-4 items-start mt-4 max-w-full min-h-[22px] w-[440px]">
-            <div class="flex flex-col justify-center items-center text-center text-white rounded-2xl bg-neutral-400 h-[22px] w-[22px]" aria-label="{{ __('messages.checkout.step_3') }}">
-                <span class="text-white">3</span>
-            </div>
-            <span class="flex-1 shrink basis-0 text-neutral-400">{{ __('messages.checkout.payment') }}</span>
         </div>
     </nav>
 </form>

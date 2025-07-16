@@ -1,6 +1,8 @@
+
 <div class="container mx-auto">
     <x-welcome-banner :settings="$settings" />
     <div class=" px-[50px] mx-auto pt-40">
+
         <section
             class="container mx-auto flex relative flex-col w-full gap-0.5 items-start self-stretch  pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0"
             aria-label="Company Advantages">
@@ -31,7 +33,9 @@
             </div>
         </section>
     </div>
+
     <div class="container mx-auto px-[16px] sm:px-[28px] md:px-[50px]  py-[80px] products  mx-auto ">
+
         <section class="flex flex-col self-stretch" aria-label="Каталог">
             <div class="">
                 <h2 class="text-2xl pb-5 font-bold leading-tight text-black max-md:max-w-full">
@@ -50,7 +54,6 @@
             </div>
         </section>
     </div>
-
 
     <div class="container mx-auto px-[16px] sm:px-[28px] md:px-[50px] py-[80px] mx-auto">
         <section class="flex overflow-hidden flex-col font-bold" aria-labelledby="advantages-title">
@@ -103,10 +106,12 @@
 
     <livewire:components.reviews-section />
 
+
     <section class="home-about-section relative container" role="main"
         aria-labelledby="about-heading">
         <div class=" mx-auto px-12 py-20 ">
             <div class=" relative">
+
                 <div
                     class="flex justify-between h-full relative w-full max-md:flex-col max-md:items-start max-md:gap-10">
                     <!-- Part 1: Main Content -->
@@ -357,9 +362,10 @@
         </footer>
     </section>
 
-    <livewire:components.blog-section />
-    <div class="px-[16px] sm:px-[28px] md:px-[50px] py-[80px]  ">
-        <livewire:components.feedback-form-block />
+
+    <livewire:components.blog-section/>
+    <div class="px-2 container mx-auto">
+        <livewire:components.feedback-form-block/>
     </div>
 
 </div>

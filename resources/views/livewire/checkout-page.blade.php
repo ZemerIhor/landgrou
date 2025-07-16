@@ -1,21 +1,20 @@
 <div>
-    <div class=" mx-auto px-[50px] py-12 sm:px-6 lg:px-8">
-        <livewire:components.breadcrumbs :currentPage="__('messages.breadcrumbs.catalog')" :items="[]" />
+    <div class="container mx-auto px-[50px] py-12 sm:px-6 lg:px-8">
 
         <div class="flex flex-wrap gap-8">
             <!-- Form Section -->
             <section class="flex-1 shrink self-start px-8 py-8 bg-white rounded-3xl border border-gray-100 min-w-60 max-md:px-5 max-md:max-w-full" role="main" aria-labelledby="form-heading">
-                @if($currentStep === $steps['personal_info'])
-                    @include('partials.checkout.address')
-                @endif
 
+                @if($currentStep === $steps['personal_info'])
+
+                    @include('partials.checkout.address')
+
+                @endif
                 @if($currentStep === $steps['delivery'])
                     @include('partials.checkout.shipping_option')
                 @endif
 
-                @if($currentStep === $steps['payment'])
-                    @include('partials.checkout.payment')
-                @endif
+
             </section>
 
             <!-- Basket Section -->
