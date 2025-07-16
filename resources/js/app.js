@@ -137,7 +137,7 @@ function initApp() {
         }
     }
 
-    // Обработка элементов с data-toggle (ваш оригинальный код)
+    // Обработка элементов с data-toggle
     document.querySelectorAll('[data-toggle]').forEach(button => {
         button.addEventListener('click', () => {
             const targetId = button.getAttribute('data-toggle');
