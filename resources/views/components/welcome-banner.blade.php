@@ -68,27 +68,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Swiper для .reviews-swiper
-        let reviewSwiper = null;
-        function initializeReviewSwiper() {
-            if (document.querySelector('.reviews-swiper')) {
-                if (reviewSwiper) {
-                    reviewSwiper.destroy(true, true); // Уничтожаем существующий Swiper
-                }
-                reviewSwiper = new Swiper('.reviews-swiper', {
-                    slidesPerView: 1,
-                    spaceBetween: 20,
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true,
-                    },
-                });
-            }
-        }
 
         // Hero Slider
         let currentSlide = 1; // Починаємо з второго
