@@ -68,76 +68,98 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Hero Slider
-        let currentSlide = 0;
-        const slider = document.getElementById('hero-slider');
-        const slides = document.querySelectorAll('#hero-slider > div');
-        const indicators = document.querySelectorAll('.hero-indicator');
-        const sliderWrap = document.getElementById('slider-wrap');
-        const prevButton = document.querySelector('.hero-prev');
-        const nextButton = document.querySelector('.hero-next');
-        const gap = 20;
+        // Функция для инициализации слайдера
+        function initializeHeroSlider() {
+            console.log('Инициализация hero-slider');
+            let currentSlide = 0;
+            const slider = document.getElementById('hero-slider');
+            const slides = document.querySelectorAll('#hero-slider > div');
+            const indicators = document.querySelectorAll('.hero-indicator');
+            const sliderWrap = document.getElementById('slider-wrap');
+            const prevButton = document.querySelector('.hero-prev');
+            const nextButton = document.querySelector('.hero-next');
+            const gap = 20;
 
-        function getSlideWidth() {
-            return slider.parentElement.offsetWidth;
+            function getSlideWidth() {
+                return slider ? slider.parentElement.offsetWidth : 0;
+            }
+
+            function updateSlider(applyTransition = true) {
+                if (!slider || slides.length === 0) {
+                    console.warn('Слайдер или слайды не найдены');
+                    return;
+                }
+                const slideWidth = getSlideWidth();
+                slider.style.transition = applyTransition ? 'transform 0.5s ease-in-out' : 'none';
+                slider.style.transform = `translateX(-${currentSlide * (slideWidth + gap)}px)`;
+
+                indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle('bg-green-500', index === currentSlide);
+                    indicator.classList.toggle('bg-white/50', index !== currentSlide);
+                });
+            }
+
+            // Инициализация без анимации
+            updateSlider(false);
+
+            // Включение видимости и анимации
+            if (slider && sliderWrap) {
+                requestAnimationFrame(() => {
+                    slider.classList.remove('opacity-0', 'invisible');
+                    sliderWrap.classList.remove('opacity-0', 'invisible');
+                    slider.style.transition = 'transform 0.5s ease-in-out';
+                    updateSlider(true);
+                });
+            }
+
+            // Функции навигации
+            function moveSlide(direction) {
+                if (slides.length === 0) return;
+                currentSlide = (currentSlide + direction + slides.length) % slides.length;
+                updateSlider();
+            }
+
+            function goToSlide(index) {
+                if (slides.length === 0) return;
+                currentSlide = parseInt(index, 10);
+                updateSlider();
+            }
+
+            // Очистка и привязка обработчиков событий
+            function attachEventListeners() {
+                if (prevButton) {
+                    // Удаляем старые обработчики, если есть
+                    prevButton.removeEventListener('click', () => moveSlide(-1));
+                    prevButton.addEventListener('click', () => moveSlide(-1));
+                    console.log('Обработчик для prevButton привязан');
+                }
+                if (nextButton) {
+                    nextButton.removeEventListener('click', () => moveSlide(1));
+                    nextButton.addEventListener('click', () => moveSlide(1));
+                    console.log('Обработчик для nextButton привязан');
+                }
+                indicators.forEach(indicator => {
+                    const index = parseInt(indicator.getAttribute('data-slide'), 10);
+                    indicator.removeEventListener('click', () => goToSlide(index));
+                    indicator.addEventListener('click', () => goToSlide(index));
+                });
+                console.log('Обработчики для индикаторов привязаны');
+            }
+
+            // Привязка обработчиков событий при инициализации
+            attachEventListeners();
+
+            // Обновление при изменении размера окна
+            window.addEventListener('resize', () => updateSlider(false));
+
+            // Возвращаем функцию для повторной привязки обработчиков
+            return attachEventListeners;
         }
 
-        function updateSlider(applyTransition = true) {
-            if (slides.length === 0) return;
-            const slideWidth = getSlideWidth();
-            slider.style.transition = applyTransition ? 'transform 0.5s ease-in-out' : 'none';
-            slider.style.transform = `translateX(-${currentSlide * (slideWidth + gap)}px)`;
+        // Инициализация слайдера
+        let attachHeroSliderEvents = initializeHeroSlider();
 
-            indicators.forEach((indicator, index) => {
-                indicator.classList.toggle('bg-green-500', index === currentSlide);
-                indicator.classList.toggle('bg-white/50', index !== currentSlide);
-            });
-        }
-
-        // Initialize hero-slider without transition
-        updateSlider(false);
-
-        // Enable visibility and transition after first frame
-        requestAnimationFrame(() => {
-            slider.classList.remove('opacity-0', 'invisible');
-            sliderWrap.classList.remove('opacity-0', 'invisible');
-            slider.style.transition = 'transform 0.5s ease-in-out';
-            updateSlider(true);
-        });
-
-        // Navigation functions
-        function moveSlide(direction) {
-            if (slides.length === 0) return;
-            currentSlide = (currentSlide + direction + slides.length) % slides.length;
-            updateSlider();
-        }
-
-        function goToSlide(index) {
-            if (slides.length === 0) return;
-            currentSlide = parseInt(index, 10);
-            updateSlider();
-        }
-
-        // Attach event listeners to navigation buttons
-        if (prevButton) {
-            prevButton.addEventListener('click', () => moveSlide(-1));
-        }
-        if (nextButton) {
-            nextButton.addEventListener('click', () => moveSlide(1));
-        }
-
-        // Attach event listeners to indicators
-        indicators.forEach(indicator => {
-            indicator.addEventListener('click', () => {
-                const index = parseInt(indicator.getAttribute('data-slide'), 10);
-                goToSlide(index);
-            });
-        });
-
-        // Update on resize
-        window.addEventListener('resize', () => updateSlider(false));
-
-        // Placeholder for Swiper initialization
+        // Инициализация Swiper для отзывов
         window.initializeReviewSwiper = function() {
             if (typeof Swiper === 'undefined') {
                 console.error('Swiper не найден. Убедитесь, что библиотека подключена.');
@@ -147,51 +169,30 @@
                 slidesPerView: 3,
                 spaceBetween: 20,
                 loop: true,
-                // Add other Swiper options as needed
+                // Дополнительные параметры Swiper по необходимости
             });
             console.log('Swiper для отзывов успешно инициализирован');
         };
 
-        // Initial call to initialize Swiper
+        // Первоначальная инициализация Swiper
         initializeReviewSwiper();
 
-        // Reinitialization on Livewire navigation
+        // Переинициализация при навигации Livewire
         document.addEventListener('livewire:navigated', () => {
-            console.log('Livewire navigated, reinitializing sliders');
+            console.log('Livewire navigated, переинициализация слайдеров');
 
-            // Safely destroy Swiper if defined
+            // Уничтожение Swiper, если он существует
             if (typeof reviewSwiper !== 'undefined' && reviewSwiper) {
                 reviewSwiper.destroy(true, true);
                 window.reviewSwiper = null;
+                console.log('Swiper уничтожен');
             }
 
-            // Reinitialize Swiper
+            // Повторная инициализация Swiper
             initializeReviewSwiper();
 
-            // Reinitialize hero-slider
-            currentSlide = 0;
-            updateSlider(false);
-            requestAnimationFrame(() => {
-                slider.classList.remove('opacity-0', 'invisible');
-                sliderWrap.classList.remove('opacity-0', 'invisible');
-                slider.style.transition = 'transform 0.5s ease-in-out';
-                updateSlider(true);
-
-                // Reattach event listeners to ensure they persist after Livewire navigation
-                if (prevButton) {
-                    prevButton.removeEventListener('click', () => moveSlide(-1));
-                    prevButton.addEventListener('click', () => moveSlide(-1));
-                }
-                if (nextButton) {
-                    nextButton.removeEventListener('click', () => moveSlide(1));
-                    nextButton.addEventListener('click', () => moveSlide(1));
-                }
-                indicators.forEach(indicator => {
-                    const index = parseInt(indicator.getAttribute('data-slide'), 10);
-                    indicator.removeEventListener('click', () => goToSlide(index));
-                    indicator.addEventListener('click', () => goToSlide(index));
-                });
-            });
+            // Повторная инициализация hero-slider
+            attachHeroSliderEvents = initializeHeroSlider();
         });
     });
 </script>
