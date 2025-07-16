@@ -112,16 +112,16 @@
 
         <!-- Advantages Section -->
         <div class="mx-auto px-12 container relative about-us-advantages py-4">
-            <section aria-labelledby="advantages-title " class=" ">
+            <section aria-labelledby="advantages-title " class=" m-auto">
                 <div
-                    class="about-us-advantages-grid  ">
+                    class=" ">
                     <h2 id="advantages-title" class="sr-only">{{ __('messages.about_us.advantages_title') }}</h2>
                     @php
                         $advantages = isset($settings->advantages) && is_array($settings->advantages) ? ($settings->advantages[app()->getLocale()] ?? []) : [];
                         $advantage_images = $settings->advantage_images ?? [];
                     @endphp
                     @if (!empty($advantages))
-                        <div class="flex flex-wrap sm:flex-nowrap gap-2 w-full max-md:max-w-full  justify-between wrap-advantage">
+                        <div class="about-us-advantages-grid  wrap-advantage">
                             @foreach($advantages as $index => $advantage)
                                 <article
                                     class="]">
