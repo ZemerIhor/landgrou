@@ -99,22 +99,45 @@ function initApp() {
         });
     }
 
-    // Инициализация Swiper для отзывов (если используется)
+    // Инициализация Swiper для отзывов
     function initializeReviewSwiper() {
-        if (document.querySelector('.reviews-swiper')) {
+        const swiperContainer = document.querySelector('.reviews-swiper');
+        if (!swiperContainer) {
+            console.log('Контейнер .reviews-swiper не найден');
+            return;
+        }
+
+        // Проверяем, не инициализирован ли Swiper уже
+        if (swiperContainer.swiper) {
+            console.log('Swiper уже инициализирован для .reviews-swiper');
+            return;
+        }
+
+        try {
             window.reviewSwiper = new Swiper('.reviews-swiper', {
-                slidesPerView: 3,
-                spaceBetween: 20,
-                loop: true,
-                // Дополнительные параметры Swiper по необходимости
+                slidesPerView: 2,
+                spaceBetween: 8,
+                loop: false,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                breakpoints: {
+                    768: {
+                        slidesPerView: 3,
+                        spaceBetween: 8,
+                    },
+                },
+                navigation: false,
+                pagination: false,
             });
             console.log('Swiper для отзывов успешно инициализирован');
-        } else {
-            console.log('Контейнер .reviews-swiper не найден');
+        } catch (error) {
+            console.error('Ошибка при инициализации Swiper:', error);
         }
     }
 
-    // Обработка элементов с data-toggle (ваш оригинальный код)
+    // Обработка элементов с data-toggle
     document.querySelectorAll('[data-toggle]').forEach(button => {
         button.addEventListener('click', () => {
             const targetId = button.getAttribute('data-toggle');
