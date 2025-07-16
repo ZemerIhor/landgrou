@@ -3,8 +3,8 @@
     $currentLocale = app()->getLocale(); // Get current locale (e.g., 'en' or 'uk')
 @endphp
 
-<footer class="self-stretch bg-zinc-800 mt-auto px-[50px]" role="contentinfo" aria-label="Site footer">
-    <div class="main-container">
+<footer class="self-stretch bg-zinc-800 mt-auto conteiner relative " role="contentinfo" id="footer" aria-label="Site footer">
+    <div class="container mx-auto px-12">
         <section class="header-section">
             <div class="logo"><x-brand.logo /></div>
 
@@ -13,13 +13,10 @@
                 <nav aria-label="{{ __('messages.footer.social_aria_label') }}" class="social-links">
                     @foreach ($footer->social_links as $link)
                         @if (!empty($link['url']) && !empty($link['icon']))
-                            <a href="{{ $link['url'] }}" aria-label="{{ __('messages.footer.follow_on') }} {{ $link['icon'] }}" target="_blank" rel="noopener noreferrer">
-                                <img
-                                    src="{{ asset('images/icons/' . $link['icon'] . '.svg') }}"
-                                    alt="{{ $link['icon'] }} icon"
-                                    class="social-icon"
-                                    role="img"
-                                />
+                            <a href="{{ $link['url'] }}" aria-label="{{ __('messages.footer.follow_on') }} {{ $link['icon'] }}"
+                                target="_blank" rel="noopener noreferrer">
+                                <img src="{{ asset('images/icons/' . $link['icon'] . '.svg') }}" alt="{{ $link['icon'] }} icon"
+                                    class="social-icon" role="img" />
                             </a>
                         @endif
                     @endforeach
@@ -51,9 +48,8 @@
                         <div class="contacts-list">
                             @if (!empty($footer->phone))
                                 <div class="contact-item">
-                                    <a href="tel:{{ $footer->phone }}"
-                                       class="contact-link"
-                                       aria-label="{{ __('messages.footer.phone_aria_label') }}">
+                                    <a href="tel:{{ $footer->phone }}" class="contact-link"
+                                        aria-label="{{ __('messages.footer.phone_aria_label') }}">
                                         {{ $footer->phone }}
                                     </a>
                                 </div>
@@ -61,8 +57,7 @@
                             @if (!empty($footer->email))
                                 <div class="contact-item">
                                     <a href="mailto:{{ is_array($footer->email) ? ($footer->email[app()->getLocale()] ?? $footer->email['en'] ?? '') : $footer->email }}"
-                                       class="contact-link"
-                                       aria-label="{{ __('messages.footer.email_aria_label') }}">
+                                        class="contact-link" aria-label="{{ __('messages.footer.email_aria_label') }}">
                                         {{ is_array($footer->email) ? ($footer->email[app()->getLocale()] ?? $footer->email['en'] ?? '') : $footer->email }}
                                     </a>
                                 </div>
@@ -119,7 +114,7 @@
                 object-fit: contain;
             }
 
-            .nav-contacts ul{
+            .nav-contacts ul {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
                 gap: 40px;
@@ -128,7 +123,7 @@
             }
 
             @media (max-width: 768px) {
-                .nav-contacts ul{
+                .nav-contacts ul {
                     grid-template-columns: 1fr;
                 }
             }
@@ -138,8 +133,10 @@
                 flex-direction: column;
                 gap: 20px;
                 align-items: flex-start;
-             flex-grow: 1;
+                flex-grow: 1;
             }
+
+            
 
             @media (max-width: 640px) {
                 .menu {

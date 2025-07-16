@@ -1,5 +1,5 @@
 
-<main class="box-border px-[16px] sm:px-[28px] md:px-[50px] py-0 mx-auto my-0 mb-[100px] w-full ">
+<main class=" container mx-auto box-border px-[16px] sm:px-[28px] md:px-[50px] py-0 mx-auto my-0 mb-[100px] w-full ">
      <!-- Breadcrumbs -->
             <livewire:components.breadcrumbs
                 :currentPage="__('messages.reviews.title')"
