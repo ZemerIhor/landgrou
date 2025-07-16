@@ -1,5 +1,5 @@
 
-<main class="flex relative flex-col gap-14 items-start self-stretch px-12 py-4 max-sm:gap-8 max-sm:px-4">
+<main class="flex container m-auto relative flex-col gap-14 items-start self-stretch px-12 py-4 max-sm:gap-8 max-sm:px-4 product-page">
     <!-- Product Header Section -->
     <header class="flex relative flex-col gap-4 items-start self-stretch">
         <div class="flex relative flex-col gap-1 items-start">
@@ -150,7 +150,8 @@
                     {{ strip_tags($this->product->translateAttribute('description')) }}
                 </p>
 
-                <table class="flex relative flex-col items-start self-stretch" role="table" aria-label="{{ __('messages.product.attributes_table') }}">
+                <table class="product-properties flex relative flex-col items-start self-stretch" role="table" aria-label="{{ __('messages.product.attributes_table') }}">
+                    <tbody class="w-full"> 
                     @foreach ($this->getAttributesProperty() as $attribute)
                         <tr class="flex relative items-center self-stretch {{ $loop->even ? 'bg-white' : '' }} rounded-lg">
                             <td class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">
@@ -165,6 +166,7 @@
                             </td>
                         </tr>
                     @endforeach
+                    </tbody>
                 </table>
 
                 <!-- Price and Actions Section -->
@@ -220,16 +222,16 @@
     </section>
 
     <!-- Characteristics Section -->
-    <section class="flex relative flex-col gap-4 items-start self-stretch">
+    <section class="characteristics-section flex relative flex-col gap-4 items-start self-stretch">
         <h2 class="relative self-stretch text-xl font-bold leading-6 text-black max-sm:text-lg">
             {{ __('messages.product.characteristics') }}
         </h2>
-        <table class="flex relative flex-col items-start self-stretch"
+        <table class="characteristics flex relative flex-col items-start self-stretch"
                role="table"
                aria-label="{{ __('messages.product.detailed_attributes_table') }}">
             <!-- Table Header -->
-            <thead class="flex relative items-center self-stretch rounded-lg bg-zinc-600">
-            <tr class="flex relative items-center self-stretch rounded-lg bg-zinc-600">
+            <thead class="flex relative items-center self-stretch rounded-lg ">
+            <tr class="flex relative w-full  items-center self-stretch rounded-lg ">
                 <th class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">
                         <span class="relative text-base font-semibold leading-5 text-white flex-[1_0_0] max-sm:text-sm">
                             {{ __('messages.product.attribute_name') }}

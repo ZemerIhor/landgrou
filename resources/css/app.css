@@ -1,6 +1,6 @@
-@import 'swiper/css';
-@import 'swiper/css/navigation';
-@import 'swiper/css/pagination';
+@import "swiper/css";
+@import "swiper/css/navigation";
+@import "swiper/css/pagination";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,8 +15,8 @@
         @apply appearance-none m-0;
     }
 }
-:root{
-    background-color: #F3F3F3;
+:root {
+    background-color: #f3f3f3;
 }
 #mobile-menu {
     transition: transform 0.3s ease-in-out;
@@ -30,9 +30,14 @@
 [x-cloak] {
     display: none;
 }
-
+#header {
+    height: 56px;
+}
+#header ul {
+    align-items: center;
+}
 .gallery-slide,
-.certificate-slide{
+.certificate-slide {
     max-width: 250px;
     width: auto !important;
 }
@@ -48,48 +53,44 @@
 }
 
 .review {
-    background-color: #E6E6E6;
+    background-color: #e6e6e6;
 }
 .review-card {
-    background-color: #F3F3F3;
+    background-color: #f3f3f3;
     box-shadow: 0 4px 10px #00000025;
-
 }
 
 .pt-40 {
-  padding-top: 40px;
+    padding-top: 40px;
 }
-
 
 /* Приклад для 4 елементів на великих екранах */
 @media (min-width: 1280px) {
-  .product-card:nth-child(n + 5) {
-    display: none;
-  }
+    .product-card:nth-child(n + 5) {
+        display: none;
+    }
 }
 
 /* 3 елементи на середніх */
 @media (min-width: 769px) and (max-width: 1279px) {
-  .product-card:nth-child(n + 4) {
-    display: none;
-  }
+    .product-card:nth-child(n + 4) {
+        display: none;
+    }
 }
 
 /* 2 елементи на sm */
 @media (min-width: 640px) and (max-width: 768px) {
-  .product-card:nth-child(n + 4) {
-    display: none;
-  }
+    .product-card:nth-child(n + 4) {
+        display: none;
+    }
 }
 
 /* 1 елемент на дуже маленьких */
 @media (max-width: 639px) {
-  .product-card:nth-child(n + 3) {
-    display: none;
-  }
+    .product-card:nth-child(n + 3) {
+        display: none;
+    }
 }
-
-
 
 .swiper {
     position: relative;
@@ -139,20 +140,17 @@
     top: auto !important;
     transform: none !important;
     left: auto !important;
- 
 }
-.swiper-button-prev{
+.swiper-button-prev {
     bottom: -6px !important;
-    right: 48px !important; 
-
-
+    right: 48px !important;
 }
 .swiper-button-prev:hover,
-.swiper-button-next:hover{
+.swiper-button-next:hover {
     scale: 1.03;
 }
 .swiper-button-next {
-    bottom: -6px !important; 
+    bottom: -6px !important;
     right: 0 !important;
 }
 .swiper-button-next:after,
@@ -178,18 +176,197 @@
     }
 }
 
-
-.swiper-button-next:after, .swiper-rtl .swiper-button-prev:after {
+.swiper-button-next:after,
+.swiper-rtl .swiper-button-prev:after {
     content: "";
 }
 
-.swiper-button-prev:after, .swiper-rtl .swiper-button-next:after {
+.swiper-button-prev:after,
+.swiper-rtl .swiper-button-next:after {
     content: "";
 }
 
+@media (max-width: 10123px) {
+    #header {
+        height: 67px;
+    }
+}
 
 @media (max-width: 663px) {
-  .custom-order {
-    order: 1 !important;
-  }
+    .custom-order {
+        order: 1 !important;
+    }
+}
+
+.reviews:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: #e6e6e6;
+    /* box-shadow: 0 10px 40px rgba(0, 0, 0, .25); */
+    z-index: -1;
+    height: 100%;
+}
+.home-about-section:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: #333;
+    z-index: -1;
+    height: 100%;
+}
+#footer:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: #333;
+    z-index: -1;
+    height: 100%;
+}
+.about-us-advantages:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: #333;
+    z-index: -1;
+    height: 100%;
+}
+.about-us-gallery:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: #e6e6e6;
+    z-index: -1;
+    height: 100%;
+}
+
+.about-us-certificate:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: #333;
+    z-index: -1;
+    height: 100%;
+}
+.catalog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(224px, 1fr));
+    gap: 1rem;
+    grid-auto-rows: 378px;
+    align-items: stretch;
+}
+.card {
+    display: flex;
+    flex-direction: column;
+    max-width: 289px;
+    width: 100%;
+    margin: 0 auto;
+    height: 100%;
+}
+.card-footer {
+    margin-top: auto; /* 🔑 притискає низ */
+}
+@media (max-width: 688px) {
+    .catalog-grid {
+        grid-auto-rows: 397px;
+    }
+    .card {
+        max-width: 224px;
+    }
+}
+.top-section {
+    background: #333333;
+}
+
+.bg-shape {
+    fill: var(--Bg, #f3f3f3);
+    filter: drop-shadow(
+            var(--sds-size-depth-0) 0px var(--sds-size-depth-100)
+                rgba(12, 12, 13, 0.05)
+        )
+        drop-shadow(
+            var(--sds-size-depth-0) 0px var(--sds-size-depth-800)
+                rgba(12, 12, 13, 0.15)
+        );
+    width: 1280px;
+    height: 780px;
+    flex-shrink: 0;
+    aspect-ratio: 64/39;
+}
+
+.product-properties tbody tr {
+    border-radius: 8px;
+}
+.product-properties tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+.characteristics thead {
+    background-color: #606060;
+    border-radius: 8px;
+    width: 100%;
+}
+.characteristics tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.about-us-advantages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    grid-auto-rows: 190px;
+    align-items: stretch;
+}
+.about-us-advantages-grid article{
+    display: flex;
+  flex-direction: column;
+  flex: 1 1 0%;             /* flex-grow: 1, flex-shrink: 1, flex-basis: 0 */
+  padding: 1.5rem;          /* p-6 */
+  align-items: stretch;     /* items-stretch */
+  justify-content: center;  /* justify-center */
+  min-width: 0;             /* min-w-[0] */
+  max-width: 190px;         /* max-w-[190px] */
+  height: 100%;             /* h-full */
+  background-color: #262626; /* bg-neutral-800 (або #1f2937 в залежності від теми Tailwind) */
+  border-radius: 1.5rem;    /* rounded-3xl ≈ 24px */
+  box-shadow:
+    0 4px 8px -1px rgba(0, 0, 0, 0.2),
+    0 1px 1px -1px rgba(0, 0, 0, 0.1); /* shadow-[...] */
+}
+.about-us-advantages-grid .img {
+     display: flex;
+  flex-direction: column;
+  flex: 1 1 0%;             /* flex-grow: 1, flex-shrink: 1, flex-basis: 0 */
+  align-items: stretch;     /* items-stretch */
+  justify-content: center;  /* justify-center */
+  min-width: 108px;             /* min-w-[0] */
+  max-width: 190px;         /* max-w-[190px] */
+  height: 100%;             /* h-full */
+  border-radius: 1.5rem;    /* rounded-3xl ≈ 24px */
+  box-shadow:
+    0 4px 8px -1px rgba(0, 0, 0, 0.2),
+    0 1px 1px -1px rgba(0, 0, 0, 0.1); /* shadow-[...] */
+}
+.about-us-advantages-grid .img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* або contain — залежно від бажаного ефекту */
+  border-radius: inherit; /* якщо потрібно округлення, як у батька */
 }

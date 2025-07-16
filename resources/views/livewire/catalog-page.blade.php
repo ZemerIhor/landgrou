@@ -1,4 +1,4 @@
-<main class="self-stretch px-12 pt-14 bg-zinc-100 max-md:px-5">
+<main class=" container  mx-auto self-stretch pb-14 px-12 max-md:px-5 catalog-page">
     <!-- Breadcrumbs Navigation -->
     <livewire:components.breadcrumbs :currentPage="__('messages.breadcrumbs.catalog')" :items="[]" />
 
@@ -170,9 +170,9 @@
             @endif
 
             <!-- Grid or List view based on $view -->
-            <div class="{{ $view == 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6' : 'flex flex-col gap-6' }}">
+            <div class="{{ $view == 'grid' ? 'catalog-grid ' : 'flex flex-col gap-6' }} catalog-page-grid">
                 @forelse ($products as $product)
-                    <article wire:key="product-{{ $product->id }}" class="overflow-hidden rounded-3xl bg-neutral-200 min-w-60">
+                    <article wire:key="product-{{ $product->id }}" class="overflow-hidden rounded-3xl bg-neutral-200 card">
                         <div class="flex relative flex-col w-full min-h-[153px]">
                             @if ($product->thumbnail)
                                 <div class="flex overflow-hidden h-[163px]">
@@ -193,7 +193,7 @@
 
                                 </div>
                         </div>
-                        <div class="p-4 w-full">
+                        <div class="p-4 w-full flex flex-1 flex-col justify-between">
                             <div class="w-full text-zinc-800">
                                 <h3 class="text-base font-bold leading-5 text-zinc-800">
                                     <a href="{{ route('product.view', $product->defaultUrl->slug ?? '') }}">
@@ -207,11 +207,11 @@
                                     <p class="text-xs mt-1">{{ __('Бренд') }}: {{ $product->brand->translateAttribute('name') ?? $product->brand->name ?? 'N/A' }}</p>
                                 @endif
                             </div>
-                            <div class="flex gap-10 justify-between items-end mt-2 w-full text-base font-bold">
+                            <div class="flex gap-10 justify-between items-end mt-auto w-full text-base font-bold card-footer">
                                 <span class="leading-tight text-zinc-800">
                                     <x-product-price :product="$product" />
                                 </span>
-                                <div class="mt-3">
+                                <div class="mt-2">
                                     <livewire:components.add-to-cart :purchasable="$product->variants->first()" :key="'add-to-cart-' . $product->id" />
                                 </div>
                             </div>
