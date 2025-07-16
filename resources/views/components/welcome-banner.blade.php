@@ -68,9 +68,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-
         // Hero Slider
-        let currentSlide = 1; // Починаємо з второго
+        let currentSlide = 0; // Start from the first slide for consistency
         const slider = document.getElementById('hero-slider');
         const slides = document.querySelectorAll('#hero-slider > div');
         const indicators = document.querySelectorAll('[data-slide]');
@@ -93,10 +92,10 @@
             });
         }
 
-        // Инициализация hero-slider без transition
+        // Initialize hero-slider without transition
         updateSlider(false);
 
-        // После первого кадра включаем видимость и transition
+        // Enable visibility and transition after first frame
         requestAnimationFrame(() => {
             slider.classList.remove('opacity-0', 'invisible');
             sliderWrap.classList.remove('opacity-0', 'invisible');
@@ -104,7 +103,7 @@
             updateSlider(true);
         });
 
-        // Функции для стрелок
+        // Functions for arrows
         window.moveSlide = function(direction) {
             if (slides.length === 0) return;
             currentSlide = (currentSlide + direction + slides.length) % slides.length;
@@ -117,24 +116,40 @@
             updateSlider();
         };
 
-        // Обновление на изменение размера
+        // Update on resize
         window.addEventListener('resize', () => updateSlider(false));
 
-        // Инициализация Swiper и hero-slider при загрузке страницы
+        // Placeholder for Swiper initialization (adapt to your actual review swiper selector)
+        window.initializeReviewSwiper = function() {
+            if (typeof Swiper === 'undefined') {
+                console.error('Swiper не найден. Убедитесь, что библиотека подключена.');
+                return;
+            }
+            // Example: Initialize Swiper for a reviews section (replace '.reviews-swiper' with your actual class)
+            window.reviewSwiper = new Swiper('.reviews-swiper', {
+                // Your Swiper options here, e.g., slidesPerView: 3, loop: true, etc.
+            });
+            console.log('Swiper для отзывов успешно инициализирован');
+        };
 
-        // Повторная инициализация при SPA-навигации (Livewire)
+        // Initial call to initialize Swiper
+        initializeReviewSwiper();
+
+        // Reinitialization on Livewire navigation
         document.addEventListener('livewire:navigated', () => {
             console.log('Livewire navigated, reinitializing sliders');
-            // Уничтожаем Swiper
-            if (reviewSwiper) {
+
+            // Safely destroy Swiper if defined
+            if (typeof reviewSwiper !== 'undefined' && reviewSwiper) {
                 reviewSwiper.destroy(true, true);
-                reviewSwiper = null;
+                reviewSwiper = null; // Explicitly nullify after destroy
             }
-            // Переинициализируем Swiper
+
+            // Reinitialize Swiper
             initializeReviewSwiper();
 
-            // Переинициализация hero-slider
-            currentSlide = 1;
+            // Reinitialize hero-slider safely
+            currentSlide = 0;
             updateSlider(false);
             requestAnimationFrame(() => {
                 slider.classList.remove('opacity-0', 'invisible');
