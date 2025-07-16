@@ -1,4 +1,4 @@
-<div class="relative mt-5 w-full mx-auto overflow-hidden home-slider-main" aria-label="{{ __('messages.hero.aria_label') }}">
+<div class="relative mt-5 w-full mx-auto overflow-hidden home-slider-main" aria-label="Головний банер">
     <div class="relative mx-auto transition-opacity duration-300" style="width: 90%" id="slider-wrap">
         <div class="flex duration-300" id="hero-slider" style="gap: 20px;">
             @php
@@ -18,16 +18,16 @@
                                 </svg>
                             </div>
                             <div class="flex flex-col gap-2 justify-center mb-5">
-                                <h1 class="text-5xl font-bold">{{ $slide['heading'] ?? __('messages.hero.default_heading') }}</h1>
-                                <p class="mt-4 text-xl">{!! $slide['subheading'] ?? __('messages.hero.default_subheading') !!}</p>
-                                <p class="mt-2 text-sm">{{ $slide['extra_text'] ?? __('messages.hero.default_extra_text') }}</p>
+                                <h1 class="text-5xl font-bold">{{ $slide['heading'] ?? 'VIVID ENEGE' }}</h1>
+                                <p class="mt-4 text-xl">{!! $slide['subheading'] ?? 'Українська компанія з видобування й переробки торфу' !!}</p>
+                                <p class="mt-2 text-sm">{{ $slide['extra_text'] ?? 'Keep warm' }}</p>
                             </div>
                             <div class="flex justify-center mt-6 gap-4 max-md:flex-col">
                                 <a href="{{ route('catalog.view') }}" class="px-6 py-3 border-2 border-white rounded-2xl text-white hover:bg-white hover:text-black transition">
-                                    {{ __('messages.hero.catalog_button') }} →
+                                    Каталог →
                                 </a>
                                 <a href="#" class="px-6 py-3 bg-green-600 text-white rounded-2xl hover:bg-green-700 transition">
-                                    {{ __('messages.hero.buy_now_button') }} →
+                                    Купити зараз →
                                 </a>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
                 @endforeach
             @else
                 <div class="min-w-full flex items-center justify-center bg-gray-200 text-gray-500 p-10">
-                    {{ __('messages.hero.no_slides') }}
+                    Немає слайдів
                 </div>
             @endif
         </div>
@@ -80,15 +80,16 @@
             const nextButton = document.querySelector('.hero-next');
             const gap = 20;
 
+            if (!slider || !sliderWrap || slides.length === 0) {
+                console.warn('Слайдер, обертка или слайды не найдены');
+                return () => {}; // Возвращаем пустую функцию, если слайдер не инициализирован
+            }
+
             function getSlideWidth() {
-                return slider ? slider.parentElement.offsetWidth : 0;
+                return slider.parentElement.offsetWidth;
             }
 
             function updateSlider(applyTransition = true) {
-                if (!slider || slides.length === 0) {
-                    console.warn('Слайдер или слайды не найдены');
-                    return;
-                }
                 const slideWidth = getSlideWidth();
                 slider.style.transition = applyTransition ? 'transform 0.5s ease-in-out' : 'none';
                 slider.style.transform = `translateX(-${currentSlide * (slideWidth + gap)}px)`;
@@ -97,69 +98,77 @@
                     indicator.classList.toggle('bg-green-500', index === currentSlide);
                     indicator.classList.toggle('bg-white/50', index !== currentSlide);
                 });
+                console.log(`Слайдер обновлен, текущий слайд: ${currentSlide}`);
             }
 
             // Инициализация без анимации
             updateSlider(false);
 
             // Включение видимости и анимации
-            if (slider && sliderWrap) {
-                requestAnimationFrame(() => {
-                    slider.classList.remove('opacity-0', 'invisible');
-                    sliderWrap.classList.remove('opacity-0', 'invisible');
-                    slider.style.transition = 'transform 0.5s ease-in-out';
-                    updateSlider(true);
-                });
-            }
+            requestAnimationFrame(() => {
+                slider.classList.remove('opacity-0', 'invisible');
+                sliderWrap.classList.remove('opacity-0', 'invisible');
+                slider.style.transition = 'transform 0.5s ease-in-out';
+                updateSlider(true);
+            });
 
             // Функции навигации
             function moveSlide(direction) {
                 if (slides.length === 0) return;
                 currentSlide = (currentSlide + direction + slides.length) % slides.length;
                 updateSlider();
+                console.log(`Переключение слайда, направление: ${direction}, текущий слайд: ${currentSlide}`);
             }
 
             function goToSlide(index) {
                 if (slides.length === 0) return;
                 currentSlide = parseInt(index, 10);
                 updateSlider();
+                console.log(`Переход к слайду: ${currentSlide}`);
             }
 
-            // Очистка и привязка обработчиков событий
+            // Привязка обработчиков событий
             function attachEventListeners() {
                 if (prevButton) {
-                    // Удаляем старые обработчики, если есть
                     prevButton.removeEventListener('click', () => moveSlide(-1));
                     prevButton.addEventListener('click', () => moveSlide(-1));
                     console.log('Обработчик для prevButton привязан');
+                } else {
+                    console.warn('Кнопка prevButton не найдена');
                 }
                 if (nextButton) {
                     nextButton.removeEventListener('click', () => moveSlide(1));
                     nextButton.addEventListener('click', () => moveSlide(1));
                     console.log('Обработчик для nextButton привязан');
+                } else {
+                    console.warn('Кнопка nextButton не найдена');
                 }
-                indicators.forEach(indicator => {
-                    const index = parseInt(indicator.getAttribute('data-slide'), 10);
+                indicators.forEach((indicator, index) => {
                     indicator.removeEventListener('click', () => goToSlide(index));
-                    indicator.addEventListener('click', () => goToSlide(index));
+                    indicator.addEventListener('click', () => goToSlide(indicator.getAttribute('data-slide')));
+                    console.log(`Обработчик для индикатора ${index} привязан`);
                 });
-                console.log('Обработчики для индикаторов привязаны');
             }
 
-            // Привязка обработчиков событий при инициализации
+            // Первоначальная привязка обработчиков
             attachEventListeners();
 
             // Обновление при изменении размера окна
-            window.addEventListener('resize', () => updateSlider(false));
+            window.addEventListener('resize', () => {
+                if (slides.length > 0) {
+                    updateSlider(false);
+                    console.log('Слайдер обновлен при изменении размера окна');
+                }
+            });
 
-            // Возвращаем функцию для повторной привязки обработчиков
+            // Возвращаем функцию для перепривязки обработчиков
             return attachEventListeners;
         }
 
         // Инициализация слайдера
         let attachHeroSliderEvents = initializeHeroSlider();
 
-        // Инициализация Swiper для отзывов
+        // Инициализация Swiper для отзывов (если используется)
         window.initializeReviewSwiper = function() {
             if (typeof Swiper === 'undefined') {
                 console.error('Swiper не найден. Убедитесь, что библиотека подключена.');
