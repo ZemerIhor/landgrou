@@ -111,10 +111,10 @@
         </header>
 
         <!-- Advantages Section -->
-        <div class="mx-auto px-12 container relative about-us-advantages">
-            <section aria-labelledby="advantages-title">
+        <div class="mx-auto px-12 container relative about-us-advantages py-4">
+            <section aria-labelledby="advantages-title " class=" ">
                 <div
-                    class="flex mx-auto  overflow-hidden  items-stretch flex-col justify-center py-10 w-full max-w-screen-xl text-center">
+                    class="about-us-advantages-grid  ">
                     <h2 id="advantages-title" class="sr-only">{{ __('messages.about_us.advantages_title') }}</h2>
                     @php
                         $advantages = isset($settings->advantages) && is_array($settings->advantages) ? ($settings->advantages[app()->getLocale()] ?? []) : [];
@@ -308,22 +308,5 @@
 
     </div>
     <livewire:components.blog-section />
-
-
-
-    <style>
-        .top-section {
-            background: #333333;
-        }
-
-        .bg-shape {
-            fill: var(--Bg, #F3F3F3);
-            filter: drop-shadow(var(--sds-size-depth-0) 0px var(--sds-size-depth-100) rgba(12, 12, 13, 0.05)) drop-shadow(var(--sds-size-depth-0) 0px var(--sds-size-depth-800) rgba(12, 12, 13, 0.15));
-            width: 1280px;
-            height: 780px;
-            flex-shrink: 0;
-            aspect-ratio: 64/39;
-        }
-    </style>
 
 </div>

@@ -231,7 +231,7 @@
     background: #333;
     z-index: -1;
     height: 100%;
-} 
+}
 .about-us-advantages:before {
     content: "";
     position: absolute;
@@ -242,7 +242,7 @@
     background: #333;
     z-index: -1;
     height: 100%;
-} 
+}
 .about-us-gallery:before {
     content: "";
     position: absolute;
@@ -253,7 +253,7 @@
     background: #e6e6e6;
     z-index: -1;
     height: 100%;
-} 
+}
 
 .about-us-certificate:before {
     content: "";
@@ -265,47 +265,72 @@
     background: #333;
     z-index: -1;
     height: 100%;
-} 
+}
 .catalog-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(224px, 1fr));
-  gap: 1rem;
-  grid-auto-rows: 378px;
-  align-items: stretch;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(224px, 1fr));
+    gap: 1rem;
+    grid-auto-rows: 378px;
+    align-items: stretch;
 }
 .card {
     display: flex;
     flex-direction: column;
-  max-width: 289px; 
-  width: 100%;
-  margin: 0 auto;
-  height: 100%
+    max-width: 289px;
+    width: 100%;
+    margin: 0 auto;
+    height: 100%;
 }
 .card-footer {
-  margin-top: auto; /* 🔑 притискає низ */
+    margin-top: auto; /* 🔑 притискає низ */
 }
 @media (max-width: 688px) {
-    .catalog-grid{
+    .catalog-grid {
         grid-auto-rows: 397px;
     }
     .card {
-  max-width: 224px; 
- 
+        max-width: 224px;
+    }
 }
-    
+.top-section {
+    background: #333333;
 }
-.product-properties tbody tr{
+
+.bg-shape {
+    fill: var(--Bg, #f3f3f3);
+    filter: drop-shadow(
+            var(--sds-size-depth-0) 0px var(--sds-size-depth-100)
+                rgba(12, 12, 13, 0.05)
+        )
+        drop-shadow(
+            var(--sds-size-depth-0) 0px var(--sds-size-depth-800)
+                rgba(12, 12, 13, 0.15)
+        );
+    width: 1280px;
+    height: 780px;
+    flex-shrink: 0;
+    aspect-ratio: 64/39;
+}
+
+.product-properties tbody tr {
     border-radius: 8px;
 }
 .product-properties tbody tr:nth-child(odd) {
-  background-color: #FFFFFF;
+    background-color: #ffffff;
 }
-.characteristics  thead {
+.characteristics thead {
     background-color: #606060;
     border-radius: 8px;
     width: 100%;
 }
 .characteristics tbody tr:nth-child(even) {
-  background-color: #FFFFFF;
+    background-color: #ffffff;
 }
 
+.about-us-advantages-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    grid-auto-rows: 190px;
+    align-items: stretch;
+}
