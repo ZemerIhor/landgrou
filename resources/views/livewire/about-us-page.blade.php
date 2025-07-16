@@ -124,7 +124,7 @@
                         <div class="flex flex-wrap sm:flex-nowrap gap-2 w-full max-md:max-w-full  justify-between wrap-advantage">
                             @foreach($advantages as $index => $advantage)
                                 <article
-                                    class="flex flex-col flex-1  p-6 items-stretch justify-center min-w-[0] aspect-[1] rounded-3xl basis-0 bg-neutral-800 h-[180px] max-w-[190px] shadow-[0_4px_8px_-1px_rgba(0,0,0,0.2),0_1px_1px_-1px_rgba(0,0,0,0.1)]">
+                                    class="]">
                                     <div class="self-center text-4xl leading-none text-green-600">
                                         {{ $advantage['value'] ?? '0' }}
                                     </div>
@@ -144,14 +144,14 @@
                                 @if (isset($advantage_images[$index]) && isset($advantage_images[$index]['image']) && Storage::disk('public')->exists($advantage_images[$index]['image']))
 
                                     <div
-                                        class="overflow-hidden flex-col flex-1 justify-center  rounded-3xl h-[180px] max-w-[190px] min-w-[0] shadow-[0_4px_8px_-1px_rgba(0,0,0,0.2),0_1px_1px_-1px_rgba(0,0,0,0.1)] ">
+                                        class="img overflow-hidden  ">
                                         <img src="{{ Storage::url($advantage_images[$index]['image']) }}"
                                             alt="{{ is_array($advantage_images[$index]['alt']) ? ($advantage_images[$index]['alt'][app()->getLocale()] ?? $advantage_images[$index]['alt']['en'] ?? '') : ($advantage_images[$index]['alt'] ?? '') }}"
                                             class="object-cover h-full w-full " />
                                     </div>
                                 @elseif (isset($advantage_images[$index]))
                                     <div
-                                        class="overflow-hidden flex-col flex-1  justify-center rounded-3xl h-[180px] max-w-[190px] min-w-[0] shadow-[0_4px_8px_-1px_rgba(0,0,0,0.2),0_1px_1px_-1px_rgba(0,0,0,0.1)] ">
+                                        class="overflow-hidden ">
                                         <img src="{{ asset('images/fallback-advantage.jpg') }}"
                                             alt="{{ is_array($advantage_images[$index]['alt']) ? ($advantage_images[$index]['alt'][app()->getLocale()] ?? $advantage_images[$index]['alt']['en'] ?? '') : ($advantage_images[$index]['alt'] ?? '') }}"
                                             class="object-cover h-full w-full" />
