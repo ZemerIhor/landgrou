@@ -1,6 +1,6 @@
 <div class="relative mt-5 w-full mx-auto overflow-hidden home-slider-main" aria-label="{{ __('messages.hero.aria_label') }}">
     <div class="relative mx-auto transition-opacity duration-300" style="width: 90%" id="slider-wrap">
-        <div class="flex opacity-0 invisible transition-opacity duration-300" id="hero-slider" style="gap: 20px;">
+        <div class="flex duration-300" id="hero-slider" style="gap: 20px;">
             @php
                 $locale = app()->getLocale();
                 $heroSlides = $settings->hero_slides[$locale] ?? [];
