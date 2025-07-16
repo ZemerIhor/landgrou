@@ -273,7 +273,14 @@
     grid-auto-rows: 378px;
     align-items: stretch;
 }
-.card {
+.catalog-list {
+     display: grid;
+     grid-template-columns: 1fr;    
+    gap: 1rem;
+    grid-auto-rows: 153px;
+    align-items: stretch;
+}
+.catalog-grid .card {
     display: flex;
     flex-direction: column;
     max-width: 289px;
@@ -281,6 +288,21 @@
     margin: 0 auto;
     height: 100%;
 }
+.catalog-list .card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    /* margin: 0 auto;
+    height: 100%; */
+}
+.catalog-list .card .product-top{
+    width: 30%;
+
+}
+.catalog-list .card .product-bottom{
+    width: 70%;
+}
+
 .card-footer {
     margin-top: auto; /* 🔑 притискає низ */
 }

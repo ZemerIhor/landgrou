@@ -170,10 +170,10 @@
             @endif
 
             <!-- Grid or List view based on $view -->
-            <div class="{{ $view == 'grid' ? 'catalog-grid ' : 'flex flex-col gap-6' }} catalog-page-grid">
+            <div class="{{ $view == 'grid' ? 'catalog-grid ' : 'catalog-list' }} catalog-page-grid">
                 @forelse ($products as $product)
                     <article wire:key="product-{{ $product->id }}" class="overflow-hidden rounded-3xl bg-neutral-200 card">
-                        <div class="flex relative flex-col w-full min-h-[153px]">
+                        <div class="flex relative flex-col w-full min-h-[153px] product-top">
                             @if ($product->thumbnail)
                                 <div class="flex overflow-hidden h-[163px]">
                                     <a href="{{ route('product.view', $product->defaultUrl->slug ?? '') }}">
@@ -193,7 +193,7 @@
 
                                 </div>
                         </div>
-                        <div class="p-4 w-full flex flex-1 flex-col justify-between">
+                        <div class="p-4 w-full flex flex-1 flex-col justify-between product-bottom">
                             <div class="w-full text-zinc-800">
                                 <h3 class="text-base font-bold leading-5 text-zinc-800">
                                     <a href="{{ route('product.view', $product->defaultUrl->slug ?? '') }}">
