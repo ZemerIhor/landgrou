@@ -31,7 +31,7 @@
         <!-- Close Button -->
         <button
             wire:click="closeModal"
-            class="flex absolute top-0 right-0 flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+            class="flex absolute button-modal-close flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             aria-label="{{ __('messages.contact_form.close_button_aria_label') }}"
         >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -198,7 +198,7 @@
     >
         <button
             wire:click="closeModal"
-            class="flex absolute top-0 right-0 flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+            class="flex absolute button-modal-close flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             aria-label="{{ __('messages.contact_form.close_button_aria_label') }}"
         >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -265,7 +265,7 @@
     >
         <button
             wire:click="closeModal"
-            class="flex absolute top-0 right-0 flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+            class="flex absolute button-modal-close flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             aria-label="{{ __('messages.contact_form.close_button_aria_label') }}"
         >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

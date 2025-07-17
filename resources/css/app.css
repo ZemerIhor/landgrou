@@ -292,7 +292,10 @@
         max-width: 224px;
     }
 }
-
+.button-modal-close {
+    top: 50px;
+    right: 50px;
+}
 
 .top-section {
     background: #333333;
