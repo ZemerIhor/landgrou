@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 class ContactForm extends Component
 {
     public $isOpen = false;
-    public $state = 'form'; // 'form', 'success', or 'error'
+    public $state = 'form';
 
     #[Rule('required|string|max:255')]
     public $name = '';
@@ -37,9 +37,10 @@ class ContactForm extends Component
 
     public function mount()
     {
-        $this->isOpen = false; // Гарантируем, что модальное окно закрыто при загрузке
+        $this->isOpen = false;
         $this->state = 'form';
         $this->resetForm();
+        Log::info('ContactForm mounted', ['isOpen' => $this->isOpen, 'state' => $this->state]);
     }
 
     #[On('openContactForm')]
@@ -48,7 +49,9 @@ class ContactForm extends Component
         $this->isOpen = true;
         $this->state = 'form';
         $this->resetForm();
+        Log::info('ContactForm opened', ['isOpen' => $this->isOpen, 'state' => $this->state]);
     }
+
     public function resetModal()
     {
         $this->reset([
@@ -62,15 +65,17 @@ class ContactForm extends Component
             'state',
         ]);
         $this->state = 'form';
-        $this->isOpen = true; // Открываем модальное окно при инициализации
-        Log::info('Feedback form modal reset', ['state' => $this->state]);
+        $this->isOpen = false; // Модальное окно закрыто по умолчанию
+        Log::info('ContactForm modal reset', ['state' => $this->state, 'isOpen' => $this->isOpen]);
     }
+
     public function closeModal()
     {
         $this->isOpen = false;
         $this->resetForm();
         $this->state = 'form';
         $this->dispatch('closeContactForm');
+        Log::info('ContactForm closed', ['isOpen' => $this->isOpen, 'state' => $this->state]);
     }
 
     public function submit()
@@ -85,6 +90,7 @@ class ContactForm extends Component
             $this->resetForm();
             session()->flash('message', __('messages.form_submitted'));
             $this->dispatch('formSubmitted');
+            Log::info('ContactForm submitted successfully', $validated);
         } catch (\Exception $e) {
             Log::error('Contact form submission failed', [
                 'error' => $e->getMessage(),
@@ -98,22 +104,26 @@ class ContactForm extends Component
     public function tryAgain()
     {
         $this->state = 'form';
+        Log::info('ContactForm try again', ['state' => $this->state]);
     }
 
     public function continueFromSuccess()
     {
         $this->closeModal();
+        Log::info('ContactForm continued from success', ['state' => $this->state]);
     }
 
     public function goBack()
     {
         $this->closeModal();
+        Log::info('ContactForm go back', ['state' => $this->state]);
     }
 
     private function resetForm()
     {
         $this->reset(['name', 'email', 'phone', 'subject', 'formMessage', 'agreePrivacy', 'rating']);
         $this->resetErrorBag();
+        Log::info('ContactForm form reset');
     }
 
     public function render()
