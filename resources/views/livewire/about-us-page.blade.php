@@ -18,7 +18,7 @@
                          class="object-cover absolute inset-0 size-full" />
                 @endif
 
-                <div class="container px-12 mx-auto ">
+                <div class="container md:px-12 px-4 mx-auto ">
                     <!-- Breadcrumbs -->
                     <nav aria-label="{{ __('messages.about_us.breadcrumbs_aria_label') }}"
                          class="flex relative flex-wrap gap-2 items-center self-stretch w-full text-xs min-h-[34px] max-md:max-w-full">
@@ -103,7 +103,7 @@
         </header>
 
         <!-- Advantages Section -->
-        <div class="mx-auto px-12 container relative about-us-advantages py-12">
+        <div class="mx-auto md:px-12 px-4 container relative about-us-advantages py-12">
 
             <section aria-labelledby="advantages-title " class=" ">
                 <div
@@ -157,7 +157,7 @@
             </section>
         </div>
 
-<div class="relative container m-auto px-12 ">
+<div class="relative container m-auto md:px-12 px-4 ">
 
         <img src="{{ asset('images/1.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute left-0 bottom-0" />
         <img src="{{ asset('images/2.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute right-0 bottom-0" />
@@ -223,7 +223,7 @@
 
         <!-- Gallery Section -->
         <section class="m-auto relative overflow-hidden about-us-gallery" aria-labelledby="gallery-title">
-            <div class="py-12 px-12 container m-auto">
+            <div class="py-12 md:px-12 px-4 container m-auto">
                 @if (isset($settings->gallery_title) && (is_array($settings->gallery_title) ? isset($settings->gallery_title[app()->getLocale()]) : is_string($settings->gallery_title)))
                     <h2 id="gallery-title" class="text-4xl font-bold text-zinc-800">
                         {{ is_array($settings->gallery_title) ? $settings->gallery_title[app()->getLocale()] : $settings->gallery_title }}
@@ -308,7 +308,7 @@
         </section>
 
         <!-- Certificates Section -->
-        <section class="container relative mx-auto about-us-certificate px-12 py-12" aria-labelledby="certificates-title">
+        <section class="container relative mx-auto about-us-certificate md:px-12 py-12 px-4" aria-labelledby="certificates-title">
             <div>
                 @if (isset($settings->certificates_title) && (is_array($settings->certificates_title) ? isset($settings->certificates_title[app()->getLocale()]) : is_string($settings->certificates_title)))
                     <h2 id="certificates-title" class="text-3xl font-bold text-white">

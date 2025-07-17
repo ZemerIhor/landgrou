@@ -127,9 +127,9 @@ order: -1;
     }
 </style>
 
-<div class="container mx-auto mx-auto px-[16px] sm:px-[28px] md:px-[50px]">
+<div class="container mx-auto px-4 md:px-12">
     <section class="" aria-label="Frequently Asked Questions">
-        <div class="main-container">
+        <div class="">
             <!-- Breadcrumbs -->
             <livewire:components.breadcrumbs
                 :currentPage="__('messages.faq.title')"
