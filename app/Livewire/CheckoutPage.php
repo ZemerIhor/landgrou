@@ -23,7 +23,6 @@ class CheckoutPage extends Component
     public int $currentStep = 1;
     public ?string $chosenShipping = null;
     public ?string $comment = '';
-    public bool $shippingIsBilling = true;
 
     public array $shippingOptions = [];
     public array $npCities = [];
@@ -180,7 +179,6 @@ class CheckoutPage extends Component
             'shippingData.postcode' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
             'chosenShipping' => 'required|string|in:pickup,nova-poshta,courier',
             'comment' => 'nullable|string|max:500',
-            'shippingIsBilling' => 'boolean',
         ];
     }
 
@@ -272,7 +270,6 @@ class CheckoutPage extends Component
             'shippingData.contact_email' => 'required|email|max:255',
             'shippingData.company' => 'nullable|string|max:255',
             'privacy_policy' => 'accepted',
-            'shippingIsBilling' => 'boolean',
         ]);
 
         Log::info('Сохранение адреса доставки', ['shipping' => $this->shippingData]);
@@ -288,44 +285,7 @@ class CheckoutPage extends Component
         $this->cart->setShippingAddress($this->cart->shippingAddress);
         $this->cart->refresh();
 
-        if ($this->shippingIsBilling) {
-            $billingAddress = CartAddress::where('cart_id', $this->cart->id)
-                ->where('type', 'billing')
-                ->first();
 
-            if (!$billingAddress) {
-                $billingAddress = $this->cart->addresses()->create([
-                    'type' => 'billing',
-                    'country_id' => $this->cart->shippingAddress->country_id,
-                    'first_name' => $this->shippingData['first_name'],
-                    'last_name' => $this->shippingData['last_name'],
-                    'contact_phone' => $this->shippingData['contact_phone'],
-                    'contact_email' => $this->shippingData['contact_email'],
-                    'company' => $this->shippingData['company'] ?? null,
-                    'city' => $this->shippingData['city'] ?? 'Не требуется',
-                    'line_one' => $this->shippingData['line_one'] ?? 'Самовывоз',
-                    'postcode' => $this->shippingData['postcode'] ?? '00000',
-                ]);
-                Log::info('Создан новый адрес для выставления счета', [
-                    'cart_id' => $this->cart->id,
-                    'billing_address_id' => $billingAddress->id,
-                ]);
-            } else {
-                $billingAddress->fill([
-                    'country_id' => $this->cart->shippingAddress->country_id,
-                    'first_name' => $this->shippingData['first_name'],
-                    'last_name' => $this->shippingData['last_name'],
-                    'contact_phone' => $this->shippingData['contact_phone'],
-                    'contact_email' => $this->shippingData['contact_email'],
-                    'company' => $this->shippingData['company'] ?? null,
-                    'city' => $this->shippingData['city'] ?? 'Не требуется',
-                    'line_one' => $this->shippingData['line_one'] ?? 'Самовывоз',
-                    'postcode' => $this->shippingData['postcode'] ?? '00000',
-                ])->save();
-            }
-            $this->cart->setBillingAddress($billingAddress);
-            $this->cart->refresh();
-        }
 
         $this->currentStep = $this->steps['delivery'];
         session(['checkout_step' => $this->currentStep]);
@@ -344,25 +304,25 @@ class CheckoutPage extends Component
             'comment' => 'nullable|string|max:500',
         ]);
 
-        Log::info('Выбрана опция доставки', [
+        \Illuminate\Support\Facades\Log::info('Выбрана опция доставки', [
             'cart_id' => $this->cart->id,
             'chosen_shipping' => $this->chosenShipping,
         ]);
 
         if (!$this->chosenShipping) {
-            Log::error('Опция доставки не выбрана', [
+            \Illuminate\Support\Facades\Log::error('Опция доставки не выбрана', [
                 'cart_id' => $this->cart->id,
             ]);
             $this->addError('chosenShipping', __('messages.checkout.shipping_option_not_found'));
             return;
         }
 
-        $option = ShippingManifest::getOptions($this->cart)->first(
+        $option = \Lunar\Facades\ShippingManifest::getOptions($this->cart)->first(
             fn($opt) => $opt->getIdentifier() === $this->chosenShipping
         );
 
         if (!$option) {
-            Log::error('Опция доставки не найдена', [
+            \Illuminate\Support\Facades\Log::error('Опция доставки не найдена', [
                 'cart_id' => $this->cart->id,
                 'chosen_shipping' => $this->chosenShipping,
             ]);
@@ -374,6 +334,18 @@ class CheckoutPage extends Component
             // Устанавливаем опцию доставки
             $this->cart->setShippingOption($option);
 
+            // Проверяем и устанавливаем channel_id
+            $channel = \Lunar\Models\Channel::where('handle', 'web')->first();
+            if (!$channel) {
+                \Illuminate\Support\Facades\Log::error('Канал с handle "web" не найден', [
+                    'cart_id' => $this->cart->id,
+                    'available_channels' => \Lunar\Models\Channel::all()->toArray(),
+                ]);
+                throw new \Exception('Канал продаж не настроен. Пожалуйста, обратитесь к администратору.');
+            }
+            $this->cart->channel_id = $channel->id;
+            $this->cart->save();
+
             // Сохраняем дополнительные данные в meta
             $this->cart->meta = array_merge($this->cart->meta ? $this->cart->meta->toArray() : [], [
                 'shipping_option' => $this->chosenShipping,
@@ -383,15 +355,16 @@ class CheckoutPage extends Component
                 'shipping_tax_breakdown' => [],
                 'sub_total' => $this->cart->subTotal->value ?? 0,
                 'total' => $this->cart->total->value ?? 0,
-                'tax_total' => 0, // Налоги отключены
+                'tax_total' => 0,
             ]);
             $this->cart->save();
             $this->cart->refresh();
 
-            Log::info('Опция доставки установлена', [
+            \Illuminate\Support\Facades\Log::info('Опция доставки установлена', [
                 'cart_id' => $this->cart->id,
                 'shipping_option' => $this->cart->meta['shipping_option'] ?? null,
                 'payment_option' => $this->cart->meta['payment_option'] ?? null,
+                'channel_id' => $this->cart->channel_id,
                 'shipping_option_object' => [
                     'name' => $option->name,
                     'description' => $option->description,
@@ -416,7 +389,7 @@ class CheckoutPage extends Component
                 'city' => $this->shippingData['city'],
                 'line_one' => $this->shippingData['line_one'],
                 'postcode' => $this->shippingData['postcode'],
-                'meta' => array_merge($this->cart->shippingAddress->meta ? $this->cart->shippingAddress->meta->toArray() : [], [
+                'meta' => array_merge($this->cart->shippingAddress->meta ? $this->cart->shippingAddress->toArray() : [], [
                     'shipping_option' => $this->chosenShipping,
                 ]),
             ])->save();
@@ -424,10 +397,10 @@ class CheckoutPage extends Component
             $this->cart->setShippingAddress($this->cart->shippingAddress);
             $this->cart->refresh();
 
-            $savedAddress = CartAddress::where('cart_id', $this->cart->id)
+            $savedAddress = \Lunar\Models\CartAddress::where('cart_id', $this->cart->id)
                 ->where('type', 'shipping')
                 ->first();
-            Log::info('Адрес доставки сохранен', [
+            \Illuminate\Support\Facades\Log::info('Адрес доставки сохранен', [
                 'cart_id' => $this->cart->id,
                 'shipping_option' => $savedAddress->meta['shipping_option'] ?? null,
                 'shipping_data' => $savedAddress->toArray(),
@@ -436,21 +409,31 @@ class CheckoutPage extends Component
             $this->cart->calculate();
             $this->loadShippingOptions();
         } catch (\Exception $e) {
-            Log::error('Ошибка при сохранении адреса доставки', [
+            \Illuminate\Support\Facades\Log::error('Ошибка при сохранении адреса доставки', [
                 'cart_id' => $this->cart->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
-            $this->addError('shipping', 'Не удалось сохранить адрес доставки.');
+            $this->addError('shipping', 'Не удалось сохранить адрес доставки: ' . $e->getMessage());
             return;
         }
 
         try {
-            Log::info('Состояние корзины перед созданием заказа', [
+            // Проверяем наличие строк корзины
+            if ($this->cart->lines->isEmpty()) {
+                \Illuminate\Support\Facades\Log::error('Попытка создать заказ с пустой корзиной', [
+                    'cart_id' => $this->cart->id,
+                ]);
+                $this->addError('order', 'Корзина пуста. Добавьте товары перед оформлением заказа.');
+                return;
+            }
+
+            \Illuminate\Support\Facades\Log::info('Состояние корзины перед созданием заказа', [
                 'cart_id' => $this->cart->id,
                 'meta' => $this->cart->meta ? $this->cart->meta->toArray() : null,
                 'shipping_option' => $this->cart->meta['shipping_option'] ?? null,
                 'payment_option' => $this->cart->meta['payment_option'] ?? null,
+                'channel_id' => $this->cart->channel_id,
                 'shipping_address' => $this->cart->shippingAddress ? $this->cart->shippingAddress->toArray() : null,
                 'meta_shipping_total' => $this->cart->meta['shipping_total'] ?? null,
                 'meta_shipping_sub_total' => $this->cart->meta['shipping_sub_total'] ?? null,
@@ -463,29 +446,157 @@ class CheckoutPage extends Component
                     'subTotal' => $line->subTotal instanceof \Lunar\DataTypes\Price
                         ? ['value' => $line->subTotal->value, 'formatted' => $line->subTotal->formatted()]
                         : $line->subTotal,
+                    'purchasable' => $line->purchasable ? $line->purchasable->toArray() : null,
                 ])->toArray(),
             ]);
 
-            $order = $this->cart->createOrder();
+            // Генерируем fingerprint
+            $cartData = [
+                'cart_id' => $this->cart->id,
+                'lines' => $this->cart->lines->toArray(),
+                'currency_code' => $this->cart->currency->code ?? 'UAH',
+                'meta' => $this->cart->meta ? $this->cart->meta->toArray() : [],
+            ];
+            $fingerprint = sha1(json_encode($cartData));
+
+            // Формируем shipping_breakdown как коллекцию объектов
+            $shippingBreakdownItem = new \stdClass();
+            $shippingBreakdownItem->name = $option->name;
+            $shippingBreakdownItem->identifier = $option->identifier;
+            $shippingBreakdownItem->price = new \Lunar\DataTypes\Price($option->price->value ?? 0, $this->cart->currency, 1);
+
+            $shippingBreakdownItems = collect([$shippingBreakdownItem]);
+            $shippingBreakdown = new \Lunar\Base\ValueObjects\Cart\ShippingBreakdown($shippingBreakdownItems);
+
+            // Формируем tax_breakdown как пустую коллекцию для заказа
+            $taxBreakdownItems = collect([]);
+            $taxBreakdown = new \Lunar\Base\ValueObjects\Cart\TaxBreakdown($taxBreakdownItems);
+
+            // Логируем параметры заказа перед созданием
+            \Illuminate\Support\Facades\Log::debug('Параметры заказа перед созданием', [
+                'order_data' => [
+                    'cart_id' => $this->cart->id,
+                    'channel_id' => $this->cart->channel_id,
+                    'status' => 'pending',
+                    'fingerprint' => $fingerprint,
+                    'sub_total' => $this->cart->subTotal->value ?? 0,
+                    'discount_total' => 0,
+                    'shipping_breakdown' => $shippingBreakdownItems->map(fn($item) => [
+                        'name' => $item->name,
+                        'identifier' => $item->identifier,
+                        'price' => $item->price->value,
+                    ])->toArray(),
+                    'shipping_total' => $option->price->value ?? 0,
+                    'total' => $this->cart->total->value ?? 0,
+                    'tax_total' => 0,
+                    'tax_breakdown' => $taxBreakdownItems->toArray(),
+                    'currency_code' => $this->cart->currency->code ?? 'UAH',
+                    'compare_currency_code' => $this->cart->currency->code ?? 'UAH',
+                    'exchange_rate' => 1,
+                    'placed_at' => now(),
+                    'meta' => $this->cart->meta ? $this->cart->meta->toArray() : [],
+                    'reference' => 'ORDER-' . $this->cart->id . '-' . now()->format('YmdHis'),
+                    'user_id' => $this->cart->user_id ?? null,
+                    'customer_id' => $this->cart->customer_id ?? null,
+                    'notes' => $this->comment ?? null,
+                    'customer_reference' => null,
+                ],
+            ]);
+
+            // Создаём заказ напрямую
+            $order = \Lunar\Models\Order::create([
+                'cart_id' => $this->cart->id,
+                'channel_id' => $this->cart->channel_id,
+                'status' => 'pending',
+                'fingerprint' => $fingerprint,
+                'sub_total' => $this->cart->subTotal->value ?? 0,
+                'discount_total' => 0,
+                'shipping_breakdown' => $shippingBreakdown,
+                'shipping_total' => $option->price->value ?? 0,
+                'total' => $this->cart->total->value ?? 0,
+                'tax_total' => 0,
+                'tax_breakdown' => $taxBreakdown,
+                'currency_code' => $this->cart->currency->code ?? 'UAH',
+                'compare_currency_code' => $this->cart->currency->code ?? 'UAH',
+                'exchange_rate' => 1,
+                'placed_at' => now(),
+                'meta' => $this->cart->meta ? $this->cart->meta->toArray() : [],
+                'reference' => 'ORDER-' . $this->cart->id . '-' . now()->format('YmdHis'),
+                'user_id' => $this->cart->user_id ?? null,
+                'customer_id' => $this->cart->customer_id ?? null,
+                'notes' => $this->comment ?? null,
+                'customer_reference' => null,
+            ]);
+
+            // Вручную создаём строки заказа
+            foreach ($this->cart->lines as $cartLine) {
+                $purchasable = $cartLine->purchasable;
+                // Получаем перевод названия товара
+                $translation = $purchasable->translate('name') ?? $purchasable->name ?? $purchasable->sku ?? 'Product';
+                // Формируем tax_breakdown как пустую коллекцию для строки заказа
+                $lineTaxBreakdownItems = collect([]);
+                $lineTaxBreakdown = new \Lunar\Base\ValueObjects\Cart\TaxBreakdown($lineTaxBreakdownItems);
+
+                \Lunar\Models\OrderLine::create([
+                    'order_id' => $order->id,
+                    'purchasable_type' => $cartLine->purchasable_type,
+                    'purchasable_id' => $cartLine->purchasable_id,
+                    'type' => 'physical', // Или другой тип, если требуется
+                    'description' => $translation,
+                    'option' => $cartLine->meta['variant'] ?? null,
+                    'identifier' => $purchasable->sku ?? 'unknown',
+                    'unit_price' => $cartLine->unit_price->value ?? 0,
+                    'unit_quantity' => $cartLine->unit_quantity ?? 1,
+                    'quantity' => $cartLine->quantity,
+                    'sub_total' => $cartLine->subTotal->value ?? 0,
+                    'discount_total' => 0,
+                    'tax_total' => 0,
+                    'tax_breakdown' => $lineTaxBreakdown,
+                    'total' => $cartLine->subTotal->value ?? 0,
+                    'meta' => $cartLine->meta ? $cartLine->meta->toArray() : [],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            \Illuminate\Support\Facades\Log::info('Заказ создан', [
+                'order_id' => $order->id,
+                'cart_id' => $this->cart->id,
+                'channel_id' => $order->channel_id,
+                'status' => $order->status,
+                'fingerprint' => $fingerprint,
+                'discount_total' => $order->discount_total,
+                'shipping_breakdown' => $order->shipping_breakdown->items->map(fn($item) => [
+                    'name' => $item->name,
+                    'identifier' => $item->identifier,
+                    'price' => $item->price->value,
+                ])->toArray(),
+                'tax_breakdown' => [], // Пропускаем, так как tax_breakdown пустой
+            ]);
+
             if ($this->comment) {
-                $order->meta = array_merge($order->meta ? $order->meta->toArray() : [], ['comment' => $this->comment]);
+                $order->meta = array_merge($this->cart->meta ? $this->cart->meta->toArray() : [], ['comment' => $this->comment]);
                 $order->save();
             }
 
-            CartSession::forget();
+            \Illuminate\Support\Facades\Log::info('Перенаправление на главную страницу', [
+                'order_id' => $order->id,
+            ]);
             $this->redirect('/');
         } catch (\Exception $e) {
-            Log::error('Ошибка при создании заказа', [
+            \Illuminate\Support\Facades\Log::error('Ошибка при создании заказа', [
                 'cart_id' => $this->cart->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'shipping_option' => $this->cart->meta['shipping_option'] ?? null,
                 'payment_option' => $this->cart->meta['payment_option'] ?? null,
+                'channel_id' => $this->cart->channel_id,
                 'cart_shipping_address' => $this->cart->shippingAddress ? $this->cart->shippingAddress->toArray() : null,
             ]);
-            $this->addError('order', 'Не удалось создать заказ. Пожалуйста, попробуйте снова.');
+            $this->addError('order', 'Не удалось создать заказ: ' . $e->getMessage());
         }
     }
+
 
     /**
      * Обновление поискового запроса для города
