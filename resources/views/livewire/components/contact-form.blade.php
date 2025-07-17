@@ -1,156 +1,9 @@
-<style>
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1040;
-        display: none;
-    }
-
-    .modal-open .modal-overlay {
-        display: block;
-    }
-
-    .modal-open {
-        overflow: hidden;
-    }
-
-    .modal-content {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #e5e5e5;
-        border-radius: 1.5rem;
-        padding: 2.5rem;
-        width: 100%;
-        max-width: 600px;
-        z-index: 1050;
-        display: none;
-    }
-
-    .modal-open .modal-content {
-        display: flex;
-    }
-
-    @media (max-width: 768px) {
-        .modal-content {
-            max-width: 500px;
-            padding: 2rem;
-        }
-    }
-
-    @media (max-width: 640px) {
-        .modal-content {
-            max-width: 400px;
-            padding: 1.5rem;
-        }
-    }
-
-    .button-modal-close {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        width: 2rem;
-        height: 2rem;
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-    }
-
-    .button-modal-close:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-    }
-
-    .form-input, .form-textarea {
-        width: 100%;
-        padding: 0.875rem 1rem;
-        border: 1px solid #a3a3a3;
-        border-radius: 1rem;
-        background: transparent;
-        color: #27272a;
-        outline: none;
-    }
-
-    .form-input:focus, .form-textarea:focus {
-        border-color: #15803d;
-        box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.2);
-    }
-
-    .form-textarea {
-        resize: none;
-        height: 90px;
-    }
-
-    .form-button {
-        padding: 0.625rem 1.5rem;
-        border-radius: 1rem;
-        font-weight: 700;
-        transition: all 0.3s ease-in-out;
-    }
-
-    .form-button-primary {
-        background-color: #15803d;
-        color: #ffffff;
-        border: none;
-    }
-
-    .form-button-primary:hover,
-    .form-button-primary:focus {
-        background-color: #166534;
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.2);
-    }
-
-    .form-button-secondary {
-        border: 2px solid #15803d;
-        color: #15803d;
-        background: transparent;
-    }
-
-    .form-button-secondary:hover,
-    .form-button-secondary:focus {
-        background-color: rgba(21, 128, 61, 0.1);
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.2);
-    }
-
-    .star-button {
-        background: none;
-        border: none;
-        cursor: pointer;
-    }
-
-    .star-icon {
-        width: 2rem;
-        height: 2rem;
-    }
-
-    .error-text {
-        color: #ef4444;
-        font-size: 0.875rem;
-    }
-</style>
-
-<div x-data="{ rating: @entangle('rating'), ready: false }" x-init="setTimeout(() => ready = true, 0); document.body.classList.toggle('modal-open', $wire.isOpen)" x-on:keydown.escape="$wire.closeModal()">
-    <!-- Button to open modal -->
-    <button
-        wire:click="$dispatch('openContactForm')"
-        class="form-button form-button-primary mb-4"
-        x-show="!$wire.isOpen"
-    >
-        {{ __('messages.contact_form.open_form') }}
-    </button>
-
+<div x-data="{ rating: @entangle('rating'), ready: false }" x-init="setTimeout(() => ready = true, 0)" class="relative">
     <!-- Modal Overlay -->
     <div
-        class="modal-overlay"
         x-show="ready && $wire.isOpen"
         x-cloak
-        x-on:click="$wire.closeModal()"
+        class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 transition-opacity duration-200"
         x-transition:enter="transition-opacity ease-out duration-200"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
@@ -163,7 +16,7 @@
     <section
         x-show="ready && $wire.isOpen && $wire.state === 'form'"
         x-cloak
-        class="modal-content flex-col gap-10 items-center"
+        class="fixed top-1/2 left-1/2 transform -translate-x-1/2  flex flex-col gap-10 items-center p-20 rounded-3xl bg-neutral-200 w-[600px] max-md:p-16 max-md:w-[500px] max-sm:px-5 max-sm:py-10 max-sm:w-full max-sm:max-w-[400px] z-50 transition-all duration-200"
         x-transition:enter="transition-all ease-out duration-200"
         x-transition:enter-start="opacity-0 scale-95 translate-y-4"
         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
@@ -178,7 +31,7 @@
         <!-- Close Button -->
         <button
             wire:click="closeModal"
-            class="button-modal-close"
+            class="flex absolute button-modal-close flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             aria-label="{{ __('messages.contact_form.close_button_aria_label') }}"
         >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -187,17 +40,17 @@
         </button>
 
         <!-- Header Section -->
-        <header class="flex flex-col gap-3 items-start w-full max-w-[440px]">
-            <h1 id="form-title" class="text-xl font-bold leading-6 text-zinc-800 max-sm:text-lg">
+        <header class="flex flex-col gap-3 items-start w-[440px]  max-md:w-full header">
+            <h1 id="form-title" class="text-xl font-bold leading-6 text-zinc-800 w-[440px] max-md:w-full max-sm:text-lg">
                 {{ __('messages.contact_form.title') }}
             </h1>
-            <p id="form-description" class="text-base font-semibold leading-5 text-zinc-800 max-sm:text-sm">
+            <p id="form-description" class="text-base font-semibold leading-5 text-zinc-800 w-[440px] max-md:w-full max-sm:text-sm">
                 {{ __('messages.contact_form.description') }}
             </p>
         </header>
 
         <!-- Form Content -->
-        <form wire:submit.prevent="submit" x-on:keydown.enter.prevent class="flex flex-col gap-4 items-start w-full max-w-[440px]" novalidate>
+        <form wire:submit.prevent="submit" x-on:keydown.enter.prevent class="flex flex-col gap-4 items-start w-full max-w-[440px] max-md:max-w-full" novalidate>
             <fieldset class="w-full border-none p-0 m-0">
                 <legend class="sr-only">{{ __('messages.contact_form.fieldset_legend') }}</legend>
 
@@ -211,13 +64,13 @@
                             <button
                                 type="button"
                                 x-on:click="rating = {{ $i }}"
-                                class="star-button"
+                                class="star-button w-8 h-8 flex justify-center items-center"
                                 data-rating="{{ $i }}"
                                 aria-label="{{ $i == 1 ? __('messages.contact_form.star_label_one') : __('messages.contact_form.star_label_multiple', ['count' => $i]) }}"
                                 role="radio"
                                 :aria-checked="rating === {{ $i }}"
                             >
-                                <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="star-icon">
+                                <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="star-icon w-8 h-8">
                                     <path
                                         d="M18.8065 4.68L21.1532 9.37334C21.4732 10.0267 22.3265 10.6533 23.0465 10.7733L27.2999 11.48C30.0199 11.9333 30.6599 13.9067 28.6999 15.8533L25.3932 19.16C24.8332 19.72 24.5265 20.8 24.6999 21.5733L25.6465 25.6667C26.3932 28.9067 24.6732 30.16 21.8065 28.4667L17.8199 26.1067C17.0999 25.68 15.9132 25.68 15.1799 26.1067L11.1932 28.4667C8.33988 30.16 6.60655 28.8933 7.35321 25.6667L8.29988 21.5733C8.47321 20.8 8.16655 19.72 7.60655 19.16L4.29988 15.8533C2.35321 13.9067 2.97988 11.9333 5.69988 11.48L9.95321 10.7733C10.6599 10.6533 11.5132 10.0267 11.8332 9.37334L14.1799 4.68C15.4599 2.13334 17.5399 2.13334 18.8065 4.68Z"
                                         :fill="rating >= {{ $i }} ? '#FACC15' : '#DBDBDB'"
@@ -233,57 +86,57 @@
                         type="text"
                         wire:model="name"
                         placeholder="{{ __('messages.contact_form.name_placeholder') }}"
-                        class="form-input @error('name') border-red-500 @enderror"
+                        class="box-border gap-2 px-4 py-3 w-full h-12 text-base font-semibold leading-5 rounded-2xl border border-solid border-neutral-400 flex-[1_0_0] text-neutral-400 placeholder-neutral-400 max-sm:px-3.5 max-sm:py-2.5 max-sm:h-11 max-sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent @error('name') border-red-500 @enderror"
                         aria-label="{{ __('messages.contact_form.name_label') }}"
                         required
                     />
-                    @error('name') <span class="error-text">{{ $message }}</span> @enderror
+                    @error('name') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
 
                     <input
                         type="email"
                         wire:model="email"
                         placeholder="{{ __('messages.contact_form.email_placeholder') }}"
-                        class="form-input @error('email') border-red-500 @enderror"
+                        class="box-border gap-2 px-4 py-3 w-full h-12 text-base font-semibold leading-5 rounded-2xl border border-solid border-neutral-400 flex-[1_0_0] text-neutral-400 placeholder-neutral-400 max-sm:px-3.5 max-sm:py-2.5 max-sm:h-11 max-sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent @error('email') border-red-500 @enderror"
                         aria-label="{{ __('messages.contact_form.email_label') }}"
                         required
                     />
-                    @error('email') <span class="error-text">{{ $message }}</span> @enderror
+                    @error('email') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
 
                     <input
                         type="tel"
                         wire:model="phone"
                         placeholder="{{ __('messages.contact_form.phone_placeholder') }}"
-                        class="form-input @error('phone') border-red-500 @enderror"
+                        class="box-border gap-2 px-4 py-3 w-full h-12 text-base font-semibold leading-5 rounded-2xl border border-solid border-neutral-400 flex-[1_0_0] text-neutral-400 placeholder-neutral-400 max-sm:px-3.5 max-sm:py-2.5 max-sm:h-11 max-sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent @error('phone') border-red-500 @enderror"
                         aria-label="{{ __('messages.contact_form.phone_label') }}"
                         required
                     />
-                    @error('phone') <span class="error-text">{{ $message }}</span> @enderror
+                    @error('phone') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
 
                     <input
                         type="text"
                         wire:model="subject"
                         placeholder="{{ __('messages.contact_form.subject_placeholder') }}"
-                        class="form-input @error('subject') border-red-500 @enderror"
+                        class="box-border gap-2 px-4 py-3 w-full h-12 text-base font-semibold leading-5 rounded-2xl border border-solid border-neutral-400 flex-[1_0_0] text-neutral-400 placeholder-neutral-400 max-sm:px-3.5 max-sm:py-2.5 max-sm:h-11 max-sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent @error('subject') border-red-500 @enderror"
                         aria-label="{{ __('messages.contact_form.subject_label') }}"
                         required
                     />
-                    @error('subject') <span class="error-text">{{ $message }}</span> @enderror
+                    @error('subject') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
 
-                    <div class="flex flex-col rounded-2xl border border-solid border-neutral-400 focus-within:ring-2 focus-within:ring-green-600 focus-within:border-transparent @error('formMessage') border-red-500 @enderror">
+                    <div class="box-border flex flex-col px-4 py-3 w-full rounded-2xl border border-solid border-neutral-400 focus-within:ring-2 focus-within:ring-green-600 focus-within:border-transparent @error('formMessage') border-red-500 @enderror">
                         <textarea
                             wire:model="formMessage"
                             placeholder="{{ __('messages.contact_form.message_placeholder') }}"
-                            class="form-textarea"
+                            class="w-full text-base font-semibold leading-5 h-[90px] text-neutral-400 placeholder-neutral-400 max-sm:text-sm resize-none border-none outline-none bg-transparent"
                             aria-label="{{ __('messages.contact_form.message_label') }}"
                             required
                         ></textarea>
                     </div>
-                    @error('formMessage') <span class="error-text">{{ $message }}</span> @enderror
+                    @error('formMessage') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
                 </div>
             </fieldset>
 
             <!-- Checkbox and Buttons -->
-            <div class="flex flex-col gap-4 items-start w-full">
+            <div class="flex flex-col gap-4 items-start w-full max-w-[440px] max-md:max-w-full">
                 <div class="flex gap-2 items-center">
                     <input
                         type="checkbox"
@@ -293,21 +146,21 @@
                         required
                     />
                     <label for="privacy-agreement" class="flex gap-0.5 items-start">
-                        <span class="text-xs font-semibold leading-5 text-zinc-800">
+                        <span class="text-xs font-semibold leading-5 text-zinc-800 max-sm:text-xs">
                             {{ __('messages.contact_form.privacy_agreement') }}
                         </span>
-                        <a href="{{ route('terms') }}" class="text-xs leading-5 text-indigo-500 underline rounded-lg hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <a href="{{ route('terms') }}" class="gap-2 text-xs leading-5 text-indigo-500 underline rounded-lg max-sm:text-xs hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                             {{ __('messages.contact_form.privacy_policy_link') }}
                         </a>
                     </label>
-                    @error('agreePrivacy') <span class="error-text">{{ $message }}</span> @enderror
+                    @error('agreePrivacy') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="flex gap-4 items-center w-full max-sm:flex-col max-sm:gap-3">
                     <button
                         type="button"
                         wire:click="goBack"
-                        class="form-button form-button-secondary"
+                        class="gap-2 px-6 py-2.5 text-base font-bold leading-6 text-green-600 rounded-2xl border-2 border-green-600 border-solid cursor-pointer min-h-11 max-sm:px-5 max-sm:py-2 max-sm:text-sm max-sm:min-h-10 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
                     >
                         {{ __('messages.contact_form.back_button') }}
                     </button>
@@ -315,7 +168,7 @@
                         type="submit"
                         wire:loading.attr="disabled"
                         x-bind:disabled="!$wire.name || !$wire.email || !$wire.subject || !$wire.formMessage || !$wire.agreePrivacy"
-                        class="form-button form-button-primary"
+                        class="gap-2 px-6 py-2.5 text-base font-bold leading-6 text-white bg-green-600 rounded-2xl cursor-pointer border-[none] min-h-11 max-sm:px-5 max-sm:py-2 max-sm:text-sm max-sm:min-h-10 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
                         x-show="!$wire.isOpen || $wire.state === 'form'"
                         x-cloak
                     >
@@ -331,7 +184,7 @@
     <section
         x-show="ready && $wire.isOpen && $wire.state === 'success'"
         x-cloak
-        class="modal-content flex-col gap-10 items-center"
+        class="fixed top-1/2 left-1/2 transform -translate-x-1/2  flex flex-col gap-10 items-center p-20 rounded-3xl bg-neutral-200 w-[600px] max-md:p-16 max-md:w-[500px] max-sm:px-5 max-sm:py-10 max-sm:w-full max-sm:max-w-[400px] z-50 transition-all duration-200"
         x-transition:enter="transition-all ease-out duration-200"
         x-transition:enter-start="opacity-0 scale-95 translate-y-4"
         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
@@ -341,10 +194,11 @@
         role="dialog"
         aria-labelledby="success-title"
         aria-describedby="success-description"
+        wire:init="resetModal"
     >
         <button
             wire:click="closeModal"
-            class="button-modal-close"
+            class="flex absolute button-modal-close flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             aria-label="{{ __('messages.contact_form.close_button_aria_label') }}"
         >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -374,19 +228,19 @@
             </svg>
         </div>
 
-        <header class="flex flex-col gap-3 items-center w-full max-w-[440px]">
-            <h1 id="success-title" class="text-xl font-bold leading-6 text-zinc-800 max-sm:text-lg">
+        <header class="flex flex-col gap-3 items-start">
+            <h1 id="success-title" class="text-xl font-bold leading-6 text-center text-zinc-800 w-[440px] max-md:w-[380px] max-sm:w-full max-sm:text-lg">
                 {{ __('messages.contact_form.thank_you') }}
             </h1>
-            <p id="success-description" class="text-base font-semibold leading-5 text-zinc-800 max-sm:text-sm">
+            <p id="success-description" class="text-base font-semibold leading-5 text-center text-zinc-800 w-[440px] max-md:w-[380px] max-sm:w-full max-sm:text-sm">
                 {{ __('messages.contact_form.order_processed') }}
             </p>
         </header>
 
-        <div class="flex flex-col gap-4 items-center w-full">
+        <div class="flex flex-col gap-4 items-center self-stretch">
             <button
                 wire:click="continueFromSuccess"
-                class="form-button form-button-primary"
+                class="flex gap-2 justify-center items-center px-6 py-2.5 bg-sky-500 rounded-2xl cursor-pointer min-h-11 max-sm:w-full hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition-colors"
             >
                 <span class="text-base font-bold leading-6 text-white">{{ __('messages.contact_form.submit_button') }}</span>
             </button>
@@ -397,7 +251,7 @@
     <section
         x-show="ready && $wire.isOpen && $wire.state === 'error'"
         x-cloak
-        class="modal-content flex-col gap-10 items-center"
+        class="fixed top-1/2 left-1/2 transform -translate-x-1/2  flex flex-col gap-10 items-center p-20 rounded-3xl bg-neutral-200 w-[600px] max-md:p-16 max-md:w-[500px] max-sm:px-5 max-sm:py-10 max-sm:w-full max-sm:max-w-[400px] z-50 transition-all duration-200"
         x-transition:enter="transition-all ease-out duration-200"
         x-transition:enter-start="opacity-0 scale-95 translate-y-4"
         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
@@ -407,10 +261,11 @@
         role="dialog"
         aria-labelledby="error-title"
         aria-describedby="error-description"
+        wire:init="resetModal"
     >
         <button
             wire:click="closeModal"
-            class="button-modal-close"
+            class="flex absolute button-modal-close flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             aria-label="{{ __('messages.contact_form.close_button_aria_label') }}"
         >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -440,19 +295,19 @@
             </svg>
         </div>
 
-        <header class="flex flex-col gap-3 items-center w-full max-w-[440px]">
-            <h1 id="error-title" class="text-xl font-bold leading-6 text-zinc-800 max-sm:text-lg">
+        <header class="flex flex-col gap-3 items-start">
+            <h1 id="error-title" class="text-xl font-bold leading-6 text-center text-zinc-800 w-[440px] max-md:w-[380px] max-sm:w-full max-sm:text-lg">
                 {{ __('messages.contact_form.error_occurred') }}
             </h1>
-            <p id="error-description" class="text-base font-semibold leading-5 text-zinc-800 max-sm:text-sm">
+            <p id="error-description" class="text-base font-semibold leading-5 text-center text-zinc-800 w-[440px] max-md:w-[380px] max-sm:w-full max-sm:text-sm">
                 {{ __('messages.contact_form.try_again') }}
             </p>
         </header>
 
-        <div class="flex flex-col gap-4 items-center w-full">
+        <div class="flex flex-col gap-4 items-center self-stretch">
             <button
                 wire:click="tryAgain"
-                class="form-button form-button-primary bg-red-500 hover:bg-red-600 focus:ring-red-500"
+                class="flex gap-2 justify-center items-center px-6 py-2.5 bg-red-500 rounded-2xl cursor-pointer min-h-11 max-sm:w-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
             >
                 <span class="text-base font-bold leading-6 text-white">{{ __('messages.contact_form.try_again_button') }}</span>
             </button>
@@ -470,7 +325,6 @@
                 });
                 Livewire.on('closeContactForm', () => {
                     console.log('Close contact form event received');
-                    document.body.classList.remove('modal-open');
                 });
             });
         </script>
