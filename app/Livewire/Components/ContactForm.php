@@ -51,9 +51,19 @@ class ContactForm extends Component
     }
     public function resetModal()
     {
-        $this->isOpen = false;
+        $this->reset([
+            'name',
+            'email',
+            'phone',
+            'subject',
+            'formMessage',
+            'agreePrivacy',
+            'rating',
+            'state',
+        ]);
         $this->state = 'form';
-        $this->reset(['rating', 'name', 'email', 'phone', 'subject', 'formMessage', 'agreePrivacy']);
+        $this->isOpen = true; // Открываем модальное окно при инициализации
+        Log::info('Feedback form modal reset', ['state' => $this->state]);
     }
     public function closeModal()
     {
