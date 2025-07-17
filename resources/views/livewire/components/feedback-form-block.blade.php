@@ -2,7 +2,6 @@
 <div class=" mx-auto ">
     <!-- Form Block -->
     <section class="grid grid-cols-1 xl:grid-cols-2 gap-2 justify-center min-h-[570px] xl:h-[570px]" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
-        <div class="grid grid-cols-1 items-stretch justify-center w-full max-md:max-w-full">
             <div class="relative grid grid-cols-1 justify-center px-6 rounded-3xl bg-neutral-200 min-h-[570px] max-md:max-w-full">
                 <form wire:submit="submit" class="w-full" aria-labelledby="feedback-form-title" novalidate>
                     <header class="w-full text-zinc-800 max-md:max-w-full">
@@ -114,7 +113,6 @@
                     <p>{{ __('messages.feedback_form.no_image') }}</p>
                 @endif
             </aside>
-        </div>
     </section>
 
     <!-- Modal Overlay -->
