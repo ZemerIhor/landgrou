@@ -245,5 +245,6 @@
         <section class="py-20" aria-labelledby="contact-form">
             <livewire:components.feedback-form-block />
         </section>
-    </section>
+        
+    </main>
 </div>
