@@ -16,7 +16,6 @@
 
 
             </section>
-
             <!-- Basket Section -->
             <aside class="p-8 bg-white rounded-3xl min-w-60 w-[487px] max-md:px-5 max-md:max-w-full" role="complementary" aria-labelledby="order-heading">
                 <div class="w-full max-md:max-w-full">
