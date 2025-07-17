@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 class FeedbackFormBlock extends Component
 {
     public $isOpen = false;
-    public $state = 'form'; // 'form', 'success', or 'error'
+    public $state = 'form';
 
     #[Rule('required|string|max:255')]
     public $name = '';
@@ -24,9 +24,6 @@ class FeedbackFormBlock extends Component
 
     #[Rule('required|string|max:1000')]
     public $comment = '';
-
-    #[Rule('accepted')]
-    public $privacyAgreement = false;
 
     protected $settingsCache = null;
 
@@ -49,21 +46,38 @@ class FeedbackFormBlock extends Component
 
     public function closeModal()
     {
+        Log::info('Feedback form closed', [
+            'formData' => [
+                'name' => $this->name,
+                'phone' => $this->phone,
+                'comment' => $this->comment,
+            ]
+        ]);
         $this->isOpen = false;
         $this->state = 'form';
         $this->resetForm();
         $this->dispatch('closeFeedbackForm');
-        Log::info('Feedback form closed');
     }
 
     public function submit()
     {
+        Log::info('FeedbackForm submit triggered', [
+            'formData' => [
+                'name' => $this->name,
+                'phone' => $this->phone,
+                'comment' => $this->comment,
+            ]
+        ]);
+
         $validated = $this->validate();
+        Log::info('Validated data', ['validated' => $validated]);
 
         try {
             $settings = $this->getSettings();
-            Mail::to($settings['contact_email'] ?? config('mail.feedback_recipient', 'office@landgrou.com'))
-                ->send(new FeedbackFormSubmitted($validated));
+            $recipient = $settings['contact_email'] ?? config('mail.feedback_recipient', 'office@landgrou.com');
+            Log::info('Sending email to', ['recipient' => $recipient]);
+
+            Mail::to($recipient)->send(new FeedbackFormSubmitted($validated));
 
             $this->state = 'success';
             $this->resetForm();
@@ -83,6 +97,7 @@ class FeedbackFormBlock extends Component
     public function tryAgain()
     {
         $this->state = 'form';
+        $this->resetErrorBag();
         Log::info('Feedback form try again');
     }
 
@@ -95,8 +110,9 @@ class FeedbackFormBlock extends Component
 
     private function resetForm()
     {
-        $this->reset(['name', 'phone', 'comment', 'privacyAgreement']);
+        $this->reset(['name', 'phone', 'comment']);
         $this->resetErrorBag();
+        Log::info('Feedback form reset');
     }
 
     private function getSettings()
