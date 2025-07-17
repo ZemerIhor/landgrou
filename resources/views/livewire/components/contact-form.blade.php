@@ -1,5 +1,4 @@
 <style>
-    /* Стили для затемнённого фона */
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -15,12 +14,10 @@
         display: block;
     }
 
-    /* Отключаем прокрутку страницы */
     .modal-open {
         overflow: hidden;
     }
 
-    /* Стили для модального окна */
     .modal-content {
         position: fixed;
         top: 50%;
@@ -53,7 +50,6 @@
         }
     }
 
-    /* Стили для кнопки закрытия */
     .button-modal-close {
         position: absolute;
         top: 1rem;
@@ -69,7 +65,6 @@
         background-color: rgba(0, 0, 0, 0.1);
     }
 
-    /* Стили для формы */
     .form-input, .form-textarea {
         width: 100%;
         padding: 0.875rem 1rem;
@@ -141,6 +136,15 @@
 </style>
 
 <div x-data="{ rating: @entangle('rating'), ready: false }" x-init="setTimeout(() => ready = true, 0); document.body.classList.toggle('modal-open', $wire.isOpen)" x-on:keydown.escape="$wire.closeModal()">
+    <!-- Button to open modal (optional, if not opened automatically) -->
+    <button
+        wire:click="$dispatch('openContactForm')"
+        class="form-button form-button-primary mb-4"
+        x-show="!$wire.isOpen"
+    >
+        {{ __('messages.contact_form.open_form') }}
+    </button>
+
     <!-- Modal Overlay -->
     <div
         class="modal-overlay"
@@ -337,7 +341,6 @@
         role="dialog"
         aria-labelledby="success-title"
         aria-describedby="success-description"
-        wire:init="resetModal"
     >
         <button
             wire:click="closeModal"
@@ -404,7 +407,6 @@
         role="dialog"
         aria-labelledby="error-title"
         aria-describedby="error-description"
-        wire:init="resetModal"
     >
         <button
             wire:click="closeModal"
