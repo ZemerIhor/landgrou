@@ -249,7 +249,6 @@
                 </div>
             </div>
         </div>
-        @livewire('components.contact-form')
     </header>
     <!-- Placeholder to prevent content jump -->
     <div class="header-placeholder"
@@ -263,4 +262,6 @@
          x-transition:leave-start="height 56px"
          x-transition:leave-end="height 0">
     </div>
+    @livewire('components.contact-form')
+
 </div>
