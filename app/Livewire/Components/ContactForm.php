@@ -62,24 +62,49 @@ class ContactForm extends Component
             'formMessage',
             'agreePrivacy',
             'rating',
-            'state',
         ]);
         $this->state = 'form';
-        $this->isOpen = false; // Модальное окно закрыто по умолчанию
+        $this->isOpen = false;
+        $this->resetErrorBag();
         Log::info('ContactForm modal reset', ['state' => $this->state, 'isOpen' => $this->isOpen]);
     }
 
     public function closeModal()
     {
+        Log::info('ContactForm closeModal triggered', [
+            'isOpen' => $this->isOpen,
+            'state' => $this->state,
+            'formData' => [
+                'name' => $this->name,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'subject' => $this->subject,
+                'formMessage' => $this->formMessage,
+                'agreePrivacy' => $this->agreePrivacy,
+                'rating' => $this->rating,
+            ]
+        ]);
+
         $this->isOpen = false;
-        $this->resetForm();
         $this->state = 'form';
+        $this->resetForm();
         $this->dispatch('closeContactForm');
-        Log::info('ContactForm closed', ['isOpen' => $this->isOpen, 'state' => $this->state]);
     }
 
     public function submit()
     {
+        Log::info('ContactForm submit triggered', [
+            'formData' => [
+                'name' => $this->name,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'subject' => $this->subject,
+                'formMessage' => $this->formMessage,
+                'agreePrivacy' => $this->agreePrivacy,
+                'rating' => $this->rating,
+            ]
+        ]);
+
         $validated = $this->validate();
 
         try {
@@ -104,6 +129,7 @@ class ContactForm extends Component
     public function tryAgain()
     {
         $this->state = 'form';
+        $this->resetErrorBag();
         Log::info('ContactForm try again', ['state' => $this->state]);
     }
 
