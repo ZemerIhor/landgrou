@@ -324,11 +324,7 @@
                             'autoplay' => ['delay' => 3000],
                             'spaceBetween' => 10,
                             'slidesPerView' => 3,
-                            'breakpoints' => [
-                                640 => ['slidesPerView' => 1],
-                                768 => ['slidesPerView' => 2],
-                                1024 => ['slidesPerView' => 3]
-                            ]
+
                         ]">
                             @foreach ($certificates_images as $image)
                                 <div class="swiper-slide certificate-slide flex flex-col items-center rounded-3xl aspect-[0.71] bg-white shadow-md">
