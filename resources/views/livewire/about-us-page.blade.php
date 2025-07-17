@@ -4,6 +4,7 @@
 
 <div class="max-w-full mx-auto">
     <div class="top-section relative">
+
         <header class="font-semibold">
             <div class="flex relative flex-col items-center pb-20 w-full min-h-[780px] max-md:px-5 max-md:max-w-full">
                 <!-- Фоновое изображение -->
@@ -103,9 +104,11 @@
 
         <!-- Advantages Section -->
         <div class="mx-auto px-12 container relative about-us-advantages py-4">
+
             <section aria-labelledby="advantages-title " class=" ">
                 <div
                     class=" ">
+
                     <h2 id="advantages-title" class="sr-only">{{ __('messages.about_us.advantages_title') }}</h2>
                     @php
                         $advantages = isset($settings->advantages) && is_array($settings->advantages) ? ($settings->advantages[app()->getLocale()] ?? []) : [];
@@ -113,6 +116,7 @@
                     @endphp
                     @if (!empty($advantages))
                         <div class="about-us-advantages-grid  wrap-advantage">
+
                             @foreach($advantages as $index => $advantage)
                                 <article>
                                     <div class="self-center text-4xl leading-none text-green-600">
@@ -152,7 +156,9 @@
                 </div>
             </section>
         </div>
+
 <div class="relative container m-auto px-12">
+
         <img src="{{ asset('images/1.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute left-0 bottom-0" />
         <img src="{{ asset('images/2.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute right-0 bottom-0" />
 
@@ -212,8 +218,8 @@
             </section>
 
         </div>
-
     </div>
+
 
         <!-- Gallery Section -->
         <section class="bg-zinc-100 m-auto relative overflow-hidden about-us-gallery" aria-labelledby="gallery-title">
