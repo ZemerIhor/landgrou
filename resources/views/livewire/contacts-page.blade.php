@@ -326,12 +326,27 @@
                 <div id="map" class="map-container"></div>
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
-                        var map = L.map('map').setView([{{ $settings->map_latitude }}, {{ $settings->map_longitude }}], 15);
+                        // Проверка, что Leaflet загружен
+                        if (typeof L === 'undefined') {
+                            console.error('Leaflet is not loaded. Please check CDN links.');
+                            return;
+                        }
+
+                        // Проверка валидности координат
+                        const latitude = parseFloat('{{ $settings->map_latitude }}');
+                        const longitude = parseFloat('{{ $settings->map_longitude }}');
+                        if (isNaN(latitude) || isNaN(longitude)) {
+                            console.error('Invalid coordinates:', { latitude, longitude });
+                            return;
+                        }
+
+                        // Инициализация карты
+                        const map = L.map('map').setView([latitude, longitude], 15);
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         }).addTo(map);
-                        L.marker([{{ $settings->map_latitude }}, {{ $settings->map_longitude }}]).addTo(map)
-                            .bindPopup('{{ data_get($settings, "main_address." . app()->getLocale(), data_get($settings, "main_address.en", "")) }}')
+                        L.marker([latitude, longitude]).addTo(map)
+                            .bindPopup('{{ addslashes(data_get($settings, "main_address." . app()->getLocale(), data_get($settings, "main_address.en", ""))) }}')
                             .openPopup();
                     });
                 </script>
