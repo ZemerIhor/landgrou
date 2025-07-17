@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app()->getLocale() }}">
 <head>
-    <title>Нове повідомлення з форми зворотнього зв’язку</title>
+    <title>{{ __('messages.feedback_form.title') }}</title>
     <style>
         body {
             background-color: #f9f9f9;
             font-family: Arial, sans-serif;
             color: #333;
+            margin: 0;
+            padding: 0;
         }
         .container {
             max-width: 600px;
-            margin: 0 auto;
+            margin: 20px auto;
             padding: 20px;
             background-color: #fff;
             border-radius: 8px;
@@ -32,13 +34,10 @@
 </head>
 <body>
 <div class="container">
-    <h1>Нове повідомлення з форми зворотнього зв’язку</h1>
-    <p><span class="label">Ім'я:</span> {{ htmlspecialchars($name) }}</p>
-    <p><span class="label">Email:</span> {{ htmlspecialchars($email) }}</p>
-    <p><span class="label">Телефон:</span> {{ htmlspecialchars($phone ?? 'Не вказано') }}</p>
-    <p><span class="label">Тема:</span> {{ htmlspecialchars($subject) }}</p>
-    <p><span class="label">Повідомлення:</span> {{ htmlspecialchars($formMessage) }}</p> <!-- Line 35: Fixed from $message -->
-    <p><span class="label">Рейтинг:</span> {{ htmlspecialchars($rating) }} зір{{ $rating == 1 ? 'ка' : 'ки' }}</p>
+    <h1>{{ __('messages.feedback_form.title') }}</h1>
+    <p><span class="label">{{ __('messages.feedback_form.name_label') }}:</span> {{ htmlspecialchars($name) }}</p>
+    <p><span class="label">{{ __('messages.feedback_form.phone_label') }}:</span> {{ htmlspecialchars($phone) }}</p>
+    <p><span class="label">{{ __('messages.feedback_form.comment_label') }}:</span> {{ htmlspecialchars($comment) }}</p>
 </div>
 </body>
 </html>
