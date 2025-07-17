@@ -4,9 +4,9 @@ namespace App\Filament\Pages;
 
 use App\Settings\ContactSettings;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
@@ -21,11 +21,8 @@ class Contacts extends Page implements HasForms
     use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-phone';
-
     protected static string $view = 'filament.pages.contacts';
-
     protected static ?string $navigationLabel = 'Contact Settings';
-
     public static function getSlug(): string
     {
         return 'contacts';
@@ -37,7 +34,6 @@ class Contacts extends Page implements HasForms
     {
         $settings = app(ContactSettings::class);
 
-        // Инициализация данных формы из настроек
         $this->data = [
             'main_address' => $settings->main_address ?? ['en' => '', 'uk' => ''],
             'main_email' => $settings->main_email ?? '',
@@ -51,10 +47,11 @@ class Contacts extends Page implements HasForms
             })->values()->toArray(),
             'map_image' => $settings->map_image ?? '',
             'map_image_alt' => $settings->map_image_alt ?? ['en' => '', 'uk' => ''],
+            'map_latitude' => $settings->map_latitude ?? '',
+            'map_longitude' => $settings->map_longitude ?? '',
         ];
 
         Log::info('Contacts form initialized', ['data' => $this->data]);
-
         $this->form->fill($this->data);
     }
 
@@ -64,7 +61,6 @@ class Contacts extends Page implements HasForms
             ->schema([
                 Section::make(__('messages.contacts.title'))
                     ->schema([
-                        // Поля без переводов (email и телефон)
                         TextInput::make('main_email')
                             ->label(__('messages.contacts.main_email'))
                             ->email()
@@ -85,7 +81,6 @@ class Contacts extends Page implements HasForms
                             ->tel()
                             ->required()
                             ->maxLength(20),
-                        // Поля с переводами
                         Translate::make()
                             ->locales(['en', 'uk'])
                             ->schema([
@@ -102,7 +97,6 @@ class Contacts extends Page implements HasForms
                                     ->required()
                                     ->maxLength(255),
                             ]),
-                        // Repeater для телефонов
                         Repeater::make('sales_phones')
                             ->label(__('messages.contacts.sales_phones'))
                             ->schema([
@@ -114,7 +108,6 @@ class Contacts extends Page implements HasForms
                             ])
                             ->collapsible()
                             ->cloneable(),
-                        // Repeater для дополнительных email (с ключом и значением)
                         Repeater::make('additional_emails')
                             ->label(__('messages.contacts.additional_emails'))
                             ->schema([
@@ -131,13 +124,24 @@ class Contacts extends Page implements HasForms
                             ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
                             ->collapsible()
                             ->cloneable(),
-                        // Поле для изображения карты
                         FileUpload::make('map_image')
                             ->label(__('messages.contacts.map_image'))
                             ->image()
                             ->disk('public')
                             ->directory('contacts-images')
                             ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
+                        TextInput::make('map_latitude')
+                            ->label(__('messages.contacts.map_latitude'))
+                            ->numeric()
+                            ->required()
+                            ->minValue(-90)
+                            ->maxValue(90),
+                        TextInput::make('map_longitude')
+                            ->label(__('messages.contacts.map_longitude'))
+                            ->numeric()
+                            ->required()
+                            ->minValue(-180)
+                            ->maxValue(180),
                     ])
                     ->collapsible(),
             ])
@@ -148,13 +152,6 @@ class Contacts extends Page implements HasForms
     {
         try {
             $data = $this->form->getState();
-
-            // Логирование MIME-типа для map_image
-            if (isset($data['map_image']) && is_object($data['map_image'])) {
-                Log::info('MIME type for map_image', ['mime' => $data['map_image']->getMimeType()]);
-            }
-
-            // Преобразование additional_emails в ассоциативный массив
             $data['additional_emails'] = collect($data['additional_emails'])->pluck('value', 'key')->toArray();
 
             Log::info('Contact Settings Form Data', ['data' => $data]);
@@ -168,7 +165,7 @@ class Contacts extends Page implements HasForms
                 ->success()
                 ->send();
         } catch (ValidationException $e) {
-            Log::error('Помилки валідації в налаштуваннях контактів', [
+            Log::error('Ошибки валидации в настройках контактов', [
                 'errors' => $e->errors(),
                 'message' => $e->getMessage(),
             ]);
@@ -179,7 +176,7 @@ class Contacts extends Page implements HasForms
                 ->danger()
                 ->send();
         } catch (\Exception $e) {
-            Log::error('Помилка збереження налаштувань контактів', [
+            Log::error('Ошибка сохранения настроек контактов', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
