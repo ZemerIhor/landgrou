@@ -4,8 +4,6 @@
 
 <div class="max-w-full mx-auto">
     <div class="top-section relative">
-        <img src="{{ asset('images/1.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute left-0 bottom-0" />
-        <img src="{{ asset('images/2.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute right-0 bottom-0" />
 
         <header class="font-semibold">
             <div class="flex relative flex-col items-center pb-20 w-full min-h-[780px] max-md:px-5 max-md:max-w-full">
@@ -153,8 +151,13 @@
                     @endif
                 </div>
             </section>
-            <section class="flex overflow-hidden relative flex-col items-center px-12 py-20 w-full max-w-screen-xl max-md:px-5 max-md:max-w-full">
-                <!-- Background Pattern -->
+        </div>
+<div class="relative">
+        <img src="{{ asset('images/1.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute left-0 bottom-0" />
+        <img src="{{ asset('images/2.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute right-0 bottom-0" />
+
+        <section class="flex overflow-hidden relative flex-col items-center px-12 py-20 w-full max-w-screen-xl max-md:px-5 max-md:max-w-full">
+
 
                 <!-- Content -->
                 <div class="z-0 max-w-full text-center text-zinc-100 w-[779px]">
