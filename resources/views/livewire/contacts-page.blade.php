@@ -164,8 +164,8 @@
     }
 </style>
 
-<div class="mx-auto px-12 container">
-    <main class="">
+<div class="mx-auto px-12 container py-4">
+
         <!-- Breadcrumbs -->
         <livewire:components.breadcrumbs
             :currentPage="__('messages.contacts.title')"
@@ -285,6 +285,5 @@
                 <!-- Contact Form Component -->
                 <livewire:components.feedback-form-block />
         </section>
-        
-    </main>
+
 </div>
