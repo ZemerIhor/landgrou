@@ -156,11 +156,11 @@
         <img src="{{ asset('images/1.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute left-0 bottom-0" />
         <img src="{{ asset('images/2.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute right-0 bottom-0" />
 
-        <section class="flex container mx-auto overflow-hidden relative flex-col items-center px-12 py-20 w-full max-w-screen-xl max-md:px-5 max-md:max-w-full">
+        <section class="flex container mx-auto overflow-hidden relative flex-col items-center py-20 w-full max-w-screen-xl max-md:px-5 max-md:max-w-full">
 
 
                 <!-- Content -->
-                <div class="z-0 max-w-full text-center text-zinc-100 w-[779px]">
+                <div class="z-0 max-w-full text-center text-zinc-100">
                     @if (isset($settings->about_title) && (is_array($settings->about_title) ? isset($settings->about_title[app()->getLocale()]) : is_string($settings->about_title)))
                         <h2 class="text-2xl font-bold leading-tight text-zinc-100 max-md:max-w-full">
                             {{ is_array($settings->about_title) ? $settings->about_title[app()->getLocale()] : $settings->about_title }}
