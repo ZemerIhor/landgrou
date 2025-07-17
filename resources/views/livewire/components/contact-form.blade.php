@@ -6,10 +6,11 @@
         class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 transition-opacity duration-200"
         x-transition:enter="transition-opacity ease-out duration-200"
         x-transition:enter-start="opacity-0"
-        x-transition:enter-end="opacity-50"
+        x-transition:enter-end="opacity-100"
         x-transition:leave="transition-opacity ease-in duration-150"
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
+        x-on:click="$wire.closeModal"
     ></div>
 
     <!-- Form State -->
@@ -30,6 +31,7 @@
     >
         <!-- Close Button -->
         <button
+            type="button"
             wire:click="closeModal"
             class="flex absolute button-modal-close flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             aria-label="{{ __('messages.contact_form.close_button_aria_label') }}"
@@ -72,7 +74,7 @@
                             >
                                 <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="star-icon w-8 h-8">
                                     <path
-                                        d="M18.8065 4.68L21.1532 9.37334C21.4732 10.0267 22.3265 10.6533 23.0465 10.7733L27.2999 11.48C30.0199 11.9333 30.6599 13.9067 28.6999 15.8533L25.3932 19.16C24.8332 19.72 24.5265 20.8 24.6999 21.5733L25.6465 25.6667C26.3932 28.9067 24.6732 30.16 21.8065 28.4667L17.8199 26.1067C17.0999 25.68 15.9132 25.68 15.1799 26.1067L11.1932 28.4667C8.33988 30.16 6.60655 28.8933 7.35321 25.6667L8.29988 21.5733C8.47321 20.8 8.16655 19.72 7.60655 19.16L4.29988 15.8533C2.35321 13.9067 2.97988 11.9333 5.69988 11.48L9.95321 10.7733C10.6599 10  .6533 11.5132 10.0267 11.8332 9.37334L14.1799 4.68C15.4599 2.13334 17.5399 2.13334 18.8065 4.68Z"
+                                        d="M18.8065 4.68L21.1532 9.37334C21.4732 10.0267 22.3265 10.6533 23.0465 10.7733L27.2999 11.48C30.0199 11.9333 30.6599 13.9067 28.6999 15.8533L25.3932 19.16C24.8332 19.72 24.5265 20.8 24.6999 21.5733L25.6465 25.6667C26.3932 28.9067 24.6732 30.16 21.8065 28.4667L17.8199 26.1067C17.0999 25.68 15.9132 25.68 15.1799 26.1067L11.1932 28.4667C8.33988 30.16 6.60655 28.8933 7.35321 25.6667L8.29988 21.5733C8.47321 20.8 8.16655 19.72 7.60655 19.16L4.29988 15.8533C2.35321 13.9067 2.97988 11.9333 5.69988 11.48L9.95321 10.7733C10.6599 10.6533 11.5132 10.0267 11.8332 9.37334L14.1799 4.68C15.4599 2.13334 17.5399 2.13334 18.8065 4.68Z"
                                         :fill="rating >= {{ $i }} ? '#FACC15' : '#DBDBDB'"
                                     />
                                 </svg>
@@ -96,7 +98,7 @@
                         type="email"
                         wire:model="email"
                         placeholder="{{ __('messages.contact_form.email_placeholder') }}"
-                        class="box-border gap-2 px-4 py-3 w-full h-12 text-base font-bold leading-5 rounded-2xl border border-solid border-neutral-400 flex-[1_0_0] text-neutral-400 placeholder-neutral- neutral400 max-sm:px-3.5 max-sm:py-2.5 max-sm:h-11 max-sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent @error('email') border-red-500 @enderror"
+                        class="box-border gap-2 px-4 py-3 w-full h-12 text-base font-semibold leading-5 rounded-2xl border border-solid border-neutral-400 flex-[1_0_0] text-neutral-400 placeholder-neutral-400 max-sm:px-3.5 max-sm:py-2.5 max-sm:h-11 max-sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent @error('email') border-red-500 @enderror"
                         aria-label="{{ __('messages.contact_form.email_label') }}"
                         required
                     />
@@ -184,7 +186,7 @@
     <section
         x-show="ready && $wire.isOpen && $wire.state === 'success'"
         x-cloak
-        class="fixed top-1/2 left-1/2 transform -translate-x-1/2 flex flex-col gap-10 items-center p-20 rounded-3xl bg-neutral-200 w-[600px] max-md:p-16 max-md:w-[500px] max-sm:px-5 max-sm:py-10 max-sm:w-full max-sm:max-w-[400px] z-50 transition-all duration-200"
+        class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-10 items-center p-20 rounded-3xl bg-neutral-200 w-[600px] max-md:p-16 max-md:w-[500px] max-sm:px-5 max-sm:py-10 max-sm:w-full max-sm:max-w-[400px] z-50 transition-all duration-200"
         x-transition:enter="transition-all ease-out duration-200"
         x-transition:enter-start="opacity-0 scale-95 translate-y-4"
         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
@@ -197,6 +199,7 @@
         wire:init="resetModal"
     >
         <button
+            type="button"
             wire:click="closeModal"
             class="flex absolute button-modal-close flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             aria-label="{{ __('messages.contact_form.close_button_aria_label') }}"
@@ -239,6 +242,7 @@
 
         <div class="flex flex-col gap-4 items-center self-stretch">
             <button
+                type="button"
                 wire:click="continueFromSuccess"
                 class="flex gap-2 justify-center items-center px-6 py-2.5 bg-sky-500 rounded-2xl cursor-pointer min-h-11 max-sm:w-full hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition-colors"
             >
@@ -251,7 +255,7 @@
     <section
         x-show="ready && $wire.isOpen && $wire.state === 'error'"
         x-cloak
-        class="fixed top-1/2 left-1/2 transform -translate-x-1/2 flex flex-col gap-10 items-center p-20 rounded-3xl bg-neutral-200 w-[600px] max-md:p-16 max-md:w-[500px] max-sm:px-5 max-sm:py-10 max-sm:w-full max-sm:max-w-[400px] z-50 transition-all duration-200"
+        class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-10 items-center p-20 rounded-3xl bg-neutral-200 w-[600px] max-md:p-16 max-md:w-[500px] max-sm:px-5 max-sm:py-10 max-sm:w-full max-sm:max-w-[400px] z-50 transition-all duration-200"
         x-transition:enter="transition-all ease-out duration-200"
         x-transition:enter-start="opacity-0 scale-95 translate-y-4"
         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
@@ -264,6 +268,7 @@
         wire:init="resetModal"
     >
         <button
+            type="button"
             wire:click="closeModal"
             class="flex absolute button-modal-close flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             aria-label="{{ __('messages.contact_form.close_button_aria_label') }}"
@@ -306,6 +311,7 @@
 
         <div class="flex flex-col gap-4 items-center self-stretch">
             <button
+                type="button"
                 wire:click="tryAgain"
                 class="flex gap-2 justify-center items-center px-6 py-2.5 bg-red-500 rounded-2xl cursor-pointer min-h-11 max-sm:w-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
             >
