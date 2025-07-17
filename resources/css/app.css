@@ -36,6 +36,12 @@
 #header ul {
     align-items: center;
 }
+.desktop-menu ul li a{
+    text-wrap-mode: nowrap;
+}
+/* .desktop-menu ul {
+    flex-wrap: wrap;
+} */
 .gallery-slide,
 .certificate-slide {
     max-width: 250px;

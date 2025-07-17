@@ -4,7 +4,7 @@
 @endphp
 
 <footer class="self-stretch bg-zinc-800 mt-auto conteiner relative " role="contentinfo" id="footer" aria-label="Site footer">
-    <div class="container mx-auto px-12">
+    <div class="container mx-auto md:px-12 px-4">
         <section class="header-section">
             <div class="logo"><x-brand.logo /></div>
 
