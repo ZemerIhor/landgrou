@@ -127,7 +127,9 @@ order: -1;
     }
 </style>
 
+
 <div class="container mx-auto px-4 md:px-12">
+
     <section class="" aria-label="Frequently Asked Questions">
         <div class="">
             <!-- Breadcrumbs -->

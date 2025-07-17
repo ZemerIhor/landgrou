@@ -36,6 +36,7 @@
 <div class="container">
     <h1>{{ __('messages.feedback_form.title') }}</h1>
     <p><span class="label">{{ __('messages.feedback_form.name_label') }}:</span> {{ htmlspecialchars($name) }}</p>
+    <p><span class="label">{{ __('messages.feedback_form.phone_label') }}:</span> {{ htmlspecialchars($phone) }}</p>
     <p><span class="label">{{ __('messages.feedback_form.comment_label') }}:</span> {{ htmlspecialchars($comment) }}</p>
 </div>
 </body>

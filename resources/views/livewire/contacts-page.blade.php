@@ -246,4 +246,6 @@
             <livewire:components.feedback-form-block />
         </section>
     </section>
+
 </div>
+
