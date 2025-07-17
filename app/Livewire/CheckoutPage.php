@@ -176,7 +176,6 @@ class CheckoutPage extends Component
             'privacy_policy' => 'accepted',
             'shippingData.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
             'shippingData.line_one' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
-            'shippingData.postcode' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
             'chosenShipping' => 'required|string|in:pickup,nova-poshta,courier',
             'comment' => 'nullable|string|max:500',
         ];
@@ -285,8 +284,6 @@ class CheckoutPage extends Component
         $this->cart->setShippingAddress($this->cart->shippingAddress);
         $this->cart->refresh();
 
-
-
         $this->currentStep = $this->steps['delivery'];
         session(['checkout_step' => $this->currentStep]);
     }
@@ -300,7 +297,6 @@ class CheckoutPage extends Component
             'chosenShipping' => 'required|string|in:pickup,nova-poshta,courier',
             'shippingData.city' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
             'shippingData.line_one' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
-            'shippingData.postcode' => in_array($this->chosenShipping, ['courier', 'nova-poshta']) ? 'required|string|max:255' : 'nullable|string|max:255',
             'comment' => 'nullable|string|max:500',
         ]);
 
@@ -382,14 +378,12 @@ class CheckoutPage extends Component
             if ($this->chosenShipping === 'pickup') {
                 $this->shippingData['city'] = $this->shippingData['city'] ?? 'Не требуется';
                 $this->shippingData['line_one'] = $this->shippingData['line_one'] ?? 'Самовывоз';
-                $this->shippingData['postcode'] = $this->shippingData['postcode'] ?? '00000';
             }
 
             $this->cart->shippingAddress->fill([
                 'city' => $this->shippingData['city'],
                 'line_one' => $this->shippingData['line_one'],
-                'postcode' => $this->shippingData['postcode'],
-                'meta' => array_merge($this->cart->shippingAddress->meta ? $this->cart->shippingAddress->toArray() : [], [
+                'meta' => array_merge($this->cart->shippingAddress->meta ? $this->cart->shippingAddress->meta->toArray() : [], [
                     'shipping_option' => $this->chosenShipping,
                 ]),
             ])->save();
@@ -531,9 +525,7 @@ class CheckoutPage extends Component
             // Вручную создаём строки заказа
             foreach ($this->cart->lines as $cartLine) {
                 $purchasable = $cartLine->purchasable;
-                // Получаем перевод названия товара
                 $translation = $purchasable->translate('name') ?? $purchasable->name ?? $purchasable->sku ?? 'Product';
-                // Формируем tax_breakdown как пустую коллекцию для строки заказа
                 $lineTaxBreakdownItems = collect([]);
                 $lineTaxBreakdown = new \Lunar\Base\ValueObjects\Cart\TaxBreakdown($lineTaxBreakdownItems);
 
@@ -541,7 +533,7 @@ class CheckoutPage extends Component
                     'order_id' => $order->id,
                     'purchasable_type' => $cartLine->purchasable_type,
                     'purchasable_id' => $cartLine->purchasable_id,
-                    'type' => 'physical', // Или другой тип, если требуется
+                    'type' => 'physical',
                     'description' => $translation,
                     'option' => $cartLine->meta['variant'] ?? null,
                     'identifier' => $purchasable->sku ?? 'unknown',
@@ -559,6 +551,55 @@ class CheckoutPage extends Component
                 ]);
             }
 
+            // Создание адресов заказа
+            $shippingCartAddress = $this->cart->shippingAddress;
+
+            \Lunar\Models\OrderAddress::create([
+                'order_id' => $order->id,
+                'type' => 'shipping',
+                'first_name' => $shippingCartAddress->first_name,
+                'last_name' => $shippingCartAddress->last_name,
+                'company_name' => $shippingCartAddress->company ?? null,
+                'line_one' => $shippingCartAddress->line_one,
+                'line_two' => $shippingCartAddress->line_two ?? null,
+                'line_three' => $shippingCartAddress->line_three ?? null,
+                'city' => $shippingCartAddress->city,
+                'state' => $shippingCartAddress->state ?? null,
+                'country_id' => $shippingCartAddress->country_id,
+                'contact_email' => $shippingCartAddress->contact_email,
+                'contact_phone' => $shippingCartAddress->contact_phone,
+                'meta' => $shippingCartAddress->meta ? $shippingCartAddress->meta->toArray() : null,
+            ]);
+
+            \Lunar\Models\OrderAddress::create([
+                'order_id' => $order->id,
+                'type' => 'billing',
+                'first_name' => $shippingCartAddress->first_name,
+                'last_name' => $shippingCartAddress->last_name,
+                'company_name' => $shippingCartAddress->company ?? null,
+                'line_one' => $shippingCartAddress->line_one,
+                'line_two' => $shippingCartAddress->line_two ?? null,
+                'line_three' => $shippingCartAddress->line_three ?? null,
+                'city' => $shippingCartAddress->city,
+                'state' => $shippingCartAddress->state ?? null,
+                'country_id' => $shippingCartAddress->country_id,
+                'contact_email' => $shippingCartAddress->contact_email,
+                'contact_phone' => $shippingCartAddress->contact_phone,
+                'meta' => $shippingCartAddress->meta ? $shippingCartAddress->meta->toArray() : null,
+            ]);
+
+            \Illuminate\Support\Facades\Log::info('Адреса заказа созданы', [
+                'order_id' => $order->id,
+                'shipping_address' => [
+                    'first_name' => $shippingCartAddress->first_name,
+                    'last_name' => $shippingCartAddress->last_name,
+                    'contact_phone' => $shippingCartAddress->contact_phone,
+                    'contact_email' => $shippingCartAddress->contact_email,
+                    'city' => $shippingCartAddress->city,
+                    'line_one' => $shippingCartAddress->line_one,
+                ],
+            ]);
+
             \Illuminate\Support\Facades\Log::info('Заказ создан', [
                 'order_id' => $order->id,
                 'cart_id' => $this->cart->id,
@@ -571,7 +612,7 @@ class CheckoutPage extends Component
                     'identifier' => $item->identifier,
                     'price' => $item->price->value,
                 ])->toArray(),
-                'tax_breakdown' => [], // Пропускаем, так как tax_breakdown пустой
+                'tax_breakdown' => [],
             ]);
 
             if ($this->comment) {
@@ -596,7 +637,6 @@ class CheckoutPage extends Component
             $this->addError('order', 'Не удалось создать заказ: ' . $e->getMessage());
         }
     }
-
 
     /**
      * Обновление поискового запроса для города
@@ -704,6 +744,15 @@ class CheckoutPage extends Component
             ]);
         }
 
+        $this->cart->calculate();
+        $this->loadShippingOptions();
+    }
+
+    /**
+     * Обновление адреса доставки
+     */
+    public function updatedShippingDataLineOne(): void
+    {
         $this->cart->calculate();
         $this->loadShippingOptions();
     }
