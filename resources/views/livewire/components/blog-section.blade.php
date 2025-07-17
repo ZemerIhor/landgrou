@@ -39,7 +39,7 @@
         <a
             href="{{ route('blog.index') }}"
             class="flex gap-2 justify-center items-center self-center px-6 py-2.5 mt-5 text-base font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
-            aria-label="{{ __('blog.more_button_aria_label') }}"
+            aria-label="{{ __('messages.blog.read_more') }}"
         >
             <span class="self-stretch my-auto text-green-600">
                 {{ __('messages.blog.more_button') }}
