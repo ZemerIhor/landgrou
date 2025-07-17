@@ -210,7 +210,7 @@
 
         </div>
 
-        <!-- About Section -->
+    </div>>
 
         <!-- Gallery Section -->
         <section class="bg-zinc-100 m-auto relative overflow-hidden about-us-gallery" aria-labelledby="gallery-title">
