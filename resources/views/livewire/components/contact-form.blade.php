@@ -1,4 +1,4 @@
-<div x-data="{ rating: @entangle('rating'), ready: false }" x-init="setTimeout(() => ready = true, 0)" class="relative">
+<div x-data="{ ready: false }" x-init="setTimeout(() => ready = true, 0)" class="relative">
     <!-- Modal Overlay -->
     <div
         x-show="ready && $wire.isOpen"
@@ -57,33 +57,6 @@
             <fieldset class="w-full border-none p-0 m-0">
                 <legend class="sr-only">{{ __('messages.contact_form.fieldset_legend') }}</legend>
 
-                <!-- Rating Section -->
-                <section class="flex gap-2 items-center" role="group" aria-labelledby="rating-label">
-                    <span id="rating-label" class="text-base font-semibold leading-5 text-zinc-800 max-sm:text-sm">
-                        {{ __('messages.contact_form.rating_label') }}
-                    </span>
-                    <div class="flex gap-0" role="radiogroup" aria-labelledby="rating-label">
-                        @for ($i = 1; $i <= 5; $i++)
-                            <button
-                                type="button"
-                                x-on:click="rating = {{ $i }}"
-                                class="star-button w-8 h-8 flex justify-center items-center"
-                                data-rating="{{ $i }}"
-                                aria-label="{{ $i == 1 ? __('messages.contact_form.star_label_one') : __('messages.contact_form.star_label_multiple', ['count' => $i]) }}"
-                                role="radio"
-                                :aria-checked="rating === {{ $i }}"
-                            >
-                                <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="star-icon w-8 h-8">
-                                    <path
-                                        d="M18.8065 4.68L21.1532 9.37334C21.4732 10.0267 22.3265 10.6533 23.0465 10.7733L27.2999 11.48C30.0199 11.9333 30.6599 13.9067 28.6999 15.8533L25.3932 19.16C24.8332 19.72 24.5265 20.8 24.6999 21.5733L25.6465 25.6667C26.3932 28.9067 24.6732 30.16 21.8065 28.4667L17.8199 26.1067C17.0999 25.68 15.9132 25.68 15.1799 26.1067L11.1932 28.4667C8.33988 30.16 6.60655 28.8933 7.35321 25.6667L8.29988 21.5733C8.47321 20.8 8.16655 19.72 7.60655 19.16L4.29988 15.8533C2.35321 13.9067 2.97988 11.9333 5.69988 11.48L9.95321 10.7733C10.6599 10.6533 11.5132 10.0267 11.8332 9.37334L14.1799 4.68C15.4599 2.13334 17.5399 2.13334 18.8065 4.68Z"
-                                        :fill="rating >= {{ $i }} ? '#FACC15' : '#DBDBDB'"
-                                    />
-                                </svg>
-                            </button>
-                        @endfor
-                    </div>
-                </section>
-
                 <div class="flex flex-col gap-4 w-full">
                     <input
                         type="text"
@@ -96,16 +69,6 @@
                     @error('name') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
 
                     <input
-                        type="email"
-                        wire:model="email"
-                        placeholder="{{ __('messages.contact_form.email_placeholder') }}"
-                        class="box-border gap-2 px-4 py-3 w-full h-12 text-base font-semibold leading-5 rounded-2xl border border-solid border-neutral-400 flex-[1_0_0] text-neutral-400 placeholder-neutral-400 max-sm:px-3.5 max-sm:py-2.5 max-sm:h-11 max-sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent @error('email') border-red-500 @enderror"
-                        aria-label="{{ __('messages.contact_form.email_label') }}"
-                        required
-                    />
-                    @error('email') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-
-                    <input
                         type="tel"
                         wire:model="phone"
                         placeholder="{{ __('messages.contact_form.phone_placeholder') }}"
@@ -114,16 +77,6 @@
                         required
                     />
                     @error('phone') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-
-                    <input
-                        type="text"
-                        wire:model="subject"
-                        placeholder="{{ __('messages.contact_form.subject_placeholder') }}"
-                        class="box-border gap-2 px-4 py-3 w-full h-12 text-base font-semibold leading-5 rounded-2xl border border-solid border-neutral-400 flex-[1_0_0] text-neutral-400 placeholder-neutral-400 max-sm:px-3.5 max-sm:py-2.5 max-sm:h-11 max-sm:text-sm focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent @error('subject') border-red-500 @enderror"
-                        aria-label="{{ __('messages.contact_form.subject_label') }}"
-                        required
-                    />
-                    @error('subject') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
 
                     <div class="box-border flex flex-col px-4 py-3 w-full rounded-2xl border border-solid border-neutral-400 focus-within:ring-2 focus-within:ring-green-600 focus-within:border-transparent @error('formMessage') border-red-500 @enderror">
                         <textarea
@@ -138,45 +91,24 @@
                 </div>
             </fieldset>
 
-            <!-- Checkbox and Buttons -->
-            <div class="flex flex-col gap-4 items-start w-full max-w-[440px] max-md:max-w-full">
-                <div class="flex gap-2 items-center">
-                    <input
-                        type="checkbox"
-                        wire:model="agreePrivacy"
-                        id="privacy-agreement"
-                        class="w-6 h-6 rounded border-solid border-[1.5px] border-neutral-400 text-green-600 focus:ring-green-600 focus:ring-2 @error('agreePrivacy') border-red-500 @enderror"
-                        required
-                    />
-                    <label for="privacy-agreement" class="flex gap-0.5 items-start">
-                        <span class="text-xs font-semibold leading-5 text-zinc-800 max-sm:text-xs">
-                            {{ __('messages.contact_form.privacy_agreement') }}
-                        </span>
-                        <a href="{{ route('terms') }}" class="gap-2 text-xs leading-5 text-indigo-500 underline rounded-lg max-sm:text-xs hover:text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            {{ __('messages.contact_form.privacy_policy_link') }}
-                        </a>
-                    </label>
-                    @error('agreePrivacy') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
-                </div>
-
-                <div class="flex gap-4 items-center w-full max-sm:flex-col max-sm:gap-3">
-                    <button
-                        type="button"
-                        wire:click="goBack"
-                        class="gap-2 px-6 py-2.5 text-base font-bold leading-6 text-green-600 rounded-2xl border-2 border-green-600 border-solid cursor-pointer min-h-11 max-sm:px-5 max-sm:py-2 max-sm:text-sm max-sm:min-h-10 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
-                    >
-                        {{ __('messages.contact_form.back_button') }}
-                    </button>
-                    <button
-                        type="submit"
-                        wire:loading.attr="disabled"
-                        x-bind:disabled="!$wire.name || !$wire.email || !$wire.subject || !$wire.formMessage || !$wire.agreePrivacy || !$wire.rating"
-                        class="gap-2 px-6 py-2.5 text-base font-bold leading-6 text-white bg-green-600 rounded-2xl cursor-pointer border-none min-h-11 max-sm:px-5 max-sm:py-2 max-sm:text-sm max-sm:min-h-10 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
-                    >
-                        <span wire:loading.remove>{{ __('messages.contact_form.submit_button') }}</span>
-                        <span wire:loading>{{ __('messages.contact_form.submit_loading') }}</span>
-                    </button>
-                </div>
+            <!-- Buttons -->
+            <div class="flex gap-4 items-center w-full max-sm:flex-col max-sm:gap-3">
+                <button
+                    type="button"
+                    wire:click="goBack"
+                    class="gap-2 px-6 py-2.5 text-base font-bold leading-6 text-green-600 rounded-2xl border-2 border-green-600 border-solid cursor-pointer min-h-11 max-sm:px-5 max-sm:py-2 max-sm:text-sm max-sm:min-h-10 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
+                >
+                    {{ __('messages.contact_form.back_button') }}
+                </button>
+                <button
+                    type="submit"
+                    wire:loading.attr="disabled"
+                    x-bind:disabled="!$wire.name || !$wire.phone || !$wire.formMessage"
+                    class="gap-2 px-6 py-2.5 text-base font-bold leading-6 text-white bg-green-600 rounded-2xl cursor-pointer border-none min-h-11 max-sm:px-5 max-sm:py-2 max-sm:text-sm max-sm:min-h-10 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
+                >
+                    <span wire:loading.remove>{{ __('messages.contact_form.submit_button') }}</span>
+                    <span wire:loading>{{ __('messages.contact_form.submit_loading') }}</span>
+                </button>
             </div>
         </form>
     </section>
@@ -335,7 +267,6 @@
                 });
             });
 
-            // Debug form submission attempts
             document.addEventListener('submit', (event) => {
                 console.log('Form submit event detected', {
                     target: event.target,
