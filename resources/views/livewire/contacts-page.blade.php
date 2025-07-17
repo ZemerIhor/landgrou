@@ -184,7 +184,7 @@
         <section class="mt-2" aria-labelledby="map-section">
             <h3 id="map-section" class="sr-only">{{ __('messages.contacts.map') }}</h3>
             @if ($settings->map_latitude && $settings->map_longitude)
-                <div id="map" class="map-container"></div>
+                <div id="map" class="map-container z-0"></div>
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         // Проверка, что Leaflet загружен
