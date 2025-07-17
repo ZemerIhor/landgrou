@@ -1,8 +1,8 @@
 
 <div class=" mx-auto ">
     <!-- Form Block -->
-    <section class="grid grid-cols-1 xl:grid-cols-2 gap-2 justify-center min-h-[570px] xl:h-[570px]" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
-            <div class="relative grid grid-cols-1 justify-center px-6 rounded-3xl bg-neutral-200 min-h-[570px] max-md:max-w-full">
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-2 justify-center min-h-[570px] xl:h-[570px]" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
+            <div class="relative px-6 rounded-3xl bg-neutral-200 min-h-[570px] max-md:max-w-full">
                 <form wire:submit="submit" class="w-full" aria-labelledby="feedback-form-title" novalidate>
                     <header class="w-full text-zinc-800 max-md:max-w-full">
                         <h1 id="feedback-form-title" class="text-xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
@@ -102,7 +102,7 @@
                     </footer>
                 </form>
             </div>
-            <aside class="grid justify-center min-w-60 max-md:max-w-full max-md:-order-1" aria-label="{{ __('messages.feedback_form.image_aria_label') }}">
+            <aside class=" min-w-60 max-md:max-w-full max-md:-order-1" aria-label="{{ __('messages.feedback_form.image_aria_label') }}">
                 @if ($settings['feedback_form_image'])
                     <img
                         src="{{ $settings['feedback_form_image'] }}"
