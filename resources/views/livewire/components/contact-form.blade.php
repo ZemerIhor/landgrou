@@ -34,7 +34,7 @@
         <button
             type="button"
             wire:click="closeModal"
-            class="flex absolute button-modal-close flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+            class="flex absolute top-4 right-4 flex-col gap-2.5 justify-center items-center hover:bg-gray-100 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             aria-label="{{ __('messages.contact_form.close_button_aria_label') }}"
         >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,7 +43,7 @@
         </button>
 
         <!-- Header Section -->
-        <header class="flex flex-col gap-3 items-start w-[440px] max-md:w-full header">
+        <header class="flex flex-col gap-3 items-start w-[440px] max-md:w-full">
             <h1 id="form-title" class="text-xl font-bold leading-6 text-zinc-800 w-[440px] max-md:w-full max-sm:text-lg">
                 {{ __('messages.contact_form.title') }}
             </h1>
@@ -53,7 +53,7 @@
         </header>
 
         <!-- Form Content -->
-        <form wire:submit.prevent="submit" x-on:keydown.enter.prevent class="flex flex-col gap-4 items-start w-full max-w-[440px] max-md:max-w-full" novalidate>
+        <form wire:submit.prevent="submit" x-on:submit.prevent="$wire.submit" class="flex flex-col gap-4 items-start w-full max-w-[440px] max-md:max-w-full" novalidate>
             <fieldset class="w-full border-none p-0 m-0">
                 <legend class="sr-only">{{ __('messages.contact_form.fieldset_legend') }}</legend>
 
@@ -170,10 +170,8 @@
                     <button
                         type="submit"
                         wire:loading.attr="disabled"
-                        x-bind:disabled="!$wire.name || !$wire.email || !$wire.subject || !$wire.formMessage || !$wire.agreePrivacy"
-                        class="gap-2 px-6 py-2.5 text-base font-bold leading-6 text-white bg-green-600 rounded-2xl cursor-pointer border-[none] min-h-11 max-sm:px-5 max-sm:py-2 max-sm:text-sm max-sm:min-h-10 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
-                        x-show="!$wire.isOpen || $wire.state === 'form'"
-                        x-cloak
+                        x-bind:disabled="!$wire.name || !$wire.email || !$wire.subject || !$wire.formMessage || !$wire.agreePrivacy || !$wire.rating"
+                        class="gap-2 px-6 py-2.5 text-base font-bold leading-6 text-white bg-green-600 rounded-2xl cursor-pointer border-none min-h-11 max-sm:px-5 max-sm:py-2 max-sm:text-sm max-sm:min-h-10 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
                     >
                         <span wire:loading.remove>{{ __('messages.contact_form.submit_button') }}</span>
                         <span wire:loading>{{ __('messages.contact_form.submit_loading') }}</span>
@@ -203,7 +201,7 @@
         <button
             type="button"
             wire:click="closeModal"
-            class="flex absolute button-modal-close flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+            class="flex absolute top-4 right-4 flex-col gap-2.5 justify-center items-center hover:bg-gray-100 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             aria-label="{{ __('messages.contact_form.close_button_aria_label') }}"
         >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -273,7 +271,7 @@
         <button
             type="button"
             wire:click="closeModal"
-            class="flex absolute button-modal-close flex-col gap-2.5 justify-center items-center hover:bg-opacity-5 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
+            class="flex absolute top-4 right-4 flex-col gap-2.5 justify-center items-center hover:bg-gray-100 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500"
             aria-label="{{ __('messages.contact_form.close_button_aria_label') }}"
         >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -334,6 +332,15 @@
                 });
                 Livewire.on('closeContactForm', () => {
                     console.log('Close contact form event received');
+                });
+            });
+
+            // Debug form submission attempts
+            document.addEventListener('submit', (event) => {
+                console.log('Form submit event detected', {
+                    target: event.target,
+                    formId: event.target.id,
+                    formAction: event.target.action
                 });
             });
         </script>

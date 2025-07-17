@@ -105,6 +105,15 @@ class ContactForm extends Component
             ]
         ]);
 
+        // Only proceed with submission if the modal is open and in the 'form' state
+        if (!$this->isOpen || $this->state !== 'form') {
+            Log::warning('ContactForm submit attempted in invalid state', [
+                'isOpen' => $this->isOpen,
+                'state' => $this->state
+            ]);
+            return;
+        }
+
         $validated = $this->validate();
 
         try {
