@@ -7,11 +7,10 @@
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1040; /* Меньше, чем z-index модального окна */
-        display: none; /* Скрыт по умолчанию */
+        z-index: 1040;
+        display: none;
     }
 
-    /* Показываем оверлей, когда модалка открыта */
     .modal-open .modal-overlay {
         display: block;
     }
@@ -32,8 +31,12 @@
         padding: 2.5rem;
         width: 100%;
         max-width: 600px;
-        z-index: 1050; /* Выше оверлея */
-        display: none; /* Скрыт по умолчанию */
+        z-index: 1050;
+        display: none;
+    }
+
+    .modal-open .modal-content {
+        display: flex;
     }
 
     @media (max-width: 768px) {
@@ -50,36 +53,23 @@
         }
     }
 
-    /* Показываем модальное окно, когда оно открыто */
-    .modal-open .modal-content {
-        display: flex;
-    }
-
     /* Стили для кнопки закрытия */
     .button-modal-close {
+        position: absolute;
         top: 1rem;
         right: 1rem;
         width: 2rem;
         height: 2rem;
         background-color: transparent;
         border: none;
+        cursor: pointer;
     }
 
-    /* Стили для формы и других элементов */
-    .contact-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        line-height: 1.5rem;
-        color: #27272a;
+    .button-modal-close:hover {
+        background-color: rgba(0, 0, 0, 0.1);
     }
 
-    .contact-text {
-        font-size: 1rem;
-        font-weight: 600;
-        line-height: 1.5rem;
-        color: #27272a;
-    }
-
+    /* Стили для формы */
     .form-input, .form-textarea {
         width: 100%;
         padding: 0.875rem 1rem;
@@ -120,6 +110,19 @@
         box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.2);
     }
 
+    .form-button-secondary {
+        border: 2px solid #15803d;
+        color: #15803d;
+        background: transparent;
+    }
+
+    .form-button-secondary:hover,
+    .form-button-secondary:focus {
+        background-color: rgba(21, 128, 61, 0.1);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(21, 128, 61, 0.2);
+    }
+
     .star-button {
         background: none;
         border: none;
@@ -137,12 +140,13 @@
     }
 </style>
 
-<div x-data="{ rating: @entangle('rating'), ready: false }" x-init="setTimeout(() => ready = true, 0); document.body.classList.toggle('modal-open', $wire.isOpen)">
+<div x-data="{ rating: @entangle('rating'), ready: false }" x-init="setTimeout(() => ready = true, 0); document.body.classList.toggle('modal-open', $wire.isOpen)" x-on:keydown.escape="$wire.closeModal()">
     <!-- Modal Overlay -->
     <div
         class="modal-overlay"
         x-show="ready && $wire.isOpen"
         x-cloak
+        x-on:click="$wire.closeModal()"
         x-transition:enter="transition-opacity ease-out duration-200"
         x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100"
