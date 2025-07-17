@@ -150,7 +150,7 @@
                     @endif
                 </div>
             </section>
-            <section class="flex overflow-hidden relative flex-col items-center px-12 py-20 w-full max-w-screen-xl bg-zinc-800 max-md:px-5 max-md:max-w-full">
+            <section class="flex overflow-hidden relative flex-col items-center px-12 py-20 w-full max-w-screen-xl max-md:px-5 max-md:max-w-full">
                 <!-- Background Pattern -->
                 <img src="{{ asset('images/1.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute left-0" />
                 <img src="{{ asset('images/2.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute right-0" />
