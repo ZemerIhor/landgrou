@@ -8,6 +8,13 @@
         </h1>
     </header>
 
+    <!-- Отладочная информация -->
+    <div class="mt-4 text-sm text-gray-500">
+        Debug: chosenShipping={{ $chosenShipping ?? 'None' }},
+        city={{ $shippingData['city'] ?? 'None' }},
+        line_one={{ $shippingData['line_one'] ?? 'None' }}
+    </div>
+
     @if($shippingData)
         <div class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full space-y-4">
             @foreach($shippingOptions as $option)
@@ -205,7 +212,6 @@
 </form>
 
 <style>
-    /* Стили для радиокнопок */
     input[type="radio"] {
         appearance: none;
         -webkit-appearance: none;
@@ -236,13 +242,11 @@
         outline-offset: 2px;
     }
 
-    /* Стили фокуса для select и input */
     select:focus, input:focus {
         outline: 2px solid #3b82f6;
         outline-offset: 2px;
     }
 
-    /* Стили фокуса для доступности */
     .btn-primary:focus,
     .btn-secondary:focus {
         outline: 2px solid #228F5D;
@@ -254,7 +258,6 @@
         border-color: #228F5D;
     }
 
-    /* Эффекты наведения */
     .btn-primary:hover {
         background-color: #1e7a4f;
     }
@@ -263,7 +266,6 @@
         background-color: #f0fdf4;
     }
 
-    /* Стили для placeholder */
     input::placeholder, select:invalid, textarea::placeholder {
         color: #a3a3a3;
     }
