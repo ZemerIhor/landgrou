@@ -28,6 +28,7 @@
         aria-labelledby="form-title"
         aria-describedby="form-description"
         wire:init="resetModal"
+        x-on:click.stop
     >
         <!-- Close Button -->
         <button
@@ -197,6 +198,7 @@
         aria-labelledby="success-title"
         aria-describedby="success-description"
         wire:init="resetModal"
+        x-on:click.stop
     >
         <button
             type="button"
@@ -266,6 +268,7 @@
         aria-labelledby="error-title"
         aria-describedby="error-description"
         wire:init="resetModal"
+        x-on:click.stop
     >
         <button
             type="button"
