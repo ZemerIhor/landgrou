@@ -17,23 +17,11 @@ class ContactForm extends Component
     #[Rule('required|string|max:255')]
     public $name = '';
 
-    #[Rule('required|email|max:255')]
-    public $email = '';
-
     #[Rule('required|regex:/^\+?\d{10,15}$/')]
     public $phone = '';
 
-    #[Rule('required|string|max:255')]
-    public $subject = '';
-
     #[Rule('required|string|max:1000')]
     public $formMessage = '';
-
-    #[Rule('accepted')]
-    public $agreePrivacy = false;
-
-    #[Rule('required|integer|min:1|max:5')]
-    public $rating = 0;
 
     public function mount()
     {
@@ -54,15 +42,7 @@ class ContactForm extends Component
 
     public function resetModal()
     {
-        $this->reset([
-            'name',
-            'email',
-            'phone',
-            'subject',
-            'formMessage',
-            'agreePrivacy',
-            'rating',
-        ]);
+        $this->reset(['name', 'phone', 'formMessage']);
         $this->state = 'form';
         $this->isOpen = false;
         $this->resetErrorBag();
@@ -76,12 +56,8 @@ class ContactForm extends Component
             'state' => $this->state,
             'formData' => [
                 'name' => $this->name,
-                'email' => $this->email,
                 'phone' => $this->phone,
-                'subject' => $this->subject,
                 'formMessage' => $this->formMessage,
-                'agreePrivacy' => $this->agreePrivacy,
-                'rating' => $this->rating,
             ]
         ]);
 
@@ -96,16 +72,11 @@ class ContactForm extends Component
         Log::info('ContactForm submit triggered', [
             'formData' => [
                 'name' => $this->name,
-                'email' => $this->email,
                 'phone' => $this->phone,
-                'subject' => $this->subject,
                 'formMessage' => $this->formMessage,
-                'agreePrivacy' => $this->agreePrivacy,
-                'rating' => $this->rating,
             ]
         ]);
 
-        // Only proceed with submission if the modal is open and in the 'form' state
         if (!$this->isOpen || $this->state !== 'form') {
             Log::warning('ContactForm submit attempted in invalid state', [
                 'isOpen' => $this->isOpen,
@@ -156,7 +127,7 @@ class ContactForm extends Component
 
     private function resetForm()
     {
-        $this->reset(['name', 'email', 'phone', 'subject', 'formMessage', 'agreePrivacy', 'rating']);
+        $this->reset(['name', 'phone', 'formMessage']);
         $this->resetErrorBag();
         Log::info('ContactForm form reset');
     }
