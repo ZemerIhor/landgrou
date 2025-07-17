@@ -314,9 +314,7 @@
         max-width: 224px;
     }
 }
-.top-section {
-    background: #333333;
-}
+
 
 .bg-shape {
     fill: var(--Bg, #f3f3f3);
