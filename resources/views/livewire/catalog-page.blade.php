@@ -78,7 +78,7 @@
     </section>
 
     <!-- Main Content Area -->
-    <div class="flex flex-wrap gap-2 items-start pt-2 w-full max-md:max-w-full">
+    <div class="flex flex-wrap gap-2 items-start justify-center pt-2 w-full max-md:max-w-full">
         <!-- Filters Sidebar -->
         <aside class="rounded-3xl bg-neutral-200 min-w-60 w-[289px]" aria-label="Фильтры товаров">
             <!-- Brand Filter -->
