@@ -250,12 +250,33 @@
     left: 0;
     width: 100vw;
     margin-left: calc(-50vw + 50%);
-    background: #e6e6e6;
-    z-index: -1;
+    background: #F3F3F3;
+    z-index: -2;
     height: 100%;
 }
 
 .about-us-certificate:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    background: #333;
+    z-index: -1;
+    height: 100%;
+}
+.top-section {
+  position: relative;
+}
+.top-section .bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+}
+.top-section:before {
     content: "";
     position: absolute;
     top: 0;
@@ -316,9 +337,6 @@
 }
 
 
-.top-section {
-    background: #333333;
-}
 
 .bg-shape {
     fill: var(--Bg, #f3f3f3);
