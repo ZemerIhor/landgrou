@@ -45,7 +45,6 @@ class Contacts extends Page implements HasForms
             'additional_emails' => collect($settings->additional_emails ?? [])->map(function ($value, $key) {
                 return ['key' => $key, 'value' => $value];
             })->values()->toArray(),
-            'map_image' => $settings->map_image ?? '',
             'map_image_alt' => $settings->map_image_alt ?? ['en' => '', 'uk' => ''],
             'map_latitude' => $settings->map_latitude ?? '',
             'map_longitude' => $settings->map_longitude ?? '',
@@ -124,12 +123,6 @@ class Contacts extends Page implements HasForms
                             ->itemLabel(fn (array $state): ?string => $state['key'] ?? null)
                             ->collapsible()
                             ->cloneable(),
-                        FileUpload::make('map_image')
-                            ->label(__('messages.contacts.map_image'))
-                            ->image()
-                            ->disk('public')
-                            ->directory('contacts-images')
-                            ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
                         TextInput::make('map_latitude')
                             ->label(__('messages.contacts.map_latitude'))
                             ->numeric()

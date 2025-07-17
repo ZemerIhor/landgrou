@@ -20,6 +20,8 @@ class ContactSettings extends Settings
     public  $sales_email;
     public  $export_phone;
     public  $export_email;
+    public  $map_latitude;
+    public  $map_longitude;
     public  $additional_emails;
     public ?string  $map_image;
 
