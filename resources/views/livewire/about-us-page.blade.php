@@ -156,8 +156,8 @@
         <section class="flex overflow-hidden relative flex-col items-center px-12 py-20 w-full max-w-screen-xl bg-zinc-800 max-md:px-5 max-md:max-w-full">
             <!-- Background Pattern -->
             <div class="flex absolute top-1/2 left-1/2 z-0 items-center self-start -translate-x-1/2 -translate-y-1/2 w-[2662px]" aria-hidden="true">
-                <img src="{{ asset('images/about-pattern-1.jpg') }}" alt="" class="object-contain self-stretch my-auto aspect-[1.33] min-w-60 w-[1030px] max-md:max-w-full" />
-                <img src="{{ asset('images/about-pattern-2.jpg') }}" alt="" class="object-contain self-stretch my-auto aspect-[1.33] min-w-60 w-[1030px] max-md:max-w-full" />
+                <img src="{{ asset('images/1.png') }}" alt="" class="object-contain self-stretch my-auto aspect-[1.33] min-w-60 w-[1030px] max-md:max-w-full" />
+                <img src="{{ asset('images/2.png') }}" alt="" class="object-contain self-stretch my-auto aspect-[1.33] min-w-60 w-[1030px] max-md:max-w-full" />
             </div>
 
             <!-- Content -->
