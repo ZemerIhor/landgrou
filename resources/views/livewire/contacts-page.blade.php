@@ -16,7 +16,6 @@
         background-color: #ffffff;
         border-radius: 1.5rem;
         padding: 1.5rem;
-        padding: 1.5rem;
     }
 
     .contact-section-alt {
@@ -40,11 +39,7 @@
     .map-container {
         width: 100%;
         height: 222px;
-    .map-container {
-        width: 100%;
-        height: 222px;
         border-radius: 1.5rem;
-        overflow: hidden;
         overflow: hidden;
     }
 
@@ -110,36 +105,11 @@
             {{ __('messages.contacts.title') }}
         </h1>
     </header>
-    <!-- Page Title -->
-    <header class="mt-5">
-        <h1 class="text-2xl font-bold leading-tight text-zinc-800">
-            {{ __('messages.contacts.title') }}
-        </h1>
-    </header>
 
     <!-- Contact Information Section -->
     <section class="mt-5 text-zinc-800" aria-labelledby="contact-info">
         <h2 id="contact-info" class="sr-only">{{ __('messages.contacts.info') }}</h2>
-    <!-- Contact Information Section -->
-    <section class="mt-5 text-zinc-800" aria-labelledby="contact-info">
-        <h2 id="contact-info" class="sr-only">{{ __('messages.contacts.info') }}</h2>
 
-        <!-- Main Contact Info -->
-        <article class="contacts-container contact-section">
-            <section>
-                <h3 class="contact-title">
-                    {{ __('messages.contacts.address') }}
-                </h3>
-                <address class="contact-text mt-4 not-italic">
-                    @php
-                        $address = data_get($settings, 'main_address.' . app()->getLocale(), data_get($settings, 'main_address.en', ''));
-                    @endphp
-                    {!! nl2br(e($address)) !!}<br>
-                    E-Mail: <a href="mailto:{{ $settings->main_email }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
-                        {{ $settings->main_email }}
-                    </a>
-                </address>
-            </section>
         <!-- Main Contact Info -->
         <article class="contacts-container contact-section">
             <section>
@@ -176,44 +146,7 @@
                 </div>
             </section>
         </article>
-            <section>
-                <h3 class="contact-title">
-                    {{ __('messages.contacts.sales') }}
-                </h3>
-                <div class="contact-text mt-4">
-                    @foreach ($settings->sales_phones as $phone)
-                        @php
-                            $phoneNumber = is_array($phone) ? ($phone['phone'] ?? '') : $phone;
-                        @endphp
-                        <a href="tel:{{ $phoneNumber }}" class="block text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
-                            {{ $phoneNumber }}
-                        </a>
-                    @endforeach
-                    E-Mail: <a href="mailto:{{ $settings->sales_email }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
-                        {{ $settings->sales_email }}
-                    </a>
-                </div>
-            </section>
-        </article>
 
-        <!-- Export and Additional Contacts -->
-        <article class="contacts-container contact-section contact-section-alt mt-2">
-            <section>
-                <h3 class="contact-title">
-                    {{ __('messages.contacts.export') }}
-                </h3>
-                <div class="contact-text mt-4">
-                    @php
-                        $contact = data_get($settings, 'export_contact.' . app()->getLocale(), data_get($settings, 'export_contact.en', ''));
-                    @endphp
-                    <a href="tel:{{ $settings->export_phone }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
-                        {{ $settings->export_phone }}
-                    </a> {{ e($contact) }}<br>
-                    E-Mail: <a href="mailto:{{ $settings->export_email }}" class="text-green-600 hover:text-green-700 focus:text-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 rounded">
-                        {{ $settings->export_email }}
-                    </a>
-                </div>
-            </section>
         <!-- Export and Additional Contacts -->
         <article class="contacts-container contact-section contact-section-alt mt-2">
             <section>
