@@ -324,7 +324,6 @@
                             'loop' => false,
                             'autoplay' => ['delay' => 3000],
                             'spaceBetween' => 10,
-                            'slidesPerView' => 3,
 
                         ]">
                             @foreach ($certificates_images as $image)
