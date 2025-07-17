@@ -170,3 +170,4 @@ document.addEventListener('livewire:navigated', () => {
 });
 document.addEventListener('livewire:init', initApp);
 document.addEventListener('livewire:update', initApp);
+

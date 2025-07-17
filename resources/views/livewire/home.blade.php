@@ -110,14 +110,13 @@
     <section class="home-about-section relative container" role="main"
         aria-labelledby="about-heading">
         <div class=" mx-auto px-12 py-20 ">
-            <div class=" relative">
+            <div class="">
 
                 <div
-                    class="flex justify-between h-full relative w-full max-md:flex-col max-md:items-start max-md:gap-10">
+                    class="home-about-us-grid ">
                     <!-- Part 1: Main Content -->
-                    <article
-                        class="flex flex-col justify-between flex-1 shrink items-start font-bold basis-0 min-w-[15rem] max-md:w-full">
-                        <header class="w-full max-md:w-full max-md:max-w-none">
+                    
+                        <header class="grid-about w-full max-md:w-full max-md:max-w-none">
                             <h1 id="about-heading"
                                 class="text-4xl leading-none text-white max-md:text-3xl max-md:w-full">
                                 {{ isset($settings->about_title[app()->getLocale()]) ? $settings->about_title[app()->getLocale()] : __('messages.about.title') }}
@@ -127,7 +126,7 @@
                             </p>
                         </header>
                         <nav
-                            class="flex gap-4 items-center mt-40 text-base leading-snug whitespace-nowrap max-md:mt-10 max-md:flex-wrap max-md:justify-start">
+                            class="grid-buttons flex gap-4 items-center mt-40 text-base leading-snug whitespace-nowrap max-md:mt-10 max-md:flex-wrap max-md:justify-start">
                             @if (!empty($settings->about_more_link[app()->getLocale()]))
                                 <a href="{{ $settings->about_more_link[app()->getLocale()] }}"
                                     class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-green-600 rounded-2xl border-2 border-solid border-[color:var(--Primaries-700,#228F5D)] min-h-11 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-800"
@@ -144,12 +143,10 @@
                                 </a>
                             @endif
                         </nav>
-                    </article>
+                   
                     <!-- Part 2: Statistics and Image -->
-                    <aside
-                        class="flex gap-2 items-end self-start min-w-[15rem] max-md:w-full max-md:flex-col max-md:gap-6"
-                        aria-label="Company statistics and information">
-                        <article class="min-w-[15rem] max-w-sm max-md:max-w-sm">
+                    
+                        <article class="grid-article min-w-[15rem] max-w-sm max-md:max-w-sm">
                             <header>
                                 <h2 class="text-4xl font-bold leading-none text-green-600 max-md:text-3xl">
                                     {{ isset($settings->about_statistic_title[app()->getLocale()]) ? $settings->about_statistic_title[app()->getLocale()] : '' }}
@@ -159,15 +156,16 @@
                                 {!! isset($settings->about_statistic_description[app()->getLocale()]) ? $settings->about_statistic_description[app()->getLocale()] : '' !!}
                             </div>
                         </article>
+                        
                         @if (!empty($settings->about_location_image))
                             <figure
-                                class="overflow-hidden text-xs font-semibold text-right text-white rounded-3xl shadow-[var(--sds-size-depth-0)_var(--sds-size-depth-400)_var(--sds-size-depth-800)_var(--sds-size-depth-negative-200)_var(--sds-color-black-400)] max-md:w-full max-md:rounded-lg"
+                                class="grid-img overflow-hidden h-full text-xs font-semibold text-right text-white rounded-3xl shadow-[var(--sds-size-depth-0)_var(--sds-size-depth-400)_var(--sds-size-depth-800)_var(--sds-size-depth-negative-200)_var(--sds-color-black-400)] max-md:w-full max-md:rounded-lg"
                                 style="min-width: 15rem;">
                                 <div
-                                    class="flex relative flex-col px-7 pb-4 w-full aspect-[0.57] pt-[473px] max-md:pt-24 max-md:pl-5">
+                                    class="flex relative flex-col h-full">
                                     <img src="{{ Storage::url($settings->about_location_image) }}"
                                         alt="{{ isset($settings->about_location_caption[app()->getLocale()]) ? $settings->about_location_caption[app()->getLocale()] : '' }}"
-                                        class="object-cover absolute inset-0 w-full h-full" />
+                                        class="object-cover max-md:rounded-lg h-full" />
                                     <figcaption class="relative z-10">
                                         {{ isset($settings->about_location_caption[app()->getLocale()]) ? $settings->about_location_caption[app()->getLocale()] : '' }}
                                     </figcaption>
@@ -176,7 +174,7 @@
                         @else
                             <p>{{ __('messages.about.no_image') }}</p>
                         @endif
-                    </aside>
+                  
                 </div>
             </div>
         </div>
@@ -369,34 +367,3 @@
     </div>
 
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const buttons = document.querySelectorAll('.faq-toggle');
-
-        buttons.forEach(button => {
-            button.addEventListener('click', () => {
-                const targetId = button.dataset.toggle;
-                const answer = document.getElementById(targetId);
-                const openIcon = button.querySelector('.arrow-open');
-                const closeIcon = button.querySelector('.arrow-close');
-
-                const isVisible = answer.style.maxHeight && answer.style.maxHeight !== '0px';
-
-                if (isVisible) {
-                    // Закриваємо
-                    answer.style.maxHeight = null;
-                    button.setAttribute('aria-expanded', 'false');
-                    openIcon.classList.remove('hidden');
-                    closeIcon.classList.add('hidden');
-                } else {
-                    // Відкриваємо
-                    answer.style.maxHeight = answer.scrollHeight + 'px';
-                    button.setAttribute('aria-expanded', 'true');
-                    openIcon.classList.add('hidden');
-                    closeIcon.classList.remove('hidden');
-                }
-            });
-        });
-    });
-</script>
