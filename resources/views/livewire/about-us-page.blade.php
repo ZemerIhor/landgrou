@@ -150,61 +150,62 @@
                     @endif
                 </div>
             </section>
-        </div>
-
-        <!-- About Section -->
-        <section class="flex overflow-hidden relative flex-col items-center px-12 py-20 w-full max-w-screen-xl bg-zinc-800 max-md:px-5 max-md:max-w-full">
-            <!-- Background Pattern -->
+            <section class="flex overflow-hidden relative flex-col items-center px-12 py-20 w-full max-w-screen-xl bg-zinc-800 max-md:px-5 max-md:max-w-full">
+                <!-- Background Pattern -->
                 <img src="{{ asset('images/1.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute left-0" />
                 <img src="{{ asset('images/2.png') }}" alt="" class="object-contain self-stretch my-auto  max-md:max-w-full absolute right-0" />
 
-            <!-- Content -->
-            <div class="z-0 max-w-full text-center text-zinc-100 w-[779px]">
-                @if (isset($settings->about_title) && (is_array($settings->about_title) ? isset($settings->about_title[app()->getLocale()]) : is_string($settings->about_title)))
-                    <h2 class="text-2xl font-bold leading-tight text-zinc-100 max-md:max-w-full">
-                        {{ is_array($settings->about_title) ? $settings->about_title[app()->getLocale()] : $settings->about_title }}
-                    </h2>
-                @else
-                    <h2 class="text-2xl font-bold leading-tight text-zinc-100 max-md:max-w-full">
-                        {{ __('messages.about_us.about_title') }}
-                    </h2>
-                @endif
+                <!-- Content -->
+                <div class="z-0 max-w-full text-center text-zinc-100 w-[779px]">
+                    @if (isset($settings->about_title) && (is_array($settings->about_title) ? isset($settings->about_title[app()->getLocale()]) : is_string($settings->about_title)))
+                        <h2 class="text-2xl font-bold leading-tight text-zinc-100 max-md:max-w-full">
+                            {{ is_array($settings->about_title) ? $settings->about_title[app()->getLocale()] : $settings->about_title }}
+                        </h2>
+                    @else
+                        <h2 class="text-2xl font-bold leading-tight text-zinc-100 max-md:max-w-full">
+                            {{ __('messages.about_us.about_title') }}
+                        </h2>
+                    @endif
 
-                @php
-                    $about_descriptions = isset($settings->about_description) && is_array($settings->about_description) ? ($settings->about_description[app()->getLocale()] ?? []) : [];
-                @endphp
-                @if (!empty($about_descriptions))
-                    <div class="mt-4 text-base font-semibold leading-6 text-zinc-100 max-md:max-w-full">
-                        @foreach ($about_descriptions as $description)
-                            @if (isset($description['text']) && is_string($description['text']))
-                                <p style="color: rgba(255, 255, 255, 1)">
-                                    {{ $description['text'] }}
-                                </p>
-                                <br />
-                            @endif
-                        @endforeach
-                    </div>
-                @else
-                    <div class="mt-4 text-base font-semibold leading-6 text-zinc-100 max-md:max-w-full">
-                        <p style="color: rgba(255, 255, 255, 1)">
-                            {{ __('messages.about_us.about_description_fallback') }}
-                        </p>
-                    </div>
-                @endif
-            </div>
+                    @php
+                        $about_descriptions = isset($settings->about_description) && is_array($settings->about_description) ? ($settings->about_description[app()->getLocale()] ?? []) : [];
+                    @endphp
+                    @if (!empty($about_descriptions))
+                        <div class="mt-4 text-base font-semibold leading-6 text-zinc-100 max-md:max-w-full">
+                            @foreach ($about_descriptions as $description)
+                                @if (isset($description['text']) && is_string($description['text']))
+                                    <p style="color: rgba(255, 255, 255, 1)">
+                                        {{ $description['text'] }}
+                                    </p>
+                                    <br />
+                                @endif
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="mt-4 text-base font-semibold leading-6 text-zinc-100 max-md:max-w-full">
+                            <p style="color: rgba(255, 255, 255, 1)">
+                                {{ __('messages.about_us.about_description_fallback') }}
+                            </p>
+                        </div>
+                    @endif
+                </div>
 
-            <!-- Call to Action Buttons -->
-            <div class="flex z-0 flex-wrap gap-4 justify-center items-center mt-16 max-w-full text-base font-bold leading-snug w-[671px] max-md:mt-10">
-                <button class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-green-600 rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-600 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-800">
-                    <span class="self-stretch my-auto">{{ __('messages.about_us.catalog') }}</span>
-                    <img src="{{ asset('images/catalog-icon.png') }}" alt="" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" />
-                </button>
-                <button class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-white bg-green-600 rounded-2xl min-h-11 max-md:px-5 hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-800">
-                    <span class="self-stretch my-auto">{{ __('messages.about_us.buy_now') }}</span>
-                    <img src="{{ asset('images/buy-now-icon.png') }}" alt="" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" />
-                </button>
-            </div>
-        </section>
+                <!-- Call to Action Buttons -->
+                <div class="flex z-0 flex-wrap gap-4 justify-center items-center mt-16 max-w-full text-base font-bold leading-snug w-[671px] max-md:mt-10">
+                    <button class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-green-600 rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-600 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-800">
+                        <span class="self-stretch my-auto">{{ __('messages.about_us.catalog') }}</span>
+                        <img src="{{ asset('images/catalog-icon.png') }}" alt="" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" />
+                    </button>
+                    <button class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-white bg-green-600 rounded-2xl min-h-11 max-md:px-5 hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-800">
+                        <span class="self-stretch my-auto">{{ __('messages.about_us.buy_now') }}</span>
+                        <img src="{{ asset('images/buy-now-icon.png') }}" alt="" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" />
+                    </button>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- About Section -->
 
         <!-- Gallery Section -->
         <section class="bg-zinc-100 m-auto relative overflow-hidden about-us-gallery" aria-labelledby="gallery-title">
