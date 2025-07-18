@@ -4,14 +4,20 @@
     <div class=" md:px-12 px-4 mx-auto pt-40">
 
         <section
-            class="container mx-auto flex relative flex-col w-full gap-0.5 items-start self-stretch  pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0"
+            class="container mx-auto flex relative flex-col w-full gap-0.5 items-start self-stretch pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0"
             aria-label="Company Advantages">
-            <div
-                class="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] max-md:grid-cols-2 max-sm:grid-cols-1 gap-1 w-full">
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] max-md:grid-cols-2 max-sm:grid-cols-1 gap-1 w-full">
                 @if (!empty($settings->advantages_cards[app()->getLocale()]))
                     @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
                         <article class="flex flex-col gap-3 items-center p-6 rounded-3xl bg-zinc-800">
                             <div class="flex flex-col gap-2 w-full text-center text-white">
+                                @if (!empty($card['icon']))
+                                    <img
+                                        src="{{ Storage::url($card['icon']) }}"
+                                        alt="{{ isset($card['title']) ? $card['title'] : 'Advantage icon' }}"
+                                        class="w-12 h-12 mx-auto mb-2"
+                                    />
+                                @endif
                                 <h2 class="text-base font-bold leading-5 max-sm:text-sm">
                                     {{ isset($card['title']) ? $card['title'] : '' }}
                                 </h2>
@@ -22,8 +28,11 @@
                         </article>
                         @if ($index < 3 && !empty($settings->{'advantages_image_' . ($index + 1)}))
                             <figure class="rounded-3xl max-md:h-[200px] max-sm:h-[180px]">
-                                <img src="{{ Storage::url($settings->{'advantages_image_' . ($index + 1)}) }}" alt="Advantage image"
-                                    class="object-cover w-full h-full rounded-3xl" />
+                                <img
+                                    src="{{ Storage::url($settings->{'advantages_image_' . ($index + 1)}) }}"
+                                    alt="Advantage image"
+                                    class="object-cover w-full h-full rounded-3xl"
+                                />
                             </figure>
                         @endif
                     @endforeach
@@ -136,7 +145,7 @@
                                 </a>
                             @endif
                             @if (!empty($settings->about_certificates_link[app()->getLocale()]))
-                                <a href="{{ $settings->about_certificates_link[app()->getLocale()] }}"
+                                <a href="{{route('about-us')}}"
                                     class="gap-2 self-stretch px-6 py-2.5 my-auto text-white bg-green-600 rounded-2xl min-h-11 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-800"
                                     type="button" aria-label="{{ __('messages.about.certificates_button_aria_label') }}">
                                     {{ __('messages.about.certificates_button') }}

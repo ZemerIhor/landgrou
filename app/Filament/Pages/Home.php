@@ -119,6 +119,13 @@ class Home extends Page implements HasForms
                                 Repeater::make('advantages_cards')
                                     ->label(__('Карточки преимуществ'))
                                     ->schema([
+                                        FileUpload::make('icon')
+                                            ->label(__('Иконка'))
+                                            ->directory('home/advantages/icons')
+                                            ->disk('public')
+                                            ->preserveFilenames()
+                                            ->maxSize(5120)
+                                            ->image(),
                                         TextInput::make('title')
                                             ->label(__('Заголовок'))
                                             ->maxLength(100),
@@ -376,6 +383,20 @@ class Home extends Page implements HasForms
                     }
                 }
                 unset($slides);
+            }
+
+            if (isset($data['advantages_cards']) && is_array($data['advantages_cards'])) {
+                foreach ($data['advantages_cards'] as $locale => &$cards) {
+                    if (is_array($cards)) {
+                        foreach ($cards as &$card) {
+                            if (isset($card['icon'])) {
+                                $card['icon'] = is_array($card['icon']) ? ($card['icon'][0] ?? null) : $card['icon'];
+                            }
+                        }
+                        unset($card);
+                    }
+                }
+                unset($cards);
             }
 
             if (isset($data['comparison_items']) && is_array($data['comparison_items'])) {
