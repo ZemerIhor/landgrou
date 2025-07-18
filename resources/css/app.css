@@ -52,6 +52,11 @@
     height: 480px;
 }
 
+.faq-answer {
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    max-height: 0;
+}
 
 .review {
     background-color: #e6e6e6;
