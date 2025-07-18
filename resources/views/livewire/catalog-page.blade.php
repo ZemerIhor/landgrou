@@ -1,4 +1,4 @@
-<main class=" container  mx-auto self-stretch pb-14 px-12 max-md:px-5 catalog-page">
+<main class=" container  mx-auto self-stretch pb-14 px-4 md:px-12 max-md:px-5 catalog-page">
     <!-- Breadcrumbs Navigation -->
     <livewire:components.breadcrumbs :currentPage="__('messages.breadcrumbs.catalog')" :items="[]" />
 
@@ -176,7 +176,7 @@
                         <div class="flex relative flex-col w-full min-h-[153px] product-top">
                             @if ($product->thumbnail)
                                 <div class="flex overflow-hidden h-[163px]">
-                                    <a href="{{ route('product.view', $product->defaultUrl->slug ?? '') }}">
+                                    <a href="{{ route('product.view', $product->defaultUrl->slug ?? '') }}" class="w-full">
                                         <img src="{{ $product->thumbnail->getUrl() }}"
                                              alt="{{ $product->attribute_data['name']->getValue($locale) ?? 'Product' }}"
                                              class="w-full" />

@@ -42,7 +42,7 @@
         :after,
         :before {
             box-sizing: border-box;
-            border: 0 solid #e2e8f0
+            /* border: 0 solid #e2e8f0 */
         }
 
         a {
