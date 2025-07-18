@@ -144,10 +144,15 @@ function initApp() {
             const answer = document.getElementById(targetId);
             const isExpanded = button.getAttribute('aria-expanded') === 'true';
 
-            answer.classList.toggle('max-h-0');
-            answer.classList.toggle('max-h-96');
+            // Переключаем max-height через style с !important
+            if (isExpanded) {
+                answer.style.maxHeight = '0px !important';
+            } else {
+                answer.style.maxHeight = '384px !important'; // 96 * 4 (max-h-96 в Tailwind = 384px)
+            }
+
             button.setAttribute('aria-expanded', !isExpanded);
-            console.log(`Переключение элемента с data-toggle, targetId: ${targetId}`);
+            console.log(`Переключение элемента с data-toggle, targetId: ${targetId}, maxHeight: ${answer.style.maxHeight}`);
         });
     });
 
