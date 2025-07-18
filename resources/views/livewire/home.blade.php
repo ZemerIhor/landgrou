@@ -115,7 +115,7 @@
                 <div
                     class="home-about-us-grid ">
                     <!-- Part 1: Main Content -->
-                    
+
                         <header class="grid-about w-full max-md:w-full max-md:max-w-none">
                             <h1 id="about-heading"
                                 class="text-4xl leading-none text-white max-md:text-3xl max-md:w-full">
@@ -128,7 +128,7 @@
                         <nav
                             class="grid-buttons flex gap-4 items-center mt-40 text-base leading-snug whitespace-nowrap max-md:mt-10 max-md:flex-wrap max-md:justify-start">
                             @if (!empty($settings->about_more_link[app()->getLocale()]))
-                                <a href="{{ $settings->about_more_link[app()->getLocale()] }}"
+                                <a href="{{route('about-us')}}"
                                     class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-green-600 rounded-2xl border-2 border-solid border-[color:var(--Primaries-700,#228F5D)] min-h-11 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-zinc-800"
                                     type="button" aria-label="{{ __('messages.about.more_button_aria_label') }}">
                                     <span
@@ -143,9 +143,9 @@
                                 </a>
                             @endif
                         </nav>
-                   
+
                     <!-- Part 2: Statistics and Image -->
-                    
+
                         <article class="grid-article min-w-[15rem] max-w-sm max-md:max-w-sm">
                             <header>
                                 <h2 class="text-4xl font-bold leading-none text-green-600 max-md:text-3xl">
@@ -156,7 +156,7 @@
                                 {!! isset($settings->about_statistic_description[app()->getLocale()]) ? $settings->about_statistic_description[app()->getLocale()] : '' !!}
                             </div>
                         </article>
-                        
+
                         @if (!empty($settings->about_location_image))
                             <figure
                                 class="grid-img overflow-hidden h-full text-xs font-semibold text-right text-white rounded-3xl shadow-[var(--sds-size-depth-0)_var(--sds-size-depth-400)_var(--sds-size-depth-800)_var(--sds-size-depth-negative-200)_var(--sds-color-black-400)] max-md:w-full max-md:rounded-lg"
@@ -174,7 +174,7 @@
                         @else
                             <p>{{ __('messages.about.no_image') }}</p>
                         @endif
-                  
+
                 </div>
             </div>
         </div>
