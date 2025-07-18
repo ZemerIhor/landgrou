@@ -191,7 +191,7 @@
 
 
     <section class="container mx-auto flex flex-col px-4 md:px-12 py-20 bg-zinc-100 max-md:px-5" role="main"
-        aria-labelledby="faq-title">
+             aria-labelledby="faq-title">
         <header>
             <h1 id="faq-title" class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
                 {{ is_string($settings->faq_title[app()->getLocale()] ?? null) ? $settings->faq_title[app()->getLocale()] : __('messages.faq.title') }}
@@ -201,8 +201,8 @@
         <div class="flex flex-wrap gap-5 justify-center mt-5 w-full max-md:max-w-full">
             @if (!empty($settings->faq_main_image))
                 <img src="{{ Storage::url($settings->faq_main_image) }}"
-                    alt="{{ is_string($settings->faq_main_image_alt) ? $settings->faq_main_image_alt : '' }}"
-                    class="rounded-3xl min-w-60 w-[380px]" />
+                     alt="{{ is_string($settings->faq_main_image_alt[app()->getLocale()] ?? '') ? $settings->faq_main_image_alt[app()->getLocale()] : '' }}"
+                     class="rounded-3xl min-w-60 w-[380px]" />
             @else
                 <p>{{ __('messages.faq.no_image') }}</p>
             @endif
@@ -214,34 +214,35 @@
                         <div class="flex gap-2.5 items-start self-stretch py-2 h-full w-[70px]">
                             @if (!empty($item['icon']))
                                 <img src="{{ Storage::url($item['icon']) }}"
-                                    alt="{{ __('messages.faq.icon_alt', ['question' => $item['question']]) }}"
-                                    class="object-contain rounded-xl faq-thumbnail" />
+                                     alt="{{ __('messages.faq.icon_alt', ['question' => $item['question']]) }}"
+                                     class="object-contain rounded-xl faq-thumbnail" />
                             @else
                                 <p>{{ __('messages.faq.no_icon') }}</p>
                             @endif
                         </div>
                         <div class="flex-1 shrink pt-4 pb-2 pl-4 basis-0 min-w-60 text-zinc-800 max-md:max-w-full">
-                            <button
-                                class="faq-toggle flex gap-2.5 justify-center items-center pb-2 w-full text-xl font-bold leading-6 max-md:max-w-full text-left"
-                                aria-expanded="false" data-toggle="answer-{{ $index }}">
+                            <!-- Скрытый чекбокс для переключения -->
+                            <input type="checkbox" id="faq-toggle-{{ $index }}" class="hidden faq-toggle-checkbox">
+                            <label for="faq-toggle-{{ $index }}"
+                                   class="faq-toggle flex gap-2.5 justify-center items-center pb-2 w-full text-xl font-bold leading-6 max-md:max-w-full text-left cursor-pointer">
                                 <h2 class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800 max-md:max-w-full">
                                     {{ $item['question'] }}
                                 </h2>
                                 <div class="flex shrink-0 gap-2.5 w-14 h-14 items-center justify-center">
                                     <svg class="arrow-open w-6 h-6 text-zinc-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7"></path>
+                                              d="M19 9l-7 7-7-7"></path>
                                     </svg>
                                     <svg class="arrow-close w-6 h-6 text-zinc-600 hidden" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                         viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 15l7-7 7 7"></path>
+                                              d="M5 15l7-7 7 7"></path>
                                     </svg>
                                 </div>
-                            </button>
+                            </label>
                             <div class="flex w-full bg-zinc-300 min-h-px max-md:max-w-full" role="separator"></div>
-                            <div id="answer-{{ $index }}" class="faq-answer">
+                            <div id="answer-{{ $index }}" class="faq-answer max-h-0 overflow-hidden">
                                 <div
                                     class="flex gap-2.5 items-center py-2 w-full text-base font-semibold leading-none rounded-2xl max-md:max-w-full">
                                     <p class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800 max-md:max-w-full">
@@ -255,23 +256,74 @@
             </div>
         </div>
 
-
         <footer class="container mx-auto flex justify-end mt-5">
             <a href="{{ route('faq') }}"
-                class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors duration-200"
-                aria-label="{{ __('messages.faq.show_more') }}">
-                <span class="self-stretch my-auto text-current">
-                    {{ __('messages.faq.show_more') }}
-                </span>
+               class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors duration-200"
+               aria-label="{{ __('messages.faq.show_more') }}">
+            <span class="self-stretch my-auto text-current">
+                {{ __('messages.faq.show_more') }}
+            </span>
                 <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M10.4697 1.1474C10.7626 0.854511 11.2374 0.854511 11.5303 1.1474L17.5303 7.1474C17.8232 7.4403 17.8232 7.91517 17.5303 8.20806L11.5303 14.2081C11.2374 14.501 10.7626 14.501 10.4697 14.2081C10.1768 13.9152 10.1768 13.4403 10.4697 13.1474L15.1893 8.42773H1C0.585786 8.42773 0.25 8.09195 0.25 7.67773C0.25 7.26352 0.585786 6.92773 1 6.92773H15.1893L10.4697 2.20806C10.1768 1.91517 10.1768 1.4403 10.4697 1.1474Z"
-                        fill="#228F5D" />
+                          d="M10.4697 1.1474C10.7626 0.854511 11.2374 0.854511 11.5303 1.1474L17.5303 7.1474C17.8232 7.4403 17.8232 7.91517 17.5303 8.20806L11.5303 14.2081C11.2374 14.501 10.7626 14.501 10.4697 14.2081C10.1768 13.9152 10.1768 13.4403 10.4697 13.1474L15.1893 8.42773H1C0.585786 8.42773 0.25 8.09195 0.25 7.67773C0.25 7.26352 0.585786 6.92773 1 6.92773H15.1893L10.4697 2.20806C10.1768 1.91517 10.1768 1.4403 10.4697 1.1474Z"
+                          fill="#228F5D" />
                 </svg>
-
             </a>
         </footer>
     </section>
+
+    <style>
+        /* Скрываем чекбокс */
+        .faq-toggle-checkbox {
+            display: none !important;
+        }
+
+        /* Стили для ответа */
+        .faq-answer {
+            max-height: 0 !important;
+            transition: max-height 0.3s ease !important;
+            overflow: hidden !important;
+        }
+
+        /* Показ ответа при активном чекбоксе */
+        .faq-toggle-checkbox:checked ~ .faq-answer {
+            max-height: 384px !important; /* Эквивалент max-h-96 (96 * 4 = 384px) */
+        }
+
+        /* Скрываем стрелку "открыть" и показываем "закрыть" при активном чекбоксе */
+        .faq-toggle-checkbox:checked + .faq-toggle .arrow-open {
+            display: none !important;
+        }
+
+        .faq-toggle-checkbox:checked + .faq-toggle .arrow-close {
+            display: block !important;
+        }
+
+        /* Стили для кнопки (лейбла) */
+        .faq-toggle {
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            width: 100% !important;
+        }
+
+        /* Стили для стрелок */
+        .arrow-open, .arrow-close {
+            width: 24px !important;
+            height: 24px !important;
+        }
+
+        .arrow-close {
+            display: none !important;
+        }
+
+        /* Плавный переход для стрелок */
+        .arrow-open, .arrow-close {
+            transition: opacity 0.3s ease !important;
+        }
+    </style>
+
     <section class="flex flex-col justify-center self-stretch px-4 md:px-12 py-20 text-base bg-zinc-100 max-md:px-5"
         aria-labelledby="tenders-heading">
         <h2 id="tenders-heading" class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
