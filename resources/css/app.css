@@ -309,8 +309,8 @@
 }
 
 .reviews-swiper {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 20px !important;
+    padding-bottom: 20px !important;
 }
 .catalog-grid .card {
     display: flex;
