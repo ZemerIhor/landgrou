@@ -241,8 +241,7 @@
                                 </div>
                             </button>
                             <div class="flex w-full bg-zinc-300 min-h-px max-md:max-w-full" role="separator"></div>
-                            <div id="answer-{{ $index }}" class="faq-answer"
-                                style="max-height: 0; overflow: hidden; transition: max-height 0.3s ease;">
+                            <div id="answer-{{ $index }}" class="faq-answer">
                                 <div
                                     class="flex gap-2.5 items-center py-2 w-full text-base font-semibold leading-none rounded-2xl max-md:max-w-full">
                                     <p class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800 max-md:max-w-full">
