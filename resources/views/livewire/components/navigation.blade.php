@@ -90,7 +90,7 @@
             </style>
 
             <!-- Desktop Menu -->
-            <div class="desktop-menu hidden md:flex">
+            <div class="desktop-menu hidden lg:flex">
                 @if ($headerMenu)
                     <ul>
                         @foreach ($headerMenu->menuItems as $item)
