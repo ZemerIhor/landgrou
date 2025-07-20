@@ -28,6 +28,7 @@
         <section class="nav-contacts flex flex-wrap justify-between">
 
 
+
             <!-- Контактная информация -->
             @if (isset($footer) && (!empty($footer->phone) || !empty($footer->email) || !empty($footer->address)))
                 <section class="contacts" aria-label="{{ __('messages.footer.contact_aria_label') }}">
