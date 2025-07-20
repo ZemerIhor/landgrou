@@ -12,7 +12,9 @@
     $hasValidSlug = is_string($slug) && trim($slug) !== '';
 
     // Generate locale-agnostic product URL
-    $productUrl = $hasValidSlug ? route('product.view', ['slug' => $slug], false) : route('home', [], false);
+$productUrl = $hasValidSlug
+    ? route('product.view', ['locale' => $locale, 'slug' => $slug], false)
+    : route('home', ['locale' => $locale], false);
 
     // Extract translations
     $nameValue = $product->translateAttribute('name') ?? 'Product';
