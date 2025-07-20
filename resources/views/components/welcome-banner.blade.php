@@ -25,13 +25,13 @@
                             <div class="flex justify-center mt-6 gap-4 max-md:flex-col">
                                 <a href="{{ route('catalog.view', ['locale' => app()->getLocale()]) }}"
                                    class="px-6 py-3 border-2 border-white rounded-2xl text-white hover:bg-white hover:text-black transition"
-                                   aria-label="{{ __('messages.hero_slider.catalog_button') }}">
-                                    {{ __('messages.hero_slider.catalog_button') }}
+                                   aria-label="{{ __('messages.hero.catalog_button') }}">
+                                    {{ __('messages.hero.catalog_button') }}
                                 </a>
                                 <a href="#"
                                    class="px-6 py-3 bg-green-600 text-white rounded-2xl hover:bg-green-700 transition"
-                                   aria-label="{{ __('messages.hero_slider.buy_now_button') }}">
-                                    {{ __('messages.hero_slider.buy_now_button') }}
+                                   aria-label="{{ __('messages.hero.buy_now_button') }}">
+                                    {{ __('messages.hero.buy_now_button') }}
                                 </a>
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                 @endforeach
             @else
                 <div class="min-w-full flex items-center justify-center bg-gray-200 text-gray-500 p-10">
-                    {{ __('messages.hero_slider.no_slides') }}
+                    {{ __('messages.hero.no_slides') }}
                 </div>
             @endif
         </div>
