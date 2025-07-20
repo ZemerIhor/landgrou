@@ -258,10 +258,6 @@
         </section>
     </div>
 
-    <!-- Debug Output -->
-    <div class="px-4 text-xs text-gray-500">
-        Debug: minPrice={{ $minPrice }}, maxPrice={{ $maxPrice }}, priceMax={{ $priceMax }}
-    </div>
 
     <style>
         /* Стили для ползунка цены */
