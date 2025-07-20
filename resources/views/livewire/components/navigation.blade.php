@@ -78,12 +78,26 @@
                 }
             </style>
             @php
-                $currentLocale = app()->getLocale();
-                $headerLocation = $currentLocale === 'en' ? 'header_en' : 'header_uk';
+                use Datlechin\FilamentMenuBuilder\Models\Menu;
+                $headerLocation = app()->getLocale() === 'en' ? 'header_en' : 'header_uk';
+                $headerMenu = Menu::location($headerLocation);
             @endphp
             <!-- Desktop Menu -->
             <div class="desktop-menu hidden md:flex">
-                <x-filament-menu-builder::menu location="{{ $headerLocation }}" />
+                @if ($headerMenu)
+                            @foreach ($headerMenu->menuItems as $item)
+                                <li>
+                                    <a href="{{ $item->url }}">{{ $item->title }}</a>
+                                    @if ($item->children)
+                                        <ul>
+                                            @foreach ($item->children as $child)
+                                                <li><a href="{{ $child->url }}">{{ $child->title }}</a></li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                </li>
+                            @endforeach
+                @endif
             </div>
 
             <div class="flex gap-2 sm:gap-3 items-center relative" x-data="{ mobileMenu: false, languageMenu: false }">
