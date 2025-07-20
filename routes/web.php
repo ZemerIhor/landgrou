@@ -16,24 +16,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
 
-// Language switch route
-Route::get('/lang/{locale}', function ($locale) {
-    if (!in_array($locale, ['uk', 'en'])) {
-        abort(404);
-    }
+// Маршрут для смены языка через контроллер
+Route::get('/lang/{locale}', [\App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
 
-    Session::put('locale', $locale);
-    App::setLocale($locale);
-
-    $redirectTo = request()->query('redirect_to', '/');
-
-    // Remove locale prefix from redirect_to, if present
-    $redirectTo = preg_replace('#^/(en|uk)/#', '/', $redirectTo);
-
-    return redirect($redirectTo);
-})->name('lang.switch');
-
-// Quick language switch route
+// Быстрое переключение языка
 Route::get('/switch/{locale}', function ($locale) {
     if (!in_array($locale, ['uk', 'en'])) {
         abort(404);
@@ -46,10 +32,10 @@ Route::get('/switch/{locale}', function ($locale) {
     return redirect($currentPath);
 })->name('lang.quick_switch');
 
-// Product route (without locale prefix)
+// Маршрут для страниц продуктов (без префикса локали)
 Route::get('/products/{slug}', ProductPage::class)->name('product.view');
 
-// Routes with optional locale prefix
+// Группа маршрутов с префиксом локали
 Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], function () {
     Route::get('/', Home::class)->name('home');
     Route::get('/catalog', CatalogPage::class)->name('catalog.view');

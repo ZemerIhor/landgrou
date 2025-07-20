@@ -1,4 +1,3 @@
-
 <main class="flex container m-auto relative flex-col gap-14 items-start self-stretch px-12 py-4 max-sm:gap-8 max-sm:px-4 product-page">
     <!-- Product Header Section -->
     <header class="flex relative flex-col gap-4 items-start self-stretch">
@@ -222,7 +221,6 @@
     </section>
 
     <!-- Characteristics Section -->
-    <!-- Другие секции страницы товара -->
     @php
         $characteristics = $product->attribute_data['characteristics'][app()->getLocale()] ?? $product->attribute_data['characteristics'] ?? [];
     @endphp
@@ -282,5 +280,4 @@
             </tbody>
         </table>
     </section>
-
 </main>
