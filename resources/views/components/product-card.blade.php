@@ -3,24 +3,23 @@
 @php
     $hasValidSlug = false;
     $slug = null;
-    $locale = app()->getLocale();
 
-    // Проверяем slug с учетом локали
-    if ($product->defaultUrl && !empty($product->defaultUrl->getTranslation('slug', $locale))) {
-        $slug = $product->defaultUrl->getTranslation('slug', $locale);
+    // Check for valid slug (considering Lunar's URL system)
+    if ($product->defaultUrl && !empty($product->defaultUrl->slug)) {
+        $slug = $product->defaultUrl->slug;
         $hasValidSlug = is_string($slug) && trim($slug) !== '';
-    } elseif (!empty($product->getTranslation('slug', $locale)) && is_string($product->getTranslation('slug', $locale)) && trim($product->getTranslation('slug', $locale)) !== '') {
-        $slug = $product->getTranslation('slug', $locale);
+    } elseif (!empty($product->slug) && is_string($product->slug) && trim($product->slug) !== '') {
+        $slug = $product->slug;
         $hasValidSlug = true;
     }
 
-    // Формируем параметры маршрута
+    $locale = app()->getLocale();
     $routeParams = ['slug' => $slug];
-    if ($locale !== config('app.fallback_locale')) {
+    if ($locale !== 'uk') {
         $routeParams['locale'] = $locale;
     }
 
-    $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', $locale !== config('app.fallback_locale') ? ['locale' => $locale] : [], false);
+    $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', $locale !== 'uk' ? ['locale' => $locale] : [], false);
 @endphp
 
 <article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 lg:h-[378px] sm:h-[389px]" role="listitem">
@@ -43,7 +42,7 @@
             <div class="p-4 w-full">
                 <div class="w-full text-zinc-800">
                     <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $product->translateAttribute('name') }}</h2>
-                    <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ $product->translateAttribute('description') }}</p>
+                    <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ $product->description }}</p>
                 </div>
             </div>
         </a>
@@ -53,14 +52,14 @@
                 <x-product-price :product="$product" />
             </span>
 
-            <livewire:components.add-to-cart :purchasable="$product->variants->first()" :key="'add-to-cart-' . $product->id" />
+            <livewire:components.add-to-cart :purchasable="$product->variants->first()" />
         </div>
 
         @if (!$hasValidSlug)
             <div class="p-4 text-red-600 text-sm">
-                Предупреждение: URL или slug отсутствует для продукта ID: {{ $product->id }} (Локаль: {{ $locale }})
+                Предупреждение: URL или slug отсутствует для продукта ID: {{ $product->id }} (Локаль: {{ app()->getLocale() }})
                 @dump($product->defaultUrl?->toArray())
-                @dump($product->getTranslations('slug'))
+                @dump($product->slug)
             </div>
         @endif
     </div>
