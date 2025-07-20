@@ -52,8 +52,9 @@ class AppServiceProvider extends ServiceProvider
                 ])
                 ->plugins([
                     new ShippingPlugin,
-                        FilamentMenuBuilderPlugin::make()
-                            ->addLocation('header', 'Header'),
+                    FilamentMenuBuilderPlugin::make()
+                        ->addLocation('header', 'Header') // Локация для основного меню
+                        ->showCustomLinkPanel(true),
                     FilamentorPlugin::make(),
                     FilamentTranslateFieldPlugin::make()
                         ->defaultLocales(['en', 'uk'])
