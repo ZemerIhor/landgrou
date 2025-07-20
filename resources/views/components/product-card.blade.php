@@ -19,18 +19,14 @@
 
     // Обработка name
     $nameValue = 'Product'; // Значение по умолчанию
-    if ($name instanceof \Lunar\FieldTypes\TranslatedText && isset($name->value[$locale])) {
-        $nameValue = $name->value[$locale];
-    } elseif ($name instanceof \Lunar\FieldTypes\TranslatedText && isset($name->value[config('app.fallback_locale')])) {
-        $nameValue = $name->value[config('app.fallback_locale')];
+    if ($name instanceof \Lunar\FieldTypes\TranslatedText) {
+        $nameValue = $name->getValue($locale) ?? $name->getValue(config('app.fallback_locale')) ?? 'Product';
     }
 
     // Обработка description
     $descriptionValue = '';
-    if ($description instanceof \Lunar\FieldTypes\TranslatedText && isset($description->value[$locale])) {
-        $descriptionValue = $description->value[$locale];
-    } elseif ($description instanceof \Lunar\FieldTypes\TranslatedText && isset($description->value[config('app.fallback_locale')])) {
-        $descriptionValue = $name->value[config('app.fallback_locale')];
+    if ($description instanceof \Lunar\FieldTypes\TranslatedText) {
+        $descriptionValue = $description->getValue($locale) ?? $description->getValue(config('app.fallback_locale')) ?? '';
     }
 
     // Логирование для отладки
@@ -38,10 +34,10 @@
         'product_id' => $product->id,
         'locale' => $locale,
         'fallback_locale' => config('app.fallback_locale'),
-        'name' => $name ? ($name instanceof \Lunar\FieldTypes\TranslatedText ? $name->value : $name) : null,
+        'name' => $name ? ($name instanceof \Lunar\FieldTypes\TranslatedText ? $name->getValue() : $name) : null,
         'nameValue' => $nameValue,
         'descriptionValue' => $descriptionValue,
-        'attribute_data' => $product->attribute_data,
+        'attribute_data' => $product->attribute_data->toArray(),
     ]);
 @endphp
 
