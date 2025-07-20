@@ -3,7 +3,6 @@
 namespace App\Livewire\Components;
 
 use App\Models\BlogPost;
-use Category;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -77,9 +76,11 @@ class BlogSection extends Component
         }
 
         $posts = $query->paginate($this->perPage);
+
         \Log::info('BlogSection::render', [
             'locale' => app()->getLocale(),
             'posts' => $posts->items(),
+            'categories' => $this->categories,
             'dateFilter' => $this->dateFilter,
             'sort' => $this->sort,
             'view' => $this->view,

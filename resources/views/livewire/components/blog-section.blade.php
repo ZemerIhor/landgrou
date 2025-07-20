@@ -3,11 +3,12 @@
         {{ __('messages.blog.title') }}
     </h1>
 
+
     <div class="flex flex-wrap gap-2 items-center mt-5 w-full min-h-[307px] max-md:max-w-full" role="region" aria-label="{{ __('blog.articles') }}">
         @forelse ($blogPosts->take(4) as $post)
             @php
                 $locale = app()->getLocale();
-                $slug = $post->getTranslation('slug', $locale); // Используем переводимый slug
+                $slug = $post->getTranslation('slug', $locale, true); // true для возврата значения по умолчанию
                 $hasValidSlug = is_string($slug) && trim($slug) !== '';
 
                 $routeParams = ['slug' => $slug];
@@ -15,6 +16,7 @@
                     $routeParams['locale'] = $locale;
                 }
 
+                // Если slug валиден, формируем URL для поста, иначе для главной страницы
                 $postUrl = $hasValidSlug ? route('blog.post', $routeParams, false) : route('home', $locale !== config('app.fallback_locale') ? ['locale' => $locale] : [], false);
             @endphp
 
@@ -38,8 +40,6 @@
                         <time class="mt-4 text-xs text-neutral-400" datetime="{{ $post->published_at->format('Y-m-d') }}">
                             {{ $post->published_at->format('d.m.Y') }}
                         </time>
-                    </div>
-                    <div class="flex absolute top-0 right-0 z-0 gap-2.5 justify-center items-center w-14 h-14 min-h-14" aria-hidden="true">
                     </div>
                 </article>
             </a>
