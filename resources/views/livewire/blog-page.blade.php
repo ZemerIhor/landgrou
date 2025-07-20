@@ -69,7 +69,8 @@
                 @endphp
 
                 @forelse ($postsChunked as $chunk)
-                        <div class="blog-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; width: 1180px; max-width: 100%; padding: 0 20px; box-sizing: border-box;">                        @foreach ($chunk as $post)
+                        <div class="blog-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; max-width: 100%; padding: 20px 0px;">
+                            @foreach ($chunk as $post)
                             @php
                                 $hasValidSlug = false;
                                 $slug = null;
