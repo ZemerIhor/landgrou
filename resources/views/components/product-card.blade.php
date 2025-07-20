@@ -34,10 +34,12 @@
         'product_id' => $product->id,
         'locale' => $locale,
         'fallback_locale' => config('app.fallback_locale'),
-        'name' => $name ? ($name instanceof \Lunar\FieldTypes\TranslatedText ? $name->getValue() : $name) : null,
+        'name' => $name ? ($name instanceof \Lunar\FieldTypes\TranslatedText ? $name->getValue($locale) : $name) : null,
         'nameValue' => $nameValue,
         'descriptionValue' => $descriptionValue,
         'attribute_data' => $product->attribute_data->toArray(),
+        'slug' => $slug,
+        'productUrl' => $productUrl,
     ]);
 @endphp
 
@@ -61,7 +63,7 @@
             <div class="p-4 w-full">
                 <div class="w-full text-zinc-800">
                     <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $nameValue }}</h2>
-                    <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ $descriptionValue }}</p>
+                    <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{!! $descriptionValue !!}</p>
                 </div>
             </div>
         </a>
