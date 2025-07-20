@@ -22,7 +22,8 @@
     $description = $product->attribute_data['description'] ?? null;
     $nameValue = ($name instanceof \Lunar\FieldTypes\TranslatedText) ? ($name->value[$locale] ?? $name->value[config('app.fallback_locale')] ?? 'Product') : 'Product';
     $descriptionValue = ($description instanceof \Lunar\FieldTypes\TranslatedText) ? ($description->value[$locale] ?? $description->value[config('app.fallback_locale')] ?? '') : '';
-@endphp
+dd($product)
+    @endphp
 
 <article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200" role="listitem">
     <div class="flex flex-col justify-between group h-full">
