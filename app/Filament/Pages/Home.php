@@ -37,6 +37,9 @@ class Home extends Page implements HasForms
         $settings = app(HomeSettings::class);
 
         $this->data = [
+            'banner_image' => $settings->banner_image,
+            'banner_title' => $settings->banner_title ?? ['en' => '', 'uk' => ''],
+            'banner_description' => $settings->banner_description ?? ['en' => '', 'uk' => ''],
             'hero_slides' => $settings->hero_slides ?? ['en' => [], 'uk' => []],
             'advantages_cards' => $settings->advantages_cards ?? ['en' => [], 'uk' => []],
             'advantages_image_1' => $settings->advantages_image_1,
@@ -78,6 +81,28 @@ class Home extends Page implements HasForms
     {
         return $form
             ->schema([
+                Section::make(__('Главный баннер'))
+                    ->schema([
+                        FileUpload::make('banner_image')
+                            ->label(__('Изображение баннера'))
+                            ->directory('home/main_banner')
+                            ->disk('public')
+                            ->preserveFilenames()
+                            ->maxSize(5120)
+                            ->image(),
+                        Translate::make()
+                            ->locales(['en', 'uk'])
+                            ->schema([
+                                TextInput::make('banner_title')
+                                    ->label(__('Заголовок баннера'))
+                                    ->maxLength(255),
+                                Textarea::make('banner_description')
+                                    ->label(__('Описание баннера'))
+                                    ->maxLength(500),
+                            ]),
+                    ])
+                    ->collapsible(),
+
                 Section::make(__('Баннер'))
                     ->schema([
                         Translate::make()
@@ -343,6 +368,7 @@ class Home extends Page implements HasForms
             Log::info('Home Settings Form Data', ['data' => $data]);
 
             $fileFields = [
+                'banner_image',
                 'advantages_image_1', 'advantages_image_2', 'advantages_image_3',
                 'main_comparison_image', 'feedback_form_image', 'about_location_image',
                 'faq_main_image',

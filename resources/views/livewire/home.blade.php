@@ -420,7 +420,81 @@
         </footer>
     </section>
 
-
+    <section class="overflow-hidden relative w-full h-[306px]" role="banner">
+        @if (!empty($settings->banner_image))
+            <img
+                src="{{ Storage::url($settings->banner_image) }}"
+                alt="{{ isset($settings->banner_title[app()->getLocale()]) ? $settings->banner_title[app()->getLocale()] : 'Main banner' }}"
+                class="object-cover absolute top-0 left-0 w-full h-[306px]"
+            />
+        @else
+            <p>{{ __('messages.banner.no_image') }}</p>
+        @endif
+        <header class="box-border flex absolute top-2/4 left-2/4 flex-col gap-8 items-center px-5 py-0 w-full -translate-x-2/4 -translate-y-2/4 max-w-[982px]">
+            <div class="flex relative flex-col gap-4 items-center w-full">
+                <h1 class="relative text-2xl font-bold leading-7 text-center max-w-[654px] text-zinc-800">
+                    {{ isset($settings->banner_title[app()->getLocale()]) ? $settings->banner_title[app()->getLocale()] : __('messages.banner.title') }}
+                </h1>
+                <p class="relative w-full text-base font-semibold leading-5 text-center text-zinc-800">
+                    <span class="text-base font-bold text-zinc-800 max-md:text-sm max-sm:text-sm">
+                        {{ isset($settings->banner_description[app()->getLocale()]) ? $settings->banner_description[app()->getLocale()] : __('messages.banner.description') }}
+                    </span>
+                </p>
+            </div>
+            <nav class="flex relative flex-wrap gap-4 justify-center items-center max-md:gap-3 max-sm:flex-col max-sm:gap-3 max-sm:w-full" role="navigation" aria-label="Основні дії">
+                <button
+                    type="button"
+                    class="flex relative gap-2 justify-center items-center px-6 py-2.5 rounded-2xl border-2 border-green-600 border-solid min-h-11 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
+                    aria-label="{{ __('messages.banner.catalog_button_aria_label') }}"
+                >
+                    <span class="relative text-base font-bold leading-6 text-green-600">
+                        {{ __('messages.banner.catalog_button') }}
+                    </span>
+                    <svg
+                        width="25"
+                        height="25"
+                        viewBox="0 0 25 25"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="catalog-arrow"
+                        aria-hidden="true"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M13.9697 6.1474C14.2626 5.85451 14.7374 5.85451 15.0303 6.1474L21.0303 12.1474C21.3232 12.4403 21.3232 12.9152 21.0303 13.2081L15.0303 19.2081C14.7374 19.501 14.2626 19.501 13.9697 19.2081C13.6768 18.9152 13.6768 18.4403 13.9697 18.1474L18.6893 13.4277H4.5C4.08579 13.4277 3.75 13.0919 3.75 12.6777C3.75 12.2635 4.08579 11.9277 4.5 11.9277H18.6893L13.9697 7.20806C13.6768 6.91517 13.6768 6.4403 13.9697 6.1474Z"
+                            fill="#228F5D"
+                        />
+                    </svg>
+                </button>
+                <button
+                    type="button"
+                    class="flex relative gap-2 justify-center items-center px-6 py-2.5 bg-green-600 rounded-2xl border-[none] min-h-11 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
+                    aria-label="{{ __('messages.banner.buy_button_aria_label') }}"
+                >
+                    <span class="relative text-base font-bold leading-6 text-white">
+                        {{ __('messages.banner.buy_button') }}
+                    </span>
+                    <svg
+                        width="25"
+                        height="25"
+                        viewBox="0 0 25 25"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="buy-arrow"
+                        aria-hidden="true"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M13.9697 6.1474C14.2626 5.85451 14.7374 5.85451 15.0303 6.1474L21.0303 12.1474C21.3232 12.4403 21.3232 12.9152 21.0303 13.2081L15.0303 19.2081C14.7374 19.501 14.2626 19.501 13.9697 19.2081C13.6768 18.9152 13.6768 18.4403 13.9697 18.1474L18.6893 13.4277H4.5C4.08579 13.4277 3.75 13.0919 3.75 12.6777C3.75 12.2635 4.08579 11.9277 4.5 11.9277H18.6893L13.9697 7.20806C13.6768 6.91517 13.6768 6.4403 13.9697 6.1474Z"
+                            fill="white"
+                        />
+                    </svg>
+                </button>
+            </nav>
+        </header>
+    </section>
     <livewire:components.blog-section/>
     <div class="px-4 md:px-12 py-[80px] container mx-auto">
         <livewire:components.feedback-form-block/>
