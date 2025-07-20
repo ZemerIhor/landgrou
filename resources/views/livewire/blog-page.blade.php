@@ -98,7 +98,7 @@
                                     <img
                                         src="{{ $post->banner ? Storage::url($post->banner) : 'https://via.placeholder.com/300x158' }}"
                                         alt="{{ $post->getTranslation('title', app()->getLocale()) }}"
-                                        class="h-[171px] w-[300px] object-cover"
+                                        class="h-[171px] w-full object-cover"
                                     />
                                 </div>
                                 <div class="flex flex-col gap-4 items-start self-stretch p-4">
