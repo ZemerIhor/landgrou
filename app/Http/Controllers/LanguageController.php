@@ -11,7 +11,6 @@ class LanguageController extends Controller
 {
     public function switch($locale)
     {
-        // Проверяем, что локаль допустима
         if (!in_array($locale, ['en', 'uk'])) {
             \Log::warning('Invalid locale attempted: ' . $locale);
             return Redirect::back()->with('error', 'Invalid locale');
@@ -21,45 +20,50 @@ class LanguageController extends Controller
         Session::put('locale', $locale);
         App::setLocale($locale);
 
-        // Получаем текущий URL из параметра redirect_to или текущего запроса
+        // Получаем текущий URL
         $redirectTo = request('redirect_to', URL::full());
+
+        // Удаляем доменную часть
+        $baseUrl = config('app.url');
+        $path = str_replace($baseUrl, '', $redirectTo);
+
+        // Удаляем префикс языка, если он есть
+        $path = preg_replace('#^/(en|uk)/#', '/', $path);
+
+        // Если это страница продукта, получаем правильный слаг
+        if (preg_match('#^/products/([^/]+)#', $path, $matches)) {
+            $currentSlug = $matches[1];
+            // Находим продукт по текущему слагу
+            $url = \Lunar\Models\Url::where('slug', $currentSlug)
+                ->where('element_type', \Lunar\Models\Product::class)
+                ->first();
+
+            if ($url) {
+                $product = $url->element;
+                $newUrl = $product->urls()
+                    ->where('language_id', \Lunar\Models\Language::where('code', $locale)->first()->id ?? 1)
+                    ->first();
+
+                if ($newUrl) {
+                    $path = "/products/{$newUrl->slug}";
+                }
+            }
+        }
 
         // Логируем для отладки
         \Log::info('Language switch requested', [
             'locale' => $locale,
-            'redirect_to' => $redirectTo,
+            'redirect_to' => $path,
             'current_url' => URL::full(),
             'request_path' => request()->path(),
         ]);
 
-        // Удаляем доменную часть, оставляем только путь
-        $baseUrl = config('app.url');
-        $path = str_replace($baseUrl, '', $redirectTo);
-
-        // Удаляем текущий префикс языка, если он есть
-        $segments = explode('/', ltrim($path, '/'));
-        if (in_array($segments[0] ?? '', ['en', 'uk'])) {
-            array_shift($segments);
-        }
-
-        // Формируем новый путь
-        $newPath = implode('/', $segments);
-        if (empty($newPath)) {
-            $newPath = request()->path(); // Используем текущий путь запроса
-        }
-
-        // Формируем финальный URL
-        $finalUrl = $locale === 'en' ? '/en' . ($newPath ? '/' . $newPath : '') : '/' . $newPath;
-
         // Добавляем query-параметры, если они есть
         $query = parse_url($redirectTo, PHP_URL_QUERY);
         if ($query) {
-            $finalUrl .= '?' . $query;
+            $path .= '?' . $query;
         }
 
-        // Логируем финальный URL
-        \Log::info('Redirecting to: ' . $finalUrl);
-
-        return redirect($finalUrl ?: '/');
+        return redirect($path ?: '/');
     }
 }

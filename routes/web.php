@@ -18,8 +18,6 @@ use Illuminate\Support\Facades\App;
 
 // Явное переключение языка с редиректом
 Route::get('/lang/{locale}', function ($locale) {
-    $redirectTo = request()->query('redirect_to', '/');
-
     if (!in_array($locale, ['uk', 'en'])) {
         abort(404);
     }
@@ -27,10 +25,15 @@ Route::get('/lang/{locale}', function ($locale) {
     Session::put('locale', $locale);
     App::setLocale($locale);
 
+    $redirectTo = request()->query('redirect_to', '/');
+
+    // Удаляем префикс локали из redirect_to, если он есть
+    $redirectTo = preg_replace('#^/(en|uk)/#', '/', $redirectTo);
+
     return redirect($redirectTo);
 })->name('lang.switch');
 
-// Быстрое переключение языка (например, по кнопке)
+// Быстрое переключение языка
 Route::get('/switch/{locale}', function ($locale) {
     if (!in_array($locale, ['uk', 'en'])) {
         abort(404);
@@ -39,10 +42,15 @@ Route::get('/switch/{locale}', function ($locale) {
     Session::put('locale', $locale);
     App::setLocale($locale);
 
-    return back();
+    // Получаем текущий URL без префикса локали
+    $currentPath = preg_replace('#^/(en|uk)/#', '/', request()->path());
+    return redirect($currentPath);
 })->name('lang.quick_switch');
 
-// Группа маршрутов с префиксом языка (опционально)
+// Маршруты без префикса локали для продуктов
+Route::get('/products/{slug}', ProductPage::class)->name('product.view')->middleware('localization');
+
+// Группа маршрутов с префиксом языка (опционально) для остальных страниц
 Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], function () {
     Route::get('/', Home::class)->name('home');
     Route::get('/catalog', CatalogPage::class)->name('catalog.view');
@@ -56,10 +64,8 @@ Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], functi
     Route::get('/blog', BlogPage::class)->name('blog.index');
     Route::get('/blog/{slug}', BlogPostPage::class)->name('blog.post');
     Route::get('/collections/{slug}', CollectionPage::class)->name('collection.view');
-    Route::get('/products/{slug}', ProductPage::class)->name('product.view');
     Route::get('/search', SearchPage::class)->name('search.view');
     Route::get('/checkout', CheckoutPage::class)->name('checkout.view');
     Route::get('/checkout/success', CheckoutSuccessPage::class)->name('checkout-success.view');
     Route::get('/products', SearchPage::class)->name('products.index');
-
 });

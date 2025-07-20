@@ -8,14 +8,11 @@
     $slug = $product->localizedUrl?->slug ?? $product->slug;
     $hasValidSlug = is_string($slug) && trim($slug) !== '';
 
-    // Формируем параметры маршрута
+    // Формируем параметры маршрута (без locale)
     $routeParams = ['slug' => $slug];
-    if ($locale !== config('app.fallback_locale')) {
-        $routeParams['locale'] = $locale;
-    }
 
-    // Генерируем URL
-    $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', $locale !== config('app.fallback_locale') ? ['locale' => $locale] : [], false);
+    // Генерируем URL без префикса локали
+    $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', [], false);
 
     // Извлекаем переводы
     $nameValue = $product->translateAttribute('name') ?? 'Product';
