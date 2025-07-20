@@ -3,12 +3,11 @@
         {{ __('messages.blog.title') }}
     </h1>
 
-
     <div class="flex flex-wrap gap-2 items-center mt-5 w-full min-h-[307px] max-md:max-w-full" role="region" aria-label="{{ __('blog.articles') }}">
         @forelse ($posts->take(4) as $post)
             @php
                 $locale = app()->getLocale();
-                $slug = $post->getTranslation('slug', $locale, true); // true для возврата значения по умолчанию
+                $slug = $post->slug; // Используем непереводимый slug
                 $hasValidSlug = is_string($slug) && trim($slug) !== '';
 
                 $routeParams = ['slug' => $slug];
@@ -48,7 +47,7 @@
         @endforelse
     </div>
 
-    @if ($blogPosts->count() > 0)
+    @if ($posts->count() > 0)
         <a
             href="{{ route('blog.index', $locale !== config('app.fallback_locale') ? ['locale' => $locale] : []) }}"
             class="flex gap-2 justify-center items-center self-center px-6 py-2.5 mt-5 text-base font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
