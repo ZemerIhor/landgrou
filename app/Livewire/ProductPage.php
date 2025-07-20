@@ -21,8 +21,25 @@ class ProductPage extends Component
     public $slug;
     public function mount($slug): void
     {
+        // Find the URL record for the given slug
+        $url = Url::where('slug', $slug)
+            ->where('element_type', (new Product)->getMorphClass())
+            ->first();
+
+        if (!$url) {
+            // Check if the slug exists in any language
+            $url = Url::whereIn('slug', [$slug, $slug . 'vfv']) // Handle both English and Ukrainian slugs
+            ->where('element_type', (new Product)->getMorphClass())
+                ->first();
+
+            if (!$url) {
+                abort(404);
+            }
+        }
+
+        // Fetch product with relations
         $this->url = $this->fetchUrl(
-            $slug,
+            $url->slug,
             (new Product)->getMorphClass(),
             [
                 'element.media',
@@ -36,11 +53,13 @@ class ProductPage extends Component
             abort(404);
         }
 
+        $this->slug = $slug;
+
+        // Initialize selected option values
         $this->selectedOptionValues = $this->productOptions->mapWithKeys(function ($data) {
             return [$data['option']->id => $data['values']->first()->id];
         })->toArray();
     }
-
     public function getVariantProperty(): ProductVariant
     {
         return $this->product->variants->first(function ($variant) {
@@ -174,11 +193,14 @@ class ProductPage extends Component
 
     public function render(): View
     {
-        $url = Url::where('slug', $this->slug)
-            ->where('element_type', \Lunar\Models\Product::class)
-            ->firstOrFail();
-
-        $product = $url->element;
-        return view('livewire.product-page');
+        return view('livewire.product-page', [
+            'product' => $this->product,
+            'variant' => $this->variant,
+            'images' => $this->images,
+            'image' => $this->image,
+            'attributes' => $this->attributes,
+            'detailedAttributes' => $this->detailedAttributes,
+            'similarProducts' => $this->similarProducts,
+        ]);
     }
 }

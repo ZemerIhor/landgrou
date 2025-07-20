@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
 
-// Явное переключение языка с редиректом
+// Language switch route
 Route::get('/lang/{locale}', function ($locale) {
     if (!in_array($locale, ['uk', 'en'])) {
         abort(404);
@@ -27,13 +27,13 @@ Route::get('/lang/{locale}', function ($locale) {
 
     $redirectTo = request()->query('redirect_to', '/');
 
-    // Удаляем префикс локали из redirect_to, если он есть
+    // Remove locale prefix from redirect_to, if present
     $redirectTo = preg_replace('#^/(en|uk)/#', '/', $redirectTo);
 
     return redirect($redirectTo);
 })->name('lang.switch');
 
-// Быстрое переключение языка
+// Quick language switch route
 Route::get('/switch/{locale}', function ($locale) {
     if (!in_array($locale, ['uk', 'en'])) {
         abort(404);
@@ -42,14 +42,14 @@ Route::get('/switch/{locale}', function ($locale) {
     Session::put('locale', $locale);
     App::setLocale($locale);
 
-    // Получаем текущий URL без префикса локали
     $currentPath = preg_replace('#^/(en|uk)/#', '/', request()->path());
     return redirect($currentPath);
 })->name('lang.quick_switch');
 
-// Маршруты без префикса локали для продуктов
+// Product route (without locale prefix)
+Route::get('/products/{slug}', ProductPage::class)->name('product.view');
 
-// Группа маршрутов с префиксом языка (опционально) для остальных страниц
+// Routes with optional locale prefix
 Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], function () {
     Route::get('/', Home::class)->name('home');
     Route::get('/catalog', CatalogPage::class)->name('catalog.view');
@@ -58,7 +58,6 @@ Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], functi
     Route::get('/privacy-policy', fn () => 'Hello World')->name('privacy-policy');
     Route::get('/terms', fn () => 'Hello World')->name('terms');
     Route::get('/faq', FaqPage::class)->name('faq');
-
     Route::get('/about-us', AboutUsPage::class)->name('about-us');
     Route::get('/contacts', ContactsPage::class)->name('contacts');
     Route::get('/blog', BlogPage::class)->name('blog.index');
@@ -68,6 +67,4 @@ Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], functi
     Route::get('/checkout', CheckoutPage::class)->name('checkout.view');
     Route::get('/checkout/success', CheckoutSuccessPage::class)->name('checkout-success.view');
     Route::get('/products', SearchPage::class)->name('products.index');
-    Route::get('/products/{slug}', ProductPage::class)->name('product.view')->middleware('localization');
-
 });

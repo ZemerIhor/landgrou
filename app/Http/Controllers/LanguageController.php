@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
+use Lunar\Models\Product;
 
 class LanguageController extends Controller
 {
@@ -16,30 +17,39 @@ class LanguageController extends Controller
             return Redirect::back()->with('error', 'Invalid locale');
         }
 
-        // Сохраняем локаль в сессии
+        // Save locale to session
         Session::put('locale', $locale);
         App::setLocale($locale);
 
-        // Получаем текущий URL
+        // Get current URL
         $redirectTo = request('redirect_to', URL::full());
 
-        // Удаляем доменную часть
+        // Remove domain part
         $baseUrl = config('app.url');
         $path = str_replace($baseUrl, '', $redirectTo);
 
-        // Удаляем префикс языка, если он есть
+        // Remove locale prefix, if present
         $path = preg_replace('#^/(en|uk)/#', '/', $path);
 
-        // Если это страница продукта, получаем правильный слаг
+        // Handle product URLs
         if (preg_match('#^/products/([^/]+)#', $path, $matches)) {
             $currentSlug = $matches[1];
-            // Находим продукт по текущему слагу
-            $url = \Lunar\Models\Url::where('slug', $currentSlug)
-                ->where('element_type', \Lunar\Models\Product::class)
+
+            // Find the product by slug
+            $url = Url::where('slug', $currentSlug)
+                ->where('element_type', Product::class)
                 ->first();
+
+            if (!$url) {
+                // Check alternative slug (e.g., Ukrainian version)
+                $url = Url::where('slug', $currentSlug . 'vfv')
+                    ->where('element_type', Product::class)
+                    ->first();
+            }
 
             if ($url) {
                 $product = $url->element;
+                // Get the slug for the new locale
                 $newUrl = $product->urls()
                     ->where('language_id', \Lunar\Models\Language::where('code', $locale)->first()->id ?? 1)
                     ->first();
@@ -50,7 +60,7 @@ class LanguageController extends Controller
             }
         }
 
-        // Логируем для отладки
+        // Log for debugging
         \Log::info('Language switch requested', [
             'locale' => $locale,
             'redirect_to' => $path,
@@ -58,7 +68,7 @@ class LanguageController extends Controller
             'request_path' => request()->path(),
         ]);
 
-        // Добавляем query-параметры, если они есть
+        // Add query parameters, if present
         $query = parse_url($redirectTo, PHP_URL_QUERY);
         if ($query) {
             $path .= '?' . $query;

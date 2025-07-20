@@ -13,10 +13,13 @@ class Localization
         $locale = $request->segment(1);
 
         if (in_array($locale, ['en', 'uk'])) {
+            // Locale is provided in URL (e.g., /en/...)
             App::setLocale($locale);
-            session(['locale' => $locale]);
+            Session::put('locale', $locale);
         } else {
-            App::setLocale(session('locale', config('app.locale')));
+            // No locale in URL (e.g., /products/{slug}), use session or fallback
+            $locale = Session::get('locale', config('app.locale', 'en'));
+            App::setLocale($locale);
         }
 
         return $next($request);
