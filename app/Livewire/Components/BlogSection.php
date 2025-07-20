@@ -77,14 +77,6 @@ class BlogSection extends Component
 
         $posts = $query->paginate($this->perPage);
 
-        \Log::info('BlogSection::render', [
-            'locale' => app()->getLocale(),
-            'posts' => $posts->items(),
-            'categories' => $this->categories,
-            'dateFilter' => $this->dateFilter,
-            'sort' => $this->sort,
-            'view' => $this->view,
-        ]);
 
         return view('livewire.components.blog-section', [
             'posts' => $posts,

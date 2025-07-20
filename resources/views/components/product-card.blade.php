@@ -16,7 +16,7 @@
     // Извлекаем name и description с помощью translateAttribute
     $nameValue = $product->translateAttribute('name') ?? 'Product';
     $descriptionValue = $product->translateAttribute('description') ?? '';
-
+dd($product)
 @endphp
 
 <article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200" role="listitem">
