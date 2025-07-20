@@ -40,11 +40,11 @@
                             @if (isset($settings->hero_logo) && Storage::disk('public')->exists($settings->hero_logo))
                                 <img src="{{ Storage::url($settings->hero_logo) }}"
                                      alt="{{ is_array($settings->hero_logo_alt) ? ($settings->hero_logo_alt[app()->getLocale()] ?? $settings->hero_logo_alt['en'] ?? __('messages.about_us.hero_logo_alt')) : ($settings->hero_logo_alt ?? __('messages.about_us.hero_logo_alt')) }}"
-                                     class="object-contain self-center aspect-[0.73] w-[29px]" />
+                                     class="object-contain self-center" style="max-width:200px" />
                             @else
                                 <img src="{{ asset('images/fallback-logo.png') }}"
                                      alt="{{ __('messages.about_us.hero_logo_alt') }}"
-                                     class="object-contain self-center aspect-[0.73] w-[29px]" />
+                                     class="object-contain self-center" style="max-width:200px" />
                             @endif
 
                             <div class="flex flex-col items-center mt-8 w-full max-md:max-w-full">
