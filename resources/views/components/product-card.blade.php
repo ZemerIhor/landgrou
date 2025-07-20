@@ -1,36 +1,34 @@
 @props(['product'])
 
 @php
-    // Получаем текущую локаль
+    // Get current locale
     $locale = app()->getLocale();
 
-    // Получаем слаг для текущей локали
-    $language = \Lunar\Models\Language::where('code', $locale)->first();
-$languageId = $language ? $language->id : (config('app.fallback_locale') === 'en' ? 2 : 1);
-$url = $product->urls()->where('language_id', $languageId)->first();
-    $slug = $url ? $url->slug : $product->slug;
+    // Get the slug for the current locale
+    $slug = $product->urls()
+        ->where('language_id', \Lunar\Models\Language::where('code', $locale)->first()->id ?? 1)
+        ->first()?->slug ?? $product->slug;
 
     $hasValidSlug = is_string($slug) && trim($slug) !== '';
 
-    // Генерируем URL без префикса локали
+    // Generate locale-agnostic product URL
     $productUrl = $hasValidSlug ? route('product.view', ['slug' => $slug], false) : route('home', [], false);
 
-    // Извлекаем переводы
+    // Extract translations
     $nameValue = $product->translateAttribute('name') ?? 'Product';
     $descriptionValue = $product->translateAttribute('description') ?? '';
 
-    // Логирование для отладки
+    // Debug logging
     \Log::info('ProductCard Debug', [
         'product_id' => $product->id,
         'locale' => $locale,
-        'language_id' => $languageId,
         'fallback_locale' => config('app.fallback_locale'),
         'name' => $product->attribute_data['name'] ?? null,
         'nameValue' => $nameValue,
         'descriptionValue' => $descriptionValue,
         'attribute_data' => $product->attribute_data->toArray(),
         'slug' => $slug,
-        'localizedUrl_slug' => $url ? $url->slug : null,
+        'localizedUrl_slug' => $product->urls()->where('language_id', \Lunar\Models\Language::where('code', $locale)->first()->id ?? 1)->first()?->slug,
         'defaultUrl_slug' => $product->defaultUrl?->slug,
         'urls' => $product->urls->toArray(),
         'productUrl' => $productUrl,
