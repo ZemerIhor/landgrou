@@ -24,7 +24,7 @@
     $descriptionValue = ($description instanceof \Lunar\FieldTypes\TranslatedText) ? ($description->value[$locale] ?? $description->value[config('app.fallback_locale')] ?? '') : '';
 @endphp
 
-<article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 lg:h-[378px] sm:h-[389px]" role="listitem">
+<article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200" role="listitem">
     <div class="flex flex-col justify-between group h-full">
         <a href="{{ $productUrl }}" wire:navigate class="flex flex-col h-full">
             <div class="flex relative flex-col w-full">
