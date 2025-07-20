@@ -1,35 +1,20 @@
 @props(['product'])
 
 @php
-    $locale = app()->getLocale();
-    $slug = $product->defaultUrl && !empty($product->defaultUrl->slug) ? $product->defaultUrl->slug : $product->slug;
-    $hasValidSlug = is_string($slug) && trim($slug) !== '';
-
-    // Формируем параметры маршрута
-    $routeParams = ['slug' => $slug];
-    if ($locale !== config('app.fallback_locale')) {
-        $routeParams['locale'] = $locale;
+    // Извлекаем slug
+    $slug = $product->defaultUrl?->slug ?: $product->slug;
+    if (!$slug) {
+        $slug = 'product-' . $product->id;
     }
 
-    $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', $locale !== config('app.fallback_locale') ? ['locale' => $locale] : [], false);
-
-    // Извлекаем name и description с помощью translateAttribute
+    // Получаем переводы
     $nameValue = $product->translateAttribute('name') ?? 'Product';
     $descriptionValue = $product->translateAttribute('description') ?? '';
 
-    // Логирование для отладки
-    \Log::info('ProductCard Debug', [
-        'product_id' => $product->id,
-        'locale' => $locale,
-        'fallback_locale' => config('app.fallback_locale'),
-        'name' => $product->attribute_data['name'] ?? null,
-        'nameValue' => $nameValue,
-        'descriptionValue' => $descriptionValue,
-        'attribute_data' => $product->attribute_data->toArray(),
-        'slug' => $slug,
-        'defaultUrl_slug' => $product->defaultUrl ? $product->defaultUrl->slug : null,
-        'productUrl' => $productUrl,
-    ]);
+    // Генерируем локализованный URL
+    $productUrl = \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl(
+        route('product.view', ['slug' => $slug])
+    );
 @endphp
 
 <article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200" role="listitem">
@@ -43,7 +28,7 @@
                              class="object-cover w-full aspect-[1.77] transition-transform duration-300 group-hover:scale-105"/>
                     @else
                         <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/d7f2f96fb365d97b578a2cfa0ccb76eaba272ebd?placeholderIfAbsent=true"
-                             alt="{{ __('messages.catalog.placeholder_image_alt') }}"
+                             alt="Placeholder image"
                              class="object-contain w-full aspect-[1.77]"/>
                     @endif
                 </div>
@@ -65,11 +50,9 @@
             <livewire:components.add-to-cart :purchasable="$product->variants->first()" :key="'add-to-cart-' . $product->id" />
         </div>
 
-        @if (!$hasValidSlug)
+        @if (!$slug || $slug === 'product-' . $product->id)
             <div class="p-4 text-red-600 text-sm">
-                {{ __('messages.catalog.warning_no_slug') }}: {{ $product->id }} ({{ __('messages.catalog.locale') }}: {{ app()->getLocale() }})
-                @dump($product->defaultUrl?->toArray())
-                @dump($product->slug)
+                {{ __('messages.catalog.warning_no_slug') }}: {{ $product->id }}
             </div>
         @endif
     </div>
