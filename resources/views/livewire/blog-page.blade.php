@@ -57,7 +57,7 @@
             </h1>
 
             <!-- Blog Cards Grid -->
-            <section class="space-y-8 mb-10" aria-label="Blog posts">
+            <section class="space-y-8 mb-10 relative z-1" aria-label="Blog posts">
                 @if (isset($error))
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         {{ $error }}
