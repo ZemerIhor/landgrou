@@ -232,6 +232,7 @@
                                 <a
                                     href="{{ route('lang.switch', ['locale' => 'en', 'redirect_to' => request()->fullUrl()]) }}"
                                     class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
+                                    wire:navigate
                                 >
                                     {{ __('messages.language.english') }}
                                 </a>
@@ -240,6 +241,7 @@
                                 <a
                                     href="{{ route('lang.switch', ['locale' => 'uk', 'redirect_to' => request()->fullUrl()]) }}"
                                     class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
+                                    wire:navigate
                                 >
                                     {{ __('messages.language.ukrainian') }}
                                 </a>
@@ -328,6 +330,7 @@
                                     <a
                                         href="{{ route('lang.switch', ['locale' => 'en', 'redirect_to' => request()->fullUrl()]) }}"
                                         class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
+                                        wire:navigate
                                     >
                                         {{ __('messages.language.english') }}
                                     </a>
@@ -336,6 +339,7 @@
                                     <a
                                         href="{{ route('lang.switch', ['locale' => 'uk', 'redirect_to' => request()->fullUrl()]) }}"
                                         class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
+                                        wire:navigate
                                     >
                                         {{ __('messages.language.ukrainian') }}
                                     </a>
