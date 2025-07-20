@@ -25,6 +25,7 @@
         "lunarphp/lunar": "^1.0@beta",
         "lunarphp/stripe": "^1.0@beta",
         "lunarphp/table-rate-shipping": "^1.0@beta",
+        "mcamara/laravel-localization": "^2.3",
         "meilisearch/meilisearch-php": "^1.6",
         "pixelpeter/filament-language-tabs": "^2.0",
         "predis/predis": "^2.2",
