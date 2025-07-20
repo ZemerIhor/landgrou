@@ -297,7 +297,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(224px, 1fr));
     gap: 1rem;
-    grid-auto-rows: 378px;
     align-items: stretch;
 }
 .catalog-list {
@@ -338,9 +337,6 @@
     margin-top: auto; /* 🔑 притискає низ */
 }
 @media (max-width: 688px) {
-    .catalog-grid {
-        grid-auto-rows: 397px;
-    }
     .card {
         max-width: 224px;
     }
