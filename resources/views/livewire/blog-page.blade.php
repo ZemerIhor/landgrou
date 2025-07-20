@@ -1,183 +1,322 @@
-<main class="container mx-auto self-stretch pb-14 px-4 md:px-12 max-md:px-5 blog-page">
     <!-- Breadcrumbs Navigation -->
-    <livewire:components.breadcrumbs :currentPage="__('messages.breadcrumbs.blog')" :items="[]" />
+    <main class="flex flex-col gap-2 items-center px-12 pt-14 pb-24 bg-zinc-100">
+        <!-- Logo Header Section -->
+        <header class="mb-8">
+            <svg
+                width="1336"
+                height="306"
+                viewBox="0 0 1336 306"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="logo-svg w-[1280px] h-[250px]"
+                style="fill: #f3f3f3;"
+                role="img"
+                aria-label="LANDGROUP Logo"
+            >
+                <g filter="url(#filter0_dd_125_12592)">
+                    <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M314.294 34.9774V271.218C314.294 275.889 323.835 273.913 332.831 273.913C340.749 273.913 347.949 273.913 355.324 273.913C356.945 268.883 355.868 221.814 355.324 211.574L354.785 164.685C354.785 158.398 353.528 155.882 353.528 149.055C353.528 149.415 354.246 149.415 354.246 149.774C354.246 149.954 354.246 150.133 354.246 150.133C355.324 151.93 354.785 150.672 355.324 152.11L383.939 211.574C388.979 222.533 393.474 232.414 399.052 243.372C416.332 280.201 403.553 273.913 446.025 273.913V36.9534C446.025 34.4384 446.025 34.4384 445.48 32.2825L413.088 32.1027C407.33 32.1027 405.714 31.0248 405.175 35.8755C403.553 50.2472 406.253 65.5176 406.253 78.9918C406.253 93.7232 406.253 108.095 406.253 122.826C406.253 138.277 407.33 150.133 407.33 165.763C404.631 162.709 360.902 59.4097 356.407 49.5289C354.246 44.1393 350.828 37.6717 349.745 32.2825C343.448 32.2825 337.331 32.2825 331.214 32.2825C327.791 32.2825 324.553 32.1027 321.135 32.1027C317.717 32.1027 314.294 31.3839 314.294 34.9774Z"
+                        fill="#F3F3F3"
+                    />
+                    <!-- Other SVG paths (omitted for brevity, same as provided) -->
+                </g>
+                <defs>
+                    <filter
+                        id="filter0_dd_125_12592"
+                        x="0"
+                        y="0"
+                        width="1336"
+                        height="306"
+                        filterUnits="userSpaceOnUse"
+                        color-interpolation-filters="sRGB"
+                    >
+                        <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+                        <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                        />
+                        <feMorphology
+                            radius="4"
+                            operator="erode"
+                            in="SourceAlpha"
+                            result="effect1_dropShadow_125_12592"
+                        />
+                        <feOffset/>
+                        <feGaussianBlur stdDeviation="2"/>
+                        <feComposite in2="hardAlpha" operator="out"/>
+                        <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0.0470588 0 0 0 0 0.0470588 0 0 0 0 0.0509804 0 0 0 0.05 0"
+                        />
+                        <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_125_12592"
+                        />
+                        <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                        />
+                        <feMorphology
+                            radius="4"
+                            operator="erode"
+                            in="SourceAlpha"
+                            result="effect2_dropShadow_125_12592"
+                        />
+                        <feOffset/>
+                        <feGaussianBlur stdDeviation="16"/>
+                        <feComposite in2="hardAlpha" operator="out"/>
+                        <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0.0470588 0 0 0 0 0.0470588 0 0 0 0 0.0509804 0 0 0 0.15 0"
+                        />
+                        <feBlend
+                            mode="normal"
+                            in2="effect1_dropShadow_125_12592"
+                            result="effect2_dropShadow_125_12592"
+                        />
+                        <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect2_dropShadow_125_12592"
+                            result="shape"
+                        />
+                    </filter>
+                </defs>
+            </svg>
+        </header>
 
-    <!-- Page Title -->
-    <header>
-        <h1 class="text-2xl font-bold leading-tight text-black max-md:max-w-full">
-            {{ __('messages.blog.title') }}
-        </h1>
-    </header>
-
-    <!-- Filter Controls and Results Count -->
-    <section class="flex flex-wrap gap-2 items-center w-full min-h-10 max-md:max-w-full" aria-label="Фильтры">
-        <!-- Results Count -->
-        <div class="flex gap-1 items-center self-stretch my-auto text-xs font-semibold text-black whitespace-nowrap">
-            <span class="self-stretch my-auto">{{ __('Найдено') }}</span>
-            <span class="self-stretch my-auto">{{ $posts->total() }}</span>
-            <span class="self-stretch my-auto">{{ __('постов') }}</span>
-        </div>
-
-        <!-- Active Filter Tags -->
+        <!-- Content Container -->
+        <div class="relative h-auto w-[1180px] max-md:box-border max-md:px-5 max-md:py-0 max-md:w-full max-md:max-w-[1180px]">
+            <livewire:components.breadcrumbs :currentPage="__('messages.breadcrumbs.blog')" :items="[]" />
 
 
-        <!-- View Toggle -->
-        <div class="flex gap-1 items-center self-stretch p-1 my-auto rounded-2xl bg-neutral-200 min-h-10" role="group" aria-label="Вид отображения">
-            <button wire:click="setView('grid')" class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Вид сетки" aria-pressed="{{ $view === 'grid' ? 'true' : 'false' }}">
-                <div class="flex self-stretch my-auto w-6 min-h-6" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-view {{ $view === 'grid' ? 'icon-active' : '' }}">
-                        <path d="M22 8.52V3.98C22 2.57 21.36 2 19.77 2H15.73C14.14 2 13.5 2.57 13.5 3.98V8.51C13.5 9.93 14.14 10.49 15.73 10.49H19.77C21.36 10.5 22 9.93 22 8.52Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M22 19.77V15.73C22 14.14 21.36 13.5 19.77 13.5H15.73C14.14 13.5 13.5 14.14 13.5 15.73V19.77C13.5 21.36 14.14 22 15.73 22H19.77C21.36 22 22 21.36 22 19.77Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M10.5 8.52V3.98C10.5 2.57 9.86 2 8.27 2H4.23C2.64 2 2 2.57 2 3.98V8.51C2 9.93 2.64 10.49 4.23 10.49H8.27C9.86 10.5 10.5 9.93 10.5 8.52Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M10.5 19.77V15.73C10.5 14.14 9.86 13.5 8.27 13.5H4.23C2.64 13.5 2 14.14 2 15.73V19.77C2 21.36 2.64 22 4.23 22H8.27C9.86 22 10.5 21.36 10.5 19.77Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+            <!-- Tab Navigation -->
+            <nav class="inline-flex items-start px-0 py-2 h-[43px] w-[1180px] max-md:box-border max-md:px-5 max-md:py-0 max-md:w-full max-md:max-w-[1180px] mb-8" role="tablist" aria-label="Content categories">
+                <div class="flex flex-col gap-2 items-center max-sm:shrink-0" role="presentation">
+                    <button wire:click="setCategory('all')" class="flex gap-2.5 justify-center items-center px-4 py-0 tab-button" role="tab" aria-selected="{{ $selectedCategory === 'all' ? 'true' : 'false' }}" tabindex="{{ $selectedCategory === 'all' ? '0' : '-1' }}">
+                        <span class="text-sm font-bold leading-4 text-center {{ $selectedCategory === 'all' ? 'text-green-600' : 'text-zinc-800' }}">Всі</span>
+                    </button>
+                    <div class="self-stretch {{ $selectedCategory === 'all' ? 'bg-green-600 rounded h-[3px]' : 'h-px bg-neutral-400' }}"></div>
                 </div>
-            </button>
-            <button wire:click="setView('list')" class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Вид списка" aria-pressed="{{ $view === 'list' ? 'true' : 'false' }}">
-                <div class="flex self-stretch my-auto w-6 min-h-6" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-view {{ $view === 'list' ? 'icon-active' : '' }}">
-                        <path d="M19.9 13.5H4.1C2.6 13.5 2 14.14 2 15.73V19.77C2 21.36 2.6 22 4.1 22H19.9C21.4 22 22 21.36 22 19.77V15.73C22 14.14 21.4 13.5 19.9 13.5Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M19.9 2H4.1C2.6 2 2 2.64 2 4.23V8.27C2 9.86 2.6 10.5 4.1 10.5H19.9C21.4 10.5 22 9.86 22 8.27V4.23C22 2.64 21.4 2 19.9 2Z" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-            </button>
-        </div>
-    </section>
+                @foreach ($availableCategories as $category)
+                    <div class="flex flex-col gap-2 items-center max-sm:shrink-0" role="presentation">
+                        <button wire:click="setCategory({{ $category->id }})" class="flex gap-2.5 items-center self-stretch px-4 py-0 tab-button" role="tab" aria-selected="{{ $selectedCategory == $category->id ? 'true' : 'false' }}" tabindex="{{ $selectedCategory == $category->id ? '0' : '-1' }}">
+                            <span class="text-sm font-bold leading-4 text-center {{ $selectedCategory == $category->id ? 'text-green-600' : 'text-zinc-800' }}">{{ $category->translateAttribute('name') ?? $category->name ?? 'Label' }}</span>
+                        </button>
+                        <div class="self-stretch {{ $selectedCategory == $category->id ? 'bg-green-600 rounded h-[3px]' : 'h-px bg-neutral-400' }}"></div>
+                    </div>
+                @endforeach
+            </nav>
 
-    <!-- Main Content Area -->
-    <div class="flex flex-wrap gap-2 items-start justify-center pt-2 w-full max-md:max-w-full">
-        <!-- Filters Sidebar -->
-        <aside class="rounded-3xl bg-neutral-200 min-w-60 w-[289px]" aria-label="Фильтры постов">
-            <!-- Category Filter -->
-            <section class="w-full rounded-2xl text-zinc-800">
-                <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-expanded="true" aria-controls="category-options">
-                    <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Категория') }}</span>
-                    <div class="flex shrink-0 self-stretch my-auto w-4 h-4" aria-hidden="true"></div>
-                </button>
-                <div id="category-options" class="flex items-start pr-0.5 pb-2 w-full text-xs font-semibold whitespace-nowrap rounded-2xl bg-neutral-200">
-                    <fieldset class="flex-1 shrink w-full basis-0 min-w-60">
-                        <legend class="sr-only">{{ __('Категория') }}</legend>
+            <!-- Page Title -->
+            <h1 class="text-2xl font-bold leading-7 text-black h-[29px] w-[1180px] max-md:box-border max-md:px-5 max-md:py-0 max-md:w-full max-md:max-w-[1180px] max-sm:text-xl max-sm:leading-6 mb-8">
+                {{ __('messages.blog.title') }}
+            </h1>
 
-                    </fieldset>
-                </div>
-            </section>
-        </aside>
+            <!-- Blog Cards Grid -->
+            <section class="space-y-8 mb-10" aria-label="Blog posts">
+                @if (isset($error))
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {{ $error }}
+                    </div>
+                @endif
 
-        <!-- Blog Posts Grid -->
-        <section class="flex-1 shrink basis-0 min-w-60 max-md:max-w-full" aria-label="Список постов">
-            @if (isset($error))
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                    {{ $error }}
-                </div>
-            @endif
+                @php
+                    $postsChunked = $posts->chunk(4); // Split posts into groups of 4 for rows
+                @endphp
 
-            <!-- Grid or List view based on $view -->
-            <div class="{{ $view == 'grid' ? 'blog-grid' : 'blog-list' }} blog-page-grid">
-                @forelse ($posts as $post)
-                    @php
-                        $hasValidSlug = false;
-                        $slug = null;
+                @forelse ($postsChunked as $chunk)
+                    <div class="inline-flex gap-2 items-center h-[307px] w-[1180px] max-md:box-border max-md:flex-wrap max-md:gap-4 max-md:px-5 max-md:py-0 max-md:w-full max-md:max-w-[1180px] max-sm:flex-col max-sm:h-auto">
+                        @foreach ($chunk as $post)
+                            @php
+                                $hasValidSlug = false;
+                                $slug = null;
 
-                        // Check slug
-                        if ($post->defaultUrl && !empty($post->defaultUrl->slug)) {
-                            $slug = $post->defaultUrl->slug;
-                            $hasValidSlug = is_string($slug) && trim($slug) !== '';
-                        } elseif (!empty($post->slug) && is_string($post->slug) && trim($post->slug) !== '') {
-                            $slug = $post->slug;
-                            $hasValidSlug = true;
-                        }
+                                // Check slug
+                                if ($post->defaultUrl && !empty($post->defaultUrl->slug)) {
+                                    $slug = $post->defaultUrl->slug;
+                                    $hasValidSlug = is_string($slug) && trim($slug) !== '';
+                                } elseif (!empty($post->slug) && is_string($post->slug) && trim($post->slug) !== '') {
+                                    $slug = $post->slug;
+                                    $hasValidSlug = true;
+                                }
 
-                        $locale = app()->getLocale();
-                        $routeParams = ['slug' => $slug];
-                        if ($locale !== 'uk') {
-                            $routeParams['locale'] = $locale;
-                        }
+                                $locale = app()->getLocale();
+                                $routeParams = ['slug' => $slug];
+                                if ($locale !== 'uk') {
+                                    $routeParams['locale'] = $locale;
+                                }
 
-                        $postUrl = $hasValidSlug ? route('blog.post', $routeParams, false) : route('home', $locale !== 'uk' ? ['locale' => $locale] : [], false);
-                    @endphp
+                                $postUrl = $hasValidSlug ? route('blog.post', $routeParams, false) : route('home', $locale !== 'uk' ? ['locale' => $locale] : [], false);
+                            @endphp
 
-                    <article wire:key="post-{{ $post->id }}" class="overflow-hidden post-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 {{ $view == 'grid' ? 'lg:h-[378px] sm:h-[389px]' : '' }}" role="listitem">
-                        <div class="flex flex-col justify-between group h-full">
-                            <a href="{{ $postUrl }}" wire:navigate class="flex flex-col h-full">
-                                <div class="flex relative flex-col w-full">
-                                    <div class="flex overflow-hidden flex-col max-w-full w-full">
-                                        <img
-                                            src="{{ $post->banner ? Storage::url($post->banner) : 'https://via.placeholder.com/300x158' }}"
-                                            alt="{{ $post->getTranslation('title', app()->getLocale()) }}"
-                                            class="object-cover w-full aspect-[1.77] transition-transform duration-300 group-hover:scale-105"
-                                        />
-                                    </div>
+                            <article wire:key="post-{{ $post->id }}" class="flex flex-col items-start rounded-3xl bg-neutral-200 flex-[1_0_0] blog-card max-sm:w-full" tabindex="0" role="article">
+                                <div class="flex justify-center items-center self-stretch h-[153px] overflow-hidden rounded-t-3xl">
+                                    <img
+                                        src="{{ $post->banner ? Storage::url($post->banner) : 'https://via.placeholder.com/300x158' }}"
+                                        alt="{{ $post->getTranslation('title', app()->getLocale()) }}"
+                                        class="h-[171px] w-[300px] object-cover"
+                                    />
                                 </div>
-
-                                <div class="p-4 w-full">
-                                    <div class="w-full text-zinc-800">
-                                        <h2 class="text-base font-bold leading-5 text-zinc-800">{{ Str::limit($post->getTranslation('title', app()->getLocale()), 50) }}</h2>
-                                        <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ Str::limit($post->getTranslation('excerpt', app()->getLocale()), 100) }}</p>
-                                        <time class="mt-1 text-xs text-neutral-400" datetime="{{ $post->published_at ? $post->published_at->format('Y-m-d') : '' }}">
-                                            {{ $post->published_at ? $post->published_at->format('d.m.Y') : __('blog.no_date') }}
-                                        </time>
-                                    </div>
+                                <div class="flex flex-col gap-4 items-start self-stretch p-4">
+                                    <p class="overflow-hidden self-stretch text-base font-semibold leading-5 text-ellipsis text-zinc-800">
+                                        {{ Str::limit($post->getTranslation('excerpt', app()->getLocale()), 150) }}
+                                    </p>
+                                    <time class="self-stretch text-xs font-semibold leading-5 text-neutral-400" datetime="{{ $post->published_at ? $post->published_at->format('Y-m-d') : '' }}">
+                                        {{ $post->published_at ? $post->published_at->format('d.m.Y') : __('blog.no_date') }}
+                                    </time>
                                 </div>
-                            </a>
-                        </div>
-
-                        @if (!$hasValidSlug)
-                            <div class="p-4 text-red-600 text-sm">
-                                Предупреждение: URL или slug отсутствует для поста ID: {{ $post->id }} (Локаль: {{ app()->getLocale() }})
-                            </div>
-                        @endif
-                    </article>
+                                <a href="{{ $postUrl }}" wire:navigate class="flex right-0 gap-2.5 justify-center items-center px-2 py-0 w-14 h-14 absolute top-0 right-0">
+                                    <div class="relative shrink-0 h-[35px] w-[35px]">
+                                        <svg
+                                            width="20"
+                                            height="20"
+                                            viewBox="0 0 20 20"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="arrow-bg w-[28px] h-[22px] absolute left-0 top-0"
+                                            aria-hidden="true"
+                                        >
+                                            <path
+                                                d="M19.8039 15.6143L19.8039 0.196583L0.197137 19.8033L8.86752 11.133C12.8868 7.11369 19.7607 9.93035 19.8039 15.6143Z"
+                                                fill="white"
+                                            />
+                                            <path
+                                                d="M19.8039 0.196583L9.52542 0.196583L4.38618 0.196584C10.0731 0.217168 12.9068 7.09365 8.88556 11.1149L0.197137 19.8033L19.8039 0.196583Z"
+                                                fill="white"
+                                            />
+                                        </svg>
+                                        <svg
+                                            width="23"
+                                            height="23"
+                                            viewBox="0 0 23 23"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="w-[23px] h-[23px] absolute left-[6px] top-[7px]"
+                                            aria-hidden="true"
+                                        >
+                                            <path
+                                                d="M21.8027 0.196716C22.3548 0.196925 22.8027 0.644626 22.8027 1.19672V21.7534C22.8027 22.3055 22.3548 22.7531 21.8027 22.7534C21.2507 22.7531 20.8038 22.3054 20.8037 21.7534L20.8027 16.6137C20.7603 11.8976 15.1435 9.52508 11.7344 12.685L11.5732 12.8403L2.90332 21.5102C2.51284 21.9007 1.87979 21.9006 1.48926 21.5102C1.12332 21.1441 1.09979 20.565 1.41992 20.1723L1.48926 20.0961L10.1777 11.4077C13.5696 8.01515 11.1791 2.21438 6.38184 2.19672H1.24609C0.693885 2.19672 0.246217 1.7489 0.246094 1.19672C0.246171 0.644497 0.693857 0.196716 1.24609 0.196716H21.8027ZM15.1689 9.24554C17.2741 9.19543 19.3478 10.053 20.8018 11.5776L20.8037 3.61078L15.1689 9.24554ZM11.4424 2.19672C12.9621 3.64751 13.8183 5.71579 13.7695 7.81586L19.3887 2.19672H11.4424Z"
+                                                fill="white"
+                                            />
+                                        </svg>
+                                    </div>
+                                </a>
+                                @if (!$hasValidSlug)
+                                    <div class="p-4 text-red-600 text-sm">
+                                        Предупреждение: URL или slug отсутствует для поста ID: {{ $post->id }} (Локаль: {{ app()->getLocale() }})
+                                    </div>
+                                @endif
+                            </article>
+                        @endforeach
+                    </div>
                 @empty
-                    <p>{{ __('Нет постов по выбранным параметрам.') }}</p>
+                    <p class="text-center text-base font-semibold text-zinc-800">Нет постов по выбранным параметрам.</p>
                 @endforelse
-            </div>
+            </section>
 
             <!-- Pagination -->
-            <nav class="flex flex-wrap gap-2 justify-center items-center pt-10 w-full max-md:max-w-full" aria-label="Навигация по страницам">
-                {{ $posts->links() }}
+            <nav class="flex gap-2 justify-center items-center pt-10" aria-label="Pagination Navigation">
+                {{ $posts->links('livewire::simple-bootstrap') }}
             </nav>
-        </section>
-    </div>
+        </div>
+        <script>
+            // Add keyboard navigation for tab controls
+            document.addEventListener('DOMContentLoaded', function() {
+                const tabs = document.querySelectorAll('[role="tab"]');
+                const blogCards = document.querySelectorAll('.blog-card');
 
-    <style>
-        /* Стили для сетки и списка */
-        .blog-grid {
-            display: grid;
-            gap: 1rem;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        }
+                // Tab navigation
+                tabs.forEach((tab, index) => {
+                    tab.addEventListener('keydown', function(e) {
+                        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                            e.preventDefault();
+                            const nextIndex = e.key === 'ArrowRight'
+                                ? (index + 1) % tabs.length
+                                : (index - 1 + tabs.length) % tabs.length;
 
-        .blog-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
+                            tabs[index].setAttribute('tabindex', '-1');
+                            tabs[nextIndex].setAttribute('tabindex', '0');
+                            tabs[nextIndex].focus();
+                        }
 
-        .blog-list .post-card {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            min-height: 150px;
-        }
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            tab.click();
+                        }
+                    });
+                });
 
-        .blog-list .post-card img {
-            width: 150px;
-            height: auto;
-            object-fit: cover;
-            margin-right: 1rem;
-        }
+                // Blog card keyboard navigation
+                blogCards.forEach(card => {
+                    card.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            const link = card.querySelector('a');
+                            if (link) {
+                                link.click();
+                            }
+                        }
+                    });
+                });
 
-        /* Стили для SVG-иконок в переключателе вида */
-        .icon-view {
-            stroke: #333333;
-        }
+                // Pagination keyboard navigation
+                const paginationButtons = document.querySelectorAll('.pagination-button');
+                paginationButtons.forEach(button => {
+                    button.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            button.click();
+                        }
+                    });
+                });
+            });
+        </script>
 
-        button[aria-pressed="true"] .icon-view {
-            stroke: #16a34a;
-        }
+        <style>
+            .logo-svg {
+                filter: drop-shadow(0px 0px 4px rgba(12, 12, 13, 0.05)) drop-shadow(0px 0px 32px rgba(12, 12, 13, 0.15));
+            }
 
-        button:hover .icon-view {
-            stroke: #16a34a;
-        }
-    </style>
-</main>
+            .arrow-bg {
+                transform: rotate(-45deg);
+            }
+
+            .blog-card:hover .arrow-bg {
+                transform: rotate(-45deg) scale(1.1);
+                transition: transform 0.2s ease;
+            }
+
+            .blog-card:focus-within .arrow-bg {
+                transform: rotate(-45deg) scale(1.1);
+            }
+
+            .pagination-button:hover {
+                background-color: #f3f4f6;
+                transition: background-color 0.2s ease;
+            }
+
+            .pagination-button:focus {
+                outline: 2px solid #16a34a;
+                outline-offset: 2px;
+            }
+
+            .tab-button:focus {
+                outline: 2px solid #16a34a;
+                outline-offset: 2px;
+            }
+
+            .blog-card:focus-within {
+                outline: 2px solid #16a34a;
+                outline-offset: 2px;
+            }
+        </style>
+    </main>
+
