@@ -30,18 +30,7 @@
                     @endif
                 @endforeach
             @endif
-            @if ($dateFilter)
-                <button wire:click="clearDate" class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Удалить фильтр: Дата">
-                    <span class="self-stretch my-auto text-white">{{ __('Дата') }}: {{ $dateFilter }}</span>
-                    <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ba94ac2e61738f897029abe123360249f0f65ef9?placeholderIfAbsent=true" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" alt="Удалить фильтр" />
-                </button>
-            @endif
-            @if (!empty($categories) || $dateFilter)
-                <button wire:click="clearAllFilters" class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-red-500 min-h-10 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Сбросить все фильтры">
-                    <span class="self-stretch my-auto text-white">{{ __('Сбросить все') }}</span>
-                    <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ba94ac2e61738f897029abe123360249f0f65ef9?placeholderIfAbsent=true" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" alt="Сбросить фильтры" />
-                </button>
-            @endif
+
         </div>
 
         <!-- Sort Dropdown -->
@@ -106,20 +95,7 @@
             </div>
 
             <!-- Date Filter -->
-            <section class="py-4 w-full rounded-2xl bg-neutral-200">
-                <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-expanded="true" aria-controls="date-filter">
-                    <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Дата публикации') }}</span>
-                    <div class="flex shrink-0 self-stretch my-auto w-4 h-4 rotate-[-3.1415925661670165rad]" aria-hidden="true"></div>
-                </button>
-                <div id="date-filter" class="flex flex-col gap-4 items-start mx-auto my-0 w-[280px] max-md:w-full max-md:max-w-[280px]">
-                    <select wire:model.debounce.500ms="dateFilter" class="w-full px-4 py-2 text-xs rounded border border-neutral-400 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Фильтр по дате">
-                        <option value="">{{ __('Все даты') }}</option>
-                        <option value="week">{{ __('Последняя неделя') }}</option>
-                        <option value="month">{{ __('Последний месяц') }}</option>
-                        <option value="year">{{ __('Последний год') }}</option>
-                    </select>
-                </div>
-            </section>
+
 
             <!-- Separator -->
             <div class="px-4 w-full">
@@ -219,10 +195,6 @@
         </section>
     </div>
 
-    <!-- Debug Output -->
-    <div class="px-4 text-xs text-gray-500">
-        Debug: categories={{ json_encode($categories) }}, dateFilter={{ $dateFilter }}
-    </div>
 
     <style>
         /* Стили для сетки и списка */
