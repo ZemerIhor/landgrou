@@ -27,19 +27,7 @@
         <!-- Navigation sections and contacts -->
         <section class="nav-contacts flex flex-wrap justify-between">
             <!-- Меню футера -->
-            @if (app()->getLocale() === 'en')
-                <nav class="menu" aria-label="{{ __('messages.footer.main_navigation') }}">
-                    <x-filament-menu-builder::menu slug="futer-en" />
-                </nav>
-            @elseif (app()->getLocale() === 'uk')
-                <nav class="menu" aria-label="{{ __('messages.footer.main_navigation') }}">
-                    <x-filament-menu-builder::menu slug="futer-ua" />
-                </nav>
-            @else
-                <nav class="menu" aria-label="{{ __('messages.footer.main_navigation') }}">
-                    <x-filament-menu-builder::menu slug="futer-en" />
-                </nav>
-            @endif
+
 
             <!-- Контактная информация -->
             @if (isset($footer) && (!empty($footer->phone) || !empty($footer->email) || !empty($footer->address)))
