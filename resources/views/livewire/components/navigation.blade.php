@@ -180,15 +180,48 @@
                     $currentUrl = request()->path();
                     $segments = explode('/', $currentUrl);
 
-                    // Удалим текущую локаль, если она есть
-                    if (in_array($segments[0], ['en', 'uk'])) {
+                    // Удаляем текущую локаль, если она есть (для страниц, не связанных с продуктами)
+                    if (in_array($segments[0] ?? '', ['en', 'uk'])) {
                         array_shift($segments);
                     }
 
                     $pathWithoutLocale = implode('/', $segments);
 
+                    // URL по умолчанию для страниц, не связанных с продуктами
                     $enUrl = url('/en/' . $pathWithoutLocale);
                     $ukUrl = url('/uk/' . $pathWithoutLocale);
+
+                    // Специальная обработка для страниц продуктов
+                    if (preg_match('#^products/([^/]+)#', $pathWithoutLocale, $matches)) {
+                        $currentSlug = $matches[1];
+
+                        // Находим запись URL для текущего слага
+                        $url = \Lunar\Models\Url::where('slug', $currentSlug)
+                            ->where('element_type', \Lunar\Models\Product::class)
+                            ->first();
+
+                        if ($url) {
+                            $product = $url->element;
+
+                            // Получаем слаг для английского языка
+                            $enLanguageId = \Lunar\Models\Language::where('code', 'en')->first()->id ?? 1;
+                            $enSlug = $product->urls()
+                                ->where('language_id', $enLanguageId)
+                                ->first()?->slug ?? $product->slug;
+                            $enUrl = url('/products/' . $enSlug);
+
+                            // Получаем слаг для украинского языка
+                            $ukLanguageId = \Lunar\Models\Language::where('code', 'uk')->first()->id ?? 2;
+                            $ukSlug = $product->urls()
+                                ->where('language_id', $ukLanguageId)
+                                ->first()?->slug ?? $product->slug;
+                            $ukUrl = url('/products/' . $ukSlug);
+                        } else {
+                            // Фоллбэк, если продукт не найден
+                            $enUrl = url('/en');
+                            $ukUrl = url('/uk');
+                        }
+                    }
 
                     \Log::info('Header Language Switch', [
                         'current_locale' => app()->getLocale(),
