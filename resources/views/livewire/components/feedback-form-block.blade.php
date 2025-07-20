@@ -3,7 +3,7 @@
     <section class="flex flex-col justify-center self-stretch min-h-[570px] xl:h-[570px]" role="main" aria-label="{{ __('messages.feedback_form.aria_label') }}">
         <div class="flex flex-wrap gap-2 items-stretch justify-center w-full max-md:max-w-full">
             <div class="flex relative flex-col flex-1 shrink justify-center self-start px-6 rounded-3xl basis-0 bg-neutral-200 min-h-[570px] max-md:max-w-full">
-                <form wire:submit="submit" class="z-0 w-full" aria-labelledby="feedback-form-title" novalidate>
+                <form wire:submit.prevent="submit" class="z-0 w-full" aria-labelledby="feedback-form-title" novalidate>
                     <header class="w-full text-zinc-800 max-md:max-w-full">
                         <h1 id="feedback-form-title" class="text-xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
                             {{ $settings['feedback_form_title'] }}

@@ -10,20 +10,13 @@ class Localization
 {
     public function handle($request, Closure $next)
     {
-        // Приоритет: ?lang=uk → session → config
-        $currentLocale = Session::get('locale', config('app.locale'));
-        $locale = $request->get('lang', $currentLocale);
+        $locale = $request->segment(1);
 
-        if (!in_array($locale, ['en', 'uk'])) {
-            $locale = 'en';
-        }
-
-        // Установка языка
-        App::setLocale($locale);
-
-        // Обновляем сессию, если локаль изменилась
-        if ($locale !== $currentLocale) {
-            Session::put('locale', $locale);
+        if (in_array($locale, ['en', 'uk'])) {
+            App::setLocale($locale);
+            session(['locale' => $locale]);
+        } else {
+            App::setLocale(session('locale', config('app.locale')));
         }
 
         return $next($request);

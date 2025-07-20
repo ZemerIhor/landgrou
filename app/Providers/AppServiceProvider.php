@@ -11,6 +11,7 @@ use App\Filament\Pages\Header;
 use App\Filament\Pages\Home;
 use App\Filament\Resources\BlogPostResource;
 use App\Filament\Resources\ReviewResource;
+use App\Filament\Resources\ProductResource; // Добавляем ProductResource
 use App\Livewire\Components\Breadcrumbs;
 use App\Livewire\Elements\PromoBoxElement;
 use App\Modifiers\ShippingModifier;
@@ -35,13 +36,13 @@ class AppServiceProvider extends ServiceProvider
         LunarPanel::panel(
             fn($panel) => $panel
                 ->pages([
-                    Footer::class, // 👈 добавляем сюда
+                    Footer::class,
                     Home::class,
-                    Header::class, // Регистрируем страницу Header
-                    Faq::class, // Регистрируем страницу Header
-                    Contacts::class, // Регистрируем страницу Header
-                    AboutUs::class, // Регистрируем страницу Header
-                    GlobalSet::class, // Регистрируем страницу Header
+                    Header::class,
+                    Faq::class,
+                    Contacts::class,
+                    AboutUs::class,
+                    GlobalSet::class,
                 ])
                 ->resources([
                     BlogPostResource::class,
@@ -62,14 +63,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(ShippingModifiers $shippingModifiers): void
     {
-
         $shippingModifiers->add(
             ShippingModifier::class
         );
         \Lunar\Facades\ModelManifest::replace(
             \Lunar\Models\Contracts\Product::class,
             \App\Models\Product::class,
-        // \App\Models\CustomProduct::class,
         );
     }
 }

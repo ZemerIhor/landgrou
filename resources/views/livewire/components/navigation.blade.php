@@ -1,11 +1,13 @@
-
 <div x-data="{ isScrolled: false }" @scroll.window="isScrolled = (window.scrollY > 0)">
-    <header id="header" class="shadow-xl  flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
+    <header id="header" class="shadow-xl flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
             :class="{ 'is-fixed': isScrolled }"
             role="banner">
-        <div class="nav-header flex relative md:px-12 px-4  justify-between items-center w-full h-auto container mx-auto">
+        <div class="nav-header flex relative md:px-12 px-4 justify-between items-center w-full h-auto container mx-auto">
             <!-- Logo -->
-            <a href="{{ url('/') }}" class="flex items-center" aria-label="{{ __('messages.banner.catalog_button_aria_label') }}" wire:navigate>
+            <a href="{{ app()->getLocale() === 'uk' ? url('/') : url('/en') }}"
+               class="flex items-center"
+               aria-label="{{ __('messages.banner.catalog_button_aria_label') }}"
+               wire:navigate>
                 <div>
                     <x-brand.logo class="w-auto h-8 text-indigo-600" />
                 </div>
@@ -18,9 +20,6 @@
                 }
 
                 /* Show menu on medium screens and above (≥768px) */
-
-
-                /* Style the menu's ul (assumed output of filament-menu-builder) */
                 .nav-header ul {
                     display: flex;
                     justify-content: space-between;
@@ -44,7 +43,6 @@
                     }
                 }
 
-                /* Menu link styles */
                 .nav-header ul li a {
                     color: #333333;
                     text-decoration: none;
@@ -55,10 +53,9 @@
                 }
 
                 .nav-header ul li a:hover {
-                    color: #16a34a; /* Matches Tailwind green-600 */
+                    color: #16a34a;
                 }
 
-                /* Header positioning */
                 header {
                     position: relative;
                     transform: translateY(0);
@@ -76,8 +73,6 @@
                     transition: transform 0.3s ease, opacity 0.3s ease;
                 }
 
-
-                /* Placeholder to prevent content jump */
                 .header-placeholder {
                     transition: height 0.3s ease;
                 }
@@ -87,10 +82,8 @@
             <div class="desktop-menu hidden md:flex">
                 @if(app()->getLocale() === 'en')
                     <x-filament-menu-builder::menu slug="en-header-menu" />
-                @elseif(app()->getLocale() === 'uk')
-                    <x-filament-menu-builder::menu slug="uk-header-menu" />
                 @else
-                    <x-filament-menu-builder::menu slug="en-header-menu" />
+                    <x-filament-menu-builder::menu slug="uk-header-menu" />
                 @endif
             </div>
 
@@ -103,6 +96,21 @@
                 >
                     {{ __('messages.feedback_form.submit_button') }}
                 </button>
+
+                @php
+                    $currentUrl = request()->path(); // Текущий путь без домена
+                    $segments = explode('/', $currentUrl);
+
+                    // Удалим текущую локаль, если она есть
+                    if (in_array($segments[0], ['en', 'uk'])) {
+                        array_shift($segments);
+                    }
+
+                    $pathWithoutLocale = implode('/', $segments);
+
+                    $enUrl = url('/en/' . $pathWithoutLocale);
+                    $ukUrl = url('/uk/' . $pathWithoutLocale);
+                @endphp
 
                 @php
                     $headerSettings = app(\App\Settings\HeaderSettings::class);
@@ -130,7 +138,7 @@
                     </a>
                     @livewire('components.cart')
 
-                    <!-- Language Dropdown -->
+                    <!-- Language Dropdown (Desktop) -->
                     <div class="relative" x-data="{ open: false }">
                         <button
                             x-on:click="open = !open"
@@ -150,25 +158,29 @@
                             class="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-md z-50"
                             x-on:click.away="open = false"
                         >
-                            <a
-                                href="{{ route('lang.switch', ['lang' => 'en']) }}"
-                                class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
-                                wire:navigate
-                            >
-                                {{ __('messages.language.english') }}
-                            </a>
-                            <a
-                                href="{{ route('lang.switch', ['lang' => 'uk']) }}"
-                                class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
-                                wire:navigate
-                            >
-                                {{ __('messages.language.ukrainian') }}
-                            </a>
+
+                            @if(app()->getLocale() !== 'en')
+                                <a
+                                    href="{{ $enUrl }}"
+                                    class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
+                                    wire:navigate
+                                >
+                                    {{ __('messages.language.english') }}
+                                </a>
+                            @endif
+                            @if(app()->getLocale() !== 'uk')
+                                <a
+                                    href="{{ $ukUrl }}"
+                                    class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
+                                    wire:navigate
+                                >
+                                    {{ __('messages.language.ukrainian') }}
+                                </a>
+                                @endif
                         </div>
                     </div>
                 </div>
 
-                <!-- Mobile Menu Toggle -->
                 <button
                     x-on:click="mobileMenu = !mobileMenu"
                     class="md:hidden text-2xl cursor-pointer text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600"
@@ -192,16 +204,11 @@
                     x-on:click.away="mobileMenu = false"
                 >
                     <nav class="flex flex-col items-center gap-4 px-2 py-6 text-base font-semibold text-zinc-800" role="navigation" aria-label="{{ __('messages.nav.mobile_navigation') }}">
-                        <!-- Mobile Menu Items -->
                         @if(app()->getLocale() === 'en')
                             <x-filament-menu-builder::menu slug="en-header-menu" class="mobile-menu-items" />
-                        @elseif(app()->getLocale() === 'uk')
-                            <x-filament-menu-builder::menu slug="uk-header-menu" class="mobile-menu-items" />
                         @else
-                            <x-filament-menu-builder::menu slug="en-header-menu" class="mobile-menu-items" />
+                            <x-filament-menu-builder::menu slug="uk-header-menu" class="mobile-menu-items" />
                         @endif
-
-                        <!-- Contact Button (Mobile) -->
                         <button
                             wire:click="$dispatch('openContactForm')"
                             class="px-4 py-2 text-sm font-bold text-green-600 rounded-2xl border-2 border-green-600 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 w-full max-w-xs"
@@ -209,8 +216,6 @@
                         >
                             {{ __('messages.feedback_form.submit_button') }}
                         </button>
-
-                        <!-- Mobile Language Menu -->
                         <div class="relative w-full px-4" x-data="{ languageMenu: false }">
                             <button
                                 x-on:click="languageMenu = !languageMenu"
@@ -229,20 +234,25 @@
                                 x-cloak
                                 class="mt-2 w-full bg-white shadow-lg rounded-md"
                             >
-                                <a
-                                    href="{{ route('lang.switch', ['lang' => 'en']) }}"
-                                    class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
-                                    wire:navigate
-                                >
-                                    {{ __('messages.language.english') }}
-                                </a>
-                                <a
-                                    href="{{ route('lang.switch', ['lang' => 'uk']) }}"
-                                    class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
-                                    wire:navigate
-                                >
-                                    {{ __('messages.language.ukrainian') }}
-                                </a>
+
+                                @if(app()->getLocale() !== 'en')
+                                    <a
+                                        href="{{ $enUrl }}"
+                                        class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
+                                        wire:navigate
+                                    >
+                                        {{ __('messages.language.english') }}
+                                    </a>
+                                @endif
+                                @if(app()->getLocale() !== 'uk')
+                                    <a
+                                        href="{{ $ukUrl }}"
+                                        class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
+                                        wire:navigate
+                                    >
+                                        {{ __('messages.language.ukrainian') }}
+                                    </a>
+                                    @endif
                             </div>
                         </div>
                     </nav>
@@ -250,7 +260,6 @@
             </div>
         </div>
     </header>
-    <!-- Placeholder to prevent content jump -->
     <div class="header-placeholder"
          x-show="isScrolled"
          style="height: 56px;"
@@ -263,5 +272,4 @@
          x-transition:leave-end="height 0">
     </div>
     @livewire('components.contact-form')
-
 </div>

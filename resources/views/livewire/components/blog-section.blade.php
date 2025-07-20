@@ -5,7 +5,16 @@
 
     <div class="flex flex-wrap gap-2 items-center mt-5 w-full min-h-[307px] max-md:max-w-full" role="region" aria-label="{{ __('blog.articles') }}">
         @forelse ($blogPosts->take(4) as $post)
-            <a href="{{ route('blog.post', $post->slug) }}" class="block overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60 hover:shadow-lg transition-shadow" aria-label="{{ __('blog.read_article', ['title' => $post->getTranslation('title', app()->getLocale())]) }}">
+            @php
+                $locale = app()->getLocale();
+                $routeParams = ['slug' => $post->slug];
+                if ($locale !== 'uk') {
+                    $routeParams['locale'] = $locale;
+                }
+                $postUrl = route('blog.post', $routeParams);
+            @endphp
+
+            <a href="{{ $postUrl }}" class="block overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60 hover:shadow-lg transition-shadow" aria-label="{{ __('blog.read_article', ['title' => $post->getTranslation('title', app()->getLocale())]) }}">
                 <article class="overflow-hidden" role="article">
                     <div class="overflow-hidden z-0 w-full">
                         <img
@@ -33,11 +42,12 @@
         @empty
             <p class="text-sm text-neutral-400 w-full text-center">{{ __('messages.blog.no_posts') }}</p>
         @endforelse
+
     </div>
 
     @if ($blogPosts->count() > 0)
         <a
-            href="{{ route('blog.index') }}"
+            href="{{ route('blog.index', ['locale' => app()->getLocale()]) }}"
             class="flex gap-2 justify-center items-center self-center px-6 py-2.5 mt-5 text-base font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
             aria-label="{{ __('messages.blog.read_more') }}"
         >

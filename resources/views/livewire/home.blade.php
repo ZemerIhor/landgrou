@@ -52,6 +52,7 @@
                 </h2>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4  overflow-hidden gap-2 lg:h-[378px] sm:h-auto"
                     role="list">
+
                     @if (!empty($allProducts))
                         @foreach ($allProducts as $product)
                             <x-product-card :product="$product" />
@@ -257,18 +258,17 @@
         </div>
 
         <footer class="container mx-auto flex justify-end mt-5">
-            <a href="{{ route('faq') }}"
-               class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors duration-200"
+            <a href="{{ route('faq', ['locale' => app()->getLocale()]) }}"
+               class="flex mt-4 gap-2 justify-center items-center self-center px-6 py-2.5 text-base font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 w-fit mx-auto hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
                aria-label="{{ __('messages.faq.show_more') }}">
-            <span class="self-stretch my-auto text-current">
-                {{ __('messages.faq.show_more') }}
-            </span>
-                <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                          d="M10.4697 1.1474C10.7626 0.854511 11.2374 0.854511 11.5303 1.1474L17.5303 7.1474C17.8232 7.4403 17.8232 7.91517 17.5303 8.20806L11.5303 14.2081C11.2374 14.501 10.7626 14.501 10.4697 14.2081C10.1768 13.9152 10.1768 13.4403 10.4697 13.1474L15.1893 8.42773H1C0.585786 8.42773 0.25 8.09195 0.25 7.67773C0.25 7.26352 0.585786 6.92773 1 6.92773H15.1893L10.4697 2.20806C10.1768 1.91517 10.1768 1.4403 10.4697 1.1474Z"
-                          fill="#228F5D" />
+    <span class="self-stretch my-auto text-green-600">
+        {{ __('messages.faq.show_more') }}
+    </span>
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
             </a>
+
         </footer>
     </section>
 

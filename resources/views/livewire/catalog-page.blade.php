@@ -170,58 +170,87 @@
             @endif
 
             <!-- Grid or List view based on $view -->
-            <div class="{{ $view == 'grid' ? 'catalog-grid ' : 'catalog-list' }} catalog-page-grid">
-                @forelse ($products as $product)
-                    <article wire:key="product-{{ $product->id }}" class="overflow-hidden rounded-3xl bg-neutral-200 card">
-                        <div class="flex relative flex-col w-full min-h-[153px] product-top">
-                            @if ($product->thumbnail)
-                                <div class="flex overflow-hidden h-[163px]">
-                                    <a href="{{ route('product.view', $product->defaultUrl->slug ?? '') }}" class="w-full">
-                                        <img src="{{ $product->thumbnail->getUrl() }}"
-                                             alt="{{ $product->attribute_data['name']->getValue($locale) ?? 'Product' }}"
-                                             class="w-full" />
-                                    </a>
-                                </div>
-                            @endif
-                                <div class="absolute top-0 right-0 flex z-0 pt-2 pr-2" aria-hidden="true">
-                                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M27.8029 23.6143L27.8029 8.19658L8.19616 27.8033L16.8665 19.133C20.8858 15.1137 27.7597 17.9304 27.8029 23.6143Z" fill="white"/>
-                                        <path d="M27.8029 8.19658L17.5244 8.19658L12.3852 8.19658C18.0721 8.21717 20.9059 15.0936 16.8846 19.1149L8.19616 27.8033L27.8029 8.19658Z" fill="white"/>
-                                        <path d="M27.8027 7.19672C28.3548 7.19693 28.8027 7.64463 28.8027 8.19672V28.7534C28.8027 29.3055 28.3548 29.7531 27.8027 29.7534C27.2507 29.7531 26.8038 29.3054 26.8037 28.7534L26.8027 23.6137C26.7603 18.8976 21.1435 16.5251 17.7344 19.685L17.5732 19.8403L8.90332 28.5102C8.51284 28.9007 7.87979 28.9006 7.48926 28.5102C7.12332 28.1441 7.09979 27.565 7.41992 27.1723L7.48926 27.0961L16.1777 18.4077C19.5696 15.0152 17.1791 9.21438 12.3818 9.19672H7.24609C6.69388 9.19672 6.24622 8.7489 6.24609 8.19672C6.24617 7.6445 6.69386 7.19672 7.24609 7.19672H27.8027ZM21.1689 16.2455C23.2741 16.1954 25.3478 17.053 26.8018 18.5776L26.8037 10.6108L21.1689 16.2455ZM17.4424 9.19672C18.9621 10.6475 19.8183 12.7158 19.7695 14.8159L25.3887 9.19672H17.4424Z" fill="white"/>
-                                    </svg>
+                <div class="{{ $view == 'grid' ? 'catalog-grid' : 'catalog-list' }} catalog-page-grid">
+                    @forelse ($products as $product)
+                        @php
+                            $hasValidSlug = false;
+                            $slug = null;
 
+                            // Check for valid slug (considering Lunar's URL system)
+                            if ($product->defaultUrl && !empty($product->defaultUrl->slug)) {
+                                $slug = $product->defaultUrl->slug;
+                                $hasValidSlug = is_string($slug) && trim($slug) !== '';
+                            } elseif (!empty($product->slug) && is_string($product->slug) && trim($product->slug) !== '') {
+                                $slug = $product->slug;
+                                $hasValidSlug = true;
+                            }
 
-                                </div>
-                        </div>
-                        <div class="p-4 w-full flex flex-1 flex-col justify-between product-bottom">
-                            <div class="w-full text-zinc-800">
-                                <h3 class="text-base font-bold leading-5 text-zinc-800">
-                                    <a href="{{ route('product.view', $product->defaultUrl->slug ?? '') }}">
-                                        {{ $product->translateAttribute('name') }}
-                                    </a>
-                                </h3>
-                                <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">
-                                    {{ strip_tags($product->translateAttribute('description')) }}
-                                </p>
-                                @if ($product->brand)
-                                    <p class="text-xs mt-1">{{ __('Бренд') }}: {{ $product->brand->translateAttribute('name') ?? $product->brand->name ?? 'N/A' }}</p>
-                                @endif
-                            </div>
-                            <div class="flex gap-10 justify-between items-end mt-auto w-full text-base font-bold card-footer">
-                                <span class="leading-tight text-zinc-800">
+                            $locale = app()->getLocale();
+                            $routeParams = ['slug' => $slug];
+                            if ($locale !== 'uk') {
+                                $routeParams['locale'] = $locale;
+                            }
+
+                            $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', $locale !== 'uk' ? ['locale' => $locale] : [], false);
+                        @endphp
+
+                        <article wire:key="product-{{ $product->id }}" class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 {{ $view == 'grid' ? 'lg:h-[378px] sm:h-[389px]' : '' }}" role="listitem">
+                            <div class="flex flex-col justify-between group h-full">
+                                <a href="{{ $productUrl }}" wire:navigate class="flex flex-col h-full">
+                                    <div class="flex relative flex-col w-full">
+                                        <div class="flex overflow-hidden flex-col max-w-full w-full">
+                                            @if ($product->thumbnail)
+                                                <img src="{{ $product->thumbnail->getUrl() }}"
+                                                     alt="{{ $product->translateAttribute('name') }}"
+                                                     class="object-cover w-full aspect-[1.77] transition-transform duration-300 group-hover:scale-105"/>
+                                            @else
+                                                <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/d7f2f96fb365d97b578a2cfa0ccb76eaba272ebd?placeholderIfAbsent=true"
+                                                     alt="Изображение-заглушка"
+                                                     class="object-contain w-full aspect-[1.77]"/>
+                                            @endif
+                                        </div>
+                                        <div class="absolute top-0 right-0 flex z-0 pt-2 pr-2" aria-hidden="true">
+                                            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M27.8029 23.6143L27.8029 8.19658L8.19616 27.8033L16.8665 19.133C20.8858 15.1137 27.7597 17.9304 27.8029 23.6143Z" fill="white"/>
+                                                <path d="M27.8029 8.19658L17.5244 8.19658L12.3852 8.19658C18.0721 8.21717 20.9059 15.0936 16.8846 19.1149L8.19616 27.8033L27.8029 8.19658Z" fill="white"/>
+                                                <path d="M27.8027 7.19672C28.3548 7.19693 28.8027 7.64463 28.8027 8.19672V28.7534C28.8027 29.3055 28.3548 29.7531 27.8027 29.7534C27.2507 29.7531 26.8038 29.3054 26.8037 28.7534L26.8027 23.6137C26.7603 18.8976 21.1435 16.5251 17.7344 19.685L17.5732 19.8403L8.90332 28.5102C8.51284 28.9007 7.87979 28.9006 7.48926 28.5102C7.12332 28.1441 7.09979 27.565 7.41992 27.1723L7.48926 27.0961L16.1777 18.4077C19.5696 15.0152 17.1791 9.21438 12.3818 9.19672H7.24609C6.69388 9.19672 6.24622 8.7489 6.24609 8.19672C6.24617 7.6445 6.69386 7.19672 7.24609 7.19672H27.8027ZM21.1689 16.2455C23.2741 16.1954 25.3478 17.053 26.8018 18.5776L26.8037 10.6108L21.1689 16.2455ZM17.4424 9.19672C18.9621 10.6475 19.8183 12.7158 19.7695 14.8159L25.3887 9.19672H17.4424Z" fill="white"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+                                    <div class="p-4 w-full">
+                                        <div class="w-full text-zinc-800">
+                                            <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $product->translateAttribute('name') }}</h2>
+                                            <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ strip_tags($product->translateAttribute('description')) }}</p>
+                                            @if ($product->brand)
+                                                <p class="text-xs mt-1">{{ __('Бренд') }}: {{ $product->brand->translateAttribute('name') ?? $product->brand->name ?? 'N/A' }}</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </a>
+
+                                <div class="flex gap-4 justify-between items-end mt-4 px-4 pb-4 w-full">
+                                <span class="text-base font-bold leading-tight text-zinc-800">
                                     <x-product-price :product="$product" />
                                 </span>
-                                <div class="mt-2">
-                                    <livewire:components.add-to-cart :purchasable="$product->variants->first()" :key="'add-to-cart-' . $product->id" />
+                                    <div>
+                                        <livewire:components.add-to-cart :purchasable="$product->variants->first()" :key="'add-to-cart-' . $product->id" />
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </article>
-                @empty
-                    <p>{{ __('Нет товаров по выбранным параметрам.') }}</p>
-                @endforelse
-            </div>
 
+                                @if (!$hasValidSlug)
+                                    <div class="p-4 text-red-600 text-sm">
+                                        Предупреждение: URL или slug отсутствует для продукта ID: {{ $product->id }} (Локаль: {{ app()->getLocale() }})
+                                        @dump($product->defaultUrl?->toArray())
+                                        @dump($product->slug)
+                                    </div>
+                                @endif
+                            </div>
+                        </article>
+                    @empty
+                        <p>{{ __('Нет товаров по выбранным параметрам.') }}</p>
+                    @endforelse
+                </div>
             <!-- Pagination -->
             <nav class="flex flex-wrap gap-2 justify-center items-center pt-10 w-full max-md:max-w-full" aria-label="Навигация по страницам">
                 {{ $products->links() }}

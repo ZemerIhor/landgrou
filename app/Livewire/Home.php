@@ -69,9 +69,9 @@ class Home extends Component
     public function render(HomeSettings $settings): View
     {
         return view('livewire.home', [
-            'allProducts' => Product::with('thumbnail')->get(),
+            'allProducts' => Product::with(['thumbnail', 'defaultUrl'])->get(),
             'settings' => $settings,
-            'blogPosts' => $this->blogPosts, // Fixed: Use $this->blogPosts instead of $this->getBlogPostsProperty
+            'blogPosts' => $this->blogPosts,
         ]);
     }
 }

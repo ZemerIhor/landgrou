@@ -23,7 +23,7 @@
                                 <p class="mt-2 text-sm">{{ $slide['extra_text'] ?? 'Keep warm' }}</p>
                             </div>
                             <div class="flex justify-center mt-6 gap-4 max-md:flex-col">
-                                <a href="{{ route('catalog.view') }}" class="px-6 py-3 border-2 border-white rounded-2xl text-white hover:bg-white hover:text-black transition">
+                                <a href="{{ route('catalog.view', ['locale' => app()->getLocale()]) }}" class="px-6 py-3 border-2 border-white rounded-2xl text-white hover:bg-white hover:text-black transition">
                                     Каталог →
                                 </a>
                                 <a href="#" class="px-6 py-3 bg-green-600 text-white rounded-2xl hover:bg-green-700 transition">
