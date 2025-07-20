@@ -196,6 +196,7 @@ return [
         'checkout' => 'Оформити замовлення',
         'continue_shopping' => 'Продовжити покупки',
         'quantity' => 'Кількість',
+        'remove' => 'Видалити',
         'remove_item' => 'Видалити товар',
         'add_to_cart' => 'В кошик',
         'add_to_cart_aria' => 'Додати товар до кошика',

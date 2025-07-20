@@ -197,6 +197,7 @@ return [
         'continue_shopping' => 'Continue Shopping',
         'quantity' => 'Quantity',
         'remove_item' => 'Remove Item',
+        'remove' => 'Remove',
         'add_to_cart' => 'Add to Cart',
         'add_to_cart_aria' => 'Add product to cart',
         'added_to_cart' => 'Product added to cart',
