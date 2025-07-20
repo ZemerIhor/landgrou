@@ -19,18 +19,7 @@
         </div>
 
         <!-- Active Filter Tags -->
-        <div class="flex flex-wrap flex-1 shrink gap-0.5 items-center self-stretch my-auto text-xs font-bold leading-tight text-white basis-8 min-w-60 max-md:max-w-full" role="group" aria-label="Активные фильтры">
-            @if (!empty($categories))
-                @foreach ($categories as $categoryId)
-                    @if ($category = $availableCategories->find($categoryId))
-                        <button wire:click="removeCategory({{ $categoryId }})" class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Удалить фильтр: {{ $category->translateAttribute('name') ?? $category->name ?? '' }}">
-                            <span class="self-stretch my-auto text-white">{{ $category->translateAttribute('name') ?? $category->name ?? '' }}</span>
-                            <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ba94ac2e61738f897029abe123360249f0f65ef9?placeholderIfAbsent=true" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" alt="Удалить фильтр" />
-                        </button>
-                    @endif
-                @endforeach
-            @endif
-        </div>
+
 
         <!-- View Toggle -->
         <div class="flex gap-1 items-center self-stretch p-1 my-auto rounded-2xl bg-neutral-200 min-h-10" role="group" aria-label="Вид отображения">
@@ -68,12 +57,7 @@
                 <div id="category-options" class="flex items-start pr-0.5 pb-2 w-full text-xs font-semibold whitespace-nowrap rounded-2xl bg-neutral-200">
                     <fieldset class="flex-1 shrink w-full basis-0 min-w-60">
                         <legend class="sr-only">{{ __('Категория') }}</legend>
-                        @foreach ($availableCategories as $category)
-                            <div class="flex gap-2 items-center px-4 py-2 w-full min-h-10">
-                                <input type="checkbox" id="category-{{ $category->id }}" wire:model.debounce.500ms="categories" value="{{ $category->id }}" class="w-6 h-6 text-green-600 bg-white border-neutral-400 rounded focus:ring-green-500 focus:ring-2" />
-                                <label for="category-{{ $category->id }}" class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800 cursor-pointer">{{ $category->translateAttribute('name') ?? $category->name ?? '' }}</label>
-                            </div>
-                        @endforeach
+
                     </fieldset>
                 </div>
             </section>

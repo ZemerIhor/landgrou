@@ -13,13 +13,8 @@ class BlogPage extends Component
     public $selectedCategory = 'blog'; // Default to 'blog' for tab navigation
     public $view = 'grid'; // Default view mode (grid or list)
     public $categories = []; // Selected category IDs for filtering
-    public $availableCategories; // Available categories from the database
 
-    public function mount()
-    {
-        // Load available categories (assuming you have a Category model)
-        $this->availableCategories = \App\Models\Category::all(); // Adjust based on your Category model
-    }
+
 
     public function render()
     {
@@ -37,7 +32,6 @@ class BlogPage extends Component
 
         return view('livewire.blog-page', [
             'posts' => $posts,
-            'availableCategories' => $this->availableCategories,
         ]);
     }
 
