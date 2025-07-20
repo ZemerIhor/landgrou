@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Livewire;
+
 use Lunar\Models\Url;
 use App\Traits\FetchesUrls;
 use Illuminate\Support\Collection;
@@ -17,19 +18,19 @@ class ProductPage extends Component
 
     public array $selectedOptionValues = [];
     public int $quantity = 1;
-
     public $slug;
+
     public function mount($slug): void
     {
-        // Find the URL record for the given slug
+        // Находим URL по переданному слагу
         $url = Url::where('slug', $slug)
             ->where('element_type', (new Product)->getMorphClass())
             ->first();
 
         if (!$url) {
-            // Check if the slug exists in any language
-            $url = Url::whereIn('slug', [$slug, $slug . 'vfv']) // Handle both English and Ukrainian slugs
-            ->where('element_type', (new Product)->getMorphClass())
+            // Проверяем альтернативный слаг (например, украинский с 'vfv')
+            $url = Url::whereIn('slug', [$slug, $slug . 'vfv'])
+                ->where('element_type', (new Product)->getMorphClass())
                 ->first();
 
             if (!$url) {
@@ -37,7 +38,7 @@ class ProductPage extends Component
             }
         }
 
-        // Fetch product with relations
+        // Загружаем продукт с отношениями
         $this->url = $this->fetchUrl(
             $url->slug,
             (new Product)->getMorphClass(),
@@ -55,11 +56,12 @@ class ProductPage extends Component
 
         $this->slug = $slug;
 
-        // Initialize selected option values
+        // Инициализируем выбранные опции
         $this->selectedOptionValues = $this->productOptions->mapWithKeys(function ($data) {
             return [$data['option']->id => $data['values']->first()->id];
         })->toArray();
     }
+
     public function getVariantProperty(): ProductVariant
     {
         return $this->product->variants->first(function ($variant) {
@@ -108,6 +110,7 @@ class ProductPage extends Component
 
         return $this->images->first();
     }
+
     public function getAttributesProperty(): array
     {
         $locale = app()->getLocale();

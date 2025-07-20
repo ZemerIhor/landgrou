@@ -177,28 +177,6 @@
                 </button>
 
                 @php
-                    $currentUrl = request()->path();
-                    $segments = explode('/', $currentUrl);
-
-                    // Удалим текущую локаль, если она есть
-                    if (in_array($segments[0], ['en', 'uk'])) {
-                        array_shift($segments);
-                    }
-
-                    $pathWithoutLocale = implode('/', $segments);
-
-                    $enUrl = url('/en/' . $pathWithoutLocale);
-                    $ukUrl = url('/uk/' . $pathWithoutLocale);
-
-                    \Log::info('Header Language Switch', [
-                        'current_locale' => app()->getLocale(),
-                        'current_url' => request()->fullUrl(),
-                        'en_url' => $enUrl,
-                        'uk_url' => $ukUrl,
-                    ]);
-                @endphp
-
-                @php
                     $headerSettings = app(\App\Settings\HeaderSettings::class);
                     $locale = app()->getLocale();
                 @endphp
@@ -252,7 +230,7 @@
                         >
                             @if(app()->getLocale() !== 'en')
                                 <a
-                                    href="{{ $enUrl }}"
+                                    href="{{ route('lang.switch', ['locale' => 'en', 'redirect_to' => request()->fullUrl()]) }}"
                                     class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
                                     wire:navigate
                                 >
@@ -261,7 +239,7 @@
                             @endif
                             @if(app()->getLocale() !== 'uk')
                                 <a
-                                    href="{{ $ukUrl }}"
+                                    href="{{ route('lang.switch', ['locale' => 'uk', 'redirect_to' => request()->fullUrl()]) }}"
                                     class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
                                     wire:navigate
                                 >
@@ -350,7 +328,7 @@
                             >
                                 @if(app()->getLocale() !== 'en')
                                     <a
-                                        href="{{ $enUrl }}"
+                                        href="{{ route('lang.switch', ['locale' => 'en', 'redirect_to' => request()->fullUrl()]) }}"
                                         class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
                                         wire:navigate
                                     >
@@ -359,7 +337,7 @@
                                 @endif
                                 @if(app()->getLocale() !== 'uk')
                                     <a
-                                        href="{{ $ukUrl }}"
+                                        href="{{ route('lang.switch', ['locale' => 'uk', 'redirect_to' => request()->fullUrl()]) }}"
                                         class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
                                         wire:navigate
                                     >

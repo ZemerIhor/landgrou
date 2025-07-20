@@ -6,23 +6,15 @@ use Lunar\Models\Url;
 
 trait FetchesUrls
 {
-    /**
-     * The URL model from the slug.
-     */
-    public ?Url $url = null;
-
-    /**
-     * Fetch a url model.
-     *
-     * @param  string  $slug
-     * @param  string  $type
-     * @param  array  $eagerLoad
-     */
-    public function fetchUrl($slug, $type, $eagerLoad = []): ?Url
+    public function fetchUrl($slug, $elementType, $with = []): ?Url
     {
-        return Url::whereElementType($type)
-            ->whereDefault(true)
-            ->whereSlug($slug)
-            ->with($eagerLoad)->first();
+        $query = Url::where('element_type', $elementType)
+            ->whereIn('slug', [$slug, $slug . 'vfv', str_replace('vfv', '', $slug)]);
+
+        if (!empty($with)) {
+            $query->with($with);
+        }
+
+        return $query->first();
     }
 }
