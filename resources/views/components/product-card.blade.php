@@ -1,26 +1,40 @@
 @props(['product'])
-
 @php
+    $locale = app()->getLocale();
     $hasValidSlug = false;
     $slug = null;
 
-    // Check for valid slug (considering Lunar's URL system)
-    if ($product->defaultUrl && !empty($product->defaultUrl->slug)) {
+    // Найти slug по текущей локали
+    if ($product->urls && $product->urls->count()) {
+        $localizedUrl = $product->urls->firstWhere('language_code', $locale);
+        if ($localizedUrl && !empty($localizedUrl->slug)) {
+            $slug = $localizedUrl->slug;
+            $hasValidSlug = true;
+        }
+    }
+
+    // fallback: defaultUrl
+    if (!$hasValidSlug && $product->defaultUrl && !empty($product->defaultUrl->slug)) {
         $slug = $product->defaultUrl->slug;
-        $hasValidSlug = is_string($slug) && trim($slug) !== '';
-    } elseif (!empty($product->slug) && is_string($product->slug) && trim($product->slug) !== '') {
+        $hasValidSlug = true;
+    }
+
+    // fallback: slug в продукте
+    if (!$hasValidSlug && !empty($product->slug)) {
         $slug = $product->slug;
         $hasValidSlug = true;
     }
 
-    $locale = app()->getLocale();
     $routeParams = ['slug' => $slug];
     if ($locale !== 'uk') {
         $routeParams['locale'] = $locale;
     }
 
-    $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', $locale !== 'uk' ? ['locale' => $locale] : [], false);
+    $productUrl = $hasValidSlug
+        ? route('product.view', $routeParams, false)
+        : route('home', $locale !== 'uk' ? ['locale' => $locale] : [], false);
 @endphp
+
 
 <article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 lg:h-[378px] sm:h-[389px]" role="listitem">
     <div class="flex flex-col justify-between group h-full">
