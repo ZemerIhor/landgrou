@@ -35,7 +35,7 @@
             @if ($footerMenu)
                 <nav class="menu" aria-label="{{ __('messages.footer.main_navigation') }}">
                     <ul>
-                @foreach ($headerMenu->menuItems as $item)
+                @foreach ($footerMenu->menuItems as $item)
 
                     <li>
                         <a href="{{ $item->url }}">{{ $item->title }}</a>
