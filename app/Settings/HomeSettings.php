@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Settings;
 
 use Spatie\LaravelSettings\Settings;
@@ -8,6 +9,10 @@ class HomeSettings extends Settings
 {
     use HasTranslations;
 
+    public ?string $banner_image = null;
+    public $banner_title;
+    public $banner_description;
+
     public $hero_slides;
     public $advantages_cards;
     public ?string $advantages_image_1 = null;
@@ -16,8 +21,8 @@ class HomeSettings extends Settings
     public $comparison_title;
     public ?string $main_comparison_image = null;
     public $main_comparison_alt;
-    public $faq_main_image; // Новое поле
-    public $faq_main_image_alt; // Новое поле (строка)
+    public ?string $faq_main_image = null;
+    public $faq_main_image_alt;
     public $comparison_items;
     public $central_text_value;
     public $central_text_unit;
@@ -38,8 +43,9 @@ class HomeSettings extends Settings
     public ?string $about_location_image = null;
     public $about_location_caption;
 
-
     protected array $translatable = [
+        'banner_title',
+        'banner_description',
         'hero_slides',
         'advantages_cards',
         'comparison_title',
@@ -48,6 +54,7 @@ class HomeSettings extends Settings
         'central_text_value',
         'central_text_unit',
         'faq_items',
+        'faq_main_image_alt',
         'feedback_form_title',
         'feedback_form_description',
         'feedback_form_image_alt',
