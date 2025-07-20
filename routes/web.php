@@ -15,7 +15,6 @@ use App\Livewire\SearchPage;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 // Явное переключение языка с редиректом
 Route::get('/lang/{locale}', function ($locale) {
@@ -44,10 +43,7 @@ Route::get('/switch/{locale}', function ($locale) {
 })->name('lang.quick_switch');
 
 // Группа маршрутов с префиксом языка (опционально)
-Route::group([
-    'prefix' => LaravelLocalization::setLocale(),
-    'middleware' => ['localize', 'localizationRedirect', 'localeSessionRedirect']
-], function () {
+Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], function () {
     Route::get('/', Home::class)->name('home');
     Route::get('/catalog', CatalogPage::class)->name('catalog.view');
     Route::get('/reviews', \App\Livewire\ReviewsPage::class)->name('reviews');
