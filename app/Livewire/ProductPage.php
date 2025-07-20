@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Livewire;
-use Lunar\Models\Url;
+
+use LunarАЗ
+
+System: Lunar\Models\Url;
 use App\Traits\FetchesUrls;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -17,10 +20,13 @@ class ProductPage extends Component
 
     public array $selectedOptionValues = [];
     public int $quantity = 1;
-
     public $slug;
+    public $url;
+
     public function mount($slug): void
     {
+        $this->slug = $slug;
+
         $this->url = $this->fetchUrl(
             $slug,
             (new Product)->getMorphClass(),
@@ -33,6 +39,11 @@ class ProductPage extends Component
         );
 
         if (!$this->url) {
+            \Log::error('Product URL not found in mount', [
+                'slug' => $this->slug,
+                'locale' => app()->getLocale(),
+                'urls' => Url::where('element_type', \Lunar\Models\Product::class)->get()->toArray(),
+            ]);
             abort(404);
         }
 
@@ -89,34 +100,30 @@ class ProductPage extends Component
 
         return $this->images->first();
     }
+
     public function getAttributesProperty(): array
     {
         $locale = app()->getLocale();
         $attributes = [];
 
-        // Список атрибутов, которые нужно пропустить
         $excludedAttributes = ['name', 'description'];
 
-        // Перебираем все ключи из attribute_data, исключая name и description
         foreach ($this->product->attribute_data->keys()->filter(fn($handle) => !in_array($handle, $excludedAttributes)) as $handle) {
-            // Получаем значение атрибута для текущей локали
             $value = $this->product->translateAttribute($handle, $locale) ?: 'N/A';
-
-            // Динамически формируем читаемое имя атрибута
             $name = ucwords(str_replace(['_', '-'], ' ', $handle));
 
-            // Если есть модель Attribute с переводами имен, используем её
             if ($attributeModel = \Lunar\Models\Attribute::where('handle', $handle)->first()) {
                 $name = $attributeModel->name[$locale] ?? $attributeModel->name['en'] ?? $name;
             }
 
             $attributes[$handle] = [
                 'name' => $name,
-                'value' => strip_tags($value), // Убираем HTML-теги
+                'value' => strip_tags($value),
             ];
         }
         return $attributes;
     }
+
     public function getDetailedAttributesProperty(): array
     {
         $locale = app()->getLocale();
@@ -174,11 +181,18 @@ class ProductPage extends Component
 
     public function render(): View
     {
-        $url = Url::where('slug', $this->slug)
-            ->where('element_type', \Lunar\Models\Product::class)
-            ->firstOrFail();
+        // Используем уже загруженный $this->url
+        if (!$this->url) {
+            \Log::error('Product URL not found in render', [
+                'slug' => $this->slug,
+                'locale' => app()->getLocale(),
+                'urls' => Url::where('element_type', \Lunar\Models\Product::class)->get()->toArray(),
+            ]);
+            abort(404);
+        }
 
-        $product = $url->element;
-        return view('livewire.product-page');
+        return view('livewire.product-page', [
+            'product' => $this->url->element,
+        ]);
     }
 }
