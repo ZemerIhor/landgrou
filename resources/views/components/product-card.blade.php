@@ -1,11 +1,7 @@
 @props(['product'])
 
 @php
-    $hasValidSlug = false;
-    $slug = null;
     $locale = app()->getLocale();
-
-    // Используем геттер slug из модели App\Models\Product
     $slug = $product->slug;
     $hasValidSlug = is_string($slug) && trim($slug) !== '';
 
@@ -20,10 +16,34 @@
     // Извлекаем name и description из attribute_data
     $name = $product->attribute_data['name'] ?? null;
     $description = $product->attribute_data['description'] ?? null;
-    $nameValue = ($name instanceof \Lunar\FieldTypes\TranslatedText) ? ($name->value[$locale] ?? $name->value[config('app.fallback_locale')] ?? 'Product') : 'Product';
-    $descriptionValue = ($description instanceof \Lunar\FieldTypes\TranslatedText) ? ($description->value[$locale] ?? $description->value[config('app.fallback_locale')] ?? '') : '';
-dd($product)
-    @endphp
+
+    // Обработка name
+    $nameValue = 'Product'; // Значение по умолчанию
+    if ($name instanceof \Lunar\FieldTypes\TranslatedText && isset($name->value[$locale])) {
+        $nameValue = $name->value[$locale];
+    } elseif ($name instanceof \Lunar\FieldTypes\TranslatedText && isset($name->value[config('app.fallback_locale')])) {
+        $nameValue = $name->value[config('app.fallback_locale')];
+    }
+
+    // Обработка description
+    $descriptionValue = '';
+    if ($description instanceof \Lunar\FieldTypes\TranslatedText && isset($description->value[$locale])) {
+        $descriptionValue = $description->value[$locale];
+    } elseif ($description instanceof \Lunar\FieldTypes\TranslatedText && isset($description->value[config('app.fallback_locale')])) {
+        $descriptionValue = $name->value[config('app.fallback_locale')];
+    }
+
+    // Логирование для отладки
+    \Log::info('ProductCard Debug', [
+        'product_id' => $product->id,
+        'locale' => $locale,
+        'fallback_locale' => config('app.fallback_locale'),
+        'name' => $name ? ($name instanceof \Lunar\FieldTypes\TranslatedText ? $name->value : $name) : null,
+        'nameValue' => $nameValue,
+        'descriptionValue' => $descriptionValue,
+        'attribute_data' => $product->attribute_data,
+    ]);
+@endphp
 
 <article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200" role="listitem">
     <div class="flex flex-col justify-between group h-full">
@@ -57,6 +77,5 @@ dd($product)
 
             <livewire:components.add-to-cart :purchasable="$product->variants->first()" :key="'add-to-cart-' . $product->id" />
         </div>
-
     </div>
 </article>
