@@ -19,7 +19,7 @@ class ProductPage extends Component
     public array $selectedOptionValues = [];
     public int $quantity = 1;
     public $slug;
-    public $url;
+    public ?Url $url;
 
     public function mount($slug): void
     {
