@@ -235,7 +235,7 @@
                     x-transition
                     x-show="mobileMenu"
                     id="mobile-menu"
-                    class="sm:hidden bg-white shadow-lg absolute top-14 left-0 w-full z-50"
+                    class="md:hidden bg-white shadow-lg absolute top-14 left-0 w-full z-50"
                     x-on:click.away="mobileMenu = false"
                 >
                     <nav class="flex flex-col items-center gap-4 px-2 py-6 text-base font-semibold text-zinc-800" role="navigation" aria-label="{{ __('messages.nav.mobile_navigation') }}">
