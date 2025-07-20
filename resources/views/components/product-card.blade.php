@@ -6,8 +6,8 @@
 
     // Получаем слаг для текущей локали
     $language = \Lunar\Models\Language::where('code', $locale)->first();
-    $languageId = $language ? $language->id : 1;
-    $url = $product->urls()->where('language_id', $languageId)->first();
+$languageId = $language ? $language->id : (config('app.fallback_locale') === 'en' ? 2 : 1);
+$url = $product->urls()->where('language_id', $languageId)->first();
     $slug = $url ? $url->slug : $product->slug;
 
     $hasValidSlug = is_string($slug) && trim($slug) !== '';

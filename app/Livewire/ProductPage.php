@@ -28,13 +28,19 @@ class ProductPage extends Component
             ->first();
 
         if (!$url) {
-            // Проверяем альтернативный слаг (например, украинский с 'vfv')
-            $url = LunarUrl::whereIn('slug', [$slug, $slug . 'vfv', str_replace('vfv', '', $slug)])
+            // Проверяем альтернативные слаги
+            $slugsToCheck = [$slug];
+            if (str_ends_with($slug, 'vfv')) {
+                $slugsToCheck[] = str_replace('vfv', '', $slug);
+            } else {
+                $slugsToCheck[] = $slug . 'vfv';
+            }
+            $url = LunarUrl::whereIn('slug', $slugsToCheck)
                 ->where('element_type', (new Product)->getMorphClass())
                 ->first();
 
             if (!$url) {
-                \Log::error('Product URL not found', ['slug' => $slug]);
+                \Log::error('Product URL not found', ['slug' => $slug, 'slugs_checked' => $slugsToCheck]);
                 abort(404);
             }
         }
@@ -67,6 +73,7 @@ class ProductPage extends Component
             'slug' => $slug,
             'product_id' => $this->product->id,
             'locale' => app()->getLocale(),
+            'urls' => $this->product->urls->toArray(),
         ]);
     }
 

@@ -45,7 +45,13 @@ class LanguageController extends Controller
 
             if (!$url) {
                 // Проверяем альтернативные слаги
-                $url = LunarUrl::whereIn('slug', [$currentSlug, $currentSlug . 'vfv', str_replace('vfv', '', $currentSlug)])
+                $slugsToCheck = [$currentSlug];
+                if (str_ends_with($currentSlug, 'vfv')) {
+                    $slugsToCheck[] = str_replace('vfv', '', $currentSlug);
+                } else {
+                    $slugsToCheck[] = $currentSlug . 'vfv';
+                }
+                $url = LunarUrl::whereIn('slug', $slugsToCheck)
                     ->where('element_type', Product::class)
                     ->first();
             }
@@ -53,20 +59,27 @@ class LanguageController extends Controller
             if ($url) {
                 $product = $url->element;
                 // Получаем ID языка для новой локали
-                $languageId = Language::where('code', $locale)->first()->id ?? 1;
-                // Получаем новый URL для локали
-                $newUrl = $product->urls()
-                    ->where('language_id', $languageId)
-                    ->first();
-
-                if ($newUrl) {
-                    $path = "/products/{$newUrl->slug}";
+                $language = Language::where('code', $locale)->first();
+                if (!$language) {
+                    \Log::error('Language not found', ['locale' => $locale]);
+                    $path = '/';
                 } else {
-                    // Фоллбек: используем дефолтный слаг
-                    $path = "/products/{$product->slug}";
+                    $languageId = $language->id;
+                    // Получаем новый URL для локали
+                    $newUrl = $product->urls()
+                        ->where('language_id', $languageId)
+                        ->first();
+
+                    if ($newUrl) {
+                        $path = "/products/{$newUrl->slug}";
+                    } else {
+                        // Фоллбек: используем дефолтный слаг
+                        $path = "/products/{$product->slug}";
+                    }
                 }
             } else {
                 // Если продукт не найден, редирект на главную
+                \Log::warning('Product not found for slug', ['slug' => $currentSlug, 'slugs_checked' => $slugsToCheck]);
                 $path = '/';
             }
         } else {
@@ -78,7 +91,6 @@ class LanguageController extends Controller
                 );
                 $path = $newPath;
             } catch (\Exception $e) {
-                // Если маршрут не существует, редирект на главную с локалью
                 \Log::warning('Route not found for path', ['path' => $newPath, 'error' => $e->getMessage()]);
                 $path = "/{$locale}";
             }
@@ -91,7 +103,8 @@ class LanguageController extends Controller
             'current_url' => FacadeURL::full(),
             'request_path' => request()->path(),
             'current_slug' => $currentSlug ?? null,
-            'new_slug' => $newUrl->slug ?? null,
+            'new_slug' => isset($newUrl) ? $newUrl->slug : null,
+            'slugs_checked' => isset($slugsToCheck) ? $slugsToCheck : null,
         ]);
 
         // Добавляем query-параметры, если они есть
