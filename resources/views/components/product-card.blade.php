@@ -3,23 +3,20 @@
 @php
     $hasValidSlug = false;
     $slug = null;
-dd($product);
-    // Check for valid slug (considering Lunar's URL system)
-    if ($product->defaultUrl && !empty($product->defaultUrl->slug)) {
-        $slug = $product->defaultUrl->slug;
-        $hasValidSlug = is_string($slug) && trim($slug) !== '';
-    } elseif (!empty($product->slug) && is_string($product->slug) && trim($product->slug) !== '') {
-        $slug = $product->slug;
-        $hasValidSlug = true;
-    }
-
     $locale = app()->getLocale();
+
+    // Используем геттер slug из модели Product
+    $slug = $product->slug;
+    $hasValidSlug = is_string($slug) && trim($slug) !== '';
+
+    // Формируем параметры маршрута
     $routeParams = ['slug' => $slug];
-    if ($locale !== 'uk') {
+    // Добавляем префикс локали, если текущая локаль не совпадает с fallback_locale
+    if ($locale !== config('app.fallback_locale')) {
         $routeParams['locale'] = $locale;
     }
 
-    $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', $locale !== 'uk' ? ['locale' => $locale] : [], false);
+    $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', $locale !== config('app.fallback_locale') ? ['locale' => $locale] : [], false);
 @endphp
 
 <article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 lg:h-[378px] sm:h-[389px]" role="listitem">
@@ -29,7 +26,7 @@ dd($product);
                 <div class="flex overflow-hidden flex-col max-w-full w-full">
                     @if ($product->thumbnail)
                         <img src="{{ $product->thumbnail->getUrl() }}"
-                             alt="{{ $product->translateAttribute('name') }}"
+                             alt="{{ $product->attribute_data['name'][$locale] ?? $product->attribute_data['name'][config('app.fallback_locale')] ?? 'Product' }}"
                              class="object-cover w-full aspect-[1.77] transition-transform duration-300 group-hover:scale-105"/>
                     @else
                         <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/d7f2f96fb365d97b578a2cfa0ccb76eaba272ebd?placeholderIfAbsent=true"
@@ -41,8 +38,12 @@ dd($product);
 
             <div class="p-4 w-full">
                 <div class="w-full text-zinc-800">
-                    <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $product->translateAttribute('name') }}</h2>
-                    <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ $product->description }}</p>
+                    <h2 class="text-base font-bold leading-5 text-zinc-800">
+                        {{ $product->attribute_data['name'][$locale] ?? $product->attribute_data['name'][config('app.fallback_locale')] ?? 'Product' }}
+                    </h2>
+                    <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">
+                        {{ $product->attribute_data['description'][$locale] ?? $product->attribute_data['description'][config('app.fallback_locale')] ?? '' }}
+                    </p>
                 </div>
             </div>
         </a>
@@ -52,14 +53,15 @@ dd($product);
                 <x-product-price :product="$product" />
             </span>
 
-            <livewire:components.add-to-cart :purchasable="$product->variants->first()" />
+            <livewire:components.add-to-cart :purchasable="$product->variants->first()" :key="'add-to-cart-' . $product->id" />
         </div>
 
         @if (!$hasValidSlug)
             <div class="p-4 text-red-600 text-sm">
-                Предупреждение: URL или slug отсутствует для продукта ID: {{ $product->id }} (Локаль: {{ app()->getLocale() }})
+                Предупреждение: URL или slug отсутствует для продукта ID: {{ $product->id }} (Локаль: {{ $locale }})
                 @dump($product->defaultUrl?->toArray())
                 @dump($product->slug)
+                @dump($product->attribute_data)
             </div>
         @endif
     </div>
