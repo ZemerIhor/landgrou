@@ -16,6 +16,8 @@ use App\Livewire\Components\Breadcrumbs;
 use App\Livewire\Elements\PromoBoxElement;
 use App\Modifiers\ShippingModifier;
 use App\Pipelines\Order\Creation\CustomFillOrderFromCart;
+use Datlechin\FilamentMenuBuilder\FilamentMenuBuilderPlugin;
+use Datlechin\FilamentMenuBuilder\MenuPanel\StaticMenuPanel;
 use Filament\SpatieLaravelTranslatablePlugin;
 use Geosem42\Filamentor\FilamentorPlugin;
 use Illuminate\Support\Facades\Blade;
@@ -50,8 +52,9 @@ class AppServiceProvider extends ServiceProvider
                 ])
                 ->plugins([
                     new ShippingPlugin,
+                        FilamentMenuBuilderPlugin::make()
+                            ->addLocation('header', 'Header'),
                     FilamentorPlugin::make(),
-                    \Biostate\FilamentMenuBuilder\FilamentMenuBuilderPlugin::make(),
                     FilamentTranslateFieldPlugin::make()
                         ->defaultLocales(['en', 'uk'])
                 ])

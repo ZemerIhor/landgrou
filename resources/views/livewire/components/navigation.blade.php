@@ -80,7 +80,7 @@
 
             <!-- Desktop Menu -->
             <div class="desktop-menu hidden md:flex">
-                <x-filament-menu-builder::menu :slug="app()->getLocale() === 'en' ? 'en-header-menu' : 'uk-header-menu'" :locale="app()->getLocale()" />
+                <x-filament-menu-builder::menu slug="header-menu" class="mobile-menu-items" />
             </div>
 
             <div class="flex gap-2 sm:gap-3 items-center relative" x-data="{ mobileMenu: false, languageMenu: false }">
@@ -200,11 +200,11 @@
                     x-on:click.away="mobileMenu = false"
                 >
                     <nav class="flex flex-col items-center gap-4 px-2 py-6 text-base font-semibold text-zinc-800" role="navigation" aria-label="{{ __('messages.nav.mobile_navigation') }}">
-                        @if(app()->getLocale() === 'en')
-                            <x-filament-menu-builder::menu slug="en-header-menu" class="mobile-menu-items" />
-                        @else
-                            <x-filament-menu-builder::menu slug="uk-header-menu" class="mobile-menu-items" />
-                        @endif
+{{--                        @if(app()->getLocale() === 'en')--}}
+{{--                            <x-filament-menu-builder::menu slug="en-header-menu" class="mobile-menu-items" />--}}
+{{--                        @else--}}
+{{--                            <x-filament-menu-builder::menu slug="uk-header-menu" class="mobile-menu-items" />--}}
+{{--                        @endif--}}
                         <button
                             wire:click="$dispatch('openContactForm')"
                             class="px-4 py-2 text-sm font-bold text-green-600 rounded-2xl border-2 border-green-600 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 w-full max-w-xs"
