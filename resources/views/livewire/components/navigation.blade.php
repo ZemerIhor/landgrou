@@ -80,7 +80,7 @@
 
             <!-- Desktop Menu -->
             <div class="desktop-menu hidden md:flex">
-                <x-filament-menu-builder::menu slug="header-menu" class="mobile-menu-items" />
+{{--                <x-filament-menu-builder::menu slug="header-menu" class="mobile-menu-items" />--}}
             </div>
 
             <div class="flex gap-2 sm:gap-3 items-center relative" x-data="{ mobileMenu: false, languageMenu: false }">
