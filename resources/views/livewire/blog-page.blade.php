@@ -1,5 +1,5 @@
     <!-- Breadcrumbs Navigation -->
-    <main class="flex flex-col gap-2 items-center px-12 pt-14 pb-24 bg-zinc-100">
+    <div class="flex flex-col gap-2 items-center pt-14 pb-24 bg-zinc-100">
         <!-- Logo Header Section -->
 
         <!-- Content Container -->
@@ -254,5 +254,5 @@
                 outline-offset: 2px;
             }
         </style>
-    </main>
+    </div>
 
