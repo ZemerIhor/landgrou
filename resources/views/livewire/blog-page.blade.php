@@ -41,14 +41,6 @@
                 </button>
                 <div class="self-stretch {{ $selectedCategory === 'all' ? 'bg-green-600 rounded h-[3px]' : 'h-px bg-neutral-400' }}"></div>
             </div>
-            @foreach ($availableCategories as $category)
-                <div class="flex flex-col gap-2 items-center max-sm:shrink-0" role="presentation">
-                    <button wire:click="setCategory({{ $category->id }})" class="flex gap-2.5 items-center self-stretch px-4 py-0 tab-button" role="tab" aria-selected="{{ $selectedCategory == $category->id ? 'true' : 'false' }}" tabindex="{{ $selectedCategory == $category->id ? '0' : '-1' }}">
-                        <span class="text-sm font-bold leading-4 text-center {{ $selectedCategory == $category->id ? 'text-green-600' : 'text-zinc-800' }}">{{ $category->translateAttribute('name') ?? $category->name ?? 'Label' }}</span>
-                    </button>
-                    <div class="self-stretch {{ $selectedCategory == $category->id ? 'bg-green-600 rounded h-[3px]' : 'h-px bg-neutral-400' }}"></div>
-                </div>
-            @endforeach
         </nav>
 
         <!-- Page Title -->
