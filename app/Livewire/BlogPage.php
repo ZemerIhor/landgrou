@@ -11,23 +11,51 @@ class BlogPage extends Component
     use WithPagination;
 
     public $selectedCategory = 'blog'; // Default to 'blog' for tab navigation
+    public $view = 'grid'; // Default view mode (grid or list)
+    public $categories = []; // Selected category IDs for filtering
+    public $availableCategories; // Available categories from the database
+
+    public function mount()
+    {
+        // Load available categories (assuming you have a Category model)
+        $this->availableCategories = \App\Models\Category::all(); // Adjust based on your Category model
+    }
 
     public function render()
     {
-        $posts = BlogPost::query()
+        $query = BlogPost::query()
             ->where('published', true)
-            ->whereNotNull('published_at')
-            ->orderBy('published_at', 'desc')
+            ->whereNotNull('published_at');
+
+        // Apply category filter if categories are selected
+        if (!empty($this->categories)) {
+            $query->whereIn('category_id', $this->categories);
+        }
+
+        $posts = $query->orderBy('published_at', 'desc')
             ->paginate(12); // 12 posts to fill three rows of 4
 
         return view('livewire.blog-page', [
             'posts' => $posts,
+            'availableCategories' => $this->availableCategories,
         ]);
     }
 
     public function setCategory($category)
     {
         $this->selectedCategory = $category;
+        $this->categories = [$category]; // Update categories array for filtering
         $this->resetPage(); // Reset pagination when category changes
+    }
+
+    public function removeCategory($categoryId)
+    {
+        $this->categories = array_diff($this->categories, [$categoryId]);
+        $this->resetPage(); // Reset pagination
+    }
+
+    public function setView($view)
+    {
+        $this->view = $view; // Set view mode (grid or list)
     }
 }

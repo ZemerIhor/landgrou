@@ -10,7 +10,7 @@
     </header>
 
     <!-- Filter Controls and Results Count -->
-    <section class="flex flex-wrap gap-2 items-center w-full min-h-10 max-md:max-w-full" aria-label="Фильтры и сортировка">
+    <section class="flex flex-wrap gap-2 items-center w-full min-h-10 max-md:max-w-full" aria-label="Фильтры">
         <!-- Results Count -->
         <div class="flex gap-1 items-center self-stretch my-auto text-xs font-semibold text-black whitespace-nowrap">
             <span class="self-stretch my-auto">{{ __('Найдено') }}</span>
@@ -30,17 +30,6 @@
                     @endif
                 @endforeach
             @endif
-
-        </div>
-
-        <!-- Sort Dropdown -->
-        <div class="relative">
-            <select wire:model.live="sort" class="flex gap-4 items-center self-stretch px-4 my-auto text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 w-[180px] hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-label="Сортировка">
-                <option value="title_asc">{{ __('Название А-Я') }}</option>
-                <option value="title_desc">{{ __('Название Я-А') }}</option>
-                <option value="date_asc">{{ __('Дата: старая к новой') }}</option>
-                <option value="date_desc">{{ __('Дата: новая к старой') }}</option>
-            </select>
         </div>
 
         <!-- View Toggle -->
@@ -74,7 +63,7 @@
             <section class="w-full rounded-2xl text-zinc-800">
                 <button class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2" aria-expanded="true" aria-controls="category-options">
                     <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('Категория') }}</span>
-                    <div class="flex shrink-0 self-stretch my-auto w-4 h-4 rotate-[-3.1415925661670165rad]" aria-hidden="true"></div>
+                    <div class="flex shrink-0 self-stretch my-auto w-4 h-4" aria-hidden="true"></div>
                 </button>
                 <div id="category-options" class="flex items-start pr-0.5 pb-2 w-full text-xs font-semibold whitespace-nowrap rounded-2xl bg-neutral-200">
                     <fieldset class="flex-1 shrink w-full basis-0 min-w-60">
@@ -88,26 +77,6 @@
                     </fieldset>
                 </div>
             </section>
-
-            <!-- Separator -->
-            <div class="px-4 w-full">
-                <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0" />
-            </div>
-
-            <!-- Date Filter -->
-
-
-            <!-- Separator -->
-            <div class="px-4 w-full">
-                <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0" />
-            </div>
-
-            <!-- Apply Button -->
-            <div class="flex gap-2 items-start p-4 w-full text-base font-bold leading-snug text-green-600 whitespace-nowrap">
-                <button wire:click="applyFilters" class="flex flex-1 shrink gap-2 justify-center items-center px-6 py-2.5 w-full rounded-2xl border-2 border-green-600 border-solid basis-0 min-h-11 min-w-60 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2">
-                    <span class="self-stretch my-auto text-green-600">{{ __('Применить') }}</span>
-                </button>
-            </div>
         </aside>
 
         <!-- Blog Posts Grid -->
@@ -125,7 +94,7 @@
                         $hasValidSlug = false;
                         $slug = null;
 
-                        // Проверка slug
+                        // Check slug
                         if ($post->defaultUrl && !empty($post->defaultUrl->slug)) {
                             $slug = $post->defaultUrl->slug;
                             $hasValidSlug = is_string($slug) && trim($slug) !== '';
@@ -154,13 +123,6 @@
                                             class="object-cover w-full aspect-[1.77] transition-transform duration-300 group-hover:scale-105"
                                         />
                                     </div>
-                                    <div class="absolute top-0 right-0 flex z-0 pt-2 pr-2" aria-hidden="true">
-                                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M27.8029 23.6143L27.8029 8.19658L8.19616 27.8033L16.8665 19.133C20.8858 15.1137 27.7597 17.9304 27.8029 23.6143Z" fill="white"/>
-                                            <path d="M27.8029 8.19658L17.5244 8.19658L12.3852 8.19658C18.0721 8.21717 20.9059 15.0936 16.8846 19.1149L8.19616 27.8033L27.8029 8.19658Z" fill="white"/>
-                                            <path d="M27.8027 7.19672C28.3548 7.19693 28.8027 7.64463 28.8027 8.19672V28.7534C28.8027 29.3055 28.3548 29.7531 27.8027 29.7534C27.2507 29.7531 26.8038 29.3054 26.8037 28.7534L26.8027 23.6137C26.7603 18.8976 21.1435 16.5251 17.7344 19.685L17.5732 19.8403L8.90332 28.5102C8.51284 28.9007 7.87979 28.9006 7.48926 28.5102C7.12332 28.1441 7.09979 27.565 7.41992 27.1723L7.48926 27.0961L16.1777 18.4077C19.5696 15.0152 17.1791 9.21438 12.3818 9.19672H7.24609C6.69388 9.19672 6.24622 8.7489 6.24609 8.19672C6.24617 7.6445 6.69386 7.19672 7.24609 7.19672H27.8027ZM21.1689 16.2455C23.2741 16.1954 25.3478 17.053 26.8018 18.5776L26.8037 10.6108L21.1689 16.2455ZM17.4424 9.19672C18.9621 10.6475 19.8183 12.7158 19.7695 14.8159L25.3887 9.19672H17.4424Z" fill="white"/>
-                                        </svg>
-                                    </div>
                                 </div>
 
                                 <div class="p-4 w-full">
@@ -178,8 +140,6 @@
                         @if (!$hasValidSlug)
                             <div class="p-4 text-red-600 text-sm">
                                 Предупреждение: URL или slug отсутствует для поста ID: {{ $post->id }} (Локаль: {{ app()->getLocale() }})
-                                @dump($post->defaultUrl?->toArray())
-                                @dump($post->slug)
                             </div>
                         @endif
                     </article>
@@ -194,7 +154,6 @@
             </nav>
         </section>
     </div>
-
 
     <style>
         /* Стили для сетки и списка */
