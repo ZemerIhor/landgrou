@@ -13,28 +13,16 @@
 
     $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', $locale !== config('app.fallback_locale') ? ['locale' => $locale] : [], false);
 
-    // Извлекаем name и description из attribute_data
-    $name = $product->attribute_data['name'] ?? null;
-    $description = $product->attribute_data['description'] ?? null;
-
-    // Обработка name
-    $nameValue = 'Product'; // Значение по умолчанию
-    if ($name instanceof \Lunar\FieldTypes\TranslatedText) {
-        $nameValue = $name->getValue($locale) ?? $name->getValue(config('app.fallback_locale')) ?? 'Product';
-    }
-
-    // Обработка description
-    $descriptionValue = '';
-    if ($description instanceof \Lunar\FieldTypes\TranslatedText) {
-        $descriptionValue = $description->getValue($locale) ?? $description->getValue(config('app.fallback_locale')) ?? '';
-    }
+    // Извлекаем name и description с помощью translateAttribute
+    $nameValue = $product->translateAttribute('name') ?? 'Product';
+    $descriptionValue = $product->translateAttribute('description') ?? '';
 
     // Логирование для отладки
     \Log::info('ProductCard Debug', [
         'product_id' => $product->id,
         'locale' => $locale,
         'fallback_locale' => config('app.fallback_locale'),
-        'name' => $name ? ($name instanceof \Lunar\FieldTypes\TranslatedText ? $name->getValue($locale) : $name) : null,
+        'name' => $product->attribute_data['name'] ?? null,
         'nameValue' => $nameValue,
         'descriptionValue' => $descriptionValue,
         'attribute_data' => $product->attribute_data->toArray(),
@@ -63,7 +51,7 @@
             <div class="p-4 w-full">
                 <div class="w-full text-zinc-800">
                     <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $nameValue }}</h2>
-                    <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{!! $descriptionValue !!}</p>
+                    <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{!! strip_tags($descriptionValue) !!}</p>
                 </div>
             </div>
         </a>
