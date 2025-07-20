@@ -164,8 +164,6 @@
             }
 
             .menu li {
-                display: flex;
-                gap: 8px;
                 align-items: center;
                 width: 100%;
                 border-radius: 8px;
