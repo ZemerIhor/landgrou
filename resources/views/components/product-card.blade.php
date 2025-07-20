@@ -57,13 +57,5 @@
             <livewire:components.add-to-cart :purchasable="$product->variants->first()" :key="'add-to-cart-' . $product->id" />
         </div>
 
-        @if (!$hasValidSlug)
-            <div class="p-4 text-red-600 text-sm">
-                Предупреждение: URL или slug отсутствует для продукта ID: {{ $product->id }} (Локаль: {{ $locale }})
-                @dump($product->defaultUrl?->toArray())
-                @dump($product->slug)
-                @dump($product->attribute_data)
-            </div>
-        @endif
     </div>
 </article>
