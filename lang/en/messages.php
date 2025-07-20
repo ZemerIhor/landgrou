@@ -190,7 +190,6 @@ return [
         'close' => 'Close',
         'order_summary' => 'Order Summary',
         'total' => 'Total',
-
         'empty' => 'Your cart is empty',
         'sub_total' => 'Subtotal',
         'update_cart' => 'Update Cart',
@@ -201,6 +200,10 @@ return [
         'add_to_cart' => 'Add to Cart',
         'add_to_cart_aria' => 'Add product to cart',
         'added_to_cart' => 'Product added to cart',
+        'identifier' => 'Identifier',
+        'quantity_controls' => 'Quantity controls',
+        'decrement_quantity' => 'Decrease quantity',
+        'increment_quantity' => 'Increase quantity',
     ],
 
     'contacts' => [

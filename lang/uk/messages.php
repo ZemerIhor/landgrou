@@ -200,6 +200,10 @@ return [
         'add_to_cart' => 'В кошик',
         'add_to_cart_aria' => 'Додати товар до кошика',
         'added_to_cart' => 'Товар додано до кошика',
+        'identifier' => 'Ідентифікатор',
+        'quantity_controls' => 'Керування кількістю',
+        'decrement_quantity' => 'Зменшити кількість',
+        'increment_quantity' => 'Збільшити кількість',
     ],
 
     'contacts' => [
