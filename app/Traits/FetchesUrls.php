@@ -2,26 +2,27 @@
 
 namespace App\Traits;
 
-use Lunar\Models\Url as LunarUrl;
+use Lunar\Models\Url;
 
 trait FetchesUrls
 {
-    public function fetchUrl($slug, $elementType, $with = []): ?LunarUrl
+    /**
+     * The URL model from the slug.
+     */
+    public ?Url $url = null;
+
+    /**
+     * Fetch a url model.
+     *
+     * @param  string  $slug
+     * @param  string  $type
+     * @param  array  $eagerLoad
+     */
+    public function fetchUrl($slug, $type, $eagerLoad = []): ?Url
     {
-        $slugsToCheck = [$slug];
-        if (str_ends_with($slug, 'vfv')) {
-            $slugsToCheck[] = str_replace('vfv', '', $slug);
-        } else {
-            $slugsToCheck[] = $slug . 'vfv';
-        }
-
-        $query = LunarUrl::where('element_type', $elementType)
-            ->whereIn('slug', $slugsToCheck);
-
-        if (!empty($with)) {
-            $query->with($with);
-        }
-
-        return $query->first();
+        return Url::whereElementType($type)
+            ->whereDefault(true)
+            ->whereSlug($slug)
+            ->with($eagerLoad)->first();
     }
 }
