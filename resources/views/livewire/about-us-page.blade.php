@@ -308,50 +308,89 @@
         </section>
 
         <!-- Certificates Section -->
-        <section class="container relative mx-auto about-us-certificate md:px-12 py-12 px-4" aria-labelledby="certificates-title">
-            <div>
-                @if (isset($settings->certificates_title) && (is_array($settings->certificates_title) ? isset($settings->certificates_title[app()->getLocale()]) : is_string($settings->certificates_title)))
-                    <h2 id="certificates-title" class="text-3xl font-bold text-white">
-                        {{ is_array($settings->certificates_title) ? $settings->certificates_title[app()->getLocale()] : $settings->certificates_title }}
-                    </h2>
-                @else
-                    <h2 id="certificates-title" class="text-3xl font-bold text-white">
-                        {{ __('messages.about_us.certificates_title') }}
-                    </h2>
-                @endif
+    <section class="container relative mx-auto about-us-certificate md:px-12 py-12 px-4" aria-labelledby="certificates-title">
+        <div>
+            @if (isset($settings->certificates_title) && (is_array($settings->certificates_title) ? isset($settings->certificates_title[app()->getLocale()]) : is_string($settings->certificates_title)))
+                <h2 id="certificates-title" class="text-3xl font-bold text-white">
+                    {{ is_array($settings->certificates_title) ? $settings->certificates_title[app()->getLocale()] : $settings->certificates_title }}
+                </h2>
+            @else
+                <h2 id="certificates-title" class="text-3xl font-bold text-white">
+                    {{ __('messages.about_us.certificates_title') }}
+                </h2>
+            @endif
 
-                @php
-                    $certificates_images = $settings->certificates_images ?? [];
-                @endphp
-                @if (!empty($certificates_images))
-                    <div class="mt-5 w-full h-[400px]">
-                        <x-flexible-slider :aria-label="__('messages.about_us.certificates_aria_label')" :config="[
-                            'loop' => false,
-                            'autoplay' => ['delay' => 3000],
-                            'spaceBetween' => 10,
+            @php
+                $certificates_images = $settings->certificates_images ?? [];
+            @endphp
+            @if (!empty($certificates_images))
+                <div class="mt-5 w-full h-[400px]">
+                    <x-flexible-slider :aria-label="__('messages.about_us.certificates_aria_label')" :config="[
+                    'loop' => false,
+                    'autoplay' => ['delay' => 3000],
+                    'spaceBetween' => 10,
+                ]">
+                        @foreach ($certificates_images as $image)
+                            <div class="swiper-slide certificate-slide flex flex-col items-center rounded-3xl aspect-[0.71] bg-white shadow-md">
+                                @if (isset($image['image']) && Storage::disk('public')->exists($image['image']))
+                                    <img src="{{ Storage::url($image['image']) }}"
+                                         alt="{{ is_array($image['alt']) ? ($image['alt'][app()->getLocale()] ?? $image['alt']['en'] ?? 'Certificate Image') : ($image['alt'] ?? 'Certificate Image') }}"
+                                         class="object-contain w-full h-full rounded-3xl cursor-pointer"
+                                         data-fullscreen-src="{{ Storage::url($image['image']) }}"
+                                         onclick="openModal(this)" />
+                                @else
+                                    <img src="{{ asset('images/fallback-certificate.jpg') }}"
+                                         alt="{{ is_array($image['alt']) ? ($image['alt'][app()->getLocale()] ?? $image['alt']['en'] ?? 'Certificate Image') : ($image['alt'] ?? 'Certificate Image') }}"
+                                         class="object-contain w-full h-full rounded-3xl cursor-pointer"
+                                         data-fullscreen-src="{{ asset('images/fallback-certificate.jpg') }}"
+                                         onclick="openModal(this)" />
+                                @endif
+                            </div>
+                        @endforeach
+                    </x-flexible-slider>
+                </div>
 
-                        ]">
-                            @foreach ($certificates_images as $image)
-                                <div class="swiper-slide certificate-slide flex flex-col items-center rounded-3xl aspect-[0.71] bg-white shadow-md">
-                                    @if (isset($image['image']) && Storage::disk('public')->exists($image['image']))
-                                        <img src="{{ Storage::url($image['image']) }}"
-                                             alt="{{ is_array($image['alt']) ? ($image['alt'][app()->getLocale()] ?? $image['alt']['en'] ?? 'Certificate Image') : ($image['alt'] ?? 'Certificate Image') }}"
-                                             class="object-contain w-full h-full rounded-3xl" />
-                                    @else
-                                        <img src="{{ asset('images/fallback-certificate.jpg') }}"
-                                             alt="{{ is_array($image['alt']) ? ($image['alt'][app()->getLocale()] ?? $image['alt']['en'] ?? 'Certificate Image') : ($image['alt'] ?? 'Certificate Image') }}"
-                                             class="object-contain w-full h-full rounded-3xl" />
-                                    @endif
-                                </div>
-                            @endforeach
-                        </x-flexible-slider>
+                <!-- Fullscreen Modal -->
+                <div id="fullscreen-modal" class="fixed inset-0 bg-black bg-opacity-90 hidden flex items-center justify-center z-50">
+                    <div class="relative w-full max-w-4xl max-h-[90vh]">
+                        <button id="close-modal" class="absolute top-4 right-4 text-white text-2xl z-50">×</button>
+                        <img id="modal-image" src="" alt="Fullscreen Certificate" class="object-contain w-full h-full" />
                     </div>
-                @else
-                    <p class="text-neutral-400 text-center">{{ __('messages.about_us.no_certificates') }}</p>
-                @endif
-            </div>
-        </section>
+                </div>
+            @else
+                <p class="text-neutral-400 text-center">{{ __('messages.about_us.no_certificates') }}</p>
+            @endif
+        </div>
 
+        @push('scripts')
+            <script>
+                function openModal(element) {
+                    const modal = document.getElementById('fullscreen-modal');
+                    const modalImage = document.getElementById('modal-image');
+                    modalImage.src = element.getAttribute('data-fullscreen-src');
+                    modalImage.alt = element.alt;
+                    modal.classList.remove('hidden');
+                }
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    const modal = document.getElementById('fullscreen-modal');
+                    const closeModal = document.getElementById('close-modal');
+
+                    // Close modal on close button click
+                    closeModal.addEventListener('click', function () {
+                        modal.classList.add('hidden');
+                    });
+
+                    // Close modal on click outside
+                    modal.addEventListener('click', function (e) {
+                        if (e.target === modal) {
+                            modal.classList.add('hidden');
+                        }
+                    });
+                });
+            </script>
+        @endpush
+    </section>
         <livewire:components.blog-section />
     </div>
 </div>
