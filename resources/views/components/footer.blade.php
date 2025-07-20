@@ -43,6 +43,7 @@
                                     </a>
                                 </div>
                             @endif
+
                             @if (!empty($footer->email))
                                 <div class="contact-item">
                                     <a href="mailto:{{ is_array($footer->email) ? ($footer->email[app()->getLocale()] ?? $footer->email['en'] ?? '') : $footer->email }}"
