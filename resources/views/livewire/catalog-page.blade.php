@@ -194,7 +194,7 @@
                             $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', $locale !== 'uk' ? ['locale' => $locale] : [], false);
                         @endphp
 
-                        <article wire:key="product-{{ $product->id }}" class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 {{ $view == 'grid' ?  : '' }}" role="listitem">
+                        <article wire:key="product-{{ $product->id }}" class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 {{ $view == 'grid' ? 'h-full' : '' }}" role="listitem">
                             <div class="flex flex-col justify-between group h-full">
                                 <a href="{{ $productUrl }}" wire:navigate class="flex flex-col h-full">
                                     <div class="flex relative flex-col w-full">
