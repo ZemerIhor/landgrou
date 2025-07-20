@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Livewire;
-
-use Lunar\Models\Url as LunarUrl;
+use Lunar\Models\Url;
 use App\Traits\FetchesUrls;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -18,34 +17,27 @@ class ProductPage extends Component
 
     public array $selectedOptionValues = [];
     public int $quantity = 1;
-    public $slug;
 
+    public $slug;
     public function mount($slug): void
     {
-        // Находим URL по переданному слагу
-        $url = LunarUrl::where('slug', $slug)
+        // Find the URL record for the given slug
+        $url = Url::where('slug', $slug)
             ->where('element_type', (new Product)->getMorphClass())
             ->first();
 
         if (!$url) {
-            // Проверяем альтернативные слаги
-            $slugsToCheck = [$slug];
-            if (str_ends_with($slug, 'vfv')) {
-                $slugsToCheck[] = str_replace('vfv', '', $slug);
-            } else {
-                $slugsToCheck[] = $slug . 'vfv';
-            }
-            $url = LunarUrl::whereIn('slug', $slugsToCheck)
-                ->where('element_type', (new Product)->getMorphClass())
+            // Check if the slug exists in any language
+            $url = Url::whereIn('slug', [$slug, $slug . 'vfv']) // Handle both English and Ukrainian slugs
+            ->where('element_type', (new Product)->getMorphClass())
                 ->first();
 
             if (!$url) {
-                \Log::error('Product URL not found', ['slug' => $slug, 'slugs_checked' => $slugsToCheck]);
                 abort(404);
             }
         }
 
-        // Загружаем продукт с отношениями
+        // Fetch product with relations
         $this->url = $this->fetchUrl(
             $url->slug,
             (new Product)->getMorphClass(),
@@ -58,25 +50,16 @@ class ProductPage extends Component
         );
 
         if (!$this->url) {
-            \Log::error('Product fetchUrl failed', ['slug' => $slug]);
             abort(404);
         }
 
         $this->slug = $slug;
 
-        // Инициализируем выбранные опции
+        // Initialize selected option values
         $this->selectedOptionValues = $this->productOptions->mapWithKeys(function ($data) {
             return [$data['option']->id => $data['values']->first()->id];
         })->toArray();
-
-        \Log::info('ProductPage mounted', [
-            'slug' => $slug,
-            'product_id' => $this->product->id,
-            'locale' => app()->getLocale(),
-            'urls' => $this->product->urls->toArray(),
-        ]);
     }
-
     public function getVariantProperty(): ProductVariant
     {
         return $this->product->variants->first(function ($variant) {
@@ -125,7 +108,6 @@ class ProductPage extends Component
 
         return $this->images->first();
     }
-
     public function getAttributesProperty(): array
     {
         $locale = app()->getLocale();

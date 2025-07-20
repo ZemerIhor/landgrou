@@ -222,31 +222,31 @@
 
     <!-- Characteristics Section -->
     @php
-        $characteristics = $product->attribute_data['characteristics'][app()->getLocale()] ?? $product->attribute_data['characteristics'] ?? [];
+        $characteristics = $this->product->attribute_data['characteristics'][app()->getLocale()] ?? $this->product->attribute_data['characteristics'] ?? [];
     @endphp
 
     <section class="characteristics-section flex relative flex-col gap-4 items-start self-stretch">
         <h2 class="relative self-stretch text-xl font-bold leading-6 text-black max-sm:text-lg">
-            Характеристики
+            {{ __('messages.product.characteristics') }}
         </h2>
-        <table class="characteristics flex relative flex-col items-start self-stretch" role="table" aria-label="Детальні характеристики товару">
+        <table class="characteristics flex relative flex-col items-start self-stretch" role="table" aria-label="{{ __('messages.product.characteristics_table') }}">
             <!-- Table Header -->
             <thead class="flex relative items-center self-stretch rounded-lg bg-zinc-800">
             <tr class="flex relative w-full items-center self-stretch rounded-lg">
                 <th class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">
-                    <span class="relative text-base font-semibold leading-5 text-white flex-[1_0_0] max-sm:text-sm">
-                        Найменування показників
-                    </span>
+                        <span class="relative text-base font-semibold leading-5 text-white flex-[1_0_0] max-sm:text-sm">
+                            {{ __('messages.product.indicator_name') }}
+                        </span>
                 </th>
                 <th class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                    <span class="relative text-base font-semibold leading-5 text-right text-white flex-[1_0_0] max-sm:text-sm">
-                        Норма согласно з ДСТУ 2042-92
-                    </span>
+                        <span class="relative text-base font-semibold leading-5 text-right text-white flex-[1_0_0] max-sm:text-sm">
+                            {{ __('messages.product.standard_norm') }}
+                        </span>
                 </th>
                 <th class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                    <span class="relative text-base font-semibold leading-5 text-right text-white flex-[1_0_0] max-sm:text-sm">
-                        Отримані показники
-                    </span>
+                        <span class="relative text-base font-semibold leading-5 text-right text-white flex-[1_0_0] max-sm:text-sm">
+                            {{ __('messages.product.actual_values') }}
+                        </span>
                 </th>
             </tr>
             </thead>
@@ -254,26 +254,26 @@
             @foreach ($characteristics as $characteristic)
                 <tr class="flex relative w-full items-center self-stretch border-b border-gray-200">
                     <td class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">
-                        <span class="relative text-base font-medium leading-5 text-black max-sm:text-sm">
-                            {{ $characteristic['name'] ?? '' }}
-                        </span>
+                            <span class="relative text-base font-medium leading-5 text-black max-sm:text-sm">
+                                {{ $characteristic['name'] ?? '' }}
+                            </span>
                     </td>
                     <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                        <span class="relative text-base font-medium leading-5 text-right text-black max-sm:text-sm">
-                            {{ $characteristic['standard'] ?? '' }}
-                        </span>
+                            <span class="relative text-base font-medium leading-5 text-right text-black max-sm:text-sm">
+                                {{ $characteristic['standard'] ?? '' }}
+                            </span>
                     </td>
                     <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                        <span class="relative text-base font-medium leading-5 text-right text-black max-sm:text-sm">
-                            {{ $characteristic['actual'] ?? '' }}
-                        </span>
+                            <span class="relative text-base font-medium leading-5 text-right text-black max-sm:text-sm">
+                                {{ $characteristic['actual'] ?? '' }}
+                            </span>
                     </td>
                 </tr>
             @endforeach
             @if (empty($characteristics))
                 <tr class="flex relative w-full items-center self-stretch">
                     <td colspan="3" class="px-4 py-2 text-center text-base font-medium text-gray-500">
-                        Нет характеристик для отображения
+                        {{ __('messages.product.no_characteristics') }}
                     </td>
                 </tr>
             @endif
