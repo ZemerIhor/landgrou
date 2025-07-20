@@ -7,7 +7,7 @@ use App\Settings\HomeSettings;
 use Illuminate\View\View;
 use Livewire\Component;
 use Lunar\Models\Collection;
-use Lunar\Models\Product;
+use App\Models\Product;
 use Lunar\Models\Url;
 
 class Home extends Component
@@ -68,8 +68,23 @@ class Home extends Component
 
     public function render(HomeSettings $settings): View
     {
+        $products = Product::with(['thumbnail', 'defaultUrl'])->get();
+
+        // Добавляем отладку для проверки slug и attribute_data
+        \Log::info('Home::render products', [
+            'locale' => app()->getLocale(),
+            'products' => $products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'slug' => $product->slug,
+                    'defaultUrl' => $product->defaultUrl?->toArray(),
+                    'attribute_data' => $product->attribute_data,
+                ];
+            })->toArray(),
+        ]);
+
         return view('livewire.home', [
-            'allProducts' => Product::with(['thumbnail', 'defaultUrl'])->get(),
+            'allProducts' => $products,
             'settings' => $settings,
             'blogPosts' => $this->blogPosts,
         ]);

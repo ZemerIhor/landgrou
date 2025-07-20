@@ -5,13 +5,12 @@
     $slug = null;
     $locale = app()->getLocale();
 
-    // Используем геттер slug из модели Product
+    // Используем геттер slug из модели App\Models\Product
     $slug = $product->slug;
     $hasValidSlug = is_string($slug) && trim($slug) !== '';
 
     // Формируем параметры маршрута
     $routeParams = ['slug' => $slug];
-    // Добавляем префикс локали, если текущая локаль не совпадает с fallback_locale
     if ($locale !== config('app.fallback_locale')) {
         $routeParams['locale'] = $locale;
     }
