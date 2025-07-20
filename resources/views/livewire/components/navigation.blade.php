@@ -80,6 +80,33 @@
 
             <!-- Desktop Menu -->
             <div class="desktop-menu hidden md:flex">
+                <!-- resources/views/components/menu.blade.php -->
+                <nav class="menu">
+                    <ul>
+                        @php
+                            $menu = \Datlechin\FilamentMenuBuilder\Models\Menu::location('header');
+                            $locale = App::getLocale();
+                        @endphp
+                        @foreach ($menu->menuItems as $item)
+                            <li>
+                                <a href="{{ $item->url }}">
+                                    {{ $item->{'title_' . $locale} ?? $item->title }}
+                                </a>
+                                @if ($item->children)
+                                    <ul>
+                                        @foreach ($item->children as $child)
+                                            <li>
+                                                <a href="{{ $child->url }}">
+                                                    {{ $child->{'title_' . $locale} ?? $child->title }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                </nav>
             </div>
 
             <div class="flex gap-2 sm:gap-3 items-center relative" x-data="{ mobileMenu: false, languageMenu: false }">
