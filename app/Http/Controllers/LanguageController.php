@@ -59,11 +59,11 @@ class LanguageController extends Controller
                     ->where('language_id', $languageId)
                     ->first();
 
-                if ($newUrl && $newUrl->slug !== $currentSlug) {
+                if ($newUrl) {
                     $path = "/products/{$newUrl->slug}";
                 } else {
-                    // Если текущий слаг уже соответствует новой локали, оставляем его
-                    $path = "/products/{$currentSlug}";
+                    // Фоллбек: используем дефолтный слаг
+                    $path = "/products/{$product->slug}";
                 }
             } else {
                 // Если продукт не найден, редирект на главную
@@ -90,6 +90,8 @@ class LanguageController extends Controller
             'redirect_to' => $path,
             'current_url' => FacadeURL::full(),
             'request_path' => request()->path(),
+            'current_slug' => $currentSlug ?? null,
+            'new_slug' => $newUrl->slug ?? null,
         ]);
 
         // Добавляем query-параметры, если они есть
