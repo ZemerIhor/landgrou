@@ -324,6 +324,7 @@
         }
     </style>
 
+
     <section class="flex flex-col justify-center self-stretch px-4 md:px-12 py-20 text-base bg-zinc-100 max-md:px-5"
         aria-labelledby="tenders-heading">
         <h2 id="tenders-heading" class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
