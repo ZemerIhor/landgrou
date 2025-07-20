@@ -26,8 +26,31 @@
 
         <!-- Navigation sections and contacts -->
         <section class="nav-contacts flex flex-wrap justify-between">
-            <!-- Меню футера -->
+            @php
+                use Datlechin\FilamentMenuBuilder\Models\Menu;
+                $footerLocation = app()->getLocale() === 'en' ? 'header_en' : 'header_uk';
+                $footerMenu = Menu::location($footerLocation);
+            @endphp
 
+            @if ($footerMenu)
+                <nav class="menu" aria-label="{{ __('messages.footer.main_navigation') }}">
+                    <ul>
+                @foreach ($headerMenu->menuItems as $item)
+
+                    <li>
+                        <a href="{{ $item->url }}">{{ $item->title }}</a>
+                        @if ($item->children)
+                            <ul>
+                                @foreach ($item->children as $child)
+                                    <li><a href="{{ $child->url }}">{{ $child->title }}</a></li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </li>
+                @endforeach
+</ul>
+                    </nav>
+            @endif
 
             <!-- Контактная информация -->
             @if (isset($footer) && (!empty($footer->phone) || !empty($footer->email) || !empty($footer->address)))

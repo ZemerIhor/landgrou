@@ -85,6 +85,7 @@
             <!-- Desktop Menu -->
             <div class="desktop-menu hidden md:flex">
                 @if ($headerMenu)
+                    <ul>
                             @foreach ($headerMenu->menuItems as $item)
                                 <li>
                                     <a href="{{ $item->url }}">{{ $item->title }}</a>
@@ -97,6 +98,7 @@
                                     @endif
                                 </li>
                             @endforeach
+                    </ul>
                 @endif
             </div>
 
