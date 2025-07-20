@@ -671,14 +671,14 @@ grid-row-gap: 0px;
 }
 
 .main-banner__link--catalog {
-    border: 2px solid #FFFFFF;
-    color: #FFFFFF;
+    border: 2px solid #16A34A;
+    color: #16A34A;
     background-color: transparent;
 }
 
 .main-banner__link--catalog:hover {
     background-color: #FFFFFF;
-    color: #000000;
+    color: #16A34A;
 }
 
 .main-banner__link--buy {
