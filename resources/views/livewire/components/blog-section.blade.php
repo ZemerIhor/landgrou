@@ -19,7 +19,7 @@
                 $postUrl = $hasValidSlug ? route('blog.post', $routeParams, false) : route('home', $locale !== config('app.fallback_locale') ? ['locale' => $locale] : [], false);
             @endphp
 
-            <a href="{{ $postUrl }}" wire:navigate class="block overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60 hover:shadow-lg transition-shadow" aria-label="{{ __('blog.read_article', ['title' => $post->getTranslation('title', $locale)]) }}">
+            <a href="{{ $postUrl }}" wire:navigate class="block overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60 hover:shadow-lg transition-shadow h-full" aria-label="{{ __('blog.read_article', ['title' => $post->getTranslation('title', $locale)]) }}">
                 <article class="overflow-hidden" role="article">
                     <div class="overflow-hidden z-0 w-full">
                         <img
