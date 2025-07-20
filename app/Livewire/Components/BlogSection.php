@@ -78,11 +78,9 @@ class BlogSection extends Component
 
         $posts = $query->paginate($this->perPage);
         $availableCategories = Category::all();
-
         \Log::info('BlogSection::render', [
             'locale' => app()->getLocale(),
             'posts' => $posts->items(),
-            'categories' => $this->categories,
             'dateFilter' => $this->dateFilter,
             'sort' => $this->sort,
             'view' => $this->view,
@@ -90,7 +88,6 @@ class BlogSection extends Component
 
         return view('livewire.components.blog-section', [
             'posts' => $posts,
-            'availableCategories' => $availableCategories,
         ]);
     }
 }
