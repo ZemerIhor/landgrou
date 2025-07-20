@@ -421,32 +421,32 @@
         </footer>
     </section>
 
-    <section class="main-banner" role="banner">
+    <section class="main-banner" role="banner" aria-label="{{ __('messages.hero.aria_label') }}">
         @if (!empty($settings->banner_image))
             <img
                 src="{{ Storage::url($settings->banner_image) }}"
-                alt="{{ isset($settings->banner_title[app()->getLocale()]) ? $settings->banner_title[app()->getLocale()] : __('messages.banner.title') }}"
+                alt="{{ isset($settings->banner_title[app()->getLocale()]) ? $settings->banner_title[app()->getLocale()] : __('messages.hero.title') }}"
                 class="main-banner__image"
             />
         @else
-            <p class="main-banner__no-image">{{ __('messages.banner.no_image') }}</p>
+            <p class="main-banner__no-image">{{ __('messages.hero.no_slides') }}</p>
         @endif
         <header class="main-banner__header">
             <div class="main-banner__content">
                 <h1 class="main-banner__title">
-                    {{ isset($settings->banner_title[app()->getLocale()]) ? $settings->banner_title[app()->getLocale()] : __('messages.banner.title') }}
+                    {{ isset($settings->banner_title[app()->getLocale()]) ? $settings->banner_title[app()->getLocale()] : __('messages.hero.title') }}
                 </h1>
                 <p class="main-banner__description">
-                    {{ isset($settings->banner_description[app()->getLocale()]) ? $settings->banner_description[app()->getLocale()] : __('messages.banner.description') }}
+                    {{ isset($settings->banner_description[app()->getLocale()]) ? $settings->banner_description[app()->getLocale()] : __('messages.hero.description') }}
                 </p>
             </div>
-            <nav class="main-banner__nav" role="navigation" aria-label="{{ __('messages.banner.nav_aria_label') }}">
-                <button
-                    type="button"
-                    class="main-banner__button main-banner__button--catalog"
-                    aria-label="{{ __('messages.banner.catalog_button_aria_label') }}"
+            <nav class="main-banner__nav" role="navigation" aria-label="{{ __('messages.hero.aria_label') }}">
+                <a
+                    href="{{ route('catalog.view', ['locale' => app()->getLocale()]) }}"
+                    class="main-banner__link main-banner__link--catalog"
+                    aria-label="{{ __('messages.hero.catalog_button') }}"
                 >
-                    <span>{{ __('messages.banner.catalog_button') }}</span>
+                    <span>{{ __('messages.hero.catalog_button') }}</span>
                     <svg
                         width="25"
                         height="25"
@@ -463,13 +463,13 @@
                             fill="#228F5D"
                         />
                     </svg>
-                </button>
-                <button
-                    type="button"
-                    class="main-banner__button main-banner__button--buy"
-                    aria-label="{{ __('messages.banner.buy_button_aria_label') }}"
+                </a>
+                <a
+                    href="#"
+                    class="main-banner__link main-banner__link--buy"
+                    aria-label="{{ __('messages.hero.buy_now_button') }}"
                 >
-                    <span>{{ __('messages.banner.buy_button') }}</span>
+                    <span>{{ __('messages.hero.buy_now_button') }}</span>
                     <svg
                         width="25"
                         height="25"
@@ -486,7 +486,7 @@
                             fill="white"
                         />
                     </svg>
-                </button>
+                </a>
             </nav>
         </header>
     </section>
