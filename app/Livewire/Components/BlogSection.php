@@ -77,7 +77,6 @@ class BlogSection extends Component
         }
 
         $posts = $query->paginate($this->perPage);
-        $availableCategories = Category::all();
         \Log::info('BlogSection::render', [
             'locale' => app()->getLocale(),
             'posts' => $posts->items(),
