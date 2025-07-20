@@ -80,7 +80,7 @@
 
             <!-- Desktop Menu -->
             <div class="desktop-menu hidden md:flex">
-                <x-filament-menu-builder::menu :slug="app()->getLocale() === 'en' ? 'en-header-menu' : 'uk-header-menu'" />
+                <x-filament-menu-builder::menu :slug="app()->getLocale() === 'en' ? 'en-header-menu' : 'uk-header-menu'" :locale="app()->getLocale()" />
             </div>
 
             <div class="flex gap-2 sm:gap-3 items-center relative" x-data="{ mobileMenu: false, languageMenu: false }">
