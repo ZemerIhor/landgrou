@@ -421,43 +421,39 @@
         </footer>
     </section>
 
-    <section class="overflow-hidden relative w-full h-[306px]" role="banner">
+    <section class="main-banner" role="banner">
         @if (!empty($settings->banner_image))
             <img
                 src="{{ Storage::url($settings->banner_image) }}"
-                alt="{{ isset($settings->banner_title[app()->getLocale()]) ? $settings->banner_title[app()->getLocale()] : 'Main banner' }}"
-                class="object-cover absolute top-0 left-0 w-full h-[306px]"
+                alt="{{ isset($settings->banner_title[app()->getLocale()]) ? $settings->banner_title[app()->getLocale()] : __('messages.banner.title') }}"
+                class="main-banner__image"
             />
         @else
-            <p>{{ __('messages.banner.no_image') }}</p>
+            <p class="main-banner__no-image">{{ __('messages.banner.no_image') }}</p>
         @endif
-        <header class="box-border flex absolute top-2/4 left-2/4 flex-col gap-8 items-center px-5 py-0 w-full -translate-x-2/4 -translate-y-2/4 max-w-[982px]">
-            <div class="flex relative flex-col gap-4 items-center w-full">
-                <h1 class="relative text-2xl font-bold leading-7 text-center max-w-[654px] text-zinc-800">
+        <header class="main-banner__header">
+            <div class="main-banner__content">
+                <h1 class="main-banner__title">
                     {{ isset($settings->banner_title[app()->getLocale()]) ? $settings->banner_title[app()->getLocale()] : __('messages.banner.title') }}
                 </h1>
-                <p class="relative w-full text-base font-semibold leading-5 text-center text-zinc-800">
-                    <span class="text-base font-bold text-zinc-800 max-md:text-sm max-sm:text-sm">
-                        {{ isset($settings->banner_description[app()->getLocale()]) ? $settings->banner_description[app()->getLocale()] : __('messages.banner.description') }}
-                    </span>
+                <p class="main-banner__description">
+                    {{ isset($settings->banner_description[app()->getLocale()]) ? $settings->banner_description[app()->getLocale()] : __('messages.banner.description') }}
                 </p>
             </div>
-            <nav class="flex relative flex-wrap gap-4 justify-center items-center max-md:gap-3 max-sm:flex-col max-sm:gap-3 max-sm:w-full" role="navigation" aria-label="Основні дії">
+            <nav class="main-banner__nav" role="navigation" aria-label="{{ __('messages.banner.nav_aria_label') }}">
                 <button
                     type="button"
-                    class="flex relative gap-2 justify-center items-center px-6 py-2.5 rounded-2xl border-2 border-green-600 border-solid min-h-11 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
+                    class="main-banner__button main-banner__button--catalog"
                     aria-label="{{ __('messages.banner.catalog_button_aria_label') }}"
                 >
-                    <span class="relative text-base font-bold leading-6 text-green-600">
-                        {{ __('messages.banner.catalog_button') }}
-                    </span>
+                    <span>{{ __('messages.banner.catalog_button') }}</span>
                     <svg
                         width="25"
                         height="25"
                         viewBox="0 0 25 25"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        class="catalog-arrow"
+                        class="main-banner__icon"
                         aria-hidden="true"
                     >
                         <path
@@ -470,19 +466,17 @@
                 </button>
                 <button
                     type="button"
-                    class="flex relative gap-2 justify-center items-center px-6 py-2.5 bg-green-600 rounded-2xl border-[none] min-h-11 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors"
+                    class="main-banner__button main-banner__button--buy"
                     aria-label="{{ __('messages.banner.buy_button_aria_label') }}"
                 >
-                    <span class="relative text-base font-bold leading-6 text-white">
-                        {{ __('messages.banner.buy_button') }}
-                    </span>
+                    <span>{{ __('messages.banner.buy_button') }}</span>
                     <svg
                         width="25"
                         height="25"
                         viewBox="0 0 25 25"
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
-                        class="buy-arrow"
+                        class="main-banner__icon"
                         aria-hidden="true"
                     >
                         <path

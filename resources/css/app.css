@@ -577,3 +577,166 @@ grid-row-gap: 0px;
 }
 
 }
+
+
+/* Стили для главного баннера */
+.main-banner {
+    position: relative;
+    width: 100%;
+    height: 306px;
+    overflow: hidden;
+}
+
+.main-banner__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.main-banner__no-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #333;
+    font-size: 16px;
+    text-align: center;
+}
+
+.main-banner__header {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+    width: 100%;
+    max-width: 982px;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.main-banner__content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    width: 100%;
+}
+
+.main-banner__title {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 28px;
+    text-align: center;
+    color: #27272A;
+    max-width: 654px;
+}
+
+.main-banner__description {
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+    text-align: center;
+    color: #27272A;
+}
+
+.main-banner__description span {
+    font-weight: bold;
+}
+
+.main-banner__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-banner__button {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 24px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 24px;
+    text-decoration: none;
+    cursor: pointer;
+    min-height: 44px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.main-banner__button--catalog {
+    border: 2px solid #16A34A;
+    color: #16A34A;
+    background-color: transparent;
+}
+
+.main-banner__button--catalog:hover {
+    background-color: #F0FDF4;
+}
+
+.main-banner__button--buy {
+    border: none;
+    background-color: #16A34A;
+    color: #FFFFFF;
+}
+
+.main-banner__button--buy:hover {
+    background-color: #15803D;
+}
+
+.main-banner__icon {
+    width: 25px;
+    height: 25px;
+}
+
+/* Адаптивность для планшетов */
+@media (max-width: 768px) {
+    .main-banner__title {
+        font-size: 20px;
+        line-height: 24px;
+    }
+
+    .main-banner__description {
+        font-size: 14px;
+        line-height: 18px;
+    }
+
+    .main-banner__nav {
+        gap: 12px;
+    }
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 640px) {
+    .main-banner__title {
+        font-size: 18px;
+        line-height: 22px;
+    }
+
+    .main-banner__description {
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    .main-banner__nav {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .main-banner__button {
+        width: 100%;
+        text-align: center;
+    }
+}
