@@ -5,7 +5,7 @@
 
 
     <div class="flex flex-wrap gap-2 items-center mt-5 w-full min-h-[307px] max-md:max-w-full" role="region" aria-label="{{ __('blog.articles') }}">
-        @forelse ($blogPosts->take(4) as $post)
+        @forelse ($posts->take(4) as $post)
             @php
                 $locale = app()->getLocale();
                 $slug = $post->getTranslation('slug', $locale, true); // true для возврата значения по умолчанию
