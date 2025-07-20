@@ -3,7 +3,7 @@
 @php
     $hasValidSlug = false;
     $slug = null;
-
+dd($product);
     // Check for valid slug (considering Lunar's URL system)
     if ($product->defaultUrl && !empty($product->defaultUrl->slug)) {
         $slug = $product->defaultUrl->slug;
