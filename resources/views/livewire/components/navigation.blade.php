@@ -17,6 +17,71 @@
                 $headerLocation = app()->getLocale() === 'en' ? 'header_en' : 'header_uk';
                 $headerMenu = Menu::location($headerLocation);
             @endphp
+
+            <style>
+                /* Base styles for the menu container */
+                .desktop-menu {
+                    align-items: center;
+                }
+
+                /* Show menu on medium screens and above (≥768px) */
+                .nav-header ul {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: 15px;
+                    margin: 0;
+                    padding: 0;
+                    list-style: none;
+                }
+
+                /* Mobile menu styles */
+                @media (max-width: 767px) {
+                    .nav-header ul.mobile-menu-items {
+                        flex-direction: column;
+                        gap: 10px;
+                        text-align: center;
+                        width: 100%;
+                    }
+
+                    .nav-header ul {
+                        flex-direction: column;
+                    }
+                }
+
+                .nav-header ul li a {
+                    color: #333333;
+                    text-decoration: none;
+                    font-size: 14px;
+                    font-weight: 600;
+                    padding: 8px 12px;
+                    transition: color 0.3s;
+                }
+
+                .nav-header ul li a:hover {
+                    color: #16a34a;
+                }
+
+                header {
+                    position: relative;
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+
+                header.is-fixed {
+                    position: fixed;
+                    transform: translateY(0);
+                    opacity: 1;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                }
+
+                header:not(.is-fixed) {
+                    transition: transform 0.3s ease, opacity 0.3s ease;
+                }
+
+                .header-placeholder {
+                    transition: height 0.3s ease;
+                }
+            </style>
             <!-- Desktop Menu -->
             <div class="desktop-menu hidden md:flex">
                 @if ($headerMenu)
