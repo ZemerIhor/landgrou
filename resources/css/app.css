@@ -601,7 +601,7 @@ grid-row-gap: 0px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #333;
+    color: #4B5563;
     font-size: 16px;
     text-align: center;
 }
@@ -647,10 +647,6 @@ grid-row-gap: 0px;
     color: #27272A;
 }
 
-.main-banner__description span {
-    font-weight: bold;
-}
-
 .main-banner__nav {
     display: flex;
     flex-wrap: wrap;
@@ -659,39 +655,39 @@ grid-row-gap: 0px;
     align-items: center;
 }
 
-.main-banner__button {
+.main-banner__link {
     display: flex;
     gap: 8px;
     justify-content: center;
     align-items: center;
-    padding: 10px 24px;
+    padding: 12px 24px;
     border-radius: 16px;
     font-size: 16px;
     font-weight: bold;
     line-height: 24px;
     text-decoration: none;
-    cursor: pointer;
-    min-height: 44px;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    min-height: 48px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.main-banner__button--catalog {
-    border: 2px solid #16A34A;
-    color: #16A34A;
+.main-banner__link--catalog {
+    border: 2px solid #FFFFFF;
+    color: #FFFFFF;
     background-color: transparent;
 }
 
-.main-banner__button--catalog:hover {
-    background-color: #F0FDF4;
+.main-banner__link--catalog:hover {
+    background-color: #FFFFFF;
+    color: #000000;
 }
 
-.main-banner__button--buy {
+.main-banner__link--buy {
     border: none;
     background-color: #16A34A;
     color: #FFFFFF;
 }
 
-.main-banner__button--buy:hover {
+.main-banner__link--buy:hover {
     background-color: #15803D;
 }
 
@@ -735,7 +731,7 @@ grid-row-gap: 0px;
         width: 100%;
     }
 
-    .main-banner__button {
+    .main-banner__link {
         width: 100%;
         text-align: center;
     }
