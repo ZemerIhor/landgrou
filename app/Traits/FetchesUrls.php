@@ -18,11 +18,15 @@ trait FetchesUrls
      * @param  string  $type
      * @param  array  $eagerLoad
      */
-    public function fetchUrl($slug, $type, $eagerLoad = []): ?Url
+    public function fetchUrl($slug, $elementType, $with = [])
     {
-        return Url::whereElementType($type)
-            ->whereDefault(true)
-            ->whereSlug($slug)
-            ->with($eagerLoad)->first();
+        $locale = app()->getLocale();
+
+        return Url::where('slug', $slug)
+            ->where('element_type', $elementType)
+            ->whereHas('language', fn($q) => $q->where('code', $locale))
+            ->with($with)
+            ->first();
     }
+
 }

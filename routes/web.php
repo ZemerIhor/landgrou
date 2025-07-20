@@ -48,7 +48,6 @@ Route::get('/switch/{locale}', function ($locale) {
 })->name('lang.quick_switch');
 
 // Маршруты без префикса локали для продуктов
-Route::get('/products/{slug}', ProductPage::class)->name('product.view')->middleware('localization');
 
 // Группа маршрутов с префиксом языка (опционально) для остальных страниц
 Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], function () {
@@ -59,6 +58,7 @@ Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], functi
     Route::get('/privacy-policy', fn () => 'Hello World')->name('privacy-policy');
     Route::get('/terms', fn () => 'Hello World')->name('terms');
     Route::get('/faq', FaqPage::class)->name('faq');
+
     Route::get('/about-us', AboutUsPage::class)->name('about-us');
     Route::get('/contacts', ContactsPage::class)->name('contacts');
     Route::get('/blog', BlogPage::class)->name('blog.index');
@@ -68,4 +68,6 @@ Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], functi
     Route::get('/checkout', CheckoutPage::class)->name('checkout.view');
     Route::get('/checkout/success', CheckoutSuccessPage::class)->name('checkout-success.view');
     Route::get('/products', SearchPage::class)->name('products.index');
+    Route::get('/products/{slug}', ProductPage::class)->name('product.view')->middleware('localization');
+
 });
