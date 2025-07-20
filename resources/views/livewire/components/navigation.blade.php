@@ -28,9 +28,27 @@
                 /* Base styles for the menu container */
                 .desktop-menu {
                     align-items: center;
+                    display: flex;
                 }
 
-                /* Show menu on medium screens and above (≥768px) */
+                /* Show desktop menu on screens 900px and above */
+                @media (max-width: 900px) {
+                    .desktop-menu {
+                        display: none;
+                    }
+                }
+
+                /* Show mobile menu toggle on screens below 900px */
+                .mobile-menu-toggle {
+                    display: none;
+                }
+                @media (max-width: 900px) {
+                    .mobile-menu-toggle {
+                        display: block;
+                    }
+                }
+
+                /* Menu list styles */
                 .nav-header ul {
                     display: flex;
                     justify-content: space-between;
@@ -41,7 +59,7 @@
                 }
 
                 /* Mobile menu styles */
-                @media (max-width: 767px) {
+                @media (max-width: 900px) {
                     .nav-header ul.mobile-menu-items {
                         flex-direction: column;
                         gap: 10px;
@@ -67,6 +85,7 @@
                     color: #16a34a;
                 }
 
+                /* Header styles */
                 header {
                     position: relative;
                     transform: translateY(0);
@@ -87,16 +106,50 @@
                 .header-placeholder {
                     transition: height 0.3s ease;
                 }
-            </style>
-            <style>
-                .desktop-menu {
-                    min-width: ;
+
+                /* Contact button styles */
+                .contact-button {
+                    display: none;
+                    padding: 8px 12px;
+                    font-size: 14px;
+                    font-weight: bold;
+                    color: #16a34a;
+                    border: 2px solid #16a34a;
+                    border-radius: 16px;
+                    background: none;
+                    cursor: pointer;
+                    transition: background-color 0.3s, color 0.3s;
+                }
+
+                .contact-button:hover {
+                    background-color: #16a34a;
+                    color: white;
+                }
+
+                @media (min-width: 640px) {
+                    .contact-button {
+                        display: block;
+                    }
+                }
+
+                /* Social links and language container */
+                .nav-right {
+                    display: flex;
+                    gap: 12px;
+                    align-items: center;
+                }
+
+                @media (max-width: 640px) {
+                    .nav-right {
+                        gap: 8px;
+                    }
                 }
             </style>
+
             <!-- Desktop Menu -->
-            <div class="desktop-menu hidden">
+            <div class="desktop-menu">
                 @if ($headerMenu)
-                    <ul>
+                    <ul class="mobile-menu-items">
                         @foreach ($headerMenu->menuItems as $item)
                             <li>
                                 <a href="{{ $item->url }}">{{ $item->title }}</a>
@@ -113,11 +166,11 @@
                 @endif
             </div>
 
-            <div class="flex gap-2 sm:gap-3 items-center relative">
+            <div class="nav-right">
                 <!-- Contact Button (Desktop) -->
                 <button
                     wire:click="$dispatch('openContactForm')"
-                    class="hidden sm:block px-3 py-2 text-sm font-bold text-green-600 rounded-2xl border-2 border-green-600 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600"
+                    class="contact-button"
                     aria-label="{{ __('messages.feedback_form.submit_button') }}"
                 >
                     {{ __('messages.feedback_form.submit_button') }}
@@ -151,7 +204,7 @@
                 @endphp
 
                     <!-- Social Links, Cart, and Language -->
-                <div class="flex gap-2 sm:gap-3 items-center">
+                <div class="flex gap-2 items-center">
                     <a href="{{ isset($headerSettings->instagram_url[$locale]) ? $headerSettings->instagram_url[$locale] : 'https://instagram.com' }}"
                        class="social-link"
                        aria-label="{{ __('messages.social.instagram') }}">
@@ -221,8 +274,8 @@
 
                 <!-- Mobile Menu Toggle -->
                 <button
-                    x-on:click="mobileMenu = !mobileMenu"
-                    class="md:hidden text-2xl cursor-pointer text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600"
+                    x-on:click="mobileMenu = !mobileMenu; console.log('Mobile menu toggled:', mobileMenu)"
+                    class="mobile-menu-toggle text-2xl cursor-pointer text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600"
                     aria-label="{{ __('messages.nav.toggle_mobile_menu') }}"
                     :aria-expanded="mobileMenu"
                 >
@@ -239,24 +292,32 @@
                     x-transition
                     x-show="mobileMenu"
                     id="mobile-menu"
-                    class="md:hidden bg-white shadow-lg absolute top-14 left-0 w-full z-50"
+                    class="bg-white shadow-lg absolute top-14 left-0 w-full z-50"
                     x-on:click.away="mobileMenu = false"
                 >
                     <nav class="flex flex-col items-center gap-4 px-2 py-6 text-base font-semibold text-zinc-800" role="navigation" aria-label="{{ __('messages.nav.mobile_navigation') }}">
                         <!-- Menu Items -->
                         @if ($headerMenu)
-                            @foreach ($headerMenu->menuItems as $item)
-                                <a href="{{ $item->url }}" class="w-full text-center py-2 hover:text-green-600">
-                                    {{ $item->title }}
-                                </a>
-                                @if ($item->children)
-                                    @foreach ($item->children as $child)
-                                        <a href="{{ $child->url }}" class="w-full text-center py-2 text-sm hover:text-green-600">
-                                            {{ $child->title }}
+                            <ul class="mobile-menu-items">
+                                @foreach ($headerMenu->menuItems as $item)
+                                    <li>
+                                        <a href="{{ $item->url }}" class="w-full text-center py-2 hover:text-green-600">
+                                            {{ $item->title }}
                                         </a>
-                                    @endforeach
-                                @endif
-                            @endforeach
+                                        @if ($item->children)
+                                            <ul class="mobile-menu-items">
+                                                @foreach ($item->children as $child)
+                                                    <li>
+                                                        <a href="{{ $child->url }}" class="w-full text-center py-2 text-sm hover:text-green-600">
+                                                            {{ $child->title }}
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </li>
+                                @endforeach
+                            </ul>
                         @endif
 
                         <!-- Contact Button -->
