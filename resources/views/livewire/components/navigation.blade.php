@@ -12,7 +12,11 @@
                     <x-brand.logo class="w-auto h-8 text-indigo-600" />
                 </div>
             </a>
-
+            @php
+                use Datlechin\FilamentMenuBuilder\Models\Menu;
+                $headerLocation = app()->getLocale() === 'en' ? 'header_en' : 'header_uk';
+                $headerMenu = Menu::location($headerLocation);
+            @endphp
             <!-- Desktop Menu -->
             <div class="desktop-menu hidden md:flex">
                 @if ($headerMenu)
