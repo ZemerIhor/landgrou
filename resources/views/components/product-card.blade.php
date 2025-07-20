@@ -17,18 +17,6 @@
     $nameValue = $product->translateAttribute('name') ?? 'Product';
     $descriptionValue = $product->translateAttribute('description') ?? '';
 
-    // Логирование для отладки
-    \Log::info('ProductCard Debug', [
-        'product_id' => $product->id,
-        'locale' => $locale,
-        'fallback_locale' => config('app.fallback_locale'),
-        'name' => $product->attribute_data['name'] ?? null,
-        'nameValue' => $nameValue,
-        'descriptionValue' => $descriptionValue,
-        'attribute_data' => $product->attribute_data->toArray(),
-        'slug' => $slug,
-        'productUrl' => $productUrl,
-    ]);
 @endphp
 
 <article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200" role="listitem">
