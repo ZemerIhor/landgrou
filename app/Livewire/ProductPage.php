@@ -2,9 +2,7 @@
 
 namespace App\Livewire;
 
-use LunarАЗ
-
-System: Lunar\Models\Url;
+use  Lunar\Models\Url;
 use App\Traits\FetchesUrls;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
