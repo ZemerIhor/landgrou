@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\URL as FacadeURL; // Алиас для Illuminate\Support\Facades\URL
+use Lunar\Models\Url as LunarUrl; // Алиас для Lunar\Models\Url
 use Lunar\Models\Product;
 use Lunar\Models\Language;
+use Illuminate\Support\Facades\Route;
 
 class LanguageController extends Controller
 {
@@ -23,7 +25,7 @@ class LanguageController extends Controller
         App::setLocale($locale);
 
         // Получаем текущий URL
-        $redirectTo = request('redirect_to', URL::full());
+        $redirectTo = request('redirect_to', FacadeURL::full());
 
         // Удаляем доменную часть
         $baseUrl = config('app.url');
@@ -37,14 +39,13 @@ class LanguageController extends Controller
             $currentSlug = $matches[1];
 
             // Находим URL по текущему слагу
-            $url = Url::where('slug', $currentSlug)
+            $url = LunarUrl::where('slug', $currentSlug)
                 ->where('element_type', Product::class)
                 ->first();
 
             if (!$url) {
                 // Проверяем альтернативный слаг (например, украинский с 'vfv')
-                $url = Url::where('slug', $currentSlug . 'vfv')
-                    ->orWhere('slug', str_replace('vfv', '', $currentSlug))
+                $url = LunarUrl::whereIn('slug', [$currentSlug, $currentSlug . 'vfv', str_replace('vfv', '', $currentSlug)])
                     ->where('element_type', Product::class)
                     ->first();
             }
@@ -70,14 +71,24 @@ class LanguageController extends Controller
             }
         } else {
             // Для других страниц добавляем префикс локали
-            $path = "/{$locale}/{$path}";
+            $newPath = "/{$locale}/{$path}";
+            try {
+                $routeExists = Route::getRoutes()->match(
+                    \Illuminate\Http\Request::create($newPath, 'GET')
+                );
+                $path = $newPath;
+            } catch (\Exception $e) {
+                // Если маршрут не существует, редирект на главную с локалью
+                \Log::warning('Route not found for path', ['path' => $newPath, 'error' => $e->getMessage()]);
+                $path = "/{$locale}";
+            }
         }
 
         // Логируем для отладки
         \Log::info('Language switch requested', [
             'locale' => $locale,
             'redirect_to' => $path,
-            'current_url' => URL::full(),
+            'current_url' => FacadeURL::full(),
             'request_path' => request()->path(),
         ]);
 
@@ -87,6 +98,6 @@ class LanguageController extends Controller
             $path .= '?' . $query;
         }
 
-        return redirect($path ?: '/');
+        return redirect($path ?: "/{$locale}");
     }
 }

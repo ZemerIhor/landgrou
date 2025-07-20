@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\App;
 // Маршрут для смены языка через контроллер
 Route::get('/lang/{locale}', [\App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
 
-// Быстрое переключение языка (оставляем для обратной совместимости, если используется)
+// Быстрое переключение языка (для совместимости)
 Route::get('/switch/{locale}', function ($locale) {
     if (!in_array($locale, ['uk', 'en'])) {
         abort(404);
@@ -29,7 +29,7 @@ Route::get('/switch/{locale}', function ($locale) {
     App::setLocale($locale);
 
     $currentPath = preg_replace('#^/(en|uk)/#', '/', request()->path());
-    return redirect($currentPath);
+    return redirect("/{$locale}/{$currentPath}");
 })->name('lang.quick_switch');
 
 // Маршрут для страниц продуктов (без префикса локали)

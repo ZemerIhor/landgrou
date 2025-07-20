@@ -22,6 +22,13 @@ class Localization
             App::setLocale($locale);
         }
 
+        \Log::info('Localization Middleware', [
+            'locale' => $locale,
+            'session_locale' => Session::get('locale'),
+            'app_locale' => App::getLocale(),
+            'path' => $request->path(),
+        ]);
+
         return $next($request);
     }
 }
