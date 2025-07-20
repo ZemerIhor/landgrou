@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Livewire;
-
+use Lunar\Models\Url;
 use App\Traits\FetchesUrls;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -18,7 +18,7 @@ class ProductPage extends Component
     public array $selectedOptionValues = [];
     public int $quantity = 1;
 
-
+    public $slug;
     public function mount($slug): void
     {
         $this->url = $this->fetchUrl(
@@ -174,6 +174,11 @@ class ProductPage extends Component
 
     public function render(): View
     {
+        $url = Url::where('slug', $this->slug)
+            ->where('element_type', \Lunar\Models\Product::class)
+            ->firstOrFail();
+
+        $product = $url->element;
         return view('livewire.product-page');
     }
 }
