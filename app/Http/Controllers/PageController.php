@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Livewire\Page;
+use App\Models\Page; // Используем модель, а не компонент Livewire
 use Illuminate\Http\Request;
 
 class PageController extends Controller

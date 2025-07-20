@@ -62,8 +62,4 @@ Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], functi
     Route::get('/checkout/success', CheckoutSuccessPage::class)->name('checkout-success.view');
     Route::get('/products', SearchPage::class)->name('products.index');
 
-    // Маршрут для динамических страниц — в самом конце
-    Route::get('/{slug}', [\App\Http\Controllers\PageController::class, 'show'])
-        ->name('page.show')
-        ->where('slug', '^(?!catalog|reviews|submit-review|privacy-policy|terms|faq|about-us|contacts|blog|collections|products|search|checkout|checkout/success).*$');
 });
