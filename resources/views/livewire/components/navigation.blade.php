@@ -12,10 +12,16 @@
                     <x-brand.logo class="w-auto h-8 text-indigo-600" />
                 </div>
             </a>
+
             @php
                 use Datlechin\FilamentMenuBuilder\Models\Menu;
                 $headerLocation = app()->getLocale() === 'en' ? 'header_en' : 'header_uk';
                 $headerMenu = Menu::location($headerLocation);
+                \Log::info('Header Menu Debug', [
+                    'location' => $headerLocation,
+                    'menu' => $headerMenu ? $headerMenu->toArray() : null,
+                    'locale' => app()->getLocale(),
+                ]);
             @endphp
 
             <style>
@@ -82,6 +88,7 @@
                     transition: height 0.3s ease;
                 }
             </style>
+
             <!-- Desktop Menu -->
             <div class="desktop-menu hidden md:flex">
                 @if ($headerMenu)
@@ -125,6 +132,13 @@
 
                     $enUrl = url('/en/' . $pathWithoutLocale);
                     $ukUrl = url('/uk/' . $pathWithoutLocale);
+
+                    \Log::info('Header Language Switch', [
+                        'current_locale' => app()->getLocale(),
+                        'current_url' => request()->fullUrl(),
+                        'en_url' => $enUrl,
+                        'uk_url' => $ukUrl,
+                    ]);
                 @endphp
 
                 @php
@@ -160,13 +174,12 @@
                     @livewire('components.cart')
 
                     <!-- Language Dropdown (Desktop) -->
-                    <div class="relative">
+                    <div class="relative" x-data="{ desktopLanguageMenu: false }">
                         <button
-                            x-on:click="open = !open"
+                            x-on:click="desktopLanguageMenu = !desktopLanguageMenu"
                             class="flex items-center gap-1 text-sm font-semibold text-zinc-800 hover:text-green-600 focus:outline-none focus:ring-2 focus:ring-green-600"
                             aria-label="{{ __('messages.language.current') }}"
-                            :aria-expanded="open"
-                            x-data="{ open: false }"
+                            :aria-expanded="desktopLanguageMenu"
                         >
                             <span class="uppercase">{{ app()->getLocale() }}</span>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -174,11 +187,11 @@
                             </svg>
                         </button>
                         <div
-                            x-show="open"
+                            x-show="desktopLanguageMenu"
                             x-transition
                             x-cloak
                             class="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-md z-50"
-                            x-on:click.away="open = false"
+                            x-on:click.away="desktopLanguageMenu = false"
                         >
                             @if(app()->getLocale() !== 'en')
                                 <a
@@ -252,12 +265,12 @@
                         </button>
 
                         <!-- Language Dropdown (Mobile) -->
-                        <div class="relative w-full px-4" x-data="{ languageMenu: false }">
+                        <div class="relative w-full px-4" x-data="{ mobileLanguageMenu: false }">
                             <button
-                                x-on:click="languageMenu = !languageMenu"
+                                x-on:click="mobileLanguageMenu = !mobileLanguageMenu"
                                 class="flex items-center justify-between w-full px-4 py-2 text-base font-semibold text-zinc-800 hover:text-green-600 focus:outline-none focus:ring-2 focus:ring-green-600"
                                 aria-label="{{ __('messages.language.current') }}"
-                                :aria-expanded="languageMenu"
+                                :aria-expanded="mobileLanguageMenu"
                             >
                                 <span>{{ app()->getLocale() === 'en' ? __('messages.language.english') : __('messages.language.ukrainian') }}</span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -265,7 +278,7 @@
                                 </svg>
                             </button>
                             <div
-                                x-show="languageMenu"
+                                x-show="mobileLanguageMenu"
                                 x-transition
                                 x-cloak
                                 class="mt-2 w-full bg-white shadow-lg rounded-md"
