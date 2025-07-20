@@ -12,18 +12,28 @@ class Product extends LunarProduct
     use HasFactory;
 
     /**
-     * Определяет отношение к основному URL продукта.
+     * Определяет отношение к URL продукта для текущей локали.
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
-    public function defaultUrl(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    public function localizedUrl(): \Illuminate\Database\Eloquent\Relations\MorphOne
     {
         $locale = app()->getLocale();
         $languageId = \Lunar\Models\Language::where('code', $locale)->first()->id ?? 1;
 
         return $this->morphOne(\Lunar\Models\Url::class, 'element')
-            ->where('default', true)
             ->where('language_id', $languageId);
+    }
+
+    /**
+     * Определяет отношение к основному URL продукта (для обратной совместимости).
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function defaultUrl(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    {
+        return $this->morphOne(\Lunar\Models\Url::class, 'element')
+            ->where('default', true);
     }
 
     /**
@@ -33,15 +43,14 @@ class Product extends LunarProduct
      */
     public function getSlugAttribute(): string
     {
-        // Проверяем defaultUrl для текущей локали
-        if ($this->defaultUrl && $this->defaultUrl->slug) {
-            return $this->defaultUrl->slug;
+        // Проверяем URL для текущей локали
+        if ($this->localizedUrl && $this->localizedUrl->slug) {
+            return $this->localizedUrl->slug;
         }
 
-        // Проверяем любой default URL как запасной вариант
-        $fallbackUrl = $this->urls()->where('default', true)->first();
-        if ($fallbackUrl && $fallbackUrl->slug) {
-            return $fallbackUrl->slug;
+        // Проверяем default URL как запасной вариант
+        if ($this->defaultUrl && $this->defaultUrl->slug) {
+            return $this->defaultUrl->slug;
         }
 
         // Используем имя из attribute_data
