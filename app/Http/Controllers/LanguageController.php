@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\URL as FacadeURL; // Алиас для Illuminate\Support\Facades\URL
-use Lunar\Models\Url as LunarUrl; // Алиас для Lunar\Models\Url
+use Illuminate\Support\Facades\URL as FacadeURL;
+use Lunar\Models\Url as LunarUrl;
 use Lunar\Models\Product;
 use Lunar\Models\Language;
 use Illuminate\Support\Facades\Route;
@@ -44,7 +44,7 @@ class LanguageController extends Controller
                 ->first();
 
             if (!$url) {
-                // Проверяем альтернативный слаг (например, украинский с 'vfv')
+                // Проверяем альтернативные слаги
                 $url = LunarUrl::whereIn('slug', [$currentSlug, $currentSlug . 'vfv', str_replace('vfv', '', $currentSlug)])
                     ->where('element_type', Product::class)
                     ->first();
@@ -59,11 +59,11 @@ class LanguageController extends Controller
                     ->where('language_id', $languageId)
                     ->first();
 
-                if ($newUrl) {
+                if ($newUrl && $newUrl->slug !== $currentSlug) {
                     $path = "/products/{$newUrl->slug}";
                 } else {
-                    // Фоллбек: используем дефолтный слаг
-                    $path = "/products/{$product->slug}";
+                    // Если текущий слаг уже соответствует новой локали, оставляем его
+                    $path = "/products/{$currentSlug}";
                 }
             } else {
                 // Если продукт не найден, редирект на главную

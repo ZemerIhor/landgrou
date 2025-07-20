@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use Lunar\Models\Url;
+use Lunar\Models\Url as LunarUrl;
 use App\Traits\FetchesUrls;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -23,17 +23,18 @@ class ProductPage extends Component
     public function mount($slug): void
     {
         // Находим URL по переданному слагу
-        $url = Url::where('slug', $slug)
+        $url = LunarUrl::where('slug', $slug)
             ->where('element_type', (new Product)->getMorphClass())
             ->first();
 
         if (!$url) {
             // Проверяем альтернативный слаг (например, украинский с 'vfv')
-            $url = Url::whereIn('slug', [$slug, $slug . 'vfv'])
+            $url = LunarUrl::whereIn('slug', [$slug, $slug . 'vfv', str_replace('vfv', '', $slug)])
                 ->where('element_type', (new Product)->getMorphClass())
                 ->first();
 
             if (!$url) {
+                \Log::error('Product URL not found', ['slug' => $slug]);
                 abort(404);
             }
         }
@@ -51,6 +52,7 @@ class ProductPage extends Component
         );
 
         if (!$this->url) {
+            \Log::error('Product fetchUrl failed', ['slug' => $slug]);
             abort(404);
         }
 
@@ -60,6 +62,12 @@ class ProductPage extends Component
         $this->selectedOptionValues = $this->productOptions->mapWithKeys(function ($data) {
             return [$data['option']->id => $data['values']->first()->id];
         })->toArray();
+
+        \Log::info('ProductPage mounted', [
+            'slug' => $slug,
+            'product_id' => $this->product->id,
+            'locale' => app()->getLocale(),
+        ]);
     }
 
     public function getVariantProperty(): ProductVariant
