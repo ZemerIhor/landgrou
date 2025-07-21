@@ -168,26 +168,9 @@ class CheckoutPage extends Component
             ];
         })->toArray();
 
-        // Если chosenShipping уже выбрана, устанавливаем цену доставки в мета-данных
-        if ($this->chosenShipping) {
-            $selectedOption = collect($this->shippingOptions)->firstWhere('identifier', $this->chosenShipping);
-            if ($selectedOption) {
-                $this->cart->meta = array_merge($this->cart->meta ? $this->cart->meta->toArray() : [], [
-                    'shipping_option' => $this->chosenShipping,
-                    'shipping_total' => $selectedOption['price']->value ?? 0,
-                    'shipping_sub_total' => $selectedOption['price']->value ?? 0,
-                ]);
-                $this->cart->save();
-            }
-        }
-
-        $this->cart->calculate();
-        $this->cart->refresh();
-
         Log::info('Опции доставки загружены', [
             'cart_id' => $this->cart->id,
             'options' => array_column($this->shippingOptions, 'identifier'),
-            'shipping_total' => $this->cart->meta['shipping_total'] ?? 0,
         ]);
     }
 
@@ -252,26 +235,7 @@ class CheckoutPage extends Component
         ])->save();
 
         $this->cart->setShippingAddress($this->cart->shippingAddress);
-
-        // Явно устанавливаем опцию доставки, если она уже выбрана
-        if ($this->chosenShipping) {
-            $option = \Lunar\Facades\ShippingManifest::getOptions($this->cart)->first(
-                fn($opt) => $opt->getIdentifier() === $this->chosenShipping
-            );
-            if ($option) {
-                $this->cart->setShippingOption($option);
-                $this->cart->meta = array_merge($this->cart->meta ? $this->cart->meta->toArray() : [], [
-                    'shipping_option' => $this->chosenShipping,
-                    'shipping_total' => $option->price->value ?? 0,
-                    'shipping_sub_total' => $option->price->value ?? 0,
-                ]);
-                $this->cart->save();
-            }
-        }
-
         $this->cart->refresh();
-        $this->cart->calculate();
-        $this->loadShippingOptions();
 
         $this->currentStep = $this->steps['delivery'];
         session(['checkout_step' => $this->currentStep]);
@@ -715,29 +679,10 @@ class CheckoutPage extends Component
         $this->cart->calculate();
         $this->loadShippingOptions();
 
-        if ($value) {
-            $option = \Lunar\Facades\ShippingManifest::getOptions($this->cart)->first(
-                fn($opt) => $opt->getIdentifier() === $value
-            );
-            if ($option) {
-                $this->cart->setShippingOption($option);
-                $this->cart->meta = array_merge($this->cart->meta ? $this->cart->meta->toArray() : [], [
-                    'shipping_option' => $value,
-                    'shipping_total' => $option->price->value ?? 0,
-                    'shipping_sub_total' => $option->price->value ?? 0,
-                ]);
-                $this->cart->save();
-            }
-        }
-
-        $this->cart->calculate();
-        $this->cart->refresh();
-
         Log::debug('Обновление chosenShipping', [
             'chosenShipping' => $value,
             'shippingData' => $this->shippingData,
             'cartAddress' => $this->cart->shippingAddress->toArray(),
-            'shipping_total' => $this->cart->meta['shipping_total'] ?? 0,
         ]);
     }
 
@@ -807,7 +752,6 @@ class CheckoutPage extends Component
             'chosen_shipping' => $this->chosenShipping,
             'shipping_data' => $this->shippingData,
             'cart_meta' => $this->cart->meta ? $this->cart->meta->toArray() : null,
-            'shipping_total' => $this->cart->meta['shipping_total'] ?? 0,
         ]);
 
         return view('livewire.checkout-page', [
