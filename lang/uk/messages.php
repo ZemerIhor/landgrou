@@ -354,6 +354,41 @@ return [
         'no_slides' => 'Слайди відсутні',
     ],
 
+    'catalog' => [
+        'title' => 'Каталог продуктів',
+        'found' => 'Знайдено',
+        'items' => 'товарів',
+        'brand' => 'Бренд',
+        'price_up_to' => 'Ціна до',
+        'clear_all' => 'Скинути все',
+        'apply' => 'Застосувати',
+        'no_products' => 'Немає товарів за вибраними параметрами.',
+        'sort_name_asc' => 'Назва А-Я',
+        'sort_name_desc' => 'Назва Я-А',
+        'sort_price_asc' => 'Ціна: низька до високої',
+        'sort_price_desc' => 'Ціна: висока до низької',
+        'placeholder_image' => 'Зображення-заглушка',
+        'missing_slug_warning' => 'Попередження: URL або slug відсутній для продукту ID: :id (Локаль: :locale)',
+    ],
+    'aria' => [
+        'filters_sort' => 'Фільтри та сортування',
+        'active_filters' => 'Активні фільтри',
+        'remove_filter' => 'Видалити фільтр: :name',
+        'remove_price_filter' => 'Видалити фільтр: Ціна',
+        'remove_filter_icon' => 'Видалити фільтр',
+        'clear_all_filters' => 'Скинути всі фільтри',
+        'clear_filters_icon' => 'Скинути фільтри',
+        'sorting' => 'Сортування',
+        'view_toggle' => 'Переключення виду',
+        'grid_view' => 'Вид сітки',
+        'list_view' => 'Вид списку',
+        'product_filters' => 'Фільтри товарів',
+        'product_list' => 'Список товарів',
+        'max_price' => 'Максимальна ціна',
+        'enter_max_price' => 'Ввести максимальну ціну',
+        'pagination' => 'Навігація по сторінках',
+    ],
+
 
 ];
 
