@@ -344,6 +344,9 @@
 .product-properties tbody tr {
     border-radius: 8px;
 }
+.product-properties tbody tr:nth-child(odd) {
+    background-color: #fff;
+}
 .product-properties tbody tr:nth-child(even) {
     background-color: #f3f3f3;
 }
