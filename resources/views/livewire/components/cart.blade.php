@@ -1,4 +1,3 @@
-
 <div class="sm:relative" x-data="{ linesVisible: @entangle('linesVisible').live }">
     <!-- Cart Button -->
     <button class="grid w-16 h-16 transition border-l border-gray-100 lg:border-l-transparent hover:opacity-75"
@@ -148,14 +147,14 @@
                 <!-- Action Buttons -->
                 <div class="flex flex-wrap gap-4 items-center mt-4 w-full leading-snug max-md:max-w-full" role="group" aria-label="{{ __('messages.cart.actions') }}">
                     <a class="flex flex-1 shrink gap-2 justify-center items-center self-stretch px-5 my-auto text-green-600 rounded-2xl border-2 border-green-600 border-solid basis-0 min-h-11 min-w-60 hover:bg-green-50 transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                       href="{{ url('/') }}"
+                       href="{{ route('home', ['locale' => app()->getLocale()]) }}"
                        wire:navigate
                        aria-label="{{ __('messages.cart.continue_shopping') }}">
                         <span class="self-stretch my-auto text-green-600">{{ __('messages.cart.continue_shopping') }}</span>
                     </a>
 
                     <a class="flex flex-1 shrink gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto text-white bg-green-600 rounded-2xl basis-0 min-h-11 min-w-60 max-md:px-5 hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                       href="{{ route('checkout.view') }}"
+                       href="{{ route('checkout.view', ['locale' => app()->getLocale()]) }}"
                        wire:navigate
                        aria-label="{{ __('messages.cart.checkout') }}">
                         <span class="self-stretch my-auto text-white">{{ __('messages.cart.checkout') }}</span>
@@ -165,4 +164,3 @@
         @endif
     </main>
 </div>
-
