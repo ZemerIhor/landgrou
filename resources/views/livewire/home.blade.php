@@ -328,7 +328,7 @@
     <section class="flex flex-col justify-center self-stretch px-4 md:px-12 py-20 text-base bg-zinc-100 max-md:px-5"
         aria-labelledby="tenders-heading">
         <h2 id="tenders-heading" class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
-            {{ $settings->tenders_title[app()->getLocale()] ?? __('messages.tenders.title') }}
+            {{ __('messages.tenders.title') }}
         </h2>
 
         <div class="flex flex-wrap gap-2 mt-5 w-full font-semibold leading-6 text-white max-md:max-w-full" role="list"
