@@ -242,7 +242,7 @@ class CatalogPage extends Component
     {
         try {
             Log::info('Catalog Page Rendering', [
-                'products_count' => $this->products->total(),
+                'products_count' => $products->total(),
                 'filters' => [
                     'brands' => $this->brands,
                     'priceMax' => $this->priceMax,
