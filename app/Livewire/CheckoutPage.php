@@ -63,9 +63,6 @@ class CheckoutPage extends Component
                     ? ['value' => $line->subTotal->value, 'formatted' => $line->subTotal->formatted()]
                     : $line->subTotal,
             ])->toArray(),
-            'total' => $this->cart->total->value ?? 0,
-            'sub_total' => $this->cart->subTotal->value ?? 0,
-            'shipping_total' => $this->cart->meta['shipping_total'] ?? 0,
         ]);
     }
 
@@ -73,7 +70,6 @@ class CheckoutPage extends Component
     {
         $this->initializeCartAndShipping();
         $this->shippingData = $this->cart->shippingAddress->getAttributes();
-        $this->loadShippingOptions(); // Пересчитываем опции доставки при гидратации
 
         Log::info('Гидратация компонента CheckoutPage', [
             'current_step' => $this->currentStep,
@@ -81,9 +77,6 @@ class CheckoutPage extends Component
             'shipping_data' => $this->cart->shippingAddress ? $this->cart->shippingAddress->toArray() : null,
             'chosen_shipping' => $this->chosenShipping,
             'cart_meta' => $this->cart->meta ? $this->cart->meta->toArray() : null,
-            'total' => $this->cart->total->value ?? 0,
-            'sub_total' => $this->cart->subTotal->value ?? 0,
-            'shipping_total' => $this->cart->meta['shipping_total'] ?? 0,
         ]);
     }
 
@@ -165,34 +158,26 @@ class CheckoutPage extends Component
         $currency = Currency::where('code', $this->cart->currency->code)->first() ?? Currency::first();
 
         $this->shippingOptions = ShippingManifest::getOptions($this->cart)->unique('identifier')->map(function ($option) use ($currency) {
-            $priceValue = $option->price->value ?? 0;
             return [
                 'name' => $option->name,
                 'description' => $option->description,
                 'identifier' => $option->identifier,
-                'price' => new \Lunar\DataTypes\Price($priceValue, $currency, 1),
-                'formatted_price' => (new \Lunar\DataTypes\Price($priceValue, $currency, 1))->formatted(),
+                'price' => new \Lunar\DataTypes\Price($option->price->value ?? 0, $currency, 1),
+                'formatted_price' => (new \Lunar\DataTypes\Price($option->price->value ?? 0, $currency, 1))->formatted(),
                 'collect' => $option->collect ?? false,
             ];
         })->toArray();
 
-        // Устанавливаем опцию доставки, если выбрана
+        // Если chosenShipping уже выбрана, устанавливаем цену доставки в мета-данных
         if ($this->chosenShipping) {
             $selectedOption = collect($this->shippingOptions)->firstWhere('identifier', $this->chosenShipping);
             if ($selectedOption) {
-                $option = \Lunar\Facades\ShippingManifest::getOptions($this->cart)->first(
-                    fn($opt) => $opt->getIdentifier() === $this->chosenShipping
-                );
-                if ($option) {
-                    $this->cart->setShippingOption($option);
-                    $this->cart->meta = array_merge($this->cart->meta ? $this->cart->meta->toArray() : [], [
-                        'shipping_option' => $this->chosenShipping,
-                        'shipping_total' => $option->price->value ?? 0,
-                        'shipping_sub_total' => $option->price->value ?? 0,
-                        'total' => $this->cart->subTotal->value + ($option->price->value ?? 0),
-                    ]);
-                    $this->cart->save();
-                }
+                $this->cart->meta = array_merge($this->cart->meta ? $this->cart->meta->toArray() : [], [
+                    'shipping_option' => $this->chosenShipping,
+                    'shipping_total' => $selectedOption['price']->value ?? 0,
+                    'shipping_sub_total' => $selectedOption['price']->value ?? 0,
+                ]);
+                $this->cart->save();
             }
         }
 
@@ -203,8 +188,6 @@ class CheckoutPage extends Component
             'cart_id' => $this->cart->id,
             'options' => array_column($this->shippingOptions, 'identifier'),
             'shipping_total' => $this->cart->meta['shipping_total'] ?? 0,
-            'sub_total' => $this->cart->subTotal->value ?? 0,
-            'total' => $this->cart->total->value ?? 0,
         ]);
     }
 
@@ -245,7 +228,6 @@ class CheckoutPage extends Component
         }
         $this->cart->refresh();
         $this->cart->calculate();
-        $this->loadShippingOptions(); // Пересчитываем опции доставки после изменения количества
     }
 
     public function saveAddress(): void
@@ -271,7 +253,7 @@ class CheckoutPage extends Component
 
         $this->cart->setShippingAddress($this->cart->shippingAddress);
 
-        // Устанавливаем опцию доставки, если выбрана
+        // Явно устанавливаем опцию доставки, если она уже выбрана
         if ($this->chosenShipping) {
             $option = \Lunar\Facades\ShippingManifest::getOptions($this->cart)->first(
                 fn($opt) => $opt->getIdentifier() === $this->chosenShipping
@@ -282,7 +264,6 @@ class CheckoutPage extends Component
                     'shipping_option' => $this->chosenShipping,
                     'shipping_total' => $option->price->value ?? 0,
                     'shipping_sub_total' => $option->price->value ?? 0,
-                    'total' => $this->cart->subTotal->value + ($option->price->value ?? 0),
                 ]);
                 $this->cart->save();
             }
@@ -294,14 +275,6 @@ class CheckoutPage extends Component
 
         $this->currentStep = $this->steps['delivery'];
         session(['checkout_step' => $this->currentStep]);
-
-        Log::info('Переход на шаг доставки', [
-            'cart_id' => $this->cart->id,
-            'chosen_shipping' => $this->chosenShipping,
-            'shipping_total' => $this->cart->meta['shipping_total'] ?? 0,
-            'sub_total' => $this->cart->subTotal->value ?? 0,
-            'total' => $this->cart->total->value ?? 0,
-        ]);
     }
 
     public function saveShippingOption(): void
@@ -352,19 +325,20 @@ class CheckoutPage extends Component
                 throw new \Exception('Канал продаж не настроен. Пожалуйста, обратитесь к администратору.');
             }
             $this->cart->channel_id = $channel->id;
+            $this->cart->save();
 
             $this->cart->meta = array_merge($this->cart->meta ? $this->cart->meta->toArray() : [], [
                 'shipping_option' => $this->chosenShipping,
                 'payment_option' => 'cash_on_delivery',
                 'shipping_total' => $option->price->value ?? 0,
                 'shipping_sub_total' => $option->price->value ?? 0,
+                'shipping_tax_breakdown' => [],
                 'sub_total' => $this->cart->subTotal->value ?? 0,
-                'total' => $this->cart->subTotal->value + ($option->price->value ?? 0),
+                'total' => $this->cart->total->value ?? 0,
                 'tax_total' => 0,
             ]);
             $this->cart->save();
             $this->cart->refresh();
-            $this->cart->calculate();
 
             Log::info('Опция доставки установлена', [
                 'cart_id' => $this->cart->id,
@@ -377,7 +351,6 @@ class CheckoutPage extends Component
                     'identifier' => $option->identifier,
                     'price' => $option->price->value ?? 0,
                 ],
-                'total' => $this->cart->total->value ?? 0,
             ]);
 
             if ($this->chosenShipping === 'pickup') {
@@ -395,7 +368,6 @@ class CheckoutPage extends Component
 
             $this->cart->setShippingAddress($this->cart->shippingAddress);
             $this->cart->refresh();
-            $this->cart->calculate();
 
             $savedAddress = \Lunar\Models\CartAddress::where('cart_id', $this->cart->id)
                 ->where('type', 'shipping')
@@ -404,9 +376,9 @@ class CheckoutPage extends Component
                 'cart_id' => $this->cart->id,
                 'shipping_option' => $savedAddress->meta['shipping_option'] ?? null,
                 'shipping_data' => $savedAddress->toArray(),
-                'total' => $this->cart->total->value ?? 0,
             ]);
 
+            $this->cart->calculate();
             $this->loadShippingOptions();
         } catch (\Exception $e) {
             Log::error('Ошибка при сохранении адреса доставки', [
@@ -434,7 +406,6 @@ class CheckoutPage extends Component
                 'payment_option' => $this->cart->meta['payment_option'] ?? null,
                 'channel_id' => $this->cart->channel_id,
                 'shipping_address' => $this->cart->shippingAddress ? $this->cart->shippingAddress->toArray() : null,
-                'total' => $this->cart->total->value ?? 0,
             ]);
 
             $cartData = [
@@ -465,7 +436,7 @@ class CheckoutPage extends Component
                 'discount_total' => 0,
                 'shipping_breakdown' => $shippingBreakdown,
                 'shipping_total' => $option->price->value ?? 0,
-                'total' => $this->cart->subTotal->value + ($option->price->value ?? 0),
+                'total' => $this->cart->total->value ?? 0,
                 'tax_total' => 0,
                 'tax_breakdown' => $taxBreakdown,
                 'currency_code' => $this->cart->currency->code ?? 'UAH',
@@ -524,7 +495,7 @@ class CheckoutPage extends Component
                 'country_id' => $shippingCartAddress->country_id,
                 'contact_email' => $shippingCartAddress->contact_email,
                 'contact_phone' => $shippingCartAddress->contact_phone,
-                'meta' => $this->cart->meta ? $this->cart->meta->toArray() : null,
+                'meta' => $shippingCartAddress->meta ? $shippingCartAddress->meta->toArray() : null,
             ]);
 
             \Lunar\Models\OrderAddress::create([
@@ -541,7 +512,7 @@ class CheckoutPage extends Component
                 'country_id' => $shippingCartAddress->country_id,
                 'contact_email' => $shippingCartAddress->contact_email,
                 'contact_phone' => $shippingCartAddress->contact_phone,
-                'meta' => $this->cart->meta ? $this->cart->meta->toArray() : null,
+                'meta' => $shippingCartAddress->meta ? $shippingCartAddress->meta->toArray() : null,
             ]);
 
             Log::info('Адреса заказа созданы', [
@@ -561,7 +532,6 @@ class CheckoutPage extends Component
                 'cart_id' => $this->cart->id,
                 'channel_id' => $order->channel_id,
                 'status' => $order->status,
-                'total' => $order->total,
             ]);
 
             if ($this->comment) {
@@ -647,6 +617,7 @@ class CheckoutPage extends Component
         $this->shippingData['line_one'] = '';
         $this->npWarehouses = [];
 
+        // Сохраняем город в CartAddress
         $this->cart->shippingAddress->fill([
             'city' => $this->shippingData['city'],
         ])->save();
@@ -686,6 +657,7 @@ class CheckoutPage extends Component
         $this->shippingData['line_one'] = '';
         $this->npWarehouses = [];
 
+        // Сохраняем город в CartAddress
         $this->cart->shippingAddress->fill([
             'city' => $cityName,
         ])->save();
@@ -720,11 +692,13 @@ class CheckoutPage extends Component
 
     public function updatedShippingDataLineOne($value): void
     {
+        // Сохраняем line_one в CartAddress
         $this->cart->shippingAddress->fill([
             'line_one' => $value,
         ])->save();
         $this->cart->setShippingAddress($this->cart->shippingAddress);
         $this->cart->refresh();
+
         $this->cart->calculate();
         $this->loadShippingOptions();
 
@@ -738,6 +712,9 @@ class CheckoutPage extends Component
 
     public function updatedChosenShipping($value): void
     {
+        $this->cart->calculate();
+        $this->loadShippingOptions();
+
         if ($value) {
             $option = \Lunar\Facades\ShippingManifest::getOptions($this->cart)->first(
                 fn($opt) => $opt->getIdentifier() === $value
@@ -748,7 +725,6 @@ class CheckoutPage extends Component
                     'shipping_option' => $value,
                     'shipping_total' => $option->price->value ?? 0,
                     'shipping_sub_total' => $option->price->value ?? 0,
-                    'total' => $this->cart->subTotal->value + ($option->price->value ?? 0),
                 ]);
                 $this->cart->save();
             }
@@ -756,15 +732,12 @@ class CheckoutPage extends Component
 
         $this->cart->calculate();
         $this->cart->refresh();
-        $this->loadShippingOptions();
 
         Log::debug('Обновление chosenShipping', [
             'chosenShipping' => $value,
             'shippingData' => $this->shippingData,
             'cartAddress' => $this->cart->shippingAddress->toArray(),
             'shipping_total' => $this->cart->meta['shipping_total'] ?? 0,
-            'sub_total' => $this->cart->subTotal->value ?? 0,
-            'total' => $this->cart->total->value ?? 0,
         ]);
     }
 
@@ -827,9 +800,6 @@ class CheckoutPage extends Component
 
     public function render(): View
     {
-        $this->cart->calculate(); // Пересчитываем корзину перед рендерингом
-        $this->loadShippingOptions(); // Перезагружаем опции доставки
-
         Log::info('Рендеринг CheckoutPage', [
             'current_step' => $this->currentStep,
             'shipping_exists' => $this->cart->shippingAddress instanceof \Lunar\Models\CartAddress,
@@ -838,8 +808,6 @@ class CheckoutPage extends Component
             'shipping_data' => $this->shippingData,
             'cart_meta' => $this->cart->meta ? $this->cart->meta->toArray() : null,
             'shipping_total' => $this->cart->meta['shipping_total'] ?? 0,
-            'sub_total' => $this->cart->subTotal->value ?? 0,
-            'total' => $this->cart->total->value ?? 0,
         ]);
 
         return view('livewire.checkout-page', [
