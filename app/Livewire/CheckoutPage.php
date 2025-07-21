@@ -70,6 +70,8 @@ class CheckoutPage extends Component
     {
         $this->initializeCartAndShipping();
         $this->shippingData = $this->cart->shippingAddress->getAttributes();
+        $this->cart->calculate();
+        $this->loadShippingOptions();
 
         Log::info('Гидратация компонента CheckoutPage', [
             'current_step' => $this->currentStep,
@@ -437,7 +439,7 @@ class CheckoutPage extends Component
                     'tax_total' => 0,
                     'tax_breakdown' => $lineTaxBreakdown,
                     'total' => $cartLine->subTotal->value ?? 0,
-                    'meta' => $cartLine->meta ? $cartLine->meta->toArray() : [],
+                    'meta' => $cartLine->meta ? $this->cart->meta->toArray() : [],
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
