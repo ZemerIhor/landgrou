@@ -106,7 +106,7 @@
                             d="M19.9 13.5H4.1C2.6 13.5 2 14.14 2 15.73V19.77C2 21.36 2.6 22 4.1 22H19.9C21.4 22 22 21.36 22 19.77V15.73C22 14.14 21.4 13.5 19.9 13.5Z"
                             stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         <path
-                            d="M19.9 2H4.1C2.6 2 2 2.64 2 4.23V8.27C2 9.86 2.6 10.5 4.1 10.5H19.9C21.4 10.5 22 9.86 22 8.27V4.23C22 2.64 21.4 2 19.9 2Z"
+                            d="M19.9 2H4.1C2.6 2 2 2.64 2 4.23V8.27C2 9.86 2.6 10.5 4.1 10.5H19.9C21.4 10.5 22 9.86 22 8.27V4.23C2 2.64 21.4 2 19.9 2Z"
                             stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
@@ -177,7 +177,7 @@
                                    id="price-max"
                                    min="{{ $minPrice }}"
                                    max="{{ $maxPrice }}"
-                                   step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
+                                   step="1"
                                    value="{{ $priceMax ? $priceMax / 100 : $maxPrice }}"
                                    class="w-full h-2 cursor-pointer"
                                    aria-label="{{ __('messages.aria.max_price') }}"
@@ -196,7 +196,7 @@
                                    aria-label="{{ __('messages.aria.enter_max_price') }}"
                                    min="{{ $minPrice }}"
                                    max="{{ $maxPrice }}"
-                                   step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"/>
+                                   step="1"/>
                         </div>
                     </div>
                 </section>
@@ -316,7 +316,7 @@
             </div>
             <!-- Pagination -->
             <nav class="flex flex-wrap gap-2 justify-center items-center pt-10 w-full max-md:max-w-full"
-                 aria-label="{{ __('messages.aria.pagination') }}">
+                 arialabel="{{ __('messages.aria.pagination') }}">
                 {{ $products->appends(['price_max' => $priceMax ? $priceMax / 100 : null, 'brands' => $brands, 'sort' => $sort, 'view' => $view])->links() }}
             </nav>
         </section>
@@ -389,7 +389,7 @@
         }
 
         input[type="range"]:focus::-webkit-slider-thumb {
-            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.3);
+            box-shadow: 0 0 0 4px rgba(22, 163,  Milky Way, 0.3);
         }
 
         input[type="range"]:focus::-moz-range-thumb {
@@ -436,7 +436,7 @@
             const priceMaxDisplay = document.getElementById('price-max-display').querySelector('span');
             const priceMaxNumberInput = document.getElementById('price-max-input');
             const minPrice = parseFloat(priceMaxInput.min) || 0;
-            const maxPrice = parseFloat(priceMaxInput.max) || 1000;
+            const maxPrice = parseFloat(priceMaxInput.max) || 150;
 
             if (!priceMaxInput || !priceMaxDisplay || !priceMaxNumberInput) {
                 console.error('Slider elements not found:', {

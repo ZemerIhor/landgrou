@@ -161,7 +161,7 @@ class CatalogPage extends Component
                             ->where('lunar_prices.currency_id', '=', $this->currency->id);
                     })
                     ->groupBy('lunar_products.id')
-                    ->orderByRaw('MIN(lunar_prices.price) ASC NULLS LAST');
+                    ->orderByRaw('COALESCE(MIN(lunar_prices.price), 999999999) ASC');
                 break;
             case 'price_desc':
                 $productsQuery->select('lunar_products.*')
@@ -172,7 +172,7 @@ class CatalogPage extends Component
                             ->where('lunar_prices.currency_id', '=', $this->currency->id);
                     })
                     ->groupBy('lunar_products.id')
-                    ->orderByRaw('MAX(lunar_prices.price) DESC NULLS LAST');
+                    ->orderByRaw('COALESCE(MAX(lunar_prices.price), 0) DESC');
                 break;
         }
 
@@ -215,7 +215,7 @@ class CatalogPage extends Component
                         ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                         ->where('lunar_prices.currency_id', '=', $this->currency->id);
                 })
-                ->min('lunar_prices.price') ?? 420000; // Минимальная цена из данных
+                ->min('lunar_prices.price') ?? 4200; // Минимальная цена 42 UAH (4200 копеек)
 
             $maxPrice = Product::where('status', 'published')
                 ->join('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
@@ -224,7 +224,7 @@ class CatalogPage extends Component
                         ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                         ->where('lunar_prices.currency_id', '=', $this->currency->id);
                 })
-                ->max('lunar_prices.price') ?? 1500000; // Максимальная цена из данных
+                ->max('lunar_prices.price') ?? 15000; // Максимальная цена 150 UAH (15000 копеек)
 
             Log::info('Price Range Calculated', [
                 'minPrice' => $minPrice,
@@ -274,8 +274,8 @@ class CatalogPage extends Component
             return view('livewire.catalog-page', [
                 'products' => Product::where('status', 'published')->paginate($this->perPage),
                 'availableBrands' => Brand::whereHas('products')->get(),
-                'minPrice' => 4200,
-                'maxPrice' => 15000,
+                'minPrice' => 42,
+                'maxPrice' => 150,
                 'locale' => $this->locale,
                 'currency' => $this->currency,
             ])->with('error', __('messages.catalog.error') . ': ' . $e->getMessage());
