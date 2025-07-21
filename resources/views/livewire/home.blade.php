@@ -43,7 +43,7 @@
         </section>
     </div>
 
-    <div class="container mx-auto md:px-12 px-4  py-[80px] products  mx-auto ">
+    <div class="container mx-auto md:px-2 px-42 py-[80px] products mx-auto ">
 
         <section class="flex flex-col self-stretch" aria-label="Каталог">
             <div class="">
@@ -65,7 +65,7 @@
         </section>
     </div>
 
-    <div class="container mx-auto md:px-12 px-4 mx-auto">
+    <div class="container mx-auto md:px-2 px-2 mx-auto">
         <section class="flex overflow-hidden flex-col font-bold" aria-labelledby="advantages-title">
             <div class="flex flex-col items-center">
                 <h1 id="advantages-title" class="text-4xl leading-none text-center text-zinc-800 max-md:max-w-full">
