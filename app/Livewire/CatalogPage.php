@@ -32,9 +32,10 @@ class CatalogPage extends Component
     public function mount(): void
     {
         $this->locale = app()->getLocale();
-        $this->currency = Currency::where('code', config('lunar.currency'))->first() ?? Currency::first();
+        // Force UAH currency
+        $this->currency = Currency::where('code', 'UAH')->first() ?? Currency::first();
 
-        // Read query parameters (convert price_max from UAH to cents)
+        // Read query parameters (price_max in UAH, convert to cents)
         $this->priceMax = Request::query('price_max') ? (float) Request::query('price_max') * 100 : null;
         $this->brands = Request::query('brands', []);
         $this->sort = Request::query('sort', 'name_asc');
@@ -83,20 +84,20 @@ class CatalogPage extends Component
     public function removeBrand($id)
     {
         $this->brands = array_diff($this->brands, [$id]);
-        $this->applyFilters();
+        $this->updateUrl();
     }
 
     public function clearPrice()
     {
         $this->priceMax = null;
-        $this->applyFilters();
+        $this->updateUrl();
     }
 
     public function clearAllFilters()
     {
         $this->brands = [];
         $this->priceMax = null;
-        $this->applyFilters();
+        $this->updateUrl();
     }
 
     public function setView($view)
@@ -164,7 +165,7 @@ class CatalogPage extends Component
                             ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                             ->where('lunar_prices.currency_id', '=', $this->currency->id);
                     })
-                    ->groupBy('lunar_products.id') // Group by product to avoid duplicates
+                    ->groupBy('lunar_products.id')
                     ->orderByRaw('MIN(lunar_prices.price) ASC');
                 break;
             case 'price_desc':
@@ -175,7 +176,7 @@ class CatalogPage extends Component
                             ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                             ->where('lunar_prices.currency_id', '=', $this->currency->id);
                     })
-                    ->groupBy('lunar_products.id') // Group by product to avoid duplicates
+                    ->groupBy('lunar_products.id')
                     ->orderByRaw('MAX(lunar_prices.price) DESC');
                 break;
         }
@@ -228,7 +229,7 @@ class CatalogPage extends Component
                         ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                         ->where('lunar_prices.currency_id', '=', $this->currency->id);
                 })
-                ->max('lunar_prices.price') ?? 100000; // Default in cents
+                ->max('lunar_prices.price') ?? 100000;
 
             Log::info('Price Range Calculated', [
                 'minPrice' => $minPrice,
