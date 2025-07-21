@@ -25,17 +25,12 @@ class CatalogPage extends Component
     public $locale;
     public $currency;
 
-    protected $listeners = [
-        'updatePriceMax' => 'updatePriceMax',
-    ];
-
     public function mount(): void
     {
         $this->locale = app()->getLocale();
-        // Force UAH currency
         $this->currency = Currency::where('code', 'UAH')->first() ?? Currency::first();
 
-        // Read query parameters (price_max in UAH, convert to cents)
+        // Читаем параметры запроса (price_max в UAH, конвертируем в копейки)
         $this->priceMax = Request::query('price_max') ? (float) Request::query('price_max') * 100 : null;
         $this->brands = Request::query('brands', []);
         $this->sort = Request::query('sort', 'name_asc');
@@ -57,7 +52,7 @@ class CatalogPage extends Component
 
     public function updatePriceMax($value)
     {
-        $this->priceMax = (float) $value * 100; // Convert UAH to cents
+        $this->priceMax = (float) $value * 100; // Конвертируем UAH в копейки
         $this->updateUrl();
     }
 
@@ -117,7 +112,7 @@ class CatalogPage extends Component
     protected function updateUrl()
     {
         $query = array_filter([
-            'price_max' => $this->priceMax ? $this->priceMax / 100 : null, // Convert back to UAH for URL
+            'price_max' => $this->priceMax ? $this->priceMax / 100 : null, // Конвертируем обратно в UAH для URL
             'brands' => !empty($this->brands) ? $this->brands : null,
             'sort' => $this->sort !== 'name_asc' ? $this->sort : null,
             'view' => $this->view !== 'grid' ? $this->view : null,
@@ -144,7 +139,7 @@ class CatalogPage extends Component
             $productsQuery->whereHas('variants', function ($query) {
                 $query->whereHas('prices', function ($priceQuery) {
                     $priceQuery->where('currency_id', $this->currency->id)
-                        ->where('price', '<=', (float) $this->priceMax); // Price in cents
+                        ->where('price', '<=', (float) $this->priceMax); // Цена в копейках
                 });
             });
             Log::info('Price Filter Applied', ['priceMax' => $this->priceMax]);
@@ -159,25 +154,25 @@ class CatalogPage extends Component
                 break;
             case 'price_asc':
                 $productsQuery->select('lunar_products.*')
-                    ->join('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
-                    ->join('lunar_prices', function ($join) {
+                    ->leftJoin('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
+                    ->leftJoin('lunar_prices', function ($join) {
                         $join->on('lunar_product_variants.id', '=', 'lunar_prices.priceable_id')
                             ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                             ->where('lunar_prices.currency_id', '=', $this->currency->id);
                     })
                     ->groupBy('lunar_products.id')
-                    ->orderByRaw('MIN(lunar_prices.price) ASC');
+                    ->orderByRaw('MIN(lunar_prices.price) ASC NULLS LAST');
                 break;
             case 'price_desc':
                 $productsQuery->select('lunar_products.*')
-                    ->join('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
-                    ->join('lunar_prices', function ($join) {
+                    ->leftJoin('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
+                    ->leftJoin('lunar_prices', function ($join) {
                         $join->on('lunar_product_variants.id', '=', 'lunar_prices.priceable_id')
                             ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                             ->where('lunar_prices.currency_id', '=', $this->currency->id);
                     })
                     ->groupBy('lunar_products.id')
-                    ->orderByRaw('MAX(lunar_prices.price) DESC');
+                    ->orderByRaw('MAX(lunar_prices.price) DESC NULLS LAST');
                 break;
         }
 
@@ -220,7 +215,7 @@ class CatalogPage extends Component
                         ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                         ->where('lunar_prices.currency_id', '=', $this->currency->id);
                 })
-                ->min('lunar_prices.price') ?? 0;
+                ->min('lunar_prices.price') ?? 420000; // Минимальная цена из данных
 
             $maxPrice = Product::where('status', 'published')
                 ->join('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
@@ -229,7 +224,7 @@ class CatalogPage extends Component
                         ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                         ->where('lunar_prices.currency_id', '=', $this->currency->id);
                 })
-                ->max('lunar_prices.price') ?? 100000;
+                ->max('lunar_prices.price') ?? 1500000; // Максимальная цена из данных
 
             Log::info('Price Range Calculated', [
                 'minPrice' => $minPrice,
@@ -237,8 +232,8 @@ class CatalogPage extends Component
             ]);
 
             return [
-                'min' => $minPrice / 100, // Convert to UAH for front-end
-                'max' => $maxPrice / 100, // Convert to UAH for front-end
+                'min' => $minPrice / 100, // Конвертируем в UAH для фронтенда
+                'max' => $maxPrice / 100, // Конвертируем в UAH для фронтенда
             ];
         });
     }
@@ -279,8 +274,8 @@ class CatalogPage extends Component
             return view('livewire.catalog-page', [
                 'products' => Product::where('status', 'published')->paginate($this->perPage),
                 'availableBrands' => Brand::whereHas('products')->get(),
-                'minPrice' => 0,
-                'maxPrice' => 1000,
+                'minPrice' => 4200,
+                'maxPrice' => 15000,
                 'locale' => $this->locale,
                 'currency' => $this->currency,
             ])->with('error', __('messages.catalog.error') . ': ' . $e->getMessage());
