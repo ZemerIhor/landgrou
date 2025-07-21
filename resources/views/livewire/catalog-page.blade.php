@@ -138,7 +138,6 @@
                                     <input type="checkbox" name="brands[]" id="brand-{{ $brand->id }}"
                                            value="{{ $brand->id }}"
                                            {{ in_array($brand->id, $brands) ? 'checked' : '' }}
-                                           onchange="document.getElementById('filter-form').submit()"
                                            class="w-6 h-6 text-green-600 bg-white border-neutral-400 rounded focus:ring-green-500 focus:ring-2"/>
                                     <label for="brand-{{ $brand->id }}"
                                            class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800 cursor-pointer">{{ $brand->translateAttribute('name') ?? $brand->name ?? '' }}</label>
@@ -180,7 +179,6 @@
                                    max="{{ $maxPrice }}"
                                    step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
                                    value="{{ $priceMax ? $priceMax / 100 : $maxPrice }}"
-                                   onchange="document.getElementById('filter-form').submit()"
                                    class="w-full h-2 cursor-pointer"
                                    aria-label="{{ __('messages.aria.max_price') }}"
                                    aria-valuemin="{{ $minPrice }}"
@@ -195,7 +193,6 @@
                                    class="w-20 px-2 py-1 border rounded text-xs"
                                    placeholder="{{ number_format($maxPrice, 2) }}"
                                    value="{{ $priceMax ? $priceMax / 100 : '' }}"
-                                   onchange="document.getElementById('filter-form').submit()"
                                    aria-label="{{ __('messages.aria.enter_max_price') }}"
                                    min="{{ $minPrice }}"
                                    max="{{ $maxPrice }}"
