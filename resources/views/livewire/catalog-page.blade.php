@@ -63,20 +63,20 @@
 
         <!-- Sort Dropdown -->
         <div class="relative">
-            <select wire:model.live="sort"
+            <select onchange="window.location.href = this.value"
                     class="flex gap-4 items-center self-stretch px-4 my-auto text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 w-[180px] hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
                     aria-label="{{ __('messages.aria.sorting') }}">
-                <option value="name_asc">{{ __('messages.catalog.sort_name_asc') }}</option>
-                <option value="name_desc">{{ __('messages.catalog.sort_name_desc') }}</option>
-                <option value="price_asc">{{ __('messages.catalog.sort_price_asc') }}</option>
-                <option value="price_desc">{{ __('messages.catalog.sort_price_desc') }}</option>
+                <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'name_asc', 'price_max' => $priceMax, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'name_asc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_name_asc') }}</option>
+                <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'name_desc', 'price_max' => $priceMax, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'name_desc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_name_desc') }}</option>
+                <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'price_asc', 'price_max' => $priceMax, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'price_asc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_price_asc') }}</option>
+                <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'price_desc', 'price_max' => $priceMax, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'price_desc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_price_desc') }}</option>
             </select>
         </div>
 
         <!-- View Toggle -->
         <div class="flex gap-1 items-center self-stretch p-1 my-auto rounded-2xl bg-neutral-200 min-h-10" role="group"
              aria-label="{{ __('messages.aria.view_toggle') }}">
-            <button wire:click="setView('grid')"
+            <button onclick="window.location.href = '{{ route('catalog.view', ['locale' => $locale, 'view' => 'grid', 'sort' => $sort, 'price_max' => $priceMax, 'brands' => $brands]) }}'"
                     class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
                     aria-label="{{ __('messages.aria.grid_view') }}" aria-pressed="{{ $view === 'grid' ? 'true' : 'false' }}">
                 <div class="flex self-stretch my-auto w-6 min-h-6" aria-hidden="true">
@@ -97,7 +97,7 @@
                     </svg>
                 </div>
             </button>
-            <button wire:click="setView('list')"
+            <button onclick="window.location.href = '{{ route('catalog.view', ['locale' => $locale, 'view' => 'list', 'sort' => $sort, 'price_max' => $priceMax, 'brands' => $brands]) }}'"
                     class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
                     aria-label="{{ __('messages.aria.list_view') }}" aria-pressed="{{ $view === 'list' ? 'true' : 'false' }}">
                 <div class="flex self-stretch my-auto w-6 min-h-6" aria-hidden="true">
@@ -119,96 +119,110 @@
     <div class="flex flex-wrap gap-2 items-start justify-center pt-2 w-full max-md:max-w-full">
         <!-- Filters Sidebar -->
         <aside class="rounded-3xl bg-neutral-200 min-w-60 w-[289px]" aria-label="{{ __('messages.aria.product_filters') }}">
-            <!-- Brand Filter -->
-            <section class="w-full rounded-2xl text-zinc-800">
-                <button
-                    class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                    aria-expanded="true" aria-controls="brand-options">
-                    <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('messages.catalog.brand') }}</span>
-                    <div class="flex shrink-0 self-stretch my-auto w-4 h-4 rotate-[-3.1415925661670165rad]"
-                         aria-hidden="true"></div>
-                </button>
-                <div id="brand-options"
-                     class="flex items-start pr-0.5 pb-2 w-full text-xs font-semibold whitespace-nowrap rounded-2xl bg-neutral-200">
-                    <fieldset class="flex-1 shrink w-full basis-0 min-w-60">
-                        <legend class="sr-only">{{ __('messages.catalog.brand') }}</legend>
-                        @foreach ($availableBrands as $brand)
-                            <div class="flex gap-2 items-center px-4 py-2 w-full min-h-10">
-                                <input type="checkbox" id="brand-{{ $brand->id }}" wire:model.debounce.500ms="brands"
-                                       value="{{ $brand->id }}"
-                                       class="w-6 h-6 text-green-600 bg-white border-neutral-400 rounded focus:ring-green-500 focus:ring-2"/>
-                                <label for="brand-{{ $brand->id }}"
-                                       class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800 cursor-pointer">{{ $brand->translateAttribute('name') ?? $brand->name ?? '' }}</label>
-                            </div>
-                        @endforeach
-                    </fieldset>
+            <form id="filter-form" action="{{ route('catalog.view', ['locale' => $locale]) }}" method="GET">
+                <!-- Brand Filter -->
+                <section class="w-full rounded-2xl text-zinc-800">
+                    <button
+                        type="button"
+                        class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+                        aria-expanded="true" aria-controls="brand-options">
+                        <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('messages.catalog.brand') }}</span>
+                        <div class="flex shrink-0 self-stretch my-auto w-4 h-4 rotate-[-3.1415925661670165rad]"
+                             aria-hidden="true"></div>
+                    </button>
+                    <div id="brand-options"
+                         class="flex items-start pr-0.5 pb-2 w-full text-xs font-semibold whitespace-nowrap rounded-2xl bg-neutral-200">
+                        <fieldset class="flex-1 shrink w-full basis-0 min-w-60">
+                            <legend class="sr-only">{{ __('messages.catalog.brand') }}</legend>
+                            @foreach ($availableBrands as $brand)
+                                <div class="flex gap-2 items-center px-4 py-2 w-full min-h-10">
+                                    <input type="checkbox" name="brands[]" id="brand-{{ $brand->id }}"
+                                           value="{{ $brand->id }}"
+                                           {{ in_array($brand->id, $brands) ? 'checked' : '' }}
+                                           onchange="document.getElementById('filter-form').submit()"
+                                           class="w-6 h-6 text-green-600 bg-white border-neutral-400 rounded focus:ring-green-500 focus:ring-2"/>
+                                    <label for="brand-{{ $brand->id }}"
+                                           class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800 cursor-pointer">{{ $brand->translateAttribute('name') ?? $brand->name ?? '' }}</label>
+                                </div>
+                            @endforeach
+                        </fieldset>
+                    </div>
+                </section>
+
+                <!-- Separator -->
+                <div class="px-4 w-full">
+                    <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0"/>
                 </div>
-            </section>
 
-            <!-- Separator -->
-            <div class="px-4 w-full">
-                <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0"/>
-            </div>
+                <!-- Price Filter (Single Slider) -->
+                <section class="py-4 w-full rounded-2xl bg-neutral-200">
+                    <button
+                        type="button"
+                        class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+                        aria-expanded="true" aria-controls="price-filter">
+                        <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('messages.catalog.price_up_to') }}</span>
+                        <div class="flex shrink-0 self-stretch my-auto w-4 h-4 rotate-[-3.1415925661670165rad]"
+                             aria-hidden="true"></div>
+                    </button>
+                    <div id="price-filter"
+                         class="flex flex-col gap-4 items-start mx-auto my-0 w-[280px] max-md:w-full max-md:max-w-[280px]">
+                        <!-- Price Display -->
+                        <div class="w-full px-4">
+                            <span class="text-xs font-bold leading-5 text-zinc-800" id="price-max-display">
+                                {{ __('messages.catalog.price_up_to') }}: <span>{{ number_format($priceMax ?? $maxPrice, 2) }}</span> UAH
+                            </span>
+                        </div>
+                        <!-- Price Slider -->
+                        <div class="w-full px-4">
+                            <input type="range"
+                                   name="price_max"
+                                   id="price-max"
+                                   min="{{ $minPrice }}"
+                                   max="{{ $maxPrice }}"
+                                   step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
+                                   value="{{ $priceMax ?? $maxPrice }}"
+                                   onchange="document.getElementById('filter-form').submit()"
+                                   class="w-full h-2 cursor-pointer"
+                                   aria-label="{{ __('messages.aria.max_price') }}"
+                                   aria-valuemin="{{ $minPrice }}"
+                                   aria-valuemax="{{ $maxPrice }}"
+                                   aria-valuenow="{{ $priceMax ?? $maxPrice }}"/>
+                        </div>
+                        <!-- Manual Input Field -->
+                        <div class="w-full px-4">
+                            <input type="number"
+                                   name="price_max"
+                                   id="price-max-input"
+                                   class="w-20 px-2 py-1 border rounded text-xs"
+                                   placeholder="{{ number_format($maxPrice, 2) }}"
+                                   value="{{ $priceMax ?? '' }}"
+                                   onchange="document.getElementById('filter-form').submit()"
+                                   aria-label="{{ __('messages.aria.enter_max_price') }}"
+                                   min="{{ $minPrice }}"
+                                   max="{{ $maxPrice }}"
+                                   step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"/>
+                        </div>
+                    </div>
+                </section>
 
-            <!-- Price Filter (Single Slider) -->
-            <section class="py-4 w-full rounded-2xl bg-neutral-200">
-                <button
-                    class="flex gap-4 items-center px-4 w-full text-sm font-bold leading-tight whitespace-nowrap rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                    aria-expanded="true" aria-controls="price-filter">
-                    <span class="flex-1 shrink self-stretch my-auto basis-0 text-zinc-800">{{ __('messages.catalog.price_up_to') }}</span>
-                    <div class="flex shrink-0 self-stretch my-auto w-4 h-4 rotate-[-3.1415925661670165rad]"
-                         aria-hidden="true"></div>
-                </button>
-                <div id="price-filter"
-                     class="flex flex-col gap-4 items-start mx-auto my-0 w-[280px] max-md:w-full max-md:max-w-[280px]">
-                    <!-- Price Display -->
-                    <div class="w-full px-4">
-                        <span class="text-xs font-bold leading-5 text-zinc-800" id="price-max-display">
-                            {{ __('messages.catalog.price_up_to') }}: <span>{{ number_format($priceMax ?? $maxPrice, 2) }}</span> UAH
-                        </span>
-                    </div>
-                    <div class="w-full px-4">
-                        <input type="range"
-                               wire:model.debounce.500ms="priceMax"
-                               id="price-max"
-                               min="{{ $minPrice }}"
-                               max="{{ $maxPrice }}"
-                               step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
-                               value="{{ $priceMax ?? $maxPrice }}"
-                               class="w-full h-2 cursor-pointer"
-                               aria-label="{{ __('messages.aria.max_price') }}"
-                               aria-valuemin="{{ $minPrice }}"
-                               aria-valuemax="{{ $maxPrice }}"
-                               aria-valuenow="{{ $priceMax ?? $maxPrice }}"/>
-                    </div>
-                    <!-- Manual Input Field -->
-                    <div class="w-full px-4">
-                        <input type="number"
-                               wire:model.debounce.500ms="priceMax"
-                               id="price-max-input"
-                               class="w-20 px-2 py-1 border rounded text-xs"
-                               placeholder="{{ $maxPrice }}"
-                               aria-label="{{ __('messages.aria.enter_max_price') }}"
-                               min="{{ $minPrice }}"
-                               max="{{ $maxPrice }}"
-                               step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"/>
-                    </div>
+                <!-- Separator -->
+                <div class="px-4 w-full">
+                    <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0"/>
                 </div>
-            </section>
 
-            <!-- Separator -->
-            <div class="px-4 w-full">
-                <hr class="w-full rounded-sm bg-zinc-300 min-h-px border-0"/>
-            </div>
+                <!-- Apply Button -->
+                <div
+                    class="flex gap-2 items-start p-4 w-full text-base font-bold leading-snug text-green-600 whitespace-nowrap">
+                    <button type="submit"
+                            class="flex flex-1 shrink gap-2 justify-center items-center px-6 py-2.5 w-full rounded-2xl border-2 border-green-600 border-solid basis-0 min-h-11 min-w-60 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2">
+                        <span class="self-stretch my-auto text-green-600">{{ __('messages.catalog.apply') }}</span>
+                    </button>
+                </div>
 
-            <!-- Apply Button -->
-            <div
-                class="flex gap-2 items-start p-4 w-full text-base font-bold leading-snug text-green-600 whitespace-nowrap">
-                <button wire:click="applyFilters"
-                        class="flex flex-1 shrink gap-2 justify-center items-center px-6 py-2.5 w-full rounded-2xl border-2 border-green-600 border-solid basis-0 min-h-11 min-w-60 max-md:px-5 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2">
-                    <span class="self-stretch my-auto text-green-600">{{ __('messages.catalog.apply') }}</span>
-                </button>
-            </div>
+                <!-- Hidden inputs for sort and view -->
+                <input type="hidden" name="sort" value="{{ $sort }}">
+                <input type="hidden" name="view" value="{{ $view }}">
+            </form>
         </aside>
 
         <!-- Product Grid -->
@@ -226,15 +240,11 @@
                         $locale = app()->getLocale();
                         $slug = $product->slug;
                         $hasValidSlug = is_string($slug) && trim($slug) !== '';
-
-                        // Формируем параметры маршрута
                         $routeParams = ['slug' => $slug];
                         if ($locale !== config('app.fallback_locale')) {
                             $routeParams['locale'] = $locale;
                         }
-
                         $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', $locale !== config('app.fallback_locale') ? ['locale' => $locale] : [], false);
-
                         $nameValue = $product->translateAttribute('name') ?? 'Product';
                         $descriptionValue = $product->translateAttribute('description') ?? '';
                     @endphp
@@ -317,7 +327,6 @@
     </div>
 
     <style>
-        /* Стили для ползунка цены */
         input[type="range"] {
             -webkit-appearance: none;
             appearance: none;
@@ -412,30 +421,27 @@
             -moz-appearance: textfield;
         }
 
-        /* Стили для SVG-иконок в переключателе вида */
         .icon-view {
-            stroke: #333333; /* Нейтральный цвет по умолчанию */
+            stroke: #333333;
         }
 
         button[aria-pressed="true"] .icon-view {
-            stroke: #16a34a; /* Зелёный цвет для активной кнопки */
+            stroke: #16a34a;
         }
 
         button:hover .icon-view {
-            stroke: #16a34a; /* Зелёный цвет при наведении */
+            stroke: #16a34a;
         }
     </style>
 
     <script>
-        document.addEventListener('livewire:initialized', function () {
-            console.log('Livewire initialized');
+        document.addEventListener('DOMContentLoaded', function () {
             const priceMaxInput = document.getElementById('price-max');
             const priceMaxDisplay = document.getElementById('price-max-display').querySelector('span');
             const priceMaxNumberInput = document.getElementById('price-max-input');
             const minPrice = parseFloat(priceMaxInput.min) || 0;
             const maxPrice = parseFloat(priceMaxInput.max) || 1000;
 
-            // Проверка, что элементы найдены
             if (!priceMaxInput || !priceMaxDisplay || !priceMaxNumberInput) {
                 console.error('Slider elements not found:', {
                     priceMaxInput: !!priceMaxInput,
@@ -448,57 +454,39 @@
             function updatePriceDisplay() {
                 let maxVal = parseFloat(priceMaxInput.value);
 
-                // Ограничиваем значение в пределах minPrice и maxPrice
                 if (isNaN(maxVal) || maxVal < minPrice) {
                     maxVal = minPrice;
                     priceMaxInput.value = maxVal;
-                    Livewire.dispatch('updatePriceMax', {value: maxVal});
+                    priceMaxNumberInput.value = maxVal.toFixed(2);
                 }
                 if (maxVal > maxPrice) {
                     maxVal = maxPrice;
                     priceMaxInput.value = maxVal;
-                    Livewire.dispatch('updatePriceMax', {value: maxVal});
+                    priceMaxNumberInput.value = maxVal.toFixed(2);
                 }
 
-                // Обновляем отображаемое значение
                 priceMaxDisplay.textContent = maxVal.toFixed(2);
                 priceMaxNumberInput.value = maxVal.toFixed(2);
-
-                // Обновляем aria-valuenow для доступности
                 priceMaxInput.setAttribute('aria-valuenow', maxVal);
 
                 console.log('PriceMax updated:', {maxVal});
             }
 
-            // Обработчик события для ползунка
-            priceMaxInput.addEventListener('input', function () {
-                console.log('PriceMax Input:', this.value);
-                updatePriceDisplay();
-            });
-
-            // Обработчик события для поля ввода
+            priceMaxInput.addEventListener('input', updatePriceDisplay);
             priceMaxNumberInput.addEventListener('input', function () {
                 let value = parseFloat(this.value);
                 if (isNaN(value) || value < minPrice) {
                     value = minPrice;
-                    this.value = maxVal;
+                    this.value = value.toFixed(2);
                 } else if (value > maxPrice) {
                     value = maxPrice;
-                    this.value = maxPrice;
+                    this.value = value.toFixed(2);
                 }
                 priceMaxInput.value = value;
-                console.log('PriceMax Number Input:', value);
                 updatePriceDisplay();
             });
 
-            // Инициализация при загрузке
             updatePriceDisplay();
-
-            // Повторная инициализация после обновления Livewire
-            document.addEventListener('livewire:navigated', function () {
-                console.log('Livewire navigated');
-                updatePriceDisplay();
-            });
         });
     </script>
 </main>
