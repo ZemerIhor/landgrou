@@ -328,7 +328,7 @@
     <section class="flex flex-col justify-center self-stretch px-4 md:px-12 py-20 text-base bg-zinc-100 max-md:px-5"
         aria-labelledby="tenders-heading">
         <h2 id="tenders-heading" class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
-            {{ $settings->tenders_title[app()->getLocale()] ?? 'Тендери' }}
+            {{ $settings->tenders_title[app()->getLocale()] ?? __('messages.tenders.title') }}
         </h2>
 
         <div class="flex flex-wrap gap-2 mt-5 w-full font-semibold leading-6 text-white max-md:max-w-full" role="list"
@@ -413,10 +413,12 @@
                 class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors duration-200"
                 type="button" aria-label="Переглянути більше тендерів">
                 <span class="self-stretch my-auto text-current">
-                    Більше
+                {{__('messages.tenders.more_button')}}
                 </span>
-                <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/5fcdfc213ad7c52f7cde2c5630712bbd498037c1?placeholderIfAbsent=true"
-                    alt="" class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" aria-hidden="true" />
+                <svg width="18" height="15" viewBox="0 0 18 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10.4697 1.1474C10.7626 0.854511 11.2374 0.854511 11.5303 1.1474L17.5303 7.1474C17.8232 7.4403 17.8232 7.91517 17.5303 8.20806L11.5303 14.2081C11.2374 14.501 10.7626 14.501 10.4697 14.2081C10.1768 13.9152 10.1768 13.4403 10.4697 13.1474L15.1893 8.42773H1C0.585786 8.42773 0.25 8.09195 0.25 7.67773C0.25 7.26352 0.585786 6.92773 1 6.92773H15.1893L10.4697 2.20806C10.1768 1.91517 10.1768 1.4403 10.4697 1.1474Z" fill="#228F5D"/>
+                </svg>
+
             </button>
         </footer>
     </section>
