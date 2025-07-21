@@ -345,7 +345,7 @@
     border-radius: 8px;
 }
 .product-properties tbody tr:nth-child(odd) {
-    background-color: #ffffff;
+    background-color: #f3f3f3;
 }
 .characteristics thead {
     background-color: #606060;
