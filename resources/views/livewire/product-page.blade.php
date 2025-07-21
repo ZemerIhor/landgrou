@@ -32,7 +32,7 @@
                     </div>
 
                 </div>
-                <div class="swiper-pagination" style="position: absolute; bottom: -50px !important; left: 176px; width: 136px;"></div>
+                <div class="swiper-pagination" style="position: absolute; bottom: -50px !important; left: 0; width: 136px;"></div>
                 <div class="swiper-button-prev" style="left: 413px; bottom: -50px !important; width: 26px; height: 56px;">
                     <svg width="41" height="42" viewBox="0 0 41 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M11.0777 15.4464L11.173 30.8638L30.6581 11.1361L22.0416 19.86C18.0472 23.904 11.1561 21.13 11.0777 15.4464L-nan -nanL11.0777 15.4464Z" fill="#228F5D"/>
