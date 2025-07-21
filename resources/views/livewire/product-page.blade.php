@@ -229,7 +229,7 @@
         <h2 class="relative self-stretch text-xl font-bold leading-6 text-black max-sm:text-lg">
             {{ __('messages.product.characteristics') }}
         </h2>
-        <table class="characteristics flex relative flex-col items-start self-stretch overflow-auto" role="table" aria-label="{{ __('messages.product.characteristics_table') }}">
+        <table class="characteristics flex relative flex-col items-start self-stretch overflow-auto" style="overflow: auto" role="table" aria-label="{{ __('messages.product.characteristics_table') }}">
             <!-- Table Header -->
             <thead class="flex relative items-center self-stretch rounded-lg bg-zinc-800">
             <tr class="flex relative w-full items-center self-stretch rounded-lg">
