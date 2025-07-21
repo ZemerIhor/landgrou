@@ -11,7 +11,7 @@
         </div>
 
         <div class="flex relative gap-28 items-start self-stretch max-md:flex-col max-md:gap-8">
-            <section class="flex relative flex-col items-start self-stretch w-[487px] max-md:w-full"
+            <section class="flex relative flex-col items-start w-[487px] max-md:w-full"
                      aria-label="{{ __('messages.product.image_gallery') }}">
                 <div class="swiper product-gallery w-full rounded-3xl" wire:ignore>
                     <div class="swiper-wrapper">
