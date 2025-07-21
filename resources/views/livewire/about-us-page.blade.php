@@ -351,10 +351,10 @@
                 </div>
 
                 <!-- Fullscreen Modal -->
-                <div id="fullscreen-modal" class="fixed inset-0 bg-black bg-opacity-90 hidden flex items-center justify-center z-50">
-                    <div class="relative w-full max-w-4xl max-h-[90vh]">
-                        <button id="close-modal" class="absolute top-4 right-4 text-white text-2xl z-50">×</button>
-                        <img id="modal-image" src="" alt="Fullscreen Certificate" class="object-contain w-full h-full" />
+                <div id="fullscreen-modal" class="fixed inset-0 bg-black bg-opacity-80 hidden flex items-center justify-center z-50 p-4">
+                    <div class="relative max-w-[90vw] max-h-[90vh] bg-white rounded-2xl shadow-2xl p-6">
+                        <button id="close-modal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-3xl z-50">&times;</button>
+                        <img id="modal-image" src="" alt="Fullscreen Certificate" class="object-contain max-w-full max-h-[80vh] mx-auto rounded-xl" />
                     </div>
                 </div>
             @else
@@ -391,6 +391,8 @@
             </script>
         @endpush
     </section>
+
+
         <livewire:components.blog-section />
     </div>
 </div>
