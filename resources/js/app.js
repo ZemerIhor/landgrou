@@ -159,3 +159,95 @@ document.addEventListener('livewire:navigated', () => {
 document.addEventListener('livewire:init', initApp);
 document.addEventListener('livewire:update', initApp);
 
+document.addEventListener('DOMContentLoaded', function () {
+    function initSwiper() {
+        console.log('Инициализация Swiper...');
+        if (!window.Swiper) {
+            console.error('Swiper не найден. Убедитесь, что библиотека подключена.');
+            setTimeout(initSwiper, 500);
+            return;
+        }
+
+        try {
+            const swiperContainer = document.querySelector('.product-gallery');
+            if (!swiperContainer) {
+                console.error('Контейнер .product-gallery не найден');
+                return;
+            }
+
+            const slides = swiperContainer.querySelectorAll('.swiper-slide');
+            console.log('Количество слайдов:', slides.length);
+
+            const prevButton = swiperContainer.querySelector('.swiper-button-prev');
+            const nextButton = swiperContainer.querySelector('.swiper-button-next');
+            if (!prevButton || !nextButton) {
+                console.warn('Кнопки навигации не найдены');
+            } else {
+                prevButton.addEventListener('click', () => console.log('Клик по кнопке "Назад"'));
+                nextButton.addEventListener('click', () => console.log('Клик по кнопке "Вперед"'));
+            }
+
+            const swiper = new window.Swiper(swiperContainer, {
+                slidesPerView: 1,
+                spaceBetween: 0,
+                loop: false,
+                touchRatio: 1,
+                grabCursor: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                    bulletClass: 'swiper-pagination-bullet',
+                    bulletActiveClass: 'swiper-pagination-bullet-active',
+                    bulletElement: 'span',
+                    type: 'bullets',
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                    disabledClass: 'swiper-button-disabled',
+                },
+                speed: 600,
+                watchSlidesProgress: true,
+                on: {
+                    init: function () {
+                        console.log('Swiper инициализирован, слайдов:', slides.length);
+                        const bullets = swiperContainer.querySelectorAll('.swiper-pagination-bullet');
+                        console.log('Количество буллетов:', bullets.length);
+                        bullets.forEach((bullet, index) => {
+                            bullet.addEventListener('click', () => {
+                                console.log('Клик по буллиту:', index);
+                                this.slideTo(index);
+                            });
+                        });
+                    },
+                    slideChange: function () {
+                        console.log('Слайд изменен, индекс:', this.activeIndex);
+                    },
+                    paginationRender: function (swiper, paginationEl) {
+                        console.log('Пагинация отрендерена:', paginationEl);
+                    },
+                    paginationUpdate: function (swiper, paginationEl) {
+                        console.log('Пагинация обновлена:', paginationEl);
+                    },
+                },
+            });
+
+            swiper.on('reachBeginning reachEnd', function () {
+                console.log('Достигнут край слайдера, начало:', this.isBeginning, 'конец:', this.isEnd);
+            });
+        } catch (error) {
+            console.error('Ошибка при инициализации Swiper:', error);
+        }
+    }
+
+    initSwiper();
+
+    let isSwiperInitialized = false;
+    document.addEventListener('livewire:navigated', function () {
+        if (!isSwiperInitialized) {
+            console.log('Переинициализация Swiper из-за Livewire');
+            initSwiper();
+            isSwiperInitialized = true;
+        }
+    });
+});
