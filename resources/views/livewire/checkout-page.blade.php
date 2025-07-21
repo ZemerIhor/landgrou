@@ -81,22 +81,32 @@
                     <div class="flex gap-10 justify-between items-center mt-4 w-full min-h-[19px] max-md:max-w-full">
                         <span class="self-stretch my-auto text-neutral-400">{{ __('messages.cart.sub_total') }}</span>
                         <div class="flex gap-1 items-center self-stretch my-auto text-right">
-                            <span class="self-stretch my-auto text-neutral-400">{{ $cart->subTotal instanceof \Lunar\DataTypes\Price ? $cart->subTotal->formatted() : number_format($cart->subTotal ?? 0, 2) }}</span>
+                            <span class="self-stretch my-auto text-neutral-400">{{ $cart->subTotal instanceof \Lunar\DataTypes\Price ? $cart->subTotal->formatted() : number_format($cart->subTotal, 2) }}</span>
                             <span class="self-stretch my-auto text-neutral-400">₴</span>
                         </div>
                     </div>
-                    <div class="flex gap-10 justify-between items-center mt-4 w-full min-h-[19px] max-md:max-w-full">
-                        <span class="self-stretch my-auto text-neutral-400">{{ __('messages.cart.shipping') }}</span>
-                        <div class="flex gap-1 items-center self-stretch my-auto text-right">
-                            <span class="self-stretch my-auto text-neutral-400">{{ $shippingOption && isset($shippingOption['formatted_price']) ? $shippingOption['formatted_price'] : number_format($cart->meta['shipping_total'] ?? 0, 2) }}</span>
-                            <span class="self-stretch my-auto text-neutral-400">₴</span>
+                    @if ($shippingOption && isset($shippingOption['formatted_price']))
+                        <div class="flex gap-10 justify-between items-center mt-4 w-full min-h-[19px] max-md:max-w-full">
+                            <span class="self-stretch my-auto text-neutral-400">{{ __('messages.cart.shipping') }}</span>
+                            <div class="flex gap-1 items-center self-stretch my-auto text-right">
+                                <span class="self-stretch my-auto text-neutral-400">{{ $shippingOption['formatted_price'] }}</span>
+                                <span class="self-stretch my-auto text-neutral-400">₴</span>
+                            </div>
                         </div>
-                    </div>
+                    @else
+                        <div class="flex gap-10 justify-between items-center mt-4 w-full min-h-[19px] max-md:max-w-full">
+                            <span class="self-stretch my-auto text-neutral-400">{{ __('messages.cart.shipping') }}</span>
+                            <div class="flex gap-1 items-center self-stretch my-auto text-right">
+                                <span class="self-stretch my-auto text-neutral-400">0.00</span>
+                                <span class="self-stretch my-auto text-neutral-400">₴</span>
+                            </div>
+                        </div>
+                    @endif
                     <hr class="flex mt-4 w-full bg-zinc-300 min-h-px max-md:max-w-full" />
                     <div class="flex gap-10 justify-between items-center mt-4 w-full min-h-[19px] text-zinc-800 max-md:max-w-full">
                         <span class="self-stretch my-auto text-zinc-800">{{ __('messages.cart.total') }}</span>
                         <div class="flex gap-1 items-center self-stretch my-auto text-right">
-                            <span class="self-stretch my-auto text-zinc-800">{{ $cart->total instanceof \Lunar\DataTypes\Price ? $cart->total->formatted() : number_format(($cart->subTotal->value ?? 0) + ($cart->meta['shipping_total'] ?? 0), 2) }}</span>
+                            <span class="self-stretch my-auto text-zinc-800">{{ $cart->total instanceof \Lunar\DataTypes\Price ? $cart->total->formatted() : number_format($cart->total, 2) }}</span>
                             <span class="self-stretch my-auto text-zinc-800">₴</span>
                         </div>
                     </div>
