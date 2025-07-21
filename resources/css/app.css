@@ -90,17 +90,22 @@
     align-items: center;
 }
 .swiper-pagination-bullet {
-    width: 16px;
-    height: 2px;
-    background: #d4d4d8;
     opacity: 1;
-    border-radius: 4px;
     margin: 0 4px !important;
     cursor: pointer;
+    width: 16px;
+    height: 2px;
+    background: #DBDBDB;
+    border-radius: 8px;
+    flex: none;
+    order: 1;
+    flex-grow: 0;
 }
 .swiper-pagination-bullet-active {
     background: #228f5d;
 }
+
+
 .swiper-button-prev,
 .swiper-button-next {
     all: unset;
