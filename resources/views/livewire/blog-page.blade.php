@@ -3,7 +3,7 @@
         <!-- Logo Header Section -->
 
         <!-- Content Container -->
-        <div class="relative h-auto  max-md:box-border max-md:px-5 max-md:py-0 max-md:w-full">
+        <div class="relative h-auto container  max-md:px-4 max-md:py-0 mx-auto">
             <livewire:components.breadcrumbs :currentPage="__('messages.breadcrumbs.blog')" :items="[]" />
             <div class="mb-8 absolute bottom-0 z-0">
                 <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="306" viewBox="0 0 1336 306" fill="none">
