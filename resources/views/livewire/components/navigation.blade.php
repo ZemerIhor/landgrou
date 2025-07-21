@@ -329,45 +329,7 @@
                             {{ __('messages.feedback_form.submit_button') }}
                         </button>
 
-                        <!-- Language Dropdown (Mobile) -->
-                        <div class="relative w-full px-4" x-data="{ mobileLanguageMenu: false }">
-                            <button
-                                x-on:click="mobileLanguageMenu = !mobileLanguageMenu"
-                                class="flex items-center justify-between w-full px-4 py-2 text-base font-semibold text-zinc-800 hover:text-green-600 focus:outline-none focus:ring-2 focus:ring-green-600"
-                                aria-label="{{ __('messages.language.current') }}"
-                                :aria-expanded="mobileLanguageMenu"
-                            >
-                                <span>{{ app()->getLocale() === 'en' ? __('messages.language.english') : __('messages.language.ukrainian') }}</span>
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
-                            <div
-                                x-show="mobileLanguageMenu"
-                                x-transition
-                                x-cloak
-                                class="mt-2 w-full bg-white shadow-lg rounded-md"
-                            >
-                                @if(app()->getLocale() !== 'en')
-                                    <a
-                                        href="{{ $enUrl }}"
-                                        class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
-                                        wire:navigate
-                                    >
-                                        {{ __('messages.language.english') }}
-                                    </a>
-                                @endif
-                                @if(app()->getLocale() !== 'uk')
-                                    <a
-                                        href="{{ $ukUrl }}"
-                                        class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
-                                        wire:navigate
-                                    >
-                                        {{ __('messages.language.ukrainian') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
+
                     </nav>
                 </div>
             </div>
