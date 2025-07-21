@@ -12,7 +12,7 @@
                     </time>
                     <div class="h-1 w-1 bg-neutral-400 rounded-full"></div>
                 @endif
-                <span>{{ __('breadcrumbs.blog') }}</span>
+                <span>{{ __('messages.breadcrumbs.blog') }}</span>
             </div>
             <hr class="border-zinc-200">
         </header>
