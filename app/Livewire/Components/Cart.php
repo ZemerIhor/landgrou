@@ -62,17 +62,40 @@ class Cart extends Component
         $this->dispatch('cartUpdated');
     }
 
+    /**
+     * Increment the quantity of a cart line.
+     */
+    public function incrementQuantity($index): void
+    {
+        if (isset($this->lines[$index])) {
+            $this->lines[$index]['quantity']++;
+            $this->updateLines();
+        }
+    }
+
+    /**
+     * Decrement the quantity of a cart line.
+     */
+    public function decrementQuantity($index): void
+    {
+        if (isset($this->lines[$index]) && $this->lines[$index]['quantity'] > 1) {
+            $this->lines[$index]['quantity']--;
+            $this->updateLines();
+        }
+    }
+
+    /**
+     * Remove a cart line.
+     */
     public function removeLine($id): void
     {
         CartSession::remove($id);
         $this->mapLines();
+        $this->dispatch('cartUpdated');
     }
 
     /**
      * Map the cart lines.
-     *
-     * We want to map out our cart lines like this so we can
-     * add some validation rules and make them editable.
      */
     public function mapLines(): void
     {
@@ -91,10 +114,14 @@ class Cart extends Component
         })->toArray();
     }
 
+    /**
+     * Handle add-to-cart event.
+     */
     public function handleAddToCart(): void
     {
         $this->mapLines();
         $this->linesVisible = true;
+        $this->dispatch('cartUpdated');
     }
 
     public function render(): View
