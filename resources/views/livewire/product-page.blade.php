@@ -30,15 +30,15 @@
                             </div>
                         @endif
                     </div>
-                    <div class="swiper-pagination" style="position: absolute; bottom: -50px; left: 176px; width: 136px;"></div>
-                    <div class="swiper-button-prev" style="left: 413px; bottom: -50px; width: 26px; height: 56px;">
+                    <div class="swiper-pagination" style="position: absolute; bottom: -50px !important; left: 176px; width: 136px;"></div>
+                    <div class="swiper-button-prev" style="left: 413px; bottom: -50px !important; width: 26px; height: 56px;">
                         <svg width="41" height="42" viewBox="0 0 41 42" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M11.0777 15.4464L11.173 30.8638L30.6581 11.1361L22.0416 19.86C18.0472 23.904 11.1561 21.13 11.0777 15.4464L-nan -nanL11.0777 15.4464Z" fill="#228F5D"/>
                             <path d="M11.173 30.8638L21.4513 30.8002L26.5905 30.7684L-nan -nanL26.5905 30.7684C20.9036 30.783 18.0273 23.9242 22.0236 19.8781L30.6581 11.1361L11.173 30.8638Z" fill="#228F5D"/>
                             <path d="M10.9082 9.99996C11.4605 9.99654 11.9106 10.4419 11.9141 10.9941L11.9473 16.1328C12.0186 20.8488 17.6495 23.1868 21.0391 20.0058L21.1992 19.8496L29.8154 11.1259C30.2034 10.7331 30.8365 10.7294 31.2295 11.1171C31.5977 11.4809 31.6252 12.0603 31.3076 12.455L31.2383 12.5312L22.6045 21.2734C19.233 24.6868 21.6593 30.4732 26.457 30.4609L31.5928 30.4296L31.6953 30.4336C32.1997 30.4819 32.5954 30.9062 32.5986 31.4238C32.6015 31.9413 32.2108 32.3685 31.707 32.4228L31.6045 32.4296L11.0479 32.5566C10.4959 32.5597 10.0455 32.1145 10.042 31.5625L9.91506 11.0058C9.91184 10.4539 10.3564 10.0037 10.9082 9.99996ZM13.4502 30.542L21.3965 30.4931C19.8677 29.0517 18.9983 26.9881 19.0342 24.8877L13.4502 30.542ZM12.0264 29.1367L17.627 23.4668C15.5219 23.53 13.442 22.6847 11.9785 21.1689L12.0264 29.1367Z" fill="#228F5D"/>
                         </svg>
                     </div>
-                    <div class="swiper-button-next" style="left: 449px; bottom: -50px; width: 26px; height: 56px;">
+                    <div class="swiper-button-next" style="left: 449px; bottom: -50px !important; width: 26px; height: 56px;">
                         <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M27.634 23.6144L27.634 8.19664L8.02722 27.8034L16.6976 19.133C20.7169 15.1137 27.5907 17.9304 27.634 23.6144Z" fill="#228F5D"/>
                             <path d="M27.634 8.19664L17.3555 8.19664L12.2163 8.19664C17.9031 8.21723 20.7369 15.0937 16.7156 19.115L8.02722 27.8034L27.634 8.19664Z" fill="#228F5D"/>
