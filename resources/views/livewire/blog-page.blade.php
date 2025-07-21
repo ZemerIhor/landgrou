@@ -112,24 +112,6 @@
                                 <a href="{{ $postUrl }}" wire:navigate class="flex right-0 gap-2.5 justify-center items-center px-2 py-0 w-14 h-14 absolute top-0 right-0">
                                     <div class="relative shrink-0 h-[35px] w-[35px]">
                                         <svg
-                                            width="20"
-                                            height="20"
-                                            viewBox="0 0 20 20"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            class="arrow-bg w-[28px] h-[22px] absolute left-0 top-0"
-                                            aria-hidden="true"
-                                        >
-                                            <path
-                                                d="M19.8039 15.6143L19.8039 0.196583L0.197137 19.8033L8.86752 11.133C12.8868 7.11369 19.7607 9.93035 19.8039 15.6143Z"
-                                                fill="white"
-                                            />
-                                            <path
-                                                d="M19.8039 0.196583L9.52542 0.196583L4.38618 0.196584C10.0731 0.217168 12.9068 7.09365 8.88556 11.1149L0.197137 19.8033L19.8039 0.196583Z"
-                                                fill="white"
-                                            />
-                                        </svg>
-                                        <svg
                                             width="23"
                                             height="23"
                                             viewBox="0 0 23 23"
