@@ -167,8 +167,6 @@
                             {{ __('messages.catalog.price_up_to') }}: <span>{{ number_format($priceMax ?? $maxPrice, 2) }}</span> UAH
                         </span>
                     </div>
-                    <!-- Price Slider -->
-                    ennio
                     <div class="w-full px-4">
                         <input type="range"
                                wire:model.debounce.500ms="priceMax"
