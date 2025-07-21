@@ -25,13 +25,17 @@ class CatalogPage extends Component
     public $locale;
     public $currency;
 
+    protected $listeners = [
+        'updatePriceMax' => 'updatePriceMax',
+    ];
+
     public function mount(): void
     {
         $this->locale = app()->getLocale();
         $this->currency = Currency::where('code', config('lunar.currency'))->first() ?? Currency::first();
 
-        // Read query parameters
-        $this->priceMax = Request::query('price_max') ? (float) Request::query('price_max') : null;
+        // Read query parameters (convert price_max from UAH to cents)
+        $this->priceMax = Request::query('price_max') ? (float) Request::query('price_max') * 100 : null;
         $this->brands = Request::query('brands', []);
         $this->sort = Request::query('sort', 'name_asc');
         $this->view = Request::query('view', 'grid');
@@ -52,7 +56,7 @@ class CatalogPage extends Component
 
     public function updatePriceMax($value)
     {
-        $this->priceMax = (float) $value;
+        $this->priceMax = (float) $value * 100; // Convert UAH to cents
         $this->updateUrl();
     }
 
@@ -60,8 +64,8 @@ class CatalogPage extends Component
     {
         if ($this->priceMax !== null) {
             $this->priceMax = max(0, (float) $this->priceMax);
-            if ($this->priceMax > $this->priceRange['max']) {
-                $this->priceMax = $this->priceRange['max'];
+            if ($this->priceMax > $this->priceRange['max'] * 100) {
+                $this->priceMax = $this->priceRange['max'] * 100;
             }
         }
 
@@ -112,7 +116,7 @@ class CatalogPage extends Component
     protected function updateUrl()
     {
         $query = array_filter([
-            'price_max' => $this->priceMax,
+            'price_max' => $this->priceMax ? $this->priceMax / 100 : null, // Convert back to UAH for URL
             'brands' => !empty($this->brands) ? $this->brands : null,
             'sort' => $this->sort !== 'name_asc' ? $this->sort : null,
             'view' => $this->view !== 'grid' ? $this->view : null,
@@ -139,7 +143,7 @@ class CatalogPage extends Component
             $productsQuery->whereHas('variants', function ($query) {
                 $query->whereHas('prices', function ($priceQuery) {
                     $priceQuery->where('currency_id', $this->currency->id)
-                        ->where('price', '<=', (float) $this->priceMax);
+                        ->where('price', '<=', (float) $this->priceMax); // Price in cents
                 });
             });
             Log::info('Price Filter Applied', ['priceMax' => $this->priceMax]);
@@ -160,7 +164,8 @@ class CatalogPage extends Component
                             ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                             ->where('lunar_prices.currency_id', '=', $this->currency->id);
                     })
-                    ->orderBy('lunar_prices.price', 'ASC');
+                    ->groupBy('lunar_products.id') // Group by product to avoid duplicates
+                    ->orderByRaw('MIN(lunar_prices.price) ASC');
                 break;
             case 'price_desc':
                 $productsQuery->select('lunar_products.*')
@@ -170,7 +175,8 @@ class CatalogPage extends Component
                             ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                             ->where('lunar_prices.currency_id', '=', $this->currency->id);
                     })
-                    ->orderBy('lunar_prices.price', 'DESC');
+                    ->groupBy('lunar_products.id') // Group by product to avoid duplicates
+                    ->orderByRaw('MAX(lunar_prices.price) DESC');
                 break;
         }
 
@@ -222,7 +228,7 @@ class CatalogPage extends Component
                         ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                         ->where('lunar_prices.currency_id', '=', $this->currency->id);
                 })
-                ->max('lunar_prices.price') ?? 1000;
+                ->max('lunar_prices.price') ?? 100000; // Default in cents
 
             Log::info('Price Range Calculated', [
                 'minPrice' => $minPrice,
@@ -230,8 +236,8 @@ class CatalogPage extends Component
             ]);
 
             return [
-                'min' => $minPrice,
-                'max' => $maxPrice,
+                'min' => $minPrice / 100, // Convert to UAH for front-end
+                'max' => $maxPrice / 100, // Convert to UAH for front-end
             ];
         });
     }

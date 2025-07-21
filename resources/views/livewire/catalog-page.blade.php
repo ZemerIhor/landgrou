@@ -26,38 +26,37 @@
             @if (!empty($brands))
                 @foreach ($brands as $brandId)
                     @if ($brand = $availableBrands->find($brandId))
-                        <button wire:click="removeBrand({{ $brandId }})"
-                                class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                                aria-label="{{ __('messages.aria.remove_filter', ['name' => $brand->translateAttribute('name') ?? $brand->name ?? '']) }}">
-                            <span
-                                class="self-stretch my-auto text-white">{{ $brand->translateAttribute('name') ?? $brand->name ?? '' }}</span>
+                        <a href="{{ route('catalog.view', ['locale' => $locale, 'price_max' => $priceMax ? $priceMax / 100 : null, 'brands' => array_diff($brands, [$brandId]), 'sort' => $sort, 'view' => $view]) }}"
+                           class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+                           aria-label="{{ __('messages.aria.remove_filter', ['name' => $brand->translateAttribute('name') ?? $brand->name ?? '']) }}">
+                            <span class="self-stretch my-auto text-white">{{ $brand->translateAttribute('name') ?? $brand->name ?? '' }}</span>
                             <img
                                 src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ba94ac2e61738f897029abe123360249f0f65ef9?placeholderIfAbsent=true"
                                 class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square"
                                 alt="{{ __('messages.aria.remove_filter_icon') }}"/>
-                        </button>
+                        </a>
                     @endif
                 @endforeach
             @endif
             @if ($priceMax)
-                <button wire:click="clearPrice"
-                        class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                        aria-label="{{ __('messages.aria.remove_price_filter') }}">
-                    <span class="self-stretch my-auto text-white">{{ __('messages.catalog.price_up_to') }}: {{ number_format($priceMax, 2) }} UAH</span>
+                <a href="{{ route('catalog.view', ['locale' => $locale, 'brands' => $brands, 'sort' => $sort, 'view' => $view]) }}"
+                   class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-neutral-400 min-h-10 hover:bg-neutral-500 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+                   aria-label="{{ __('messages.aria.remove_price_filter') }}">
+                    <span class="self-stretch my-auto text-white">{{ __('messages.catalog.price_up_to') }}: {{ number_format($priceMax / 100, 2) }} UAH</span>
                     <img
                         src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ba94ac2e61738f897029abe123360249f0f65ef9?placeholderIfAbsent=true"
                         class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" alt="{{ __('messages.aria.remove_filter_icon') }}"/>
-                </button>
+                </a>
             @endif
             @if (!empty($brands) || $priceMax)
-                <button wire:click="clearAllFilters"
-                        class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-red-500 min-h-10 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                        aria-label="{{ __('messages.aria.clear_all_filters') }}">
+                <a href="{{ route('catalog.view', ['locale' => $locale, 'sort' => $sort, 'view' => $view]) }}"
+                   class="flex gap-1 items-center self-stretch pr-2 pl-3 my-auto whitespace-nowrap rounded-2xl bg-red-500 min-h-10 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+                   aria-label="{{ __('messages.aria.clear_all_filters') }}">
                     <span class="self-stretch my-auto text-white">{{ __('messages.catalog.clear_all') }}</span>
                     <img
                         src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/ba94ac2e61738f897029abe123360249f0f65ef9?placeholderIfAbsent=true"
                         class="object-contain shrink-0 self-stretch my-auto w-6 aspect-square" alt="{{ __('messages.aria.clear_filters_icon') }}"/>
-                </button>
+                </a>
             @endif
         </div>
 
@@ -66,19 +65,19 @@
             <select onchange="window.location.href = this.value"
                     class="flex gap-4 items-center self-stretch px-4 my-auto text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 w-[180px] hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
                     aria-label="{{ __('messages.aria.sorting') }}">
-                <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'name_asc', 'price_max' => $priceMax, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'name_asc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_name_asc') }}</option>
-                <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'name_desc', 'price_max' => $priceMax, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'name_desc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_name_desc') }}</option>
-                <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'price_asc', 'price_max' => $priceMax, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'price_asc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_price_asc') }}</option>
-                <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'price_desc', 'price_max' => $priceMax, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'price_desc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_price_desc') }}</option>
+                <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'name_asc', 'price_max' => $priceMax ? $priceMax / 100 : null, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'name_asc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_name_asc') }}</option>
+                <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'name_desc', 'price_max' => $priceMax ? $priceMax / 100 : null, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'name_desc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_name_desc') }}</option>
+                <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'price_asc', 'price_max' => $priceMax ? $priceMax / 100 : null, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'price_asc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_price_asc') }}</option>
+                <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'price_desc', 'price_max' => $priceMax ? $priceMax / 100 : null, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'price_desc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_price_desc') }}</option>
             </select>
         </div>
 
         <!-- View Toggle -->
         <div class="flex gap-1 items-center self-stretch p-1 my-auto rounded-2xl bg-neutral-200 min-h-10" role="group"
              aria-label="{{ __('messages.aria.view_toggle') }}">
-            <button onclick="window.location.href = '{{ route('catalog.view', ['locale' => $locale, 'view' => 'grid', 'sort' => $sort, 'price_max' => $priceMax, 'brands' => $brands]) }}'"
-                    class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                    aria-label="{{ __('messages.aria.grid_view') }}" aria-pressed="{{ $view === 'grid' ? 'true' : 'false' }}">
+            <a href="{{ route('catalog.view', ['locale' => $locale, 'view' => 'grid', 'sort' => $sort, 'price_max' => $priceMax ? $priceMax / 100 : null, 'brands' => $brands]) }}"
+               class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+               aria-label="{{ __('messages.aria.grid_view') }}" aria-pressed="{{ $view === 'grid' ? 'true' : 'false' }}">
                 <div class="flex self-stretch my-auto w-6 min-h-6" aria-hidden="true">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                          class="icon-view {{ $view === 'grid' ? 'icon-active' : '' }}">
@@ -96,10 +95,10 @@
                             stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-            </button>
-            <button onclick="window.location.href = '{{ route('catalog.view', ['locale' => $locale, 'view' => 'list', 'sort' => $sort, 'price_max' => $priceMax, 'brands' => $brands]) }}'"
-                    class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
-                    aria-label="{{ __('messages.aria.list_view') }}" aria-pressed="{{ $view === 'list' ? 'true' : 'false' }}">
+            </a>
+            <a href="{{ route('catalog.view', ['locale' => $locale, 'view' => 'list', 'sort' => $sort, 'price_max' => $priceMax ? $priceMax / 100 : null, 'brands' => $brands]) }}"
+               class="flex gap-2.5 items-center self-stretch p-1 my-auto w-8 rounded-xl hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+               aria-label="{{ __('messages.aria.list_view') }}" aria-pressed="{{ $view === 'list' ? 'true' : 'false' }}">
                 <div class="flex self-stretch my-auto w-6 min-h-6" aria-hidden="true">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                          class="icon-view {{ $view === 'list' ? 'icon-active' : '' }}">
@@ -111,7 +110,7 @@
                             stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-            </button>
+            </a>
         </div>
     </section>
 
@@ -169,7 +168,7 @@
                         <!-- Price Display -->
                         <div class="w-full px-4">
                             <span class="text-xs font-bold leading-5 text-zinc-800" id="price-max-display">
-                                {{ __('messages.catalog.price_up_to') }}: <span>{{ number_format($priceMax ?? $maxPrice, 2) }}</span> UAH
+                                {{ __('messages.catalog.price_up_to') }}: <span>{{ number_format($priceMax ? $priceMax / 100 : $maxPrice, 2) }}</span> UAH
                             </span>
                         </div>
                         <!-- Price Slider -->
@@ -180,13 +179,13 @@
                                    min="{{ $minPrice }}"
                                    max="{{ $maxPrice }}"
                                    step="{{ ($maxPrice - $minPrice) > 10000 ? 10 : 1 }}"
-                                   value="{{ $priceMax ?? $maxPrice }}"
+                                   value="{{ $priceMax ? $priceMax / 100 : $maxPrice }}"
                                    onchange="document.getElementById('filter-form').submit()"
                                    class="w-full h-2 cursor-pointer"
                                    aria-label="{{ __('messages.aria.max_price') }}"
                                    aria-valuemin="{{ $minPrice }}"
                                    aria-valuemax="{{ $maxPrice }}"
-                                   aria-valuenow="{{ $priceMax ?? $maxPrice }}"/>
+                                   aria-valuenow="{{ $priceMax ? $priceMax / 100 : $maxPrice }}"/>
                         </div>
                         <!-- Manual Input Field -->
                         <div class="w-full px-4">
@@ -195,7 +194,7 @@
                                    id="price-max-input"
                                    class="w-20 px-2 py-1 border rounded text-xs"
                                    placeholder="{{ number_format($maxPrice, 2) }}"
-                                   value="{{ $priceMax ?? '' }}"
+                                   value="{{ $priceMax ? $priceMax / 100 : '' }}"
                                    onchange="document.getElementById('filter-form').submit()"
                                    aria-label="{{ __('messages.aria.enter_max_price') }}"
                                    min="{{ $minPrice }}"
@@ -321,7 +320,7 @@
             <!-- Pagination -->
             <nav class="flex flex-wrap gap-2 justify-center items-center pt-10 w-full max-md:max-w-full"
                  aria-label="{{ __('messages.aria.pagination') }}">
-                {{ $products->links() }}
+                {{ $products->appends(['price_max' => $priceMax ? $priceMax / 100 : null, 'brands' => $brands, 'sort' => $sort, 'view' => $view])->links() }}
             </nav>
         </section>
     </div>
@@ -425,11 +424,11 @@
             stroke: #333333;
         }
 
-        button[aria-pressed="true"] .icon-view {
+        button[aria-pressed="true"] .icon-view, a[aria-pressed="true"] .icon-view {
             stroke: #16a34a;
         }
 
-        button:hover .icon-view {
+        button:hover .icon-view, a:hover .icon-view {
             stroke: #16a34a;
         }
     </style>
