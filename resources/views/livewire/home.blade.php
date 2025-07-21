@@ -50,7 +50,7 @@
                 <h2 class="text-2xl pb-5 font-bold leading-tight text-black max-md:max-w-full">
                     {{ __('messages.products.title') }}
                 </h2>
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4  overflow-hidden gap-2 lg:h-[378px] sm:h-auto"
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4  overflow-hidden gap-2 sm:h-auto"
                     role="list">
 
                     @if (!empty($allProducts))
