@@ -8,13 +8,6 @@
         </h1>
     </header>
 
-    <!-- Отладочная информация -->
-    <div class="mt-4 text-sm text-gray-500">
-        Debug: chosenShipping={{ $chosenShipping ?? 'None' }},
-        city={{ $shippingData['city'] ?? 'None' }},
-        line_one={{ $shippingData['line_one'] ?? 'None' }}
-    </div>
-
     @if($shippingData)
         <div class="mt-10 w-full text-base font-semibold leading-none whitespace-nowrap text-neutral-400 max-md:max-w-full space-y-4">
             @foreach($shippingOptions as $option)
@@ -28,8 +21,7 @@
                         required
                     />
                     <span class="ml-4">
-                        <p class="text-sm font-medium text-zinc-800">{{ $option['description'] }}</p>
-                        <p class="text-xs text-neutral-400">{{ __('messages.checkout.free_shipping') }}</p>
+                        <p class="text-sm font-medium text-zinc-800">{{ $option['description'] }} ({{ $option['formatted_price'] }})</p>
                     </span>
                 </label>
                 @error('chosenShipping')
