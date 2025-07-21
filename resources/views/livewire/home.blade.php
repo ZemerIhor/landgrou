@@ -422,7 +422,7 @@
         </footer>
     </section>
 
-    <section class="main-banner" role="banner" aria-label="{{ __('messages.hero.aria_label') }}">
+    <section class="main-banner container mx-auto" role="banner" aria-label="{{ __('messages.hero.aria_label') }}">
         @if (!empty($settings->banner_image))
             <img
                 src="{{ Storage::url($settings->banner_image) }}"
