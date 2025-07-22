@@ -45,6 +45,24 @@ class GlobalSet extends Page implements HasForms
             'feedback_form_title' => $settings->feedback_form_title ?? ['en' => '', 'uk' => ''],
             'feedback_form_description' => $settings->feedback_form_description ?? ['en' => '', 'uk' => ''],
             'feedback_form_image' => $settings->feedback_form_image ?? '',
+            'home_title' => $settings->home_title ?? ['en' => '', 'uk' => ''],
+            'home_meta_description' => $settings->home_meta_description ?? ['en' => '', 'uk' => ''],
+            'about_us_title' => $settings->about_us_title ?? ['en' => '', 'uk' => ''],
+            'about_us_meta_description' => $settings->about_us_meta_description ?? ['en' => '', 'uk' => ''],
+            'contacts_title' => $settings->contacts_title ?? ['en' => '', 'uk' => ''],
+            'contacts_meta_description' => $settings->contacts_meta_description ?? ['en' => '', 'uk' => ''],
+            'faq_title' => $settings->faq_title ?? ['en' => '', 'uk' => ''],
+            'faq_meta_description' => $settings->faq_meta_description ?? ['en' => '', 'uk' => ''],
+            'reviews_title' => $settings->reviews_title ?? ['en' => '', 'uk' => ''],
+            'reviews_meta_description' => $settings->reviews_meta_description ?? ['en' => '', 'uk' => ''],
+            'submit_review_title' => $settings->submit_review_title ?? ['en' => '', 'uk' => ''],
+            'submit_review_meta_description' => $settings->submit_review_meta_description ?? ['en' => '', 'uk' => ''],
+            'blog_title' => $settings->blog_title ?? ['en' => '', 'uk' => ''],
+            'blog_meta_description' => $settings->blog_meta_description ?? ['en' => '', 'uk' => ''],
+            'checkout_title' => $settings->checkout_title ?? ['en' => '', 'uk' => ''],
+            'checkout_meta_description' => $settings->checkout_meta_description ?? ['en' => '', 'uk' => ''],
+            'checkout_success_title' => $settings->checkout_success_title ?? ['en' => '', 'uk' => ''],
+            'checkout_success_meta_description' => $settings->checkout_success_meta_description ?? ['en' => '', 'uk' => ''],
         ];
 
         Log::info('Global Settings form initialized', ['data' => $this->data]);
@@ -119,6 +137,97 @@ class GlobalSet extends Page implements HasForms
                     ])
                     ->collapsible()
                     ->columns(2),
+
+                Section::make(__('messages.settings.static_pages_section'))
+                    ->schema([
+                        Translate::make()
+                            ->locales(['en', 'uk'])
+                            ->schema([
+                                TextInput::make('home_title')
+                                    ->label(__('messages.settings.home_title'))
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('home_meta_description')
+                                    ->label(__('messages.settings.home_meta_description'))
+                                    ->rows(4)
+                                    ->required()
+                                    ->maxLength(500),
+                                TextInput::make('about_us_title')
+                                    ->label(__('messages.settings.about_us_title'))
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('about_us_meta_description')
+                                    ->label(__('messages.settings.about_us_meta_description'))
+                                    ->rows(4)
+                                    ->required()
+                                    ->maxLength(500),
+                                TextInput::make('contacts_title')
+                                    ->label(__('messages.settings.contacts_title'))
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('contacts_meta_description')
+                                    ->label(__('messages.settings.contacts_meta_description'))
+                                    ->rows(4)
+                                    ->required()
+                                    ->maxLength(500),
+                                TextInput::make('faq_title')
+                                    ->label(__('messages.settings.faq_title'))
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('faq_meta_description')
+                                    ->label(__('messages.settings.faq_meta_description'))
+                                    ->rows(4)
+                                    ->required()
+                                    ->maxLength(500),
+                                TextInput::make('reviews_title')
+                                    ->label(__('messages.settings.reviews_title'))
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('reviews_meta_description')
+                                    ->label(__('messages.settings.reviews_meta_description'))
+                                    ->rows(4)
+                                    ->required()
+                                    ->maxLength(500),
+                                TextInput::make('submit_review_title')
+                                    ->label(__('messages.settings.submit_review_title'))
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('submit_review_meta_description')
+                                    ->label(__('messages.settings.submit_review_meta_description'))
+                                    ->rows(4)
+                                    ->required()
+                                    ->maxLength(500),
+                                TextInput::make('blog_title')
+                                    ->label(__('messages.settings.blog_title'))
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('blog_meta_description')
+                                    ->label(__('messages.settings.blog_meta_description'))
+                                    ->rows(4)
+                                    ->required()
+                                    ->maxLength(500),
+                                TextInput::make('checkout_title')
+                                    ->label(__('messages.settings.checkout_title'))
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('checkout_meta_description')
+                                    ->label(__('messages.settings.checkout_meta_description'))
+                                    ->rows(4)
+                                    ->required()
+                                    ->maxLength(500),
+                                TextInput::make('checkout_success_title')
+                                    ->label(__('messages.settings.checkout_success_title'))
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('checkout_success_meta_description')
+                                    ->label(__('messages.settings.checkout_success_meta_description'))
+                                    ->rows(4)
+                                    ->required()
+                                    ->maxLength(500),
+                            ]),
+                    ])
+                    ->collapsible()
+                    ->columns(2),
             ])
             ->statePath('data');
     }
@@ -129,14 +238,10 @@ class GlobalSet extends Page implements HasForms
             $data = $this->form->getState();
 
             // Логирование MIME-типа для изображений
-            if (isset($data['logo']) && is_object($data['logo'])) {
-                Log::info('MIME type for logo', ['mime' => $data['logo']->getMimeType()]);
-            }
-            if (isset($data['favicon']) && is_object($data['favicon'])) {
-                Log::info('MIME type for favicon', ['mime' => $data['favicon']->getMimeType()]);
-            }
-            if (isset($data['feedback_form_image']) && is_object($data['feedback_form_image'])) {
-                Log::info('MIME type for feedback_form_image', ['mime' => $data['feedback_form_image']->getMimeType()]);
+            foreach (['logo', 'favicon', 'feedback_form_image'] as $field) {
+                if (isset($data[$field]) && is_object($data[$field])) {
+                    Log::info("MIME type for {$field}", ['mime' => $data[$field]->getMimeType()]);
+                }
             }
 
             Log::info('Global Settings Form Data', ['data' => $data]);

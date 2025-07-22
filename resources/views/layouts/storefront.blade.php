@@ -7,10 +7,13 @@
     @php
         $settings = app(\App\Settings\GlobalSettings::class);
         $locale = app()->getLocale();
+        // Используем переданные title и meta_description, если они есть, иначе значения из GlobalSettings или lang
+        $pageTitle = isset($title) ? $title : ($settings->site_name[$locale] ?? __('messages.settings.default_site_name'));
+        $pageDescription = isset($meta_description) ? $meta_description : ($settings->meta_description[$locale] ?? __('messages.settings.default_meta_description'));
     @endphp
 
-    <title>{{ $settings->site_name[$locale] ?? __('messages.settings.default_site_name') }}</title>
-    <meta name="description" content="{{ $settings->meta_description[$locale] ?? __('messages.settings.default_meta_description') }}">
+    <title>{{ $pageTitle }}</title>
+    <meta name="description" content="{{ $pageDescription }}">
 
     @if ($settings->favicon)
         <link rel="icon" href="{{ Storage::url($settings->favicon) }}">
@@ -33,7 +36,7 @@
 
 <x-footer/>
 <button
- id="scrollToTopBtn"
+    id="scrollToTopBtn"
     type="button"
     aria-label="Scroll to top of page"
     class="flex fixed bottom-4 right-4 z-50 gap-2.5 justify-center items-center self-start px-3 w-12 h-12 bg-green-600 rounded-[32px] hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-zinc-800 transition-colors duration-200"
@@ -61,6 +64,5 @@
         });
     });
 </script>
-
 </body>
 </html>
