@@ -7,7 +7,7 @@
     @php
         $settings = app(\App\Settings\GlobalSettings::class);
         $locale = app()->getLocale();
-        $currentRoute = request()->route()->getName();
+        $currentRoute = request()->route() ? request()->route()->getName() : 'home';
 
         // По умолчанию используем site_name и meta_description из GlobalSettings
         $pageTitle = $settings->site_name[$locale] ?? __('messages.settings.default_site_name');
@@ -59,15 +59,20 @@
                 $pageDescription = __('messages.catalog.meta_description');
                 break;
             case 'product.view':
-                $product = \Lunar\Models\Product::where('status', 'published')
-                    ->where('slug', request()->route()->parameter('slug'))
+                $url = \Lunar\Models\Url::where('slug', request()->route()->parameter('slug'))
+                    ->where('element_type', 'Lunar\Models\Product')
+                    ->where('language_id', \Lunar\Models\Language::where('code', $locale)->first()->id ?? 1)
                     ->first();
+                $product = $url ? \Lunar\Models\Product::where('id', $url->element_id)->where('status', 'published')->first() : null;
                 $pageTitle = $product ? ($product->translateAttribute('name') ?? __('messages.product.default_title')) : __('messages.product.default_title');
                 $pageDescription = $product ? (strip_tags($product->translateAttribute('description')) ?? __('messages.product.default_meta_description')) : __('messages.product.default_meta_description');
                 break;
             case 'collection.view':
-                $collection = \Lunar\Models\Collection::where('slug', request()->route()->parameter('slug'))
+                $url = \Lunar\Models\Url::where('slug', request()->route()->parameter('slug'))
+                    ->where('element_type', 'Lunar\Models\Collection')
+                    ->where('language_id', \Lunar\Models\Language::where('code', $locale)->first()->id ?? 1)
                     ->first();
+                $collection = $url ? \Lunar\Models\Collection::where('id', $url->element_id)->first() : null;
                 $pageTitle = $collection ? ($collection->translateAttribute('name') ?? __('messages.collection.title')) : __('messages.collection.title');
                 $pageDescription = $collection ? (strip_tags($collection->translateAttribute('description')) ?? __('messages.collection.meta_description')) : __('messages.collection.meta_description');
                 break;
@@ -77,7 +82,7 @@
                 $pageDescription = __('messages.search.meta_description');
                 break;
             case 'blog.post':
-                $post = \App\Models\Post::where('slug', request()->route()->parameter('slug'))->first(); // Предполагаем модель Post
+                $post = \App\Models\Post::where('slug', request()->route()->parameter('slug'))->first();
                 $pageTitle = $post ? ($post->translateAttribute('title') ?? __('messages.blog.post_default_title')) : __('messages.blog.post_default_title');
                 $pageDescription = $post ? (strip_tags($post->translateAttribute('excerpt')) ?? __('messages.blog.post_default_meta_description')) : __('messages.blog.post_default_meta_description');
                 break;
