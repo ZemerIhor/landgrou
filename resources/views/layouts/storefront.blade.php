@@ -7,9 +7,89 @@
     @php
         $settings = app(\App\Settings\GlobalSettings::class);
         $locale = app()->getLocale();
-        // Используем переданные title и meta_description, если они есть, иначе значения из GlobalSettings или lang
-        $pageTitle = isset($title) ? $title : ($settings->site_name[$locale] ?? __('messages.settings.default_site_name'));
-        $pageDescription = isset($meta_description) ? $meta_description : ($settings->meta_description[$locale] ?? __('messages.settings.default_meta_description'));
+        $currentRoute = request()->route()->getName();
+
+        // По умолчанию используем site_name и meta_description из GlobalSettings
+        $pageTitle = $settings->site_name[$locale] ?? __('messages.settings.default_site_name');
+        $pageDescription = $settings->meta_description[$locale] ?? __('messages.settings.default_meta_description');
+
+        // Определяем заголовок и мета-описание в зависимости от маршрута
+        switch ($currentRoute) {
+            // Статические страницы (из GlobalSettings)
+            case 'home':
+                $pageTitle = $settings->home_title[$locale] ?? __('messages.home.title');
+                $pageDescription = $settings->home_meta_description[$locale] ?? __('messages.home.meta_description');
+                break;
+            case 'about-us':
+                $pageTitle = $settings->about_us_title[$locale] ?? __('messages.about-us.title');
+                $pageDescription = $settings->about_us_meta_description[$locale] ?? __('messages.about-us.meta_description');
+                break;
+            case 'contacts':
+                $pageTitle = $settings->contacts_title[$locale] ?? __('messages.contacts.title');
+                $pageDescription = $settings->contacts_meta_description[$locale] ?? __('messages.contacts.meta_description');
+                break;
+            case 'faq':
+                $pageTitle = $settings->faq_title[$locale] ?? __('messages.faq.title');
+                $pageDescription = $settings->faq_meta_description[$locale] ?? __('messages.faq.meta_description');
+                break;
+            case 'reviews':
+                $pageTitle = $settings->reviews_title[$locale] ?? __('messages.reviews.title');
+                $pageDescription = $settings->reviews_meta_description[$locale] ?? __('messages.reviews.meta_description');
+                break;
+            case 'submit-review':
+                $pageTitle = $settings->submit_review_title[$locale] ?? __('messages.submit-review.title');
+                $pageDescription = $settings->submit_review_meta_description[$locale] ?? __('messages.submit-review.meta_description');
+                break;
+            case 'blog.index':
+                $pageTitle = $settings->blog_title[$locale] ?? __('messages.blog.title');
+                $pageDescription = $settings->blog_meta_description[$locale] ?? __('messages.blog.meta_description');
+                break;
+            case 'checkout.view':
+                $pageTitle = $settings->checkout_title[$locale] ?? __('messages.checkout.title');
+                $pageDescription = $settings->checkout_meta_description[$locale] ?? __('messages.checkout.meta_description');
+                break;
+            case 'checkout-success.view':
+                $pageTitle = $settings->checkout_success_title[$locale] ?? __('messages.checkout-success.title');
+                $pageDescription = $settings->checkout_success_meta_description[$locale] ?? __('messages.checkout-success.meta_description');
+                break;
+
+            // Продуктовые и системные страницы (из lang и моделей Lunar)
+            case 'catalog.view':
+                $pageTitle = __('messages.catalog.title');
+                $pageDescription = __('messages.catalog.meta_description');
+                break;
+            case 'product.view':
+                $product = \Lunar\Models\Product::where('status', 'published')
+                    ->where('slug', request()->route()->parameter('slug'))
+                    ->first();
+                $pageTitle = $product ? ($product->translateAttribute('name') ?? __('messages.product.default_title')) : __('messages.product.default_title');
+                $pageDescription = $product ? (strip_tags($product->translateAttribute('description')) ?? __('messages.product.default_meta_description')) : __('messages.product.default_meta_description');
+                break;
+            case 'collection.view':
+                $collection = \Lunar\Models\Collection::where('slug', request()->route()->parameter('slug'))
+                    ->first();
+                $pageTitle = $collection ? ($collection->translateAttribute('name') ?? __('messages.collection.title')) : __('messages.collection.title');
+                $pageDescription = $collection ? (strip_tags($collection->translateAttribute('description')) ?? __('messages.collection.meta_description')) : __('messages.collection.meta_description');
+                break;
+            case 'search.view':
+            case 'products.index':
+                $pageTitle = __('messages.search.title');
+                $pageDescription = __('messages.search.meta_description');
+                break;
+            case 'blog.post':
+                $post = \App\Models\Post::where('slug', request()->route()->parameter('slug'))->first(); // Предполагаем модель Post
+                $pageTitle = $post ? ($post->translateAttribute('title') ?? __('messages.blog.post_default_title')) : __('messages.blog.post_default_title');
+                $pageDescription = $post ? (strip_tags($post->translateAttribute('excerpt')) ?? __('messages.blog.post_default_meta_description')) : __('messages.blog.post_default_meta_description');
+                break;
+            case 'privacy-policy':
+                $pageTitle = __('messages.privacy-policy.title');
+                $pageDescription = __('messages.privacy-policy.meta_description');
+                break;
+            case 'terms':
+                $pageTitle = __('messages.terms.title');
+                $pageDescription = __('messages.terms.meta_description');
+                break;
+        }
     @endphp
 
     <title>{{ $pageTitle }}</title>
