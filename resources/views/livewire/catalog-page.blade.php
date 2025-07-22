@@ -63,7 +63,7 @@
         <!-- Sort Dropdown -->
         <div class="relative">
             <select onchange="window.location.href = this.value"
-                    class="flex gap-4 items-center self-stretch px-4 my-auto text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h-10 text-zinc-800 w-[180px] hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
+                    class="flex gap-4 items-center self-stretch px-4 my-auto text-sm font-bold leading-tight rounded-2xl bg-neutral-200 min-h- це-10 text-zinc-800 w-[180px] hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2"
                     aria-label="{{ __('messages.aria.sorting') }}">
                 <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'name_asc', 'price_max' => $priceMax ? $priceMax / 100 : null, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'name_asc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_name_asc') }}</option>
                 <option value="{{ route('catalog.view', ['locale' => $locale, 'sort' => 'name_desc', 'price_max' => $priceMax ? $priceMax / 100 : null, 'brands' => $brands, 'view' => $view]) }}" {{ $sort === 'name_desc' ? 'selected' : '' }}>{{ __('messages.catalog.sort_name_desc') }}</option>

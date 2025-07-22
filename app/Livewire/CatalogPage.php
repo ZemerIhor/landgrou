@@ -50,12 +50,6 @@ class CatalogPage extends Component
         ]);
     }
 
-    public function updatePriceMax($value)
-    {
-        $this->priceMax = (float) $value * 100; // Конвертируем UAH в копейки
-        $this->updateUrl();
-    }
-
     public function applyFilters()
     {
         if ($this->priceMax !== null) {
@@ -112,7 +106,7 @@ class CatalogPage extends Component
     protected function updateUrl()
     {
         $query = array_filter([
-            'price_max' => $this->priceMax ? $this->priceMax / 100 : null, // Конвертируем обратно в UAH для URL
+            'price_max' => $this->priceMax ? $this->priceMax / 100 : null,
             'brands' => !empty($this->brands) ? $this->brands : null,
             'sort' => $this->sort !== 'name_asc' ? $this->sort : null,
             'view' => $this->view !== 'grid' ? $this->view : null,
@@ -139,7 +133,7 @@ class CatalogPage extends Component
             $productsQuery->whereHas('variants', function ($query) {
                 $query->whereHas('prices', function ($priceQuery) {
                     $priceQuery->where('currency_id', $this->currency->id)
-                        ->where('price', '<=', (float) $this->priceMax); // Цена в копейках
+                        ->where('price', '<=', (float) $this->priceMax);
                 });
             });
             Log::info('Price Filter Applied', ['priceMax' => $this->priceMax]);
@@ -215,7 +209,7 @@ class CatalogPage extends Component
                         ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                         ->where('lunar_prices.currency_id', '=', $this->currency->id);
                 })
-                ->min('lunar_prices.price') ?? 4200; // Минимальная цена 42 UAH (4200 копеек)
+                ->min('lunar_prices.price') ?? 4200;
 
             $maxPrice = Product::where('status', 'published')
                 ->join('lunar_product_variants', 'lunar_products.id', '=', 'lunar_product_variants.product_id')
@@ -224,7 +218,7 @@ class CatalogPage extends Component
                         ->where('lunar_prices.priceable_type', 'Lunar\Models\ProductVariant')
                         ->where('lunar_prices.currency_id', '=', $this->currency->id);
                 })
-                ->max('lunar_prices.price') ?? 15000; // Максимальная цена 150 UAH (15000 копеек)
+                ->max('lunar_prices.price') ?? 15000;
 
             Log::info('Price Range Calculated', [
                 'minPrice' => $minPrice,
@@ -232,8 +226,8 @@ class CatalogPage extends Component
             ]);
 
             return [
-                'min' => $minPrice / 100, // Конвертируем в UAH для фронтенда
-                'max' => $maxPrice / 100, // Конвертируем в UAH для фронтенда
+                'min' => $minPrice / 100,
+                'max' => $maxPrice / 100,
             ];
         });
     }
@@ -241,6 +235,7 @@ class CatalogPage extends Component
     public function render(): View
     {
         try {
+            $products = $this->products; // Получаем продукты
             Log::info('Catalog Page Rendering', [
                 'products_count' => $products->total(),
                 'filters' => [
@@ -252,7 +247,7 @@ class CatalogPage extends Component
             ]);
 
             return view('livewire.catalog-page', [
-                'products' => $this->products,
+                'products' => $products,
                 'availableBrands' => $this->availableBrands,
                 'minPrice' => $this->priceRange['min'],
                 'maxPrice' => $this->priceRange['max'],
@@ -271,14 +266,17 @@ class CatalogPage extends Component
                 ],
             ]);
 
+            $products = Product::where('status', 'published')->paginate($this->perPage);
+
             return view('livewire.catalog-page', [
-                'products' => Product::where('status', 'published')->paginate($this->perPage),
+                'products' => $products,
                 'availableBrands' => Brand::whereHas('products')->get(),
                 'minPrice' => 42,
                 'maxPrice' => 150,
                 'locale' => $this->locale,
                 'currency' => $this->currency,
-            ])->with('error', __('messages.catalog.error') . ': ' . $e->getMessage());
+                'error' => __('messages.catalog.error') . ': ' . $e->getMessage(),
+            ]);
         }
     }
 }
