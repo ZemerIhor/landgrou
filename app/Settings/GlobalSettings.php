@@ -8,12 +8,12 @@ class GlobalSettings extends Settings
 {
     public  $site_name;
     public  $meta_description;
-    public string $logo;
-    public string $favicon;
-    public string $contact_email;
+    public  $logo;
+    public  $favicon;
+    public  $contact_email;
     public  $feedback_form_title;
     public  $feedback_form_description;
-    public string $feedback_form_image;
+    public  $feedback_form_image;
 
     // Поля для статических страниц
     public  $home_title;
@@ -35,7 +35,7 @@ class GlobalSettings extends Settings
     public  $checkout_success_title;
     public  $checkout_success_meta_description;
 
-    public static function group(): string
+    public static function group():string
     {
         return 'global';
     }
