@@ -340,6 +340,26 @@ return [
         'save_button' => 'Save',
         'saved' => 'Settings successfully saved',
         'error' => 'Error saving settings',
+        'default_site_name' => 'My Site',
+        'default_meta_description' => 'Default description for the site',
+        'home_title' => 'Home Page Title',
+        'home_meta_description' => 'Home Page Meta Description',
+        'about_us_title' => 'About Us Title',
+        'about_us_meta_description' => 'About Us Meta Description',
+        'contacts_title' => 'Contacts Title',
+        'contacts_meta_description' => 'Contacts Meta Description',
+        'faq_title' => 'FAQ Title',
+        'faq_meta_description' => 'FAQ Meta Description',
+        'reviews_title' => 'Reviews Title',
+        'reviews_meta_description' => 'Reviews Meta Description',
+        'submit_review_title' => 'Submit Review Title',
+        'submit_review_meta_description' => 'Submit Review Meta Description',
+        'blog_title' => 'Blog Title',
+        'blog_meta_description' => 'Blog Meta Description',
+        'checkout_title' => 'Checkout Title',
+        'checkout_meta_description' => 'Checkout Meta Description',
+        'checkout_success_title' => 'Checkout Success Title',
+        'checkout_success_meta_description' => 'Checkout Success Meta Description',
     ],
 
     'hero' => [
@@ -386,5 +406,6 @@ return [
         'enter_max_price' => 'Enter maximum price',
         'pagination' => 'Pagination',
     ],
+
 
 ];
