@@ -6,34 +6,34 @@ use Spatie\LaravelSettings\Settings;
 
 class GlobalSettings extends Settings
 {
-    public array $site_name;
-    public array $meta_description;
+    public  $site_name;
+    public  $meta_description;
     public string $logo;
     public string $favicon;
     public string $contact_email;
-    public array $feedback_form_title;
-    public array $feedback_form_description;
+    public  $feedback_form_title;
+    public  $feedback_form_description;
     public string $feedback_form_image;
 
     // Поля для статических страниц
-    public array $home_title;
-    public array $home_meta_description;
-    public array $about_us_title;
-    public array $about_us_meta_description;
-    public array $contacts_title;
-    public array $contacts_meta_description;
-    public array $faq_title;
-    public array $faq_meta_description;
-    public array $reviews_title;
-    public array $reviews_meta_description;
-    public array $submit_review_title;
-    public array $submit_review_meta_description;
-    public array $blog_title;
-    public array $blog_meta_description;
-    public array $checkout_title;
-    public array $checkout_meta_description;
-    public array $checkout_success_title;
-    public array $checkout_success_meta_description;
+    public  $home_title;
+    public  $home_meta_description;
+    public  $about_us_title;
+    public  $about_us_meta_description;
+    public  $contacts_title;
+    public  $contacts_meta_description;
+    public  $faq_title;
+    public  $faq_meta_description;
+    public  $reviews_title;
+    public  $reviews_meta_description;
+    public  $submit_review_title;
+    public  $submit_review_meta_description;
+    public  $blog_title;
+    public  $blog_meta_description;
+    public  $checkout_title;
+    public  $checkout_meta_description;
+    public  $checkout_success_title;
+    public  $checkout_success_meta_description;
 
     public static function group(): string
     {
