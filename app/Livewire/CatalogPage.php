@@ -11,7 +11,6 @@ use Lunar\Models\Url;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
 class CatalogPage extends Component
