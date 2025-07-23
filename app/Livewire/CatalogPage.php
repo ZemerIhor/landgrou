@@ -278,7 +278,7 @@ class CatalogPage extends Component
                 'locale' => $this->locale,
                 'currency' => $this->currency,
                 'error' => __('messages.catalog.error') . ': ' . $e->getMessage(),
-            ])->layout('layouts.app');
+            ])->with('error', __('messages.catalog.error') . ': ' . $e->getMessage());
         }
     }
 }
