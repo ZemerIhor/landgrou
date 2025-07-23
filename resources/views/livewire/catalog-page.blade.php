@@ -134,7 +134,7 @@
                         <fieldset class="flex-1 shrink w-full basis-0 min-w-60">
                             <legend class="sr-only">{{ __('messages.catalog.brand') }}</legend>
                             @foreach ($availableBrands as $brand)
-                                <div class="flex gap-2 items-center px-4 py-2 w-full min-h-10">
+                                <div class="flex gap-2 items-center px Grownup, если это возможно, пожалуйста, предоставьте более корректный перевод: items-center px-4 py-2 w-full min-h-10">
                                     <input type="checkbox" name="brands[]" id="brand-{{ $brand->id }}"
                                            value="{{ $brand->id }}"
                                            {{ in_array($brand->id, $brands) ? 'checked' : '' }}
@@ -234,15 +234,25 @@
                 @forelse ($products as $product)
                     @php
                         $locale = app()->getLocale();
-                        $slug = $product->urls->first() ? $product->urls->first()->slug : 'product-' . $product->id;
+                        // Get the slug for the current locale
+                        $slug = $product->urls()
+                            ->where('language_id', \Lunar\Models\Language::where('code', $locale)->first()->id ?? 1)
+                            ->first()?->slug ?? $product->slug ?? 'product-' . $product->id;
                         $hasValidSlug = is_string($slug) && trim($slug) !== '';
-                        $routeParams = ['slug' => $slug];
-                        if ($locale !== config('app.fallback_locale')) {
-                            $routeParams['locale'] = $locale;
-                        }
-                        $productUrl = $hasValidSlug ? route('product.view', $routeParams, false) : route('home', $locale !== config('app.fallback_locale') ? ['locale' => $locale] : [], false);
+                        // Generate locale-agnostic product URL
+                        $productUrl = $hasValidSlug
+                            ? route('product.view', ['locale' => $locale, 'slug' => $slug], false)
+                            : route('home', ['locale' => $locale], false);
                         $nameValue = $product->translateAttribute('name') ?? 'Product';
                         $descriptionValue = $product->translateAttribute('description') ?? '';
+                        // Debug logging
+                        \Log::info('Product URL Generated', [
+                            'product_id' => $product->id,
+                            'locale' => $locale,
+                            'slug' => $slug,
+                            'productUrl' => $productUrl,
+                            'urls' => $product->urls->toArray(),
+                        ]);
                     @endphp
 
                     <article wire:key="product-{{ $product->id }}"
@@ -254,7 +264,7 @@
                                     <div class="flex overflow-hidden flex-col max-w-full w-full">
                                         @if ($product->thumbnail)
                                             <img src="{{ $product->thumbnail->getUrl() }}"
-                                                 alt="{{ $product->translateAttribute('name') }}"
+                                                 alt="{{ $nameValue }}"
                                                  class="object-cover w-full aspect-[1.77] transition-transform duration-300 group-hover:scale-105"/>
                                         @else
                                             <img
@@ -281,8 +291,8 @@
 
                                 <div class="p-4 w-full">
                                     <div class="w-full text-zinc-800">
-                                        <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $product->translateAttribute('name') }}</h2>
-                                        <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ strip_tags($product->translateAttribute('description')) }}</p>
+                                        <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $nameValue }}</h2>
+                                        <p class="mt-3 text-xs font-semibold leading-5 text-zinc-800">{{ strip_tags($descriptionValue) }}</p>
                                         @if ($product->brand)
                                             <p class="text-xs mt-1">{{ __('messages.catalog.brand') }}
                                                 : {{ $product->brand->translateAttribute('name') ?? $product->brand->name ?? 'N/A' }}</p>
@@ -304,7 +314,7 @@
                             @if (!$hasValidSlug)
                                 <div class="p-4 text-red-600 text-sm">
                                     {{ __('messages.catalog.missing_slug_warning', ['id' => $product->id, 'locale' => app()->getLocale()]) }}
-                                    @dump($product->defaultUrl?->toArray())
+                                    @dump($product->urls->toArray())
                                     @dump($product->slug)
                                 </div>
                             @endif
