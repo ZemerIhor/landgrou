@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use Lunar\Models\Brand;
 use Lunar\Models\Currency;
 use Lunar\Models\Product;
+use Lunar\Models\Url;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
@@ -30,7 +31,6 @@ class CatalogPage extends Component
         $this->locale = app()->getLocale();
         $this->currency = Currency::where('code', 'UAH')->first() ?? Currency::first();
 
-        // Читаем параметры запроса (price_max в UAH, конвертируем в копейки)
         $this->priceMax = Request::query('price_max') ? (float) Request::query('price_max') * 100 : null;
         $this->brands = Request::query('brands', []);
         $this->sort = Request::query('sort', 'name_asc');
@@ -123,7 +123,9 @@ class CatalogPage extends Component
     public function getProductsProperty()
     {
         $productsQuery = Product::where('status', 'published')
-            ->with(['variants', 'thumbnail', 'brand', 'variants.prices']);
+            ->with(['variants', 'thumbnail', 'brand', 'variants.prices', 'urls' => function ($query) {
+                $query->where('language_id', \Lunar\Models\Language::where('code', $this->locale)->first()->id ?? 1);
+            }]);
 
         if (!empty($this->brands)) {
             $productsQuery->whereIn('brand_id', $this->brands);
@@ -179,6 +181,7 @@ class CatalogPage extends Component
                 return [
                     'id' => $product->id,
                     'name' => $product->translateAttribute('name'),
+                    'slug' => $product->urls->first() ? $product->urls->first()->slug : 'product-' . $product->id,
                     'prices' => $product->variants->map(function ($variant) {
                         return $variant->prices->map(function ($price) {
                             return [
@@ -235,7 +238,7 @@ class CatalogPage extends Component
     public function render(): View
     {
         try {
-            $products = $this->products; // Получаем продукты
+            $products = $this->products;
             Log::info('Catalog Page Rendering', [
                 'products_count' => $products->total(),
                 'filters' => [
@@ -253,7 +256,7 @@ class CatalogPage extends Component
                 'maxPrice' => $this->priceRange['max'],
                 'locale' => $this->locale,
                 'currency' => $this->currency,
-            ]);
+            ])->layout('layouts.app');
         } catch (\Exception $e) {
             Log::error('Error loading Catalog Page', [
                 'error' => $e->getMessage(),
@@ -276,7 +279,7 @@ class CatalogPage extends Component
                 'locale' => $this->locale,
                 'currency' => $this->currency,
                 'error' => __('messages.catalog.error') . ': ' . $e->getMessage(),
-            ]);
+            ])->layout('layouts.app');
         }
     }
 }

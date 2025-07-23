@@ -59,19 +59,34 @@
                 $pageDescription = __('messages.catalog.meta_description');
                 break;
             case 'product.view':
+                $language = \Lunar\Models\Language::where('code', $locale)->first();
                 $url = \Lunar\Models\Url::where('slug', request()->route()->parameter('slug'))
                     ->where('element_type', 'Lunar\Models\Product')
-                    ->where('language_id', \Lunar\Models\Language::where('code', $locale)->first()->id ?? 1)
+                    ->where('language_id', $language ? $language->id : 1)
                     ->first();
+                if (!$url) {
+                    // Попробуем найти slug для локали по умолчанию (uk)
+                    $url = \Lunar\Models\Url::where('slug', request()->route()->parameter('slug'))
+                        ->where('element_type', 'Lunar\Models\Product')
+                        ->where('default', 1)
+                        ->first();
+                }
                 $product = $url ? \Lunar\Models\Product::where('id', $url->element_id)->where('status', 'published')->first() : null;
                 $pageTitle = $product ? ($product->translateAttribute('name') ?? __('messages.product.default_title')) : __('messages.product.default_title');
                 $pageDescription = $product ? (strip_tags($product->translateAttribute('description')) ?? __('messages.product.default_meta_description')) : __('messages.product.default_meta_description');
                 break;
             case 'collection.view':
+                $language = \Lunar\Models\Language::where('code', $locale)->first();
                 $url = \Lunar\Models\Url::where('slug', request()->route()->parameter('slug'))
                     ->where('element_type', 'Lunar\Models\Collection')
-                    ->where('language_id', \Lunar\Models\Language::where('code', $locale)->first()->id ?? 1)
+                    ->where('language_id', $language ? $language->id : 1)
                     ->first();
+                if (!$url) {
+                    $url = \Lunar\Models\Url::where('slug', request()->route()->parameter('slug'))
+                        ->where('element_type', 'Lunar\Models\Collection')
+                        ->where('default', 1)
+                        ->first();
+                }
                 $collection = $url ? \Lunar\Models\Collection::where('id', $url->element_id)->first() : null;
                 $pageTitle = $collection ? ($collection->translateAttribute('name') ?? __('messages.collection.title')) : __('messages.collection.title');
                 $pageDescription = $collection ? (strip_tags($collection->translateAttribute('description')) ?? __('messages.collection.meta_description')) : __('messages.collection.meta_description');
