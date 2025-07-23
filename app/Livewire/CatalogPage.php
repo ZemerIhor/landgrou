@@ -255,7 +255,7 @@ class CatalogPage extends Component
                 'maxPrice' => $this->priceRange['max'],
                 'locale' => $this->locale,
                 'currency' => $this->currency,
-            ])->layout('layouts.app');
+            ]);
         } catch (\Exception $e) {
             Log::error('Error loading Catalog Page', [
                 'error' => $e->getMessage(),
