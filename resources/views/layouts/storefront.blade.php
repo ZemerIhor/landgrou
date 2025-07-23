@@ -10,53 +10,53 @@
         $currentRoute = request()->route() ? request()->route()->getName() : 'home';
 
         // По умолчанию используем site_name и meta_description из GlobalSettings
-        $pageTitle = $settings->site_name[$locale] ?? __('messages.settings.default_site_name');
-        $pageDescription = $settings->meta_description[$locale] ?? __('messages.settings.default_meta_description');
+        $pageTitle = $settings->site_name[$locale] ?? __('messages.settings.default_site_name', [], $locale);
+        $pageDescription = $settings->meta_description[$locale] ?? __('messages.settings.default_meta_description', [], $locale);
 
         // Определяем заголовок и мета-описание в зависимости от маршрута
         switch ($currentRoute) {
             // Статические страницы (из GlobalSettings)
             case 'home':
-                $pageTitle = $settings->home_title[$locale] ?? __('messages.home.title');
-                $pageDescription = $settings->home_meta_description[$locale] ?? __('messages.home.meta_description');
+                $pageTitle = $settings->home_title[$locale] ?? __('messages.home.title', [], $locale);
+                $pageDescription = $settings->home_meta_description[$locale] ?? __('messages.home.meta_description', [], $locale);
                 break;
             case 'about-us':
-                $pageTitle = $settings->about_us_title[$locale] ?? __('messages.about-us.title');
-                $pageDescription = $settings->about_us_meta_description[$locale] ?? __('messages.about-us.meta_description');
+                $pageTitle = $settings->about_us_title[$locale] ?? __('messages.about-us.title', [], $locale);
+                $pageDescription = $settings->about_us_meta_description[$locale] ?? __('messages.about-us.meta_description', [], $locale);
                 break;
             case 'contacts':
-                $pageTitle = $settings->contacts_title[$locale] ?? __('messages.contacts.title');
-                $pageDescription = $settings->contacts_meta_description[$locale] ?? __('messages.contacts.meta_description');
+                $pageTitle = $settings->contacts_title[$locale] ?? __('messages.contacts.title', [], $locale);
+                $pageDescription = $settings->contacts_meta_description[$locale] ?? __('messages.contacts.meta_description', [], $locale);
                 break;
             case 'faq':
-                $pageTitle = $settings->faq_title[$locale] ?? __('messages.faq.title');
-                $pageDescription = $settings->faq_meta_description[$locale] ?? __('messages.faq.meta_description');
+                $pageTitle = $settings->faq_title[$locale] ?? __('messages.faq.title', [], $locale);
+                $pageDescription = $settings->faq_meta_description[$locale] ?? __('messages.faq.meta_description', [], $locale);
                 break;
             case 'reviews':
-                $pageTitle = $settings->reviews_title[$locale] ?? __('messages.reviews.title');
-                $pageDescription = $settings->reviews_meta_description[$locale] ?? __('messages.reviews.meta_description');
+                $pageTitle = $settings->reviews_title[$locale] ?? __('messages.reviews.title', [], $locale);
+                $pageDescription = $settings->reviews_meta_description[$locale] ?? __('messages.reviews.meta_description', [], $locale);
                 break;
             case 'submit-review':
-                $pageTitle = $settings->submit_review_title[$locale] ?? __('messages.submit-review.title');
-                $pageDescription = $settings->submit_review_meta_description[$locale] ?? __('messages.submit-review.meta_description');
+                $pageTitle = $settings->submit_review_title[$locale] ?? __('messages.submit-review.title', [], $locale);
+                $pageDescription = $settings->submit_review_meta_description[$locale] ?? __('messages.submit-review.meta_description', [], $locale);
                 break;
             case 'blog.index':
-                $pageTitle = $settings->blog_title[$locale] ?? __('messages.blog.title');
-                $pageDescription = $settings->blog_meta_description[$locale] ?? __('messages.blog.meta_description');
+                $pageTitle = $settings->blog_title[$locale] ?? __('messages.blog.title', [], $locale);
+                $pageDescription = $settings->blog_meta_description[$locale] ?? __('messages.blog.meta_description', [], $locale);
                 break;
             case 'checkout.view':
-                $pageTitle = $settings->checkout_title[$locale] ?? __('messages.checkout.title');
-                $pageDescription = $settings->checkout_meta_description[$locale] ?? __('messages.checkout.meta_description');
+                $pageTitle = $settings->checkout_title[$locale] ?? __('messages.checkout.title', [], $locale);
+                $pageDescription = $settings->checkout_meta_description[$locale] ?? __('messages.checkout.meta_description', [], $locale);
                 break;
             case 'checkout-success.view':
-                $pageTitle = $settings->checkout_success_title[$locale] ?? __('messages.checkout-success.title');
-                $pageDescription = $settings->checkout_success_meta_description[$locale] ?? __('messages.checkout-success.meta_description');
+                $pageTitle = $settings->checkout_success_title[$locale] ?? __('messages.checkout-success.title', [], $locale);
+                $pageDescription = $settings->checkout_success_meta_description[$locale] ?? __('messages.checkout-success.meta_description', [], $locale);
                 break;
 
             // Продуктовые и системные страницы (из lang и моделей Lunar)
             case 'catalog.view':
-                $pageTitle = __('messages.catalog.title');
-                $pageDescription = __('messages.catalog.meta_description');
+                $pageTitle = __('messages.catalog.title', [], $locale);
+                $pageDescription = __('messages.catalog.meta_description', [], $locale);
                 break;
             case 'product.view':
                 $language = \Lunar\Models\Language::where('code', $locale)->first();
@@ -64,16 +64,35 @@
                     ->where('element_type', 'Lunar\Models\Product')
                     ->where('language_id', $language ? $language->id : 1)
                     ->first();
+
+                // Резервный поиск по умолчанию (обычно локаль 'uk')
                 if (!$url) {
-                    // Попробуем найти slug для локали по умолчанию (uk)
                     $url = \Lunar\Models\Url::where('slug', request()->route()->parameter('slug'))
                         ->where('element_type', 'Lunar\Models\Product')
                         ->where('default', 1)
                         ->first();
                 }
-                $product = $url ? \Lunar\Models\Product::where('id', $url->element_id)->where('status', 'published')->first() : null;
-                $pageTitle = $product ? ($product->translateAttribute('name') ?? __('messages.product.default_title')) : __('messages.product.default_title');
-                $pageDescription = $product ? (strip_tags($product->translateAttribute('description')) ?? __('messages.product.default_meta_description')) : __('messages.product.default_meta_description');
+
+                $product = $url ? \Lunar\Models\Product::where('id', $url->element_id)
+                    ->where('status', 'published')
+                    ->first() : null;
+
+                // Логирование для отладки
+                \Illuminate\Support\Facades\Log::info('Product View Meta', [
+                    'locale' => $locale,
+                    'slug' => request()->route()->parameter('slug'),
+                    'url_found' => $url ? $url->toArray() : null,
+                    'product_found' => $product ? $product->id : null,
+                    'product_name' => $product ? $product->translateAttribute('name') : null,
+                    'product_description' => $product ? $product->translateAttribute('description') : null,
+                ]);
+
+                $pageTitle = $product && $product->translateAttribute('name')
+                    ? $product->translateAttribute('name')
+                    : __('messages.product.default_title', [], $locale);
+                $pageDescription = $product && $product->translateAttribute('description')
+                    ? strip_tags($product->translateAttribute('description'))
+                    : __('messages.product.default_meta_description', [], $locale);
                 break;
             case 'collection.view':
                 $language = \Lunar\Models\Language::where('code', $locale)->first();
@@ -88,26 +107,26 @@
                         ->first();
                 }
                 $collection = $url ? \Lunar\Models\Collection::where('id', $url->element_id)->first() : null;
-                $pageTitle = $collection ? ($collection->translateAttribute('name') ?? __('messages.collection.title')) : __('messages.collection.title');
-                $pageDescription = $collection ? (strip_tags($collection->translateAttribute('description')) ?? __('messages.collection.meta_description')) : __('messages.collection.meta_description');
+                $pageTitle = $collection ? ($collection->translateAttribute('name') ?? __('messages.collection.title', [], $locale)) : __('messages.collection.title', [], $locale);
+                $pageDescription = $collection ? (strip_tags($collection->translateAttribute('description')) ?? __('messages.collection.meta_description', [], $locale)) : __('messages.collection.meta_description', [], $locale);
                 break;
             case 'search.view':
             case 'products.index':
-                $pageTitle = __('messages.search.title');
-                $pageDescription = __('messages.search.meta_description');
+                $pageTitle = __('messages.search.title', [], $locale);
+                $pageDescription = __('messages.search.meta_description', [], $locale);
                 break;
             case 'blog.post':
                 $post = \App\Models\Post::where('slug', request()->route()->parameter('slug'))->first();
-                $pageTitle = $post ? ($post->translateAttribute('title') ?? __('messages.blog.post_default_title')) : __('messages.blog.post_default_title');
-                $pageDescription = $post ? (strip_tags($post->translateAttribute('excerpt')) ?? __('messages.blog.post_default_meta_description')) : __('messages.blog.post_default_meta_description');
+                $pageTitle = $post ? ($post->translateAttribute('title') ?? __('messages.blog.post_default_title', [], $locale)) : __('messages.blog.post_default_title', [], $locale);
+                $pageDescription = $post ? (strip_tags($post->translateAttribute('excerpt')) ?? __('messages.blog.post_default_meta_description', [], $locale)) : __('messages.blog.post_default_meta_description', [], $locale);
                 break;
             case 'privacy-policy':
-                $pageTitle = __('messages.privacy-policy.title');
-                $pageDescription = __('messages.privacy-policy.meta_description');
+                $pageTitle = __('messages.privacy-policy.title', [], $locale);
+                $pageDescription = __('messages.privacy-policy.meta_description', [], $locale);
                 break;
             case 'terms':
-                $pageTitle = __('messages.terms.title');
-                $pageDescription = __('messages.terms.meta_description');
+                $pageTitle = __('messages.terms.title', [], $locale);
+                $pageDescription = __('messages.terms.meta_description', [], $locale);
                 break;
         }
     @endphp
