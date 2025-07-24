@@ -306,7 +306,8 @@
          x-transition:leave-start="height: var(--header-height)"
          x-transition:leave-end="height 0">
     </div>
+    @livewire('components.contact-form')
+    @livewireScripts
+
 </div>
 
-@livewire('components.contact-form')
-@livewireScripts
