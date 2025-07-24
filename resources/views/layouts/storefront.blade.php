@@ -85,7 +85,7 @@
                     'product_name' => $product ? $product->translateAttribute('name') : null,
                     'product_description' => $product ? $product->translateAttribute('description') : null,
                 ]);
-dd($product);
+dd($url);
                 $pageTitle = $product && $product->translateAttribute('name')
                     ? $product->translateAttribute('name')
                     : __('messages.product.default_title', [], $locale);
