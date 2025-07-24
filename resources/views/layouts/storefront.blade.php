@@ -65,7 +65,7 @@
                     ->where('language_id', $language ? $language->id : 1)
                     ->first();
 
-                // Резервный поиск по умолчанию (обычно локаль 'uk')
+
                 if (!$url) {
                     $url = \Lunar\Models\Url::where('slug', request()->route()->parameter('slug'))
                         ->where('element_type', 'Lunar\Models\Product')
@@ -85,7 +85,7 @@
                     'product_name' => $product ? $product->translateAttribute('name') : null,
                     'product_description' => $product ? $product->translateAttribute('description') : null,
                 ]);
-dd($url);
+
                 $pageTitle = $product && $product->translateAttribute('name')
                     ? $product->translateAttribute('name')
                     : __('messages.product.default_title', [], $locale);
