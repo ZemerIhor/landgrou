@@ -50,101 +50,101 @@
                 </div>
             </section>
 
-            <!-- Swiper Initialization Script -->
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     let swiperInstance = null;
 
                     function destroySwiper() {
                         if (swiperInstance) {
-                            console.log('Уничтожение существующего экземпляра Swiper');
+                            console.log('Уничтожение Swiper');
                             swiperInstance.destroy(true, true);
                             swiperInstance = null;
                         }
                     }
 
+                    function waitForElement(selector, callback, interval = 100, timeout = 3000) {
+                        const startTime = Date.now();
+                        const check = () => {
+                            const el = document.querySelector(selector);
+                            if (el) {
+                                callback(el);
+                            } else if (Date.now() - startTime < timeout) {
+                                setTimeout(check, interval);
+                            } else {
+                                console.warn(`Элемент ${selector} не найден за ${timeout} мс`);
+                            }
+                        };
+                        check();
+                    }
+
                     function initSwiper() {
-                        console.log('Инициализация Swiper...');
+                        console.log('Попытка инициализировать Swiper...');
                         if (!window.Swiper) {
-                            console.error('Swiper не найден. Убедитесь, что библиотека подключена.');
-                            setTimeout(initSwiper, 500); // Повторная попытка через 500 мс
+                            console.error('Swiper не загружен');
                             return;
                         }
 
-                        try {
-                            const swiperContainer = document.querySelector('.product-gallery');
-                            if (!swiperContainer) {
-                                console.error('Контейнер .product-gallery не найден');
-                                return;
-                            }
-
-                            const slides = swiperContainer.querySelectorAll('.swiper-slide');
-                            console.log('Количество слайдов:', slides.length);
-
-                            // Уничтожаем предыдущий экземпляр Swiper, если он существует
-                            destroySwiper();
-
-                            swiperInstance = new window.Swiper(swiperContainer, {
-                                slidesPerView: 1,
-                                spaceBetween: 0,
-                                loop: slides.length > 1, // Включаем loop только если больше 1 слайда
-                                touchRatio: 1,
-                                grabCursor: true,
-                                pagination: {
-                                    el: '.swiper-pagination',
-                                    clickable: true,
-                                    bulletClass: 'swiper-pagination-bullet',
-                                    bulletActiveClass: 'swiper-pagination-bullet-active',
-                                    bulletElement: 'span',
-                                    type: 'bullets',
-                                },
-                                navigation: {
-                                    nextEl: '.swiper-button-next',
-                                    prevEl: '.swiper-button-prev',
-                                    disabledClass: 'swiper-button-disabled',
-                                },
-                                speed: 600,
-                                watchSlidesProgress: true,
-                                on: {
-                                    init: function () {
-                                        console.log('Swiper инициализирован, слайдов:', slides.length);
-                                    },
-                                    slideChange: function () {
-                                        console.log('Слайд изменен, индекс:', this.activeIndex);
-                                    },
-                                    paginationRender: function (swiper, paginationEl) {
-                                        console.log('Пагинация отрендерена:', paginationEl);
-                                    },
-                                    paginationUpdate: function (swiper, paginationEl) {
-                                        console.log('Пагинация обновлена:', paginationEl);
-                                    },
-                                },
-                            });
-
-                            swiperInstance.on('reachBeginning reachEnd', function () {
-                                console.log('Достигнут край слайдера, начало:', this.isBeginning, 'конец:', this.isEnd);
-                            });
-                        } catch (error) {
-                            console.error('Ошибка при инициализации Swiper:', error);
+                        const swiperContainer = document.querySelector('.product-gallery');
+                        if (!swiperContainer) {
+                            console.error('Контейнер .product-gallery не найден');
+                            return;
                         }
+
+                        const slides = swiperContainer.querySelectorAll('.swiper-slide');
+                        destroySwiper();
+
+                        swiperInstance = new Swiper(swiperContainer, {
+                            slidesPerView: 1,
+                            spaceBetween: 0,
+                            loop: slides.length > 1,
+                            touchRatio: 1,
+                            grabCursor: true,
+                            pagination: {
+                                el: '.swiper-pagination',
+                                clickable: true,
+                                bulletClass: 'swiper-pagination-bullet',
+                                bulletActiveClass: 'swiper-pagination-bullet-active',
+                                bulletElement: 'span',
+                                type: 'bullets',
+                            },
+                            navigation: {
+                                nextEl: '.swiper-button-next',
+                                prevEl: '.swiper-button-prev',
+                                disabledClass: 'swiper-button-disabled',
+                            },
+                            speed: 600,
+                            watchSlidesProgress: true,
+                            on: {
+                                init: function () {
+                                    console.log('Swiper инициализирован, слайдов:', slides.length);
+                                },
+                                slideChange: function () {
+                                    console.log('Слайд изменен, индекс:', this.activeIndex);
+                                }
+                            },
+                        });
+
+                        swiperInstance.on('reachBeginning reachEnd', function () {
+                            console.log('Достигнут край слайдера');
+                        });
                     }
 
-                    // Инициализация Swiper при загрузке страницы
-                    initSwiper();
+                    // Инициализация при первом рендере
+                    waitForElement('.swiper-pagination', () => initSwiper());
 
-                    // Переинициализация при обновлениях Livewire
-                    document.addEventListener('livewire:navigated', function () {
-                        console.log('Livewire:navigated событие, переинициализация Swiper');
-                        initSwiper();
+                    // Livewire события
+                    document.addEventListener('livewire:update', () => {
+                        console.log('Livewire:update – перезапуск Swiper');
+                        waitForElement('.swiper-pagination', () => initSwiper());
                     });
 
-                    // Переинициализация при обновлении компонента (например, после добавления в корзину)
-                    document.addEventListener('livewire:update', function () {
-                        console.log('Livewire:update событие, переинициализация Swiper');
-                        initSwiper();
+                    document.addEventListener('livewire:navigated', () => {
+                        console.log('Livewire:navigated – перезапуск Swiper');
+                        waitForElement('.swiper-pagination', () => initSwiper());
                     });
                 });
             </script>
+
 
             <section class="flex relative flex-col gap-6 items-end flex-[1_0_0]">
                 <p class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm">
