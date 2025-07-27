@@ -261,7 +261,8 @@
             x-cloak
             x-show="mobileMenu"
             x-transition
-            class="bg-white shadow-lg absolute top-full left-0 w-full z-40"
+            class="bg-white shadow-lg absolute top-full left-0 w-full z-40" style="    top: 68px;
+    z-index: -1;"
             x-on:click.away="mobileMenu = false">
             <nav class="flex flex-col items-center gap-4 px-4 py-6 text-base font-semibold text-zinc-800" role="navigation" aria-label="{{ __('messages.nav.mobile_navigation') }}">
                 @if ($headerMenu)
