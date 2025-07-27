@@ -1,9 +1,9 @@
 <div x-data="{ isScrolled: false, mobileMenu: false, languageMenu: false, headerHeight: 0 }"
      x-init="headerHeight = $el.querySelector('#header').offsetHeight; window.addEventListener('resize', () => headerHeight = $el.querySelector('#header').offsetHeight)"
-     @scroll.window="isScrolled = (window.pageYOffset > 0)" id="header"
-     class="fixed top-0 left-0 right-0 z-50 bg-white shadow-xl flex items-center transition-all duration-300"
-     role="banner">
-    <header>
+     @scroll.window="isScrolled = (window.pageYOffset > 0)">
+    <header id="header"
+            class="fixed top-0 left-0 right-0 z-50 bg-white shadow-xl flex items-center transition-all duration-300"
+            role="banner">
         <div class="nav-header flex relative px-4 py-4 justify-between items-center w-full max-w-7xl mx-auto">
             <!-- Logo -->
             <a href="{{ app()->getLocale() === 'uk' ? url('/') : url('/en') }}"
