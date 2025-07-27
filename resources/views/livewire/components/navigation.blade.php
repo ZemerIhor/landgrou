@@ -20,8 +20,8 @@
             @endphp
 
             <style>
-                /* Header styles */
-                header {
+
+                #header {
                     position: fixed;
                     top: 0;
                     left: 0;
