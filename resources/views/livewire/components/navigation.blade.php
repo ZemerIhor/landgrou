@@ -335,6 +335,7 @@
             </div>
         </div>
     </header>
+
     <div class="header-placeholder"
          x-show="isScrolled"
          style="height: 56px;"
