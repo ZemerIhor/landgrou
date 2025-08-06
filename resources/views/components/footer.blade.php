@@ -3,7 +3,8 @@
     $currentLocale = app()->getLocale(); // Get current locale (e.g., 'en' or 'uk')
 @endphp
 
-<footer class="self-stretch bg-zinc-800 mt-auto conteiner relative " role="contentinfo" id="footer" aria-label="Site footer">
+<footer class="self-stretch bg-zinc-800 mt-auto conteiner relative " role="contentinfo" id="footer"
+    aria-label="Site footer">
     <div class="container mx-auto md:px-12 px-4">
         <section class="header-section">
             <div class="logo"><x-brand.logo /></div>
@@ -33,28 +34,28 @@
             @endphp
 
             @if ($footerMenu)
-                <nav class="menu" aria-label="{{ __('messages.footer.main_navigation') }}">
+                <nav class="menu hidden" aria-label="{{ __('messages.footer.main_navigation') }}">
                     <ul>
-                @foreach ($footerMenu->menuItems as $item)
+                        @foreach ($footerMenu->menuItems as $item)
 
-                    <li>
-                        <a href="{{ $item->url }}">{{ $item->title }}</a>
-                        @if ($item->children)
-                            <ul>
-                                @foreach ($item->children as $child)
-                                    <li><a href="{{ $child->url }}">{{ $child->title }}</a></li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </li>
-                @endforeach
-</ul>
-                    </nav>
+                            <li>
+                                <a href="{{ $item->url }}">{{ $item->title }}</a>
+                                @if ($item->children)
+                                    <ul>
+                                        @foreach ($item->children as $child)
+                                            <li><a href="{{ $child->url }}">{{ $child->title }}</a></li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                </nav>
             @endif
 
             <!-- Контактная информация -->
             @if (isset($footer) && (!empty($footer->phone) || !empty($footer->email) || !empty($footer->address)))
-                <section class="contacts" aria-label="{{ __('messages.footer.contact_aria_label') }}">
+                <section class="contacts " aria-label="{{ __('messages.footer.contact_aria_label') }}">
                     <address>
                         <div class="contacts-list">
                             @if (!empty($footer->phone))

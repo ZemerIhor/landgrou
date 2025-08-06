@@ -23,7 +23,7 @@
                                 <p class="mt-2 text-sm">{{ $slide['extra_text'] ?? 'Keep warm' }}</p>
                             </div>
                             <div class="flex justify-center mt-6 gap-4 max-md:flex-col">
-                                <a href="{{ route('catalog.view', ['locale' => app()->getLocale()]) }}"
+                                <!-- <a href="{{ route('catalog.view', ['locale' => app()->getLocale()]) }}"
                                    class="px-6 py-3 border-2 border-white rounded-2xl text-white hover:bg-white hover:text-black transition"
                                    aria-label="{{ __('messages.hero.catalog_button') }}">
                                     {{ __('messages.hero.catalog_button') }}
@@ -32,7 +32,14 @@
                                    class="px-6 py-3 bg-green-600 text-white rounded-2xl hover:bg-green-700 transition"
                                    aria-label="{{ __('messages.hero.buy_now_button') }}">
                                     {{ __('messages.hero.buy_now_button') }}
-                                </a>
+                                </a> -->
+                                  <button
+                            wire:click="$dispatch('openContactForm')"
+                            class="px-6 py-3 bg-green-600 text-white rounded-2xl hover:bg-green-700 transition"
+                            aria-label="{{ __('messages.feedback_form.submit_button') }}"
+                        >
+                            Замовити
+                  </button>
                             </div>
                         </div>
                     </div>
