@@ -39,7 +39,7 @@ $productUrl = $hasValidSlug
 
 <article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 h-full" role="listitem">
     <div class="flex flex-row justify-between group h-full">
-        <div class="flex {{ $odd ? 'flex-row-reverse' : 'flex-row' }}  w-full h-full ">
+        <div class="flex flex-col lg:{{ $odd ? 'flex-row-reverse' : 'flex-row' }}  w-full h-full ">
             <div class="flex relative flex-col flex-1">
                 <div class="flex overflow-hidden flex-col max-w-full w-full">
                     @if ($product->thumbnail)
