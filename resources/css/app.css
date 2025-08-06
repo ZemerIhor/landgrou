@@ -39,6 +39,9 @@
 .desktop-menu ul li a{
     text-wrap-mode: nowrap;
 }
+.flex-row-reverse{
+    flex-direction: row-reverse;
+}
 /* .desktop-menu ul {
     flex-wrap: wrap;
 } */

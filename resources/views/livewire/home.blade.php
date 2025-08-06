@@ -1,6 +1,7 @@
-
+<div> 
+<x-welcome-banner :settings="$settings" />
 <div class="container mx-auto">
-    <x-welcome-banner :settings="$settings" />
+    
     <div class=" px-2 mx-auto pt-40">
 
         <section
@@ -47,15 +48,25 @@
 
         <section class="flex flex-col self-stretch" aria-label="Каталог">
             <div class="">
-                <h2 class="text-2xl pb-5 font-bold leading-tight text-black max-md:max-w-full">
+                <!-- <h2 class="text-2xl pb-5 font-bold leading-tight text-black max-md:max-w-full">
                     {{ __('messages.products.title') }}
-                </h2>
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4  overflow-hidden gap-2 sm:h-auto"
+                </h2> -->
+                <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1  overflow-hidden gap-2 sm:h-auto"
                     role="list">
 
                     @if (!empty($allProducts))
                         @foreach ($allProducts as $product)
-                            <x-product-card :product="$product" />
+                            <x-product-card :product="$product" :odd="$loop->odd"/>
+<div class="flex w-full justify-center hidden">
+     <button
+                            wire:click="$dispatch('openContactForm')"
+                            class="px-4 py-2 text-sm font-bold text-green-600 rounded-2xl border-2 border-green-600 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 w-full max-w-xs"
+                            aria-label="{{ __('messages.feedback_form.submit_button') }}"
+                        >
+                            {{ __('messages.feedback_form.submit_button') }}
+                        </button>
+</div>
+                             
                         @endforeach
                     @else
                         <p>{{ __('messages.products.no_items') }}</p>
@@ -496,5 +507,5 @@
     <div class="px-2 py-4 container mx-auto">
         <livewire:components.feedback-form-block/>
     </div>
-
+</div>
 </div>
