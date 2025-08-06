@@ -1,3 +1,8 @@
+@php
+    $footer = app(\App\Settings\FooterSettings::class);
+    $currentLocale = app()->getLocale(); // Get current locale (e.g., 'en' or 'uk')
+@endphp
+
 <div x-data="{ isScrolled: false, mobileMenu: false, languageMenu: false }" @scroll.window="isScrolled = (window.scrollY > 0)">
     <header id="header" class="shadow-xl flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
             :class="{ 'is-fixed': isScrolled }"
@@ -146,8 +151,22 @@
                 }
             </style>
 
+
             <!-- Desktop Menu -->
-            <div class="desktop-menu">
+            <div class="desktop-menu ">
+                 <div class="flex items-center">
+
+             @if (!empty($footer->phone))
+                                <div class="contact-item">
+                                    <a href="tel:{{ $footer->phone }}" class=""
+                                        aria-label="{{ __('messages.footer.phone_aria_label') }}">
+                                        {{ $footer->phone }}
+                                    </a>
+                                </div>
+                            @endif
+                </div>
+                
+                <div class="hidden"> 
                 @if ($headerMenu)
                     <ul class="mobile-menu-items">
                         @foreach ($headerMenu->menuItems as $item)
@@ -164,6 +183,8 @@
                         @endforeach
                     </ul>
                 @endif
+                </div>
+
             </div>
 
             <div class="nav-right">
