@@ -16,6 +16,8 @@ module.exports = {
         'shrink-0',
         'min-w-[98vw]',
         'min-w-[80vw]',
+        'md:flex-row',
+  'md:flex-row-reverse'
     ],
     theme: {
         extend: {},
