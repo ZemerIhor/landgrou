@@ -165,8 +165,8 @@
                                 </div>
                             @endif
                 </div>
-                
-                <div class="hidden"> 
+
+                <div class="hidden">
                 @if ($headerMenu)
                     <ul class="mobile-menu-items">
                         @foreach ($headerMenu->menuItems as $item)
@@ -252,7 +252,7 @@
                     <div class="hidden">
                         @livewire('components.cart')
                     </div>
-                    
+
 
                     <!-- Language Dropdown (Desktop) -->
                     <div class="relative" x-data="{ desktopLanguageMenu: false }">
@@ -343,6 +343,7 @@
                                 @endforeach
                             </ul>
                         @endif
+
 
 
                         <!-- Contact Button -->
