@@ -1,6 +1,7 @@
 @props(['product', 'odd' => false])
 
 @php
+вцфв
     // Get current locale
     $locale = app()->getLocale();
 
