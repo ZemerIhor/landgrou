@@ -47,7 +47,7 @@
 
 <article class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 h-full" role="listitem">
     <div class="flex flex-row justify-between group h-full">
-        <div class="flex flex-col md:{{ $odd ? 'flex-row-reverse' : 'flex-row' }} w-full h-full">
+        <a href="{{ $productUrl }}" wire:navigate class="flex flex-col md:{{ $odd ? 'flex-row-reverse' : 'flex-row' }} w-full h-full">
             <div class="flex relative flex-col flex-1">
                 <div class="flex overflow-hidden flex-col max-w-full w-full">
                     @if ($product->thumbnail)
@@ -79,7 +79,7 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </a>
 
         <div class="gap-4 justify-between items-end mt-4 px-4 pb-4 w-full hidden">
             <span class="text-base font-bold leading-tight text-zinc-800">
