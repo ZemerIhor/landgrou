@@ -77,7 +77,6 @@ class Contacts extends Page implements HasForms
                             ->maxLength(255),
                         TextInput::make('export_phone')
                             ->label(__('messages.contacts.export_phone'))
-                            ->tel()
                             ->required()
                             ->maxLength(20),
                         Translate::make()
