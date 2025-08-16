@@ -301,8 +301,7 @@ class Home extends Page implements HasForms
                                     ->label(__('Пункти тендерів'))
                                     ->schema([
                                         TextInput::make('title')
-                                            ->label(__('Назва'))
-                                            ->maxLength(255), // Removed required()
+                                            ->label(__('Назва')),
                                         FileUpload::make('icon')
                                             ->label(__('Иконка категории'))
                                             ->directory('home/tenders/icons')
