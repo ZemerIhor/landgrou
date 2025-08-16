@@ -29,30 +29,6 @@ class DemoProductSeeder extends Seeder
         // Создаем демо-продукт как на скриншоте
         $product = Product::create([
             'status' => 'published',
-            'attribute_data' => [
-                'name' => [
-                    'uk' => 'Паливний торфобрикет в поліетиленових мішках по 25 кг',
-                    'en' => 'Fuel Peat Briquette in Polyethylene Bags 25 kg',
-                    'ru' => 'Топливный торфобрикет в полиэтиленовых мешках по 25 кг'
-                ],
-                'description' => [
-                    'uk' => 'Брикет торф\'яний відповідає вимогам ДСТУ 2042-92 «Брикети торфові для комунально-побутових потреб». Має високу теплотворну здатність, зручний у використанні, екологічний, ідеально підходить для опалення будинків та приміщень різного типу.',
-                    'en' => 'Peat briquette meets the requirements of DSTU 2042-92 "Peat briquettes for municipal and household needs". Has high calorific value, convenient to use, ecological, ideal for heating houses and premises of various types.',
-                    'ru' => 'Брикет торфяной соответствует требованиям ДСТУ 2042-92 «Брикеты торфяные для коммунально-бытовых нужд». Имеет высокую теплотворную способность, удобен в использовании, экологичен, идеально подходит для отопления домов и помещений различного типа.'
-                ],
-                // Основные характеристики
-                'calorific_value' => '4500',
-                'moisture_content' => '19.1',
-                'mechanical_strength' => '95.6',
-                'ash_content' => '12-18',
-                'dimensions' => '40-75/65/180',
-                'raw_material' => '100% натуральний торф',
-                // Технические характеристики
-                'heat_combustion_kcal' => '4155',
-                'heat_combustion_mj' => '17.387',
-                'sulfur_content' => '0.24',
-                'radioactive_contamination' => 'не виявлено',
-            ],
             'article_number' => '00031489',
             'compliance_standard' => 'ДСТУ 2042-92 «Брикети торфові для комунально- побутових»',
             'packaging_type' => 'В поліетиленових мішках по 25кг',
@@ -92,6 +68,30 @@ class DemoProductSeeder extends Seeder
                     'standard' => 'не нормується',
                     'actual' => 'не виявлено'
                 ]
+            ],
+            'attribute_data' => [
+                'name' => [
+                    'uk' => 'Паливний торфобрикет в поліетиленових мішках по 25 кг',
+                    'en' => 'Fuel Peat Briquette in Polyethylene Bags 25 kg',
+                    'ru' => 'Топливный торфобрикет в полиэтиленовых мешках по 25 кг'
+                ],
+                'description' => [
+                    'uk' => 'Брикет торф\'яний відповідає вимогам ДСТУ 2042-92 «Брикети торфові для комунально-побутових потреб». Має високу теплотворну здатність, зручний у використанні, екологічний, ідеально підходить для опалення будинків та приміщень різного типу.',
+                    'en' => 'Peat briquette meets the requirements of DSTU 2042-92 "Peat briquettes for municipal and household needs". Has high calorific value, convenient to use, ecological, ideal for heating houses and premises of various types.',
+                    'ru' => 'Брикет торфяной соответствует требованиям ДСТУ 2042-92 «Брикеты торфяные для коммунально-бытовых нужд». Имеет высокую теплотворную способность, удобен в использовании, экологичен, идеально подходит для отопления домов и помещений различного типа.'
+                ],
+                // Основные характеристики
+                'calorific_value' => '4500',
+                'moisture_content' => '19.1',
+                'mechanical_strength' => '95.6',
+                'ash_content' => '12-18',
+                'dimensions' => '40-75/65/180',
+                'raw_material' => '100% натуральний торф',
+                // Технические характеристики
+                'heat_combustion_kcal' => '4155',
+                'heat_combustion_mj' => '17.387',
+                'sulfur_content' => '0.24',
+                'radioactive_contamination' => 'не виявлено',
             ]
         ]);
 
