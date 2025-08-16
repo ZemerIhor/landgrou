@@ -13,12 +13,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Base data for collections, attributes, and taxes
-        $this->call(CollectionSeeder::class);
-        $this->call(AttributeSeeder::class);
-        $this->call(TaxSeeder::class);
+//        $this->call(CollectionSeeder::class);
+//        $this->call(AttributeSeeder::class);
+//        $this->call(TaxSeeder::class);
 
         // Seed products with variants, prices, media and attach to collections
-        $this->call(ProductSeeder::class);
+//        $this->call(ProductSeeder::class);
 
         // Optional: additional product attributes in the 'details' group
         $this->call(ProductAttributesSeeder::class);
