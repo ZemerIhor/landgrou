@@ -52,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
                     ReviewResource::class,
                     ProductResource::class,
                 ])
-                ->ukugins([
+                ->plugins([
                     new ShippingPlugin,
                     FilamentMenuBuilderPlugin::make()
                         ->addLocation('header_en', 'Header EN') // Локация для хедера (английский)
