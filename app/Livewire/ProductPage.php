@@ -97,7 +97,7 @@ class ProductPage extends Component
         $attributes = [];
 
         // Список атрибутов, которые нужно пропустить
-        $excludedAttributes = ['name', 'description'];
+        $excludedAttributes = ['name', 'description', 'calorific_value', 'moisture_content', 'mechanical_strength', 'ash_content', 'dimensions', 'raw_material'];
 
         // Перебираем все ключи из attribute_data, исключая name и description
         foreach ($this->product->attribute_data->keys()->filter(fn($handle) => !in_array($handle, $excludedAttributes)) as $handle) {
@@ -118,6 +118,22 @@ class ProductPage extends Component
             ];
         }
         return $attributes;
+    }
+
+    /**
+     * Get main specifications for the product
+     */
+    public function getMainSpecificationsProperty(): array
+    {
+        return $this->product->main_specifications;
+    }
+
+    /**
+     * Get technical specifications for table
+     */
+    public function getTechnicalSpecificationsTableProperty(): array
+    {
+        return $this->product->technical_specifications_for_table;
     }
 
     public function getSimilarProductsProperty(): Collection

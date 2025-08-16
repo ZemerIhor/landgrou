@@ -2,16 +2,18 @@
     <!-- Product Header Section -->
     <header class="flex relative flex-col gap-4 items-start self-stretch">
         <div class="flex relative flex-col gap-1 items-start">
-            <h1 class="relative text-2xl font-bold leading-7 text-zinc-800 w-[1179px] max-md:w-full max-sm:text-xl">
+            <h1 class="relative text-2xl font-bold leading-7 text-zinc-800 w-full max-md:w-full max-sm:text-xl">
                 {{ $this->product->translateAttribute('name') }}
             </h1>
-            <p class="relative text-xs font-semibold leading-5 text-neutral-400 w-[1179px] max-md:w-full">
-                {{ __('messages.product.sku_label') }}: {{ $this->variant->sku }}
+            <p class="relative text-xs font-semibold leading-5 text-neutral-400 w-full max-md:w-full">
+                {{ __('messages.product.sku_label') }}: {{ $this->product->display_article_number }}
             </p>
         </div>
 
-        <div class="flex relative gap-28 items-start self-stretch max-md:flex-col max-md:gap-8">
-            <section class="flex relative flex-col items-start w-[487px] max-md:w-full"
+        <!-- Main Product Layout -->
+        <div class="flex relative gap-8 items-start self-stretch max-lg:flex-col max-lg:gap-6">
+            <!-- Left Side: Image Gallery -->
+            <section class="flex relative flex-col items-start flex-1 max-w-[500px] max-lg:max-w-full"
                      aria-label="{{ __('messages.product.image_gallery') }}">
                 <div class="swiper product-gallery w-full rounded-3xl" wire:ignore>
                     <div class="swiper-wrapper">
@@ -19,18 +21,17 @@
                             <div class="swiper-slide flex justify-center items-center">
                                 <img src="{{ $media->getUrl() }}"
                                      alt="{{ $this->product->translateAttribute('name') }} - {{ __('messages.product.image') }} {{ $loop->iteration }}"
-                                     class="object-cover h-[368px] w-[645px] max-md:w-full"/>
+                                     class="object-cover h-[368px] w-full max-md:w-full rounded-lg"/>
                             </div>
                         @endforeach
                         @if (!$this->images->count())
                             <div class="swiper-slide flex justify-center items-center">
-                                <img src="https://via.placeholder.com/645x368"
+                                <img src="https://via.placeholder.com/500x368?text=No+Image"
                                      alt="{{ __('messages.product.placeholder_image') }}"
-                                     class="object-contain h-[368px] w-[645px] max-md:w-full"/>
+                                     class="object-contain h-[368px] w-full max-md:w-full rounded-lg bg-gray-100"/>
                             </div>
                         @endif
                     </div>
-
                 </div>
 
                 <div class="swiper-pagination" style="position: absolute; bottom: -50px !important; left: 0; width: 136px;"></div>
@@ -50,236 +51,225 @@
                 </div>
             </section>
 
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    let swiperInstance = null;
-
-                    function destroySwiper() {
-                        if (swiperInstance) {
-                            console.log('Уничтожение Swiper');
-                            swiperInstance.destroy(true, true);
-                            swiperInstance = null;
-                        }
-                    }
-
-                    function waitForElement(selector, callback, interval = 100, timeout = 3000) {
-                        const startTime = Date.now();
-                        const check = () => {
-                            const el = document.querySelector(selector);
-                            if (el) {
-                                callback(el);
-                            } else if (Date.now() - startTime < timeout) {
-                                setTimeout(check, interval);
-                            } else {
-                                console.warn(`Элемент ${selector} не найден за ${timeout} мс`);
-                            }
-                        };
-                        check();
-                    }
-
-                    function initSwiper() {
-                        console.log('Попытка инициализировать Swiper...');
-                        if (!window.Swiper) {
-                            console.error('Swiper не загружен');
-                            return;
-                        }
-
-                        const swiperContainer = document.querySelector('.product-gallery');
-                        if (!swiperContainer) {
-                            console.error('Контейнер .product-gallery не найден');
-                            return;
-                        }
-
-                        const slides = swiperContainer.querySelectorAll('.swiper-slide');
-                        destroySwiper();
-
-                        swiperInstance = new Swiper(swiperContainer, {
-                            slidesPerView: 1,
-                            spaceBetween: 0,
-                            loop: slides.length > 1,
-                            touchRatio: 1,
-                            grabCursor: true,
-                            pagination: {
-                                el: '.swiper-pagination',
-                                clickable: true,
-                                bulletClass: 'swiper-pagination-bullet',
-                                bulletActiveClass: 'swiper-pagination-bullet-active',
-                                bulletElement: 'span',
-                                type: 'bullets',
-                            },
-                            navigation: {
-                                nextEl: '.swiper-button-next',
-                                prevEl: '.swiper-button-prev',
-                                disabledClass: 'swiper-button-disabled',
-                            },
-                            speed: 600,
-                            watchSlidesProgress: true,
-                            on: {
-                                init: function () {
-                                    console.log('Swiper инициализирован, слайдов:', slides.length);
-                                },
-                                slideChange: function () {
-                                    console.log('Слайд изменен, индекс:', this.activeIndex);
-                                }
-                            },
-                        });
-
-                        swiperInstance.on('reachBeginning reachEnd', function () {
-                            console.log('Достигнут край слайдера');
-                        });
-                    }
-
-                    // Инициализация при первом рендере
-                    waitForElement('.swiper-pagination', () => initSwiper());
-
-                    // Livewire события
-                    document.addEventListener('livewire:update', () => {
-                        console.log('Livewire:update – перезапуск Swiper');
-                        waitForElement('.swiper-pagination', () => initSwiper());
-                    });
-
-                    document.addEventListener('livewire:navigated', () => {
-                        console.log('Livewire:navigated – перезапуск Swiper');
-                        waitForElement('.swiper-pagination', () => initSwiper());
-                    });
-                });
-            </script>
-
-
-            <section class="flex relative flex-col gap-6 items-end flex-[1_0_0]">
-                <p class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm">
-                    {{ strip_tags($this->product->translateAttribute('description')) }}
-                </p>
-
-                <table class="product-properties flex relative flex-col items-start self-stretch" role="table" aria-label="{{ __('messages.product.attributes_table') }}">
-                    <tbody class="w-full">
-                    @foreach ($this->getAttributesProperty() as $attribute)
-                        <tr class="flex relative items-center self-stretch {{ $loop->even ? 'bg-white' : '' }} rounded-lg">
-                            <td class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">
-                                <span class="relative text-base font-semibold leading-5 flex-[1_0_0] text-zinc-600 max-sm:text-sm">
-                                    {{ $attribute['name'] }}
-                                </span>
-                            </td>
-                            <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                                <span class="relative text-base font-semibold leading-5 text-right flex-[1_0_0] text-zinc-800 max-sm:text-sm">
-                                    {{ $attribute['value'] }}
-                                </span>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-
-                <!-- Price and Actions Section -->
-                <div class="flex relative justify-between items-center self-stretch h-11">
-                    <div class="flex relative gap-1 items-center flex-[1_0_0]">
-                        <span class="relative text-2xl font-bold leading-7 text-zinc-800 max-sm:text-xl">
-                            <x-product-price :variant="$this->variant" />
-                        </span>
-                        <span class="relative text-2xl font-bold leading-7 text-zinc-800 max-sm:text-xl">
-                            {{ __('messages.product.currency') }}
-                        </span>
-                    </div>
-                    <div class="flex relative gap-4 items-center max-sm:flex-col max-sm:gap-3">
-                        <!-- Quantity Selection -->
-                        <div class="flex relative gap-2 items-center px-2 py-0 h-11 rounded-2xl bg-neutral-200"
-                             role="group"
-                             aria-label="{{ __('messages.product.quantity_selection') }}">
-                            <button wire:click="incrementQuantity"
-                                    class="flex relative gap-2.5 items-center"
-                                    aria-label="{{ __('messages.product.increment_quantity') }}">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="plus-icon">
-                                    <path d="M12.75 7C12.75 6.58579 12.4142 6.25 12 6.25C11.5858 6.25 11.25 6.58579 11.25 7L11.25 11.25H7C6.58579 11.25 6.25 11.5858 6.25 12C6.25 12.4142 6.58579 12.75 7 12.75H11.25V17C11.25 17.4142 11.5858 17.75 12 17.75C12.4142 17.75 12.75 17.4142 12.75 17L12.75 12.75H17C17.4142 12.75 17.75 12.4142 17.75 12C17.75 11.5858 17.4142 11.25 17 11.25H12.75V7Z" fill="#333333"/>
-                                </svg>
-                            </button>
-                            <div class="flex relative gap-2.5 justify-center items-center">
-                                <span class="relative text-base font-semibold leading-5 text-zinc-800 max-sm:text-sm">
-                                    {{ $this->quantity }}
-                                </span>
-                            </div>
-                            <button wire:click="decrementQuantity"
-                                    class="flex relative gap-2.5 items-center"
-                                    aria-label="{{ __('messages.product.decrement_quantity') }}">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="minus-icon">
-                                    <path d="M17.2174 12.5C17.6496 12.5 18 12.1642 18 11.75C18 11.3358 17.6496 11 17.2174 11H6.78261C6.35039 11 6 11.3358 6 11.75C6 11.5858 6.35039 12.5 6.78261 12.5H17.2174Z" fill="#333333"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <livewire:components.add-to-cart :purchasable="$this->variant" :quantity="$this->quantity" :wire:key="$this->variant->id" />
-                    </div>
+            <!-- Right Side: Product Info and Specifications -->
+            <section class="flex relative flex-col gap-6 flex-1 min-w-0">
+                <!-- Product Description -->
+                <div class="product-description">
+                    <p class="text-base font-semibold leading-5 text-black max-sm:text-sm">
+                        {{ strip_tags($this->product->translateAttribute('description')) }}
+                    </p>
                 </div>
+
+                <!-- Main Specifications Component -->
+                <x-product-specifications :product="$this->product" />
+
+                <!-- Price and Actions Component -->
+                <x-product-price-actions 
+                    :product="$this->product" 
+                    :variant="$this->variant" 
+                    :quantity="$this->quantity" 
+                />
             </section>
         </div>
+
+        <!-- Compliance Note -->
+        <div class="compliance-section w-full mt-6 p-4 bg-blue-50 rounded-lg">
+            <p class="text-sm text-blue-800">
+                <strong>Примітка:</strong> {{ $this->product->display_compliance_standard }}
+            </p>
+        </div>
     </header>
+
+    <!-- Technical Characteristics Table -->
+    <section class="technical-specifications w-full">
+        <x-product-specifications-table :product="$this->product" />
+    </section>
 
     <!-- Description Section -->
     <section class="flex relative flex-col gap-4 items-start self-stretch">
         <h2 class="relative self-stretch text-xl font-bold leading-6 text-black max-sm:text-lg">
             {{ __('messages.product.description') }}
         </h2>
-        <p class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm">
-            {{ strip_tags($this->product->translateAttribute('description')) }}
-        </p>
+        <div class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm prose max-w-none">
+            {!! $this->product->translateAttribute('description') !!}
+        </div>
     </section>
 
-    <!-- Characteristics Section -->
-    @php
-        $characteristics = $this->product->attribute_data['characteristics'][app()->getLocale()] ?? $this->product->attribute_data['characteristics'] ?? [];
-    @endphp
-
-    <section class="characteristics-section flex relative flex-col gap-4 items-start self-stretch">
+    <!-- Additional Attributes (if any) -->
+    @if(!empty($this->attributes))
+    <section class="additional-attributes flex relative flex-col gap-4 items-start self-stretch">
         <h2 class="relative self-stretch text-xl font-bold leading-6 text-black max-sm:text-lg">
-            {{ __('messages.product.characteristics') }}
+            {{ __('messages.product.additional_characteristics') }}
         </h2>
-        <table class="characteristics flex relative flex-col items-start self-stretch overflow-auto" style="overflow: auto" role="table" aria-label="{{ __('messages.product.characteristics_table') }}">
-            <!-- Table Header -->
-            <thead class="flex relative items-center self-stretch rounded-lg bg-zinc-800">
-            <tr class="flex relative w-full items-center self-stretch rounded-lg">
-                <th class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">
-                        <span class="relative text-base font-semibold leading-5 text-white flex-[1_0_0] max-sm:text-sm">
-                            {{ __('messages.product.indicator_name') }}
-                        </span>
-                </th>
-                <th class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                        <span class="relative text-base font-semibold leading-5 text-right text-white flex-[1_0_0] max-sm:text-sm">
-                            {{ __('messages.product.standard_norm') }}
-                        </span>
-                </th>
-                <th class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                        <span class="relative text-base font-semibold leading-5 text-right text-white flex-[1_0_0] max-sm:text-sm">
-                            {{ __('messages.product.actual_values') }}
-                        </span>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach ($characteristics as $characteristic)
-                <tr class="flex relative w-full items-center self-stretch border-b border-gray-200">
+        <table class="additional-properties flex relative flex-col items-start self-stretch" role="table">
+            <tbody class="w-full">
+            @foreach ($this->attributes as $attribute)
+                <tr class="flex relative items-center self-stretch {{ $loop->even ? 'bg-white' : 'bg-gray-50' }} rounded-lg">
                     <td class="flex relative gap-2.5 items-center px-4 py-2 flex-[1_0_0]">
-                            <span class="relative text-base font-medium leading-5 text-black max-sm:text-sm">
-                                {{ $characteristic['name'] ?? '' }}
-                            </span>
+                        <span class="relative text-base font-semibold leading-5 flex-[1_0_0] text-zinc-600 max-sm:text-sm">
+                            {{ $attribute['name'] }}
+                        </span>
                     </td>
                     <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                            <span class="relative text-base font-medium leading-5 text-right text-black max-sm:text-sm">
-                                {{ $characteristic['standard'] ?? '' }}
-                            </span>
-                    </td>
-                    <td class="flex relative gap-2.5 justify-end items-center px-4 py-2 flex-[1_0_0]">
-                            <span class="relative text-base font-medium leading-5 text-right text-black max-sm:text-sm">
-                                {{ $characteristic['actual'] ?? '' }}
-                            </span>
+                        <span class="relative text-base font-semibold leading-5 text-right flex-[1_0_0] text-zinc-800 max-sm:text-sm">
+                            {{ $attribute['value'] }}
+                        </span>
                     </td>
                 </tr>
             @endforeach
-            @if (empty($characteristics))
-                <tr class="flex relative w-full items-center self-stretch">
-                    <td colspan="3" class="px-4 py-2 text-center text-base font-medium text-gray-500">
-                        {{ __('messages.product.no_characteristics') }}
-                    </td>
-                </tr>
-            @endif
             </tbody>
         </table>
     </section>
+    @endif
+
+    <!-- Swiper Initialization Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let swiperInstance = null;
+
+            function destroySwiper() {
+                if (swiperInstance) {
+                    console.log('Уничтожение Swiper');
+                    swiperInstance.destroy(true, true);
+                    swiperInstance = null;
+                }
+            }
+
+            function waitForElement(selector, callback, interval = 100, timeout = 3000) {
+                const startTime = Date.now();
+                const check = () => {
+                    const el = document.querySelector(selector);
+                    if (el) {
+                        callback(el);
+                    } else if (Date.now() - startTime < timeout) {
+                        setTimeout(check, interval);
+                    } else {
+                        console.warn(`Элемент ${selector} не найден за ${timeout} мс`);
+                    }
+                };
+                check();
+            }
+
+            function initSwiper() {
+                console.log('Попытка инициализировать Swiper...');
+                if (!window.Swiper) {
+                    console.error('Swiper не загружен');
+                    return;
+                }
+
+                const swiperContainer = document.querySelector('.product-gallery');
+                if (!swiperContainer) {
+                    console.error('Контейнер .product-gallery не найден');
+                    return;
+                }
+
+                const slides = swiperContainer.querySelectorAll('.swiper-slide');
+                destroySwiper();
+
+                swiperInstance = new Swiper(swiperContainer, {
+                    slidesPerView: 1,
+                    spaceBetween: 0,
+                    loop: slides.length > 1,
+                    touchRatio: 1,
+                    grabCursor: true,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                        bulletClass: 'swiper-pagination-bullet',
+                        bulletActiveClass: 'swiper-pagination-bullet-active',
+                        bulletElement: 'span',
+                        type: 'bullets',
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                        disabledClass: 'swiper-button-disabled',
+                    },
+                    speed: 600,
+                    watchSlidesProgress: true,
+                    on: {
+                        init: function () {
+                            console.log('Swiper инициализирован, слайдов:', slides.length);
+                        },
+                        slideChange: function () {
+                            console.log('Слайд изменен, индекс:', this.activeIndex);
+                        }
+                    },
+                });
+
+                swiperInstance.on('reachBeginning reachEnd', function () {
+                    console.log('Достигнут край слайдера');
+                });
+            }
+
+            // Инициализация при первом рендере
+            waitForElement('.swiper-pagination', () => initSwiper());
+
+            // Livewire события
+            document.addEventListener('livewire:update', () => {
+                console.log('Livewire:update – перезапуск Swiper');
+                waitForElement('.swiper-pagination', () => initSwiper());
+            });
+
+            document.addEventListener('livewire:navigated', () => {
+                console.log('Livewire:navigated – перезапуск Swiper');
+                waitForElement('.swiper-pagination', () => initSwiper());
+            });
+        });
+    </script>
 </main>
+
+<style>
+.product-page {
+    background: linear-gradient(135deg, #fafbfc 0%, #f8fafc 50%, #f1f5f9 100%);
+    min-height: calc(100vh - 200px);
+}
+
+.product-gallery .swiper-slide img {
+    transition: transform 0.3s ease;
+}
+
+.product-gallery .swiper-slide:hover img {
+    transform: scale(1.02);
+}
+
+.compliance-section {
+    border-left: 4px solid #3b82f6;
+}
+
+.specifications-list .spec-item {
+    transition: background-color 0.2s ease;
+}
+
+.specifications-list .spec-item:hover {
+    background-color: rgba(243, 244, 246, 0.5);
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.prose p {
+    color: #374151;
+    line-height: 1.6;
+}
+
+.prose ul, .prose ol {
+    color: #374151;
+}
+
+.prose li {
+    margin: 0.5rem 0;
+}
+
+@media (max-width: 768px) {
+    .product-page {
+        padding: 1rem;
+    }
+    
+    .swiper-button-prev, .swiper-button-next {
+        display: none !important;
+    }
+}
+</style>
