@@ -321,8 +321,7 @@ class Home extends Page implements HasForms
                                     ->reorderable()
                                     ->cloneable(),
                                 TextInput::make('tenders_phone')
-                                    ->label(__('Телефон відділу тендерів'))
-                                    ->maxLength(20),
+                                    ->label(__('Телефон відділу тендерів')),
                             ]),
                     ])
                     ->collapsible(),
