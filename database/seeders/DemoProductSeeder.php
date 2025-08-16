@@ -30,6 +30,7 @@ class DemoProductSeeder extends Seeder
         // Создаем демо-продукт как на скриншоте
         $product = Product::create([
             'status' => 'published',
+            'product_type_id' => $productType->id,
             'article_number' => '00031489',
             'compliance_standard' => 'ДСТУ 2042-92 «Брикети торфові для комунально- побутових»',
             'packaging_type' => 'В поліетиленових мішках по 25кг',
@@ -138,15 +139,7 @@ class DemoProductSeeder extends Seeder
             ]);
         }
 
-        if ($ruLang = \Lunar\Models\Language::where('code', 'ru')->first()) {
-            \Lunar\Models\Url::create([
-                'slug' => 'toplivnyi-torfobriket-25kg',
-                'default' => false,
-                'language_id' => $ruLang->id,
-                'element_type' => Product::class,
-                'element_id' => $product->id,
-            ]);
-        }
+
 
         $this->command->info('Demo product "Паливний торфобрикет" created successfully!');
         $this->command->info('Product ID: ' . $product->id);

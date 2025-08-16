@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Lunar\Models\Product as LunarProduct;
 use Lunar\FieldTypes\TranslatedText;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Product extends LunarProduct
 {
@@ -49,13 +48,6 @@ class Product extends LunarProduct
 
         return 'product-' . $this->id;
     }
-
-    /**
-     * The attributes that should be cast.
-     */
-    protected $casts = [
-        // Убираем cast для technical_specifications, так как это вызывает конфликт
-    ];
 
     /**
      * Get the article number for display
