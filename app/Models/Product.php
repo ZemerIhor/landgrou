@@ -54,7 +54,7 @@ class Product extends LunarProduct
      * The attributes that should be cast.
      */
     protected $casts = [
-        'technical_specifications' => 'array',
+        // Убираем cast для technical_specifications, так как это вызывает конфликт
     ];
 
     /**
@@ -86,8 +86,14 @@ class Product extends LunarProduct
      */
     public function getTechnicalSpecificationsForTableAttribute(): array
     {
-        if ($this->technical_specifications && is_array($this->technical_specifications)) {
-            return $this->technical_specifications;
+        if ($this->technical_specifications) {
+            $specs = is_string($this->technical_specifications) 
+                ? json_decode($this->technical_specifications, true) 
+                : $this->technical_specifications;
+            
+            if (is_array($specs)) {
+                return $specs;
+            }
         }
 
         // Default specifications based on attributes

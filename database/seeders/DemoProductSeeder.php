@@ -17,12 +17,13 @@ class DemoProductSeeder extends Seeder
      */
     public function run(): void
     {
-        // Получаем валюту и налоговый класс
+        // Получаем валюту, налоговый класс и тип продукта
         $currency = Currency::first();
         $taxClass = TaxClass::first();
+        $productType = \Lunar\Models\ProductType::first();
 
-        if (!$currency || !$taxClass) {
-            $this->command->error('Please run currency and tax class seeders first!');
+        if (!$currency || !$taxClass || !$productType) {
+            $this->command->error('Please run currency, tax class and product type seeders first!');
             return;
         }
 
@@ -32,7 +33,7 @@ class DemoProductSeeder extends Seeder
             'article_number' => '00031489',
             'compliance_standard' => 'ДСТУ 2042-92 «Брикети торфові для комунально- побутових»',
             'packaging_type' => 'В поліетиленових мішках по 25кг',
-            'technical_specifications' => [
+            'technical_specifications' => json_encode([
                 [
                     'name' => 'Масова доля загальної вологи (Wp)',
                     'standard' => '20%',
@@ -68,7 +69,7 @@ class DemoProductSeeder extends Seeder
                     'standard' => 'не нормується',
                     'actual' => 'не виявлено'
                 ]
-            ],
+            ]),
             'attribute_data' => [
                 'name' => [
                     'uk' => 'Паливний торфобрикет в поліетиленових мішках по 25 кг',
