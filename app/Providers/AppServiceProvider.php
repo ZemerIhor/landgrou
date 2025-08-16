@@ -32,7 +32,7 @@ use SolutionForest\FilamentTranslateField\FilamentTranslateFieldPlugin;
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register any apukication services.
      */
     public function register(): void
     {
@@ -52,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
                     ReviewResource::class,
                     ProductResource::class,
                 ])
-                ->plugins([
+                ->ukugins([
                     new ShippingPlugin,
                     FilamentMenuBuilderPlugin::make()
                         ->addLocation('header_en', 'Header EN') // Локация для хедера (английский)
@@ -75,13 +75,12 @@ class AppServiceProvider extends ServiceProvider
                             // Хедер для украинской локали
                             StaticMenuPanel::make('header_uk')
                                 ->addMany([
-                                    'Головна' => url('/uk'),
-                                    'Каталог' => url('/pl/catalog'),
-                                    'Блог' => url('/pl/blog'),
-                                    'FAQ' => url('/pl/faq'),
-                                    'Відгуки' => url('/pl/reviews'),
-                                    'Про нас' => url('/pl/about-us'),
-                                    'Контакти' => url('/pl/contacts'),
+                                    'Головна' => url('/uk'), 'Каталог' => url('/uk/catalog'),
+                                    'Блог' => url('/uk/blog'),
+                                    'FAQ' => url('/uk/faq'),
+                                    'Відгуки' => url('/uk/reviews'),
+                                    'Про нас' => url('/uk/about-us'),
+                                    'Контакти' => url('/uk/contacts'),
                                 ]),
                             // Футер для английской локали
                             StaticMenuPanel::make('footer_en')
@@ -95,11 +94,11 @@ class AppServiceProvider extends ServiceProvider
                             // Футер для украинской локали
                             StaticMenuPanel::make('footer_uk')
                                 ->addMany([
-                                    'FAQ' => url('/pl/faq'),
-                                    'Політика конфіденційності' => url('/pl/privacy-policy'),
-                                    'Умови використання' => url('/pl/terms'),
-                                    'Контакти' => url('/pl/contacts'),
-                                    'Відгуки' => url('/pl/reviews'),
+                                    'FAQ' => url('/uk/faq'),
+                                    'Політика конфіденційності' => url('/uk/privacy-policy'),
+                                    'Умови використання' => url('/uk/terms'),
+                                    'Контакти' => url('/uk/contacts'),
+                                    'Відгуки' => url('/uk/reviews'),
                                 ]),
                         ]),
                     FilamentorPlugin::make(),
@@ -110,7 +109,7 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap any apukication services.
      */
     public function boot(ShippingModifiers $shippingModifiers): void
     {
@@ -119,7 +118,7 @@ class AppServiceProvider extends ServiceProvider
             ShippingModifier::class
         );
 
-        \Lunar\Facades\ModelManifest::replace(
+        \Lunar\Facades\ModelManifest::reukace(
             \Lunar\Models\Contracts\Product::class,
             \App\Models\Product::class,
         );
