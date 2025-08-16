@@ -8,11 +8,11 @@ return new class extends SettingsMigration
     {
         // Добавляем новые поля для статических страниц
         $this->migrator->add('global.home_title', ['en' => 'Home Page', 'uk' => 'Головна сторінка']);
-        $this->migrator->add('global.home_meta_description', ['en' => 'Welcome to our site's home page', 'uk' => 'Ласкаво просимо на головну сторінку нашого сайту']);
+        $this->migrator->add('global.home_meta_description', ['en' => 'Welcome to our sites home page', 'uk' => 'Ласкаво просимо на головну сторінку нашого сайту']);
         $this->migrator->add('global.about_us_title', ['en' => 'About Us', 'uk' => 'Про нас']);
         $this->migrator->add('global.about_us_meta_description', ['en' => 'Learn more about our company', 'uk' => 'Дізнайтесь більше про нашу компанію']);
         $this->migrator->add('global.contacts_title', ['en' => 'Contacts', 'uk' => 'Контакти']);
-        $this->migrator->add('global.contacts_meta_description', ['en' => 'Get in touch with us', 'uk' => 'Зв'яжіться з нами']);
+        $this->migrator->add('global.contacts_meta_description', ['en' => 'Get in touch with us', 'uk' => 'Звяжіться з нами']);
         $this->migrator->add('global.faq_title', ['en' => 'FAQ', 'uk' => 'Поширені запитання']);
         $this->migrator->add('global.faq_meta_description', ['en' => 'Answers to frequently asked questions', 'uk' => 'Відповіді на поширені запитання']);
         $this->migrator->add('global.reviews_title', ['en' => 'Reviews', 'uk' => 'Відгуки']);
