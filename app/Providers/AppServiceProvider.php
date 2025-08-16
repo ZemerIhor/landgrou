@@ -104,7 +104,7 @@ class AppServiceProvider extends ServiceProvider
                         ]),
                     FilamentorPlugin::make(),
                     FilamentTranslateFieldPlugin::make()
-                        ->defaultLocales(['en', 'pl']),
+                        ->defaultLocales(['en', 'uk']),
                 ])
         )->register();
     }
@@ -114,16 +114,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(ShippingModifiers $shippingModifiers): void
     {
-        
+
         $shippingModifiers->add(
             ShippingModifier::class
         );
-        
+
         \Lunar\Facades\ModelManifest::replace(
             \Lunar\Models\Contracts\Product::class,
             \App\Models\Product::class,
         );
-        
+
         // Регистрируем Observer'ы
         \App\Models\Review::observe(\App\Observers\ReviewObserver::class);
         \App\Models\BlogPost::observe(\App\Observers\BlogPostObserver::class);

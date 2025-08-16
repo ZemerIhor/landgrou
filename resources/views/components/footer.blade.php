@@ -1,6 +1,6 @@
 @php
     $footer = app(\App\Settings\FooterSettings::class);
-    $currentLocale = app()->getLocale(); // Get current locale (e.g., 'en' or 'pl')
+    $currentLocale = app()->getLocale(); // Get current locale (e.g., 'en' or 'uk')
 @endphp
 
 <footer class="self-stretch bg-zinc-800 mt-auto conteiner relative " role="contentinfo" id="footer"

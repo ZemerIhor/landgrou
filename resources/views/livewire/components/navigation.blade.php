@@ -1,6 +1,6 @@
 @php
     $footer = app(\App\Settings\FooterSettings::class);
-    $currentLocale = app()->getLocale(); // Get current locale (e.g., 'en' or 'pl')
+    $currentLocale = app()->getLocale(); // Get current locale (e.g., 'en' or 'uk')
 @endphp
 
 <div x-data="{ isScrolled: false, mobileMenu: false, languageMenu: false }" @scroll.window="isScrolled = (window.scrollY > 0)">
@@ -9,7 +9,7 @@
             role="banner">
         <div class="nav-header flex relative px-2 justify-between items-center w-full h-auto container mx-auto">
             <!-- Logo -->
-            <a href="{{ app()->getLocale() === 'pl' ? url('/') : url('/en') }}"
+            <a href="{{ app()->getLocale() === 'uk' ? url('/') : url('/en') }}"
                class="flex items-center"
                aria-label="{{ __('messages.banner.catalog_button_aria_label') }}"
                wire:navigate>
@@ -20,7 +20,7 @@
 
             @php
                 use Datlechin\FilamentMenuBuilder\Models\Menu;
-                $headerLocation = app()->getLocale() === 'en' ? 'header_en' : 'header_pl';
+                $headerLocation = app()->getLocale() === 'en' ? 'header_en' : 'header_uk';
                 $headerMenu = Menu::location($headerLocation);
                 \Log::info('Header Menu Debug', [
                     'location' => $headerLocation,
@@ -202,20 +202,20 @@
                     $segments = explode('/', $currentUrl);
 
                     // Удалим текущую локаль, если она есть
-                    if (in_array($segments[0], ['en', 'pl'])) {
+                    if (in_array($segments[0], ['en', 'uk'])) {
                         array_shift($segments);
                     }
 
                     $pathWithoutLocale = implode('/', $segments);
 
                     $enUrl = url('/en/' . $pathWithoutLocale);
-                    $ukUrl = url('/pl/' . $pathWithoutLocale);
+                    $ukUrl = url('/uk/' . $pathWithoutLocale);
 
                     \Log::info('Header Language Switch', [
                         'current_locale' => app()->getLocale(),
                         'current_url' => request()->fullUrl(),
                         'en_url' => $enUrl,
-                        'pl_url' => $ukUrl,
+                        'uk_url' => $ukUrl,
                     ]);
                 @endphp
 
@@ -283,13 +283,13 @@
                                     {{ __('messages.language.english') }}
                                 </a>
                             @endif
-                            @if(app()->getLocale() !== 'pl')
+                            @if(app()->getLocale() !== 'uk')
                                 <a
                                     href="{{ $ukUrl }}"
                                     class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
                                     wire:navigate
                                 >
-                                    {{ __('messages.language.poland') }}
+                                    {{ __('messages.language.ukraine') }}
                                 </a>
                             @endif
                         </div>

@@ -22,7 +22,7 @@ class TaxSeeder extends Seeder
         $ukCountry = Country::firstWhere('iso3', 'GBR');
 
         $ukTaxZone = TaxZone::factory()->create([
-            'name' => 'pl',
+            'name' => 'uk',
             'active' => true,
             'default' => true,
             'zone_type' => 'country',

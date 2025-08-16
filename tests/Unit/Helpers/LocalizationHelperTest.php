@@ -9,14 +9,14 @@ class LocalizationHelperTest extends TestCase
 {
     public function test_get_supported_locales_returns_correct_array()
     {
-        $expected = ['en', 'pl'];
+        $expected = ['en', 'uk'];
         $this->assertEquals($expected, LocalizationHelper::getSupportedLocales());
     }
 
     public function test_is_supported_returns_true_for_valid_locales()
     {
         $this->assertTrue(LocalizationHelper::isSupported('en'));
-        $this->assertTrue(LocalizationHelper::isSupported('pl'));
+        $this->assertTrue(LocalizationHelper::isSupported('uk'));
     }
 
     public function test_is_supported_returns_false_for_invalid_locales()
@@ -30,21 +30,21 @@ class LocalizationHelperTest extends TestCase
     public function test_get_locale_name_returns_correct_names()
     {
         $this->assertEquals('English', LocalizationHelper::getLocaleName('en'));
-        $this->assertEquals('Polski', LocalizationHelper::getLocaleName('pl'));
+        $this->assertEquals('Polski', LocalizationHelper::getLocaleName('uk'));
         $this->assertEquals('unknown', LocalizationHelper::getLocaleName('unknown'));
     }
 
     public function test_get_locale_flag_returns_correct_flags()
     {
         $this->assertEquals('🇺🇸', LocalizationHelper::getLocaleFlag('en'));
-        $this->assertEquals('🇵🇱', LocalizationHelper::getLocaleFlag('pl'));
+        $this->assertEquals('🇵🇱', LocalizationHelper::getLocaleFlag('uk'));
         $this->assertEquals('🌐', LocalizationHelper::getLocaleFlag('unknown'));
     }
 
     public function test_get_text_direction_returns_ltr()
     {
         $this->assertEquals('ltr', LocalizationHelper::getTextDirection('en'));
-        $this->assertEquals('ltr', LocalizationHelper::getTextDirection('pl'));
+        $this->assertEquals('ltr', LocalizationHelper::getTextDirection('uk'));
         $this->assertEquals('ltr', LocalizationHelper::getTextDirection('unknown'));
     }
 
@@ -52,11 +52,11 @@ class LocalizationHelperTest extends TestCase
     {
         $jsonField = [
             'en' => 'Hello World',
-            'pl' => 'Witaj Świecie',
+            'uk' => 'Witaj Świecie',
         ];
 
         $this->assertEquals('Hello World', LocalizationHelper::getTranslatedValue($jsonField, 'en'));
-        $this->assertEquals('Witaj Świecie', LocalizationHelper::getTranslatedValue($jsonField, 'pl'));
+        $this->assertEquals('Witaj Świecie', LocalizationHelper::getTranslatedValue($jsonField, 'uk'));
     }
 
     public function test_get_translated_value_falls_back_to_default_locale()
@@ -65,8 +65,8 @@ class LocalizationHelperTest extends TestCase
             'en' => 'Hello World',
         ];
 
-        // When requesting 'pl' but only 'en' exists, should fallback to 'en'
-        $this->assertEquals('Hello World', LocalizationHelper::getTranslatedValue($jsonField, 'pl', 'en'));
+        // When requesting 'uk' but only 'en' exists, should fallback to 'en'
+        $this->assertEquals('Hello World', LocalizationHelper::getTranslatedValue($jsonField, 'uk', 'en'));
     }
 
     public function test_get_translated_value_returns_first_available_if_no_fallback()
@@ -77,14 +77,14 @@ class LocalizationHelperTest extends TestCase
         ];
 
         // When neither current nor fallback locale exists, return first available
-        $result = LocalizationHelper::getTranslatedValue($jsonField, 'pl', 'en');
+        $result = LocalizationHelper::getTranslatedValue($jsonField, 'uk', 'en');
         $this->assertEquals('Bonjour le monde', $result);
     }
 
     public function test_get_translated_value_handles_string_input()
     {
         $stringValue = 'Simple string';
-        
+
         $this->assertEquals('Simple string', LocalizationHelper::getTranslatedValue($stringValue));
     }
 
@@ -92,7 +92,7 @@ class LocalizationHelperTest extends TestCase
     {
         $expected = [
             'en' => 'Test value',
-            'pl' => 'Test value',
+            'uk' => 'Test value',
         ];
 
         $result = LocalizationHelper::createTranslatableArray('Test value');
@@ -114,30 +114,30 @@ class LocalizationHelperTest extends TestCase
     {
         $jsonField = [
             'en' => 'Content here',
-            'pl' => 'Treść tutaj',
+            'uk' => 'Treść tutaj',
         ];
 
         $this->assertTrue(LocalizationHelper::isTranslatableFieldFilled($jsonField, 'en'));
-        $this->assertTrue(LocalizationHelper::isTranslatableFieldFilled($jsonField, 'pl'));
+        $this->assertTrue(LocalizationHelper::isTranslatableFieldFilled($jsonField, 'uk'));
     }
 
     public function test_is_translatable_field_filled_returns_false_for_empty_field()
     {
         $jsonField = [
             'en' => '',
-            'pl' => '   ', // Only whitespace
+            'uk' => '   ', // Only whitespace
         ];
 
         $this->assertFalse(LocalizationHelper::isTranslatableFieldFilled($jsonField, 'en'));
-        $this->assertFalse(LocalizationHelper::isTranslatableFieldFilled($jsonField, 'pl'));
+        $this->assertFalse(LocalizationHelper::isTranslatableFieldFilled($jsonField, 'uk'));
     }
 
     public function test_get_translation_completeness_calculates_correctly()
     {
         $translatableFields = [
-            ['en' => 'Title 1', 'pl' => 'Tytuł 1'],
-            ['en' => 'Title 2', 'pl' => ''],
-            ['en' => '', 'pl' => 'Tytuł 3'],
+            ['en' => 'Title 1', 'uk' => 'Tytuł 1'],
+            ['en' => 'Title 2', 'uk' => ''],
+            ['en' => '', 'uk' => 'Tytuł 3'],
         ];
 
         $result = LocalizationHelper::getTranslationCompleteness($translatableFields);
@@ -146,15 +146,15 @@ class LocalizationHelperTest extends TestCase
         $this->assertEquals(3, $result['en']['total']);
         $this->assertEquals(66.7, $result['en']['percentage']);
 
-        $this->assertEquals(2, $result['pl']['filled']);
-        $this->assertEquals(3, $result['pl']['total']);
-        $this->assertEquals(66.7, $result['pl']['percentage']);
+        $this->assertEquals(2, $result['uk']['filled']);
+        $this->assertEquals(3, $result['uk']['total']);
+        $this->assertEquals(66.7, $result['uk']['percentage']);
     }
 
     public function test_get_current_locale_metadata_returns_correct_structure()
     {
         app()->setLocale('en');
-        
+
         $result = LocalizationHelper::getCurrentLocaleMetadata();
 
         $this->assertArrayHasKey('code', $result);

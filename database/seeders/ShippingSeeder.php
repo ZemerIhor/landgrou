@@ -32,7 +32,7 @@ class ShippingSeeder extends Seeder
         ]);
 
         $ukShippingZone = ShippingZone::create([
-            'name' => 'pl',
+            'name' => 'uk',
             'type' => 'countries',
         ]);
 

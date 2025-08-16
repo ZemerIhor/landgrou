@@ -146,7 +146,7 @@ return [
     'language' => [
         'current' => 'Language',
         'english' => 'English',
-        'poland' => 'Poland',
+        'ukraine' => 'Ukraine',
     ],
     'header' => [
         'instagram_subscribe' => 'Subscribe on Instagram',

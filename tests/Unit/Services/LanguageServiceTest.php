@@ -18,7 +18,7 @@ class LanguageServiceTest extends TestCase
     public function test_is_valid_locale_returns_true_for_supported_locales()
     {
         $this->assertTrue($this->service->isValidLocale('en'));
-        $this->assertTrue($this->service->isValidLocale('pl'));
+        $this->assertTrue($this->service->isValidLocale('uk'));
     }
 
     public function test_is_valid_locale_returns_false_for_unsupported_locales()
@@ -32,13 +32,13 @@ class LanguageServiceTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid locale');
-        
+
         $this->service->switchLanguage('invalid');
     }
 
     public function test_get_supported_locales_returns_correct_array()
     {
-        $expected = ['en', 'pl'];
+        $expected = ['en', 'uk'];
         $this->assertEquals($expected, $this->service->getSupportedLocales());
     }
 
@@ -46,9 +46,9 @@ class LanguageServiceTest extends TestCase
     {
         $path = '/en/products';
         $originalUrl = 'https://example.com/pl/products?page=2&sort=name';
-        
+
         $result = $this->service->addQueryParameters($path, $originalUrl);
-        
+
         $this->assertEquals('/en/products?page=2&sort=name', $result);
     }
 
@@ -56,9 +56,9 @@ class LanguageServiceTest extends TestCase
     {
         $path = '/en/products';
         $originalUrl = 'https://example.com/pl/products';
-        
+
         $result = $this->service->addQueryParameters($path, $originalUrl);
-        
+
         $this->assertEquals('/en/products', $result);
     }
 
@@ -66,26 +66,26 @@ class LanguageServiceTest extends TestCase
     {
         app()->setLocale('en');
         $this->assertEquals('en', $this->service->getCurrentLocale());
-        
-        app()->setLocale('pl');
-        $this->assertEquals('pl', $this->service->getCurrentLocale());
+
+        app()->setLocale('uk');
+        $this->assertEquals('uk', $this->service->getCurrentLocale());
     }
 
     public function test_detect_locale_returns_url_locale_when_valid()
     {
-        $result = $this->service->detectLocale('pl');
-        $this->assertEquals('pl', $result);
-        
+        $result = $this->service->detectLocale('uk');
+        $this->assertEquals('uk', $result);
+
         $result = $this->service->detectLocale('en');
         $this->assertEquals('en', $result);
     }
 
     public function test_detect_locale_returns_session_locale_when_url_invalid()
     {
-        session(['locale' => 'pl']);
-        
+        session(['locale' => 'uk']);
+
         $result = $this->service->detectLocale('invalid');
-        $this->assertEquals('pl', $result);
+        $this->assertEquals('uk', $result);
     }
 
     public function test_detect_locale_returns_default_when_no_valid_locale()
@@ -97,7 +97,7 @@ class LanguageServiceTest extends TestCase
     public function test_set_locale_returns_true_for_valid_locale()
     {
         $this->assertTrue($this->service->setLocale('en'));
-        $this->assertTrue($this->service->setLocale('pl'));
+        $this->assertTrue($this->service->setLocale('uk'));
     }
 
     public function test_set_locale_returns_false_for_invalid_locale()
