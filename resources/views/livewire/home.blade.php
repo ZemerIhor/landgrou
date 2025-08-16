@@ -415,7 +415,7 @@
                     </div>
                 </a>
 
-                <button
+                <a href="{{ route('contacts', ['locale' => app()->getLocale()]) }}"
                     class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors duration-200"
                     type="button" aria-label="Переглянути більше тендерів">
                     <span class="self-stretch my-auto text-current">
@@ -427,7 +427,7 @@
                             fill="#228F5D" />
                     </svg>
 
-                </button>
+                </a>
             </footer>
         </section>
 
