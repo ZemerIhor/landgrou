@@ -20,6 +20,7 @@ class ProductTechnicalAttributesSeeder extends Seeder
         $technicalGroup = AttributeGroup::firstOrCreate([
             'handle' => 'technical_specifications',
         ], [
+            'attributable_type' => Product::class,
             'name' => [
                 'uk' => 'Технічні характеристики',
                 'en' => 'Technical Specifications',
@@ -32,6 +33,7 @@ class ProductTechnicalAttributesSeeder extends Seeder
         $mainGroup = AttributeGroup::firstOrCreate([
             'handle' => 'main_specifications',
         ], [
+            'attributable_type' => Product::class,
             'name' => [
                 'uk' => 'Основні характеристики',
                 'en' => 'Main Specifications',
