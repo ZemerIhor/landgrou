@@ -168,14 +168,16 @@ class ProductTechnicalAttributesSeeder extends Seeder
             ]
         ];
 
-        foreach ($attributes as $attributeData) {
+        foreach ($attributes as $index => $attributeData) {
             Attribute::firstOrCreate([
                 'handle' => $attributeData['handle'],
             ], [
                 'attribute_type' => Product::class,
                 'attribute_group_id' => $attributeData['group'],
+                'position' => $index + 1,
                 'type' => $attributeData['type'],
                 'name' => $attributeData['name'],
+                'section' => 'main',
                 'configuration' => $attributeData['configuration'] ?? [],
                 'required' => false,
                 'system' => false,
