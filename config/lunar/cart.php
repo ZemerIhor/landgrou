@@ -12,16 +12,14 @@ return [
     | Authentication policy
     */
     'auth_policy' => 'merge',
-    'discounts' => [
-        'enabled' => false,
-    ],
+
     /*
     | Cart Pipelines
     */
     'pipelines' => [
         'cart' => [
             Lunar\Pipelines\Cart\CalculateLines::class,
-            Lunar\Pipelines\Cart\ApplyDiscounts::class,
+//            Lunar\Pipelines\Cart\ApplyDiscounts::class,
             // CalculateTax отключен, так как налоги не используются
             // Lunar\Pipelines\Cart\CalculateTax::class,
             Lunar\Pipelines\Cart\Calculate::class,
