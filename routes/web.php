@@ -23,14 +23,17 @@ use Illuminate\Support\Facades\Log;
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 Route::get('/switch/{locale}', [LanguageController::class, 'quickSwitch'])->name('lang.quick_switch');
 
-// Маршрут для продуктов, добавлено логирование для отладки
-Route::get('/products/{slug}', ProductPage::class)->name('product.view')->middleware('web');
+// 📦 Маршрут для продуктов БЕЗ префикса локали
+// Этот маршрут обрабатывает /products/slug для всех языков
+Route::get('/products/{slug}', ProductPage::class)
+    ->name('product.view')
+    ->middleware(['web', 'localization']);
 
 // 🌍 Группа маршрутов с префиксом локали
 Route::group([
     'prefix' => '{locale?}',
     'where'  => ['locale' => 'en|uk'], // Поддерживаемые языки
-    'middleware' => ['localization', 'web'], // Убедитесь, что middleware 'web' добавлен
+    'middleware' => ['localization', 'web'],
 ], function () {
     // Статика / разделы
     Route::get('/', Home::class)->name('home');
@@ -50,7 +53,7 @@ Route::group([
     // Поиск / каталог
     Route::get('/search', SearchPage::class)->name('search.view');
 
-    // Продукты и коллекции
+    // Продукты и коллекции (индексные страницы)
     Route::get('/products', SearchPage::class)->name('products.index');
     Route::get('/collections/{slug}', CollectionPage::class)->name('collection.view');
 
@@ -59,11 +62,15 @@ Route::group([
     Route::get('/checkout/success', CheckoutSuccessPage::class)->name('checkout-success.view');
 });
 
+// Редирект с /en на / для дефолтной локали (опционально)
+Route::redirect('/en', '/')->name('home.redirect');
+
 // Дополнительное логирование для отладки всех маршрутов
 Route::matched(function ($event) {
     Log::info('Route matched', [
         'uri' => $event->request->getUri(),
         'route_name' => $event->route->getName(),
         'parameters' => $event->route->parameters(),
+        'locale' => app()->getLocale(),
     ]);
 });

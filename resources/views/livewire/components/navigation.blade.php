@@ -195,74 +195,6 @@
                 </button>
 
                 @php
-                    use Lunar\Models\Url as LunarUrl;
-                    use Lunar\Models\Language;
-
-                    $currentUrl = request()->path();
-                    $segments = explode('/', $currentUrl);
-
-                    // Удаляем текущую локаль, если она есть
-                    if (in_array($segments[0], ['en', 'uk'])) {
-                        array_shift($segments);
-                    }
-
-                    $pathWithoutLocale = implode('/', $segments);
-
-                    // Проверяем, является ли текущий URL страницей продукта
-                    if (preg_match('#^products/([^/]+)$#', $pathWithoutLocale, $matches)) {
-                        // Находим продукт по текущему slug
-                        $currentSlug = $matches[1];
-                        $urlRecord = LunarUrl::where('slug', $currentSlug)
-                            ->where('element_type', \Lunar\Models\Product::class) // Используем полное имя класса
-                            ->first();
-
-                        if ($urlRecord) {
-                            $product = $urlRecord->element;
-
-                            // Получаем ID языка для каждой локали
-                            $enLanguage = Language::where('code', 'en')->first();
-                            $ukLanguage = Language::where('code', 'uk')->first();
-
-                            // Получаем slug для каждой локали
-                            $enUrlRecord = $product->urls()->where('language_id', $enLanguage?->id)->first();
-                            $ukUrlRecord = $product->urls()->where('language_id', $ukLanguage?->id)->first();
-
-                            // Отладка: логируем найденные URL
-                            \Log::info('Language URLs found', [
-                                'product_id' => $product->id,
-                                'en_language_id' => $enLanguage?->id,
-                                'uk_language_id' => $ukLanguage?->id,
-                                'en_url' => $enUrlRecord ? $enUrlRecord->slug : 'not found',
-                                'uk_url' => $ukUrlRecord ? $ukUrlRecord->slug : 'not found',
-                                'current_slug' => $currentSlug
-                            ]);
-
-                            // Используем найденные slug или fallback на текущий
-                            $enSlug = $enUrlRecord?->slug ?? $currentSlug;
-                            $ukSlug = $ukUrlRecord?->slug ?? $currentSlug;
-                            
-                            $enUrl = url('/products/' . $enSlug);
-                            $ukUrl = url('/products/' . $ukSlug);
-                        } else {
-                            // Fallback, если URL не найден
-                            $enUrl = url('/products/' . $currentSlug);
-                            $ukUrl = url('/products/' . $currentSlug);
-                        }
-                    } else {
-                        // Для остальных страниц добавляем префикс локали
-                        $enUrl = url('/en/' . $pathWithoutLocale);
-                        $ukUrl = url('/uk/' . $pathWithoutLocale);
-                    }
-
-                    \Log::info('Header Language Switch', [
-                        'current_locale' => app()->getLocale(),
-                        'current_url' => request()->fullUrl(),
-                        'en_url' => $enUrl,
-                        'uk_url' => $ukUrl,
-                    ]);
-                @endphp
-
-                @php
                     $headerSettings = app(\App\Settings\HeaderSettings::class);
                     $locale = app()->getLocale();
                 @endphp
@@ -289,12 +221,12 @@
                        class="social-link"
                        aria-label="{{ __('messages.social.telegram') }}">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="social-icon hover:stroke-green-600">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M14.3263 5.725C12.3559 6.5341 8.41795 8.20876 2.51239 10.749C1.55341 11.1255 1.05106 11.4938 1.00533 11.8539C0.928043 12.4626 1.70008 12.7022 2.7514 13.0286C2.8944 13.073 3.04257 13.119 3.19447 13.1678C4.2288 13.4997 5.62016 13.888 6.34347 13.9035C6.99958 13.9174 7.73187 13.6504 8.54035 13.1023C14.0581 9.42509 16.9064 7.56645 17.0852 7.52638C17.2114 7.49812 17.3862 7.46257 17.5046 7.56651C17.6231 7.67045 17.6115 7.8673 17.5989 7.92011C17.5224 8.242 14.4919 11.0236 12.9236 12.4631C12.4347 12.9118 12.0879 13.2301 12.017 13.3028C11.8582 13.4656 11.6963 13.6197 11.5408 13.7677C10.5799 14.6823 9.85925 15.3681 11.5807 16.488C12.4079 17.0262 13.0699 17.4713 13.7302 17.9153C14.4515 18.4002 15.1708 18.8838 16.1015 19.4861C16.3387 19.6396 16.5651 19.799 16.7857 19.9542C17.625 20.545 18.3791 21.0757 19.3107 20.9911C19.852 20.9419 20.4111 20.4394 20.6951 18.9406C21.3662 15.3986 22.6854 7.72419 22.9902 4.56174C23.0169 4.28467 22.9833 3.93008 22.9563 3.77442C22.9294 3.61876 22.873 3.39697 22.668 3.23279C22.4253 3.03836 22.0506 2.99736 21.883 3.00013C21.1211 3.01352 19.9521 3.41482 14.3263 5.725Z" stroke="#333333" stroke-width="1.5" stroke-linejoin="round"></path>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M14.3263 5.725C12.3559 6.5341 8.41795 8.20876 2.51239 10.749C1.55341 11.1255 1.05106 11.4938 1.00533 11.8539C0.928043 12.4626 1.70008 12.7022 2.7514 13.0286C2.8944 13.073 3.04257 13.119 3.19447 13.1678C4.2288 13.4997 5.62016 13.888 6.34347 13.9035C6.99958 13.9174 7.73187 13.6504 8.54035 13.1023C14.0581 9.42509 16.9064 7.56645 17.0852 7.52638C17.2114 7.49812 17.3862 7.46257 17.5046 7.56651C17.6231 7.67045 17.6115 7.8673 17.5989 7.92011C17.5224 8.242 14.4919 11.0236 12.9236 12.4631C12.4347 12.9118 12.0879 12.2301 12.017 13.3028C11.8582 13.4656 11.6963 13.6197 11.5408 13.7677C10.5799 14.6823 9.85925 15.3681 11.5807 16.488C12.4079 17.0262 13.0699 17.4713 13.7302 17.9153C14.4515 18.4002 15.1708 18.8838 16.1015 19.4861C16.3387 19.6396 16.5651 19.799 16.7857 19.9542C17.625 20.545 18.3791 21.0757 19.3107 20.9911C19.852 20.9419 20.4111 20.4394 20.6951 18.9406C21.3662 15.3986 22.6854 7.72419 22.9902 4.56174C23.0169 4.28467 22.9833 3.93008 22.9563 3.77442C22.9294 3.61876 22.873 3.39697 22.668 3.23279C22.4253 3.03836 22.0506 2.99736 21.883 3.00013C21.1211 3.01352 19.9521 3.41482 14.3263 5.725Z" stroke="#333333" stroke-width="1.5" stroke-linejoin="round"></path>
                         </svg>
                     </a>
                     @livewire('components.cart')
 
-                    <!-- Language Dropdown (Desktop) -->
+                    <!-- Language Dropdown (Desktop) - ИСПРАВЛЕНО -->
                     <div class="relative" x-data="{ desktopLanguageMenu: false }">
                         <button
                             x-on:click="desktopLanguageMenu = !desktopLanguageMenu"
@@ -316,18 +248,16 @@
                         >
                             @if(app()->getLocale() !== 'en')
                                 <a
-                                    href="{{ $enUrl }}"
+                                    href="{{ route('lang.switch', ['locale' => 'en', 'redirect_to' => request()->fullUrl()]) }}"
                                     class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
-                                    wire:navigate
                                 >
                                     {{ __('messages.language.english') }}
                                 </a>
                             @endif
                             @if(app()->getLocale() !== 'uk')
                                 <a
-                                    href="{{ $ukUrl }}"
+                                    href="{{ route('lang.switch', ['locale' => 'uk', 'redirect_to' => request()->fullUrl()]) }}"
                                     class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
-                                    wire:navigate
                                 >
                                     {{ __('messages.language.ukraine') }}
                                 </a>
@@ -392,6 +322,26 @@
                         >
                             {{ __('messages.feedback_form.submit_button') }}
                         </button>
+
+                        <!-- Mobile Language Switch -->
+                        <div class="flex gap-2">
+                            @if(app()->getLocale() !== 'en')
+                                <a
+                                    href="{{ route('lang.switch', ['locale' => 'en', 'redirect_to' => request()->fullUrl()]) }}"
+                                    class="px-3 py-1 text-sm border border-green-600 text-green-600 rounded hover:bg-green-600 hover:text-white"
+                                >
+                                    EN
+                                </a>
+                            @endif
+                            @if(app()->getLocale() !== 'uk')
+                                <a
+                                    href="{{ route('lang.switch', ['locale' => 'uk', 'redirect_to' => request()->fullUrl()]) }}"
+                                    class="px-3 py-1 text-sm border border-green-600 text-green-600 rounded hover:bg-green-600 hover:text-white"
+                                >
+                                    UK
+                                </a>
+                            @endif
+                        </div>
                     </nav>
                 </div>
             </div>
