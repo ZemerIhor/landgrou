@@ -53,7 +53,7 @@
 
                 // Обновляем URL в браузере
                 if (data.url) {
-                    // Для всех страниц используем Livewire.navigate для надежности
+                    // Используем Livewire.navigate для всех страниц
                     Livewire.navigate(data.url);
                 }
 

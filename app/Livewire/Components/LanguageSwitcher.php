@@ -20,7 +20,7 @@ class LanguageSwitcher extends Component
         $this->currentLocale = app()->getLocale();
         // Получаем исходный путь из сессии или текущего запроса
         $this->originalPath = Session::get('original_path', request()->path());
-        // Если текущий путь не livewire/update, обновляем сессию
+        // Обновляем сессию только если путь не livewire/update
         if (!str_contains($this->originalPath, 'livewire/update')) {
             Session::put('original_path', request()->path());
             $this->originalPath = request()->path();
@@ -84,7 +84,7 @@ class LanguageSwitcher extends Component
         // Если путь livewire/update, используем fallback
         if (str_contains($currentPath, 'livewire/update')) {
             \Log::warning('Livewire update path detected, using fallback', ['originalPath' => $currentPath]);
-            $currentPath = Session::get('last_valid_path', '/'); // Fallback на главную страницу
+            $currentPath = Session::get('last_valid_path', '/');
         }
 
         // Для продуктовых страниц
@@ -171,15 +171,9 @@ class LanguageSwitcher extends Component
             'pathWithoutLocale' => $pathWithoutLocale,
         ]);
 
-        // Для fallback-локали (en) не добавляем префикс
-        if ($locale === config('app.fallback_locale', 'en')) {
-            $newUrl = "/{$pathWithoutLocale}";
-            return $newUrl === '//' ? '/' : $newUrl; // Обрабатываем случай, когда pathWithoutLocale пустой
-        }
-
-        // Для других локалей добавляем префикс
+        // Для всех не-продуктовых страниц добавляем префикс локали, включая en
         $newUrl = "/{$locale}/{$pathWithoutLocale}";
-        return $newUrl === "/{$locale}/" ? "/{$locale}" : $newUrl; // Убираем лишний слеш в конце
+        return $newUrl === "/{$locale}/" ? "/{$locale}" : $newUrl; // Убираем лишний слеш для корневого пути
     }
 
     private function needsReload(): bool
