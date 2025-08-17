@@ -64,10 +64,10 @@
                 <x-product-specifications :product="$this->product" />
 
                 <!-- Price and Actions Component -->
-                <x-product-price-actions 
-                    :product="$this->product" 
-                    :variant="$this->variant" 
-                    :quantity="$this->quantity" 
+                <x-product-price-actions
+                    :product="$this->product"
+                    :variant="$this->variant"
+                    :quantity="$this->quantity"
                 />
             </section>
         </div>
@@ -217,59 +217,60 @@
             });
         });
     </script>
+
+    <style>
+        .product-page {
+            background: linear-gradient(135deg, #fafbfc 0%, #f8fafc 50%, #f1f5f9 100%);
+            min-height: calc(100vh - 200px);
+        }
+
+        .product-gallery .swiper-slide img {
+            transition: transform 0.3s ease;
+        }
+
+        .product-gallery .swiper-slide:hover img {
+            transform: scale(1.02);
+        }
+
+        .compliance-section {
+            border-left: 4px solid #3b82f6;
+        }
+
+        .specifications-list .spec-item {
+            transition: background-color 0.2s ease;
+        }
+
+        .specifications-list .spec-item:hover {
+            background-color: rgba(243, 244, 246, 0.5);
+        }
+
+        .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+        .prose p {
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .prose ul, .prose ol {
+            color: #374151;
+        }
+
+        .prose li {
+            margin: 0.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .product-page {
+                padding: 1rem;
+            }
+
+            .swiper-button-prev, .swiper-button-next {
+                display: none !important;
+            }
+        }
+    </style>
+
 </main>
-
-<style>
-.product-page {
-    background: linear-gradient(135deg, #fafbfc 0%, #f8fafc 50%, #f1f5f9 100%);
-    min-height: calc(100vh - 200px);
-}
-
-.product-gallery .swiper-slide img {
-    transition: transform 0.3s ease;
-}
-
-.product-gallery .swiper-slide:hover img {
-    transform: scale(1.02);
-}
-
-.compliance-section {
-    border-left: 4px solid #3b82f6;
-}
-
-.specifications-list .spec-item {
-    transition: background-color 0.2s ease;
-}
-
-.specifications-list .spec-item:hover {
-    background-color: rgba(243, 244, 246, 0.5);
-}
-
-.prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
-    color: #1f2937;
-    font-weight: 600;
-}
-
-.prose p {
-    color: #374151;
-    line-height: 1.6;
-}
-
-.prose ul, .prose ol {
-    color: #374151;
-}
-
-.prose li {
-    margin: 0.5rem 0;
-}
-
-@media (max-width: 768px) {
-    .product-page {
-        padding: 1rem;
-    }
-    
-    .swiper-button-prev, .swiper-button-next {
-        display: none !important;
-    }
-}
-</style>
