@@ -7,6 +7,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Lunar\Models\Url as LunarUrl;
 use Lunar\Models\Language;
+use Lunar\Models\Product;
 
 class Localization
 {
@@ -27,7 +28,7 @@ class Localization
             if (preg_match('#^products/([^/]+)$#', $currentPath, $matches)) {
                 $currentSlug = $matches[1];
                 $urlRecord = LunarUrl::where('slug', $currentSlug)
-                    ->where('element_type', 'product')
+                    ->where('element_type', Product::class)
                     ->first();
 
                 if ($urlRecord) {

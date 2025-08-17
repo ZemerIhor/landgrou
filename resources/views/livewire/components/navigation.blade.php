@@ -224,13 +224,25 @@
                             $ukLanguage = Language::where('code', 'uk')->first();
 
                             // Получаем slug для каждой локали
-                            $enUrlRecord = $product->urls()->where('language_id', $enLanguage?->id)->first()
-                                ?? $product->urls()->where('default', true)->first();
-                            $ukUrlRecord = $product->urls()->where('language_id', $ukLanguage?->id)->first()
-                                ?? $product->urls()->where('default', true)->first();
+                            $enUrlRecord = $product->urls()->where('language_id', $enLanguage?->id)->first();
+                            $ukUrlRecord = $product->urls()->where('language_id', $ukLanguage?->id)->first();
 
-                            $enUrl = url('/products/' . ($enUrlRecord->slug ?? $currentSlug));
-                            $ukUrl = url('/products/' . ($ukUrlRecord->slug ?? $currentSlug));
+                            // Отладка: логируем найденные URL
+                            \Log::info('Language URLs found', [
+                                'product_id' => $product->id,
+                                'en_language_id' => $enLanguage?->id,
+                                'uk_language_id' => $ukLanguage?->id,
+                                'en_url' => $enUrlRecord ? $enUrlRecord->slug : 'not found',
+                                'uk_url' => $ukUrlRecord ? $ukUrlRecord->slug : 'not found',
+                                'current_slug' => $currentSlug
+                            ]);
+
+                            // Используем найденные slug или fallback на текущий
+                            $enSlug = $enUrlRecord?->slug ?? $currentSlug;
+                            $ukSlug = $ukUrlRecord?->slug ?? $currentSlug;
+                            
+                            $enUrl = url('/products/' . $enSlug);
+                            $ukUrl = url('/products/' . $ukSlug);
                         } else {
                             // Fallback, если URL не найден
                             $enUrl = url('/products/' . $currentSlug);
