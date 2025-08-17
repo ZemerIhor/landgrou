@@ -170,7 +170,7 @@
                     @endif
                 </div>
 
-                <div class="hidden">
+
                     @if ($headerMenu)
                         <ul class="mobile-menu-items">
                             @foreach ($headerMenu->menuItems as $item)
@@ -188,8 +188,6 @@
                         </ul>
                     @endif
                 </div>
-            </div>
-
             <div class="nav-right">
                 <!-- Contact Button (Desktop) -->
                 <button
