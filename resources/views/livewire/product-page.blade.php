@@ -1,4 +1,4 @@
-<main class="flex container m-auto relative flex-col gap-14 items-start self-stretch px-12 py-4 max-sm:gap-8 max-sm:px-4 product-page">
+<div class="flex container m-auto relative flex-col gap-14 items-start self-stretch px-12 py-4 max-sm:gap-8 max-sm:px-4 product-page">
     <!-- Product Header Section -->
     <header class="flex relative flex-col gap-4 items-start self-stretch">
         <div class="flex relative flex-col gap-1 items-start">
@@ -273,4 +273,4 @@
         }
     </style>
 
-</main>
+</div>
