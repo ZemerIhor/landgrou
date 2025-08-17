@@ -228,9 +228,8 @@
                     @livewire('components.cart')
 
                     <!-- Language Dropdown (Desktop) - LIVEWIRE COMPONENT -->
-                    <div class="hidden md:block">
                         @livewire('components.language-switcher')
-                    </div>
+
                 </div>
 
                 <!-- Mobile Menu Toggle -->
@@ -290,10 +289,6 @@
                             {{ __('messages.feedback_form.submit_button') }}
                         </button>
 
-                        <!-- Mobile Language Switch - LIVEWIRE COMPONENT -->
-                        <div class="md:hidden">
-                            @livewire('components.language-switcher', ['mobile' => true])
-                        </div>
                     </nav>
                 </div>
             </div>
