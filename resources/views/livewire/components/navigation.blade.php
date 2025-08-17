@@ -1,9 +1,9 @@
 @php
     $footer = app(\App\Settings\FooterSettings::class);
-    $currentLocale = app()->getLocale(); // Get current locale (e.g., 'en' or 'uk')
+    $currentLocale = app()->getLocale();
 @endphp
 
-<div x-data="{ isScrolled: false, mobileMenu: false, languageMenu: false }" @scroll.window="isScrolled = (window.scrollY > 0)">
+<div x-data="{ isScrolled: false, mobileMenu: false }" @scroll.window="isScrolled = (window.scrollY > 0)">
     <header id="header" class="shadow-xl flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
             :class="{ 'is-fixed': isScrolled }"
             role="banner">
@@ -22,11 +22,6 @@
                 use Datlechin\FilamentMenuBuilder\Models\Menu;
                 $headerLocation = app()->getLocale() === 'en' ? 'header_en' : 'header_uk';
                 $headerMenu = Menu::location($headerLocation);
-                \Log::info('Header Menu Debug', [
-                    'location' => $headerLocation,
-                    'menu' => $headerMenu ? $headerMenu->toArray() : null,
-                    'locale' => app()->getLocale(),
-                ]);
             @endphp
 
             <style>
@@ -149,6 +144,12 @@
                         gap: 8px;
                     }
                 }
+
+                /* Loading spinner for language switch */
+                .language-loading {
+                    opacity: 0.7;
+                    pointer-events: none;
+                }
             </style>
 
             <!-- Desktop Menu -->
@@ -221,54 +222,20 @@
                        class="social-link"
                        aria-label="{{ __('messages.social.telegram') }}">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="social-icon hover:stroke-green-600">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M14.3263 5.725C12.3559 6.5341 8.41795 8.20876 2.51239 10.749C1.55341 11.1255 1.05106 11.4938 1.00533 11.8539C0.928043 12.4626 1.70008 12.7022 2.7514 13.0286C2.8944 13.073 3.04257 13.119 3.19447 13.1678C4.2288 13.4997 5.62016 13.888 6.34347 13.9035C6.99958 13.9174 7.73187 13.6504 8.54035 13.1023C14.0581 9.42509 16.9064 7.56645 17.0852 7.52638C17.2114 7.49812 17.3862 7.46257 17.5046 7.56651C17.6231 7.67045 17.6115 7.8673 17.5989 7.92011C17.5224 8.242 14.4919 11.0236 12.9236 12.4631C12.4347 12.9118 12.0879 12.2301 12.017 13.3028C11.8582 13.4656 11.6963 13.6197 11.5408 13.7677C10.5799 14.6823 9.85925 15.3681 11.5807 16.488C12.4079 17.0262 13.0699 17.4713 13.7302 17.9153C14.4515 18.4002 15.1708 18.8838 16.1015 19.4861C16.3387 19.6396 16.5651 19.799 16.7857 19.9542C17.625 20.545 18.3791 21.0757 19.3107 20.9911C19.852 20.9419 20.4111 20.4394 20.6951 18.9406C21.3662 15.3986 22.6854 7.72419 22.9902 4.56174C23.0169 4.28467 22.9833 3.93008 22.9563 3.77442C22.9294 3.61876 22.873 3.39697 22.668 3.23279C22.4253 3.03836 22.0506 2.99736 21.883 3.00013C21.1211 3.01352 19.9521 3.41482 14.3263 5.725Z" stroke="#333333" stroke-width="1.5" stroke-linejoin="round"></path>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M14.3263 5.725C12.3559 6.5341 8.41795 8.20876 2.51239 10.749C1.55341 11.1255 1.05106 11.4938 1.00533 11.8539C0.928043 12.4626 1.70008 12.7022 2.7514 13.0286C2.8944 13.073 3.04257 13.119 3.19447 13.1678C4.2288 13.4997 5.62016 13.888 6.34347 13.9035C6.99958 13.9174 7.73187 13.6504 8.54035 13.1023C14.0581 9.42509 16.9064 7.56645 17.0852 7.52638C17.2114 7.49812 17.3862 7.46257 17.5046 7.56651C17.6231 7.67045 17.6115 7.8673 17.5989 7.92011C17.5224 8.242 14.4919 11.0236 12.9236 12.4631C12.4347 12.9118 12.0879 13.2301 12.017 13.3028C11.8582 13.4656 11.6963 13.6197 11.5408 13.7677C10.5799 14.6823 9.85925 15.3681 11.5807 16.488C12.4079 17.0262 13.0699 17.4713 13.7302 17.9153C14.4515 18.4002 15.1708 18.8838 16.1015 19.4861C16.3387 19.6396 16.5651 19.799 16.7857 19.9542C17.625 20.545 18.3791 21.0757 19.3107 20.9911C19.852 20.9419 20.4111 20.4394 20.6951 18.9406C21.3662 15.3986 22.6854 7.72419 22.9902 4.56174C23.0169 4.28467 22.9833 3.93008 22.9563 3.77442C22.9294 3.61876 22.873 3.39697 22.668 3.23279C22.4253 3.03836 22.0506 2.99736 21.883 3.00013C21.1211 3.01352 19.9521 3.41482 14.3263 5.725Z" stroke="#333333" stroke-width="1.5" stroke-linejoin="round"></path>
                         </svg>
                     </a>
                     @livewire('components.cart')
 
-                    <!-- Language Dropdown (Desktop) - ИСПРАВЛЕНО -->
-                    <div class="relative" x-data="{ desktopLanguageMenu: false }">
-                        <button
-                            x-on:click="desktopLanguageMenu = !desktopLanguageMenu"
-                            class="flex items-center gap-1 text-sm font-semibold text-zinc-800 hover:text-green-600 focus:outline-none focus:ring-2 focus:ring-green-600"
-                            aria-label="{{ __('messages.language.current') }}"
-                            :aria-expanded="desktopLanguageMenu"
-                        >
-                            <span class="uppercase">{{ app()->getLocale() }}</span>
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                        <div
-                            x-show="desktopLanguageMenu"
-                            x-transition
-                            x-cloak
-                            class="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-md z-50"
-                            x-on:click.away="desktopLanguageMenu = false"
-                        >
-                            @if(app()->getLocale() !== 'en')
-                                <a
-                                    href="{{ route('lang.switch', ['locale' => 'en', 'redirect_to' => request()->fullUrl()]) }}"
-                                    class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
-                                >
-                                    {{ __('messages.language.english') }}
-                                </a>
-                            @endif
-                            @if(app()->getLocale() !== 'uk')
-                                <a
-                                    href="{{ route('lang.switch', ['locale' => 'uk', 'redirect_to' => request()->fullUrl()]) }}"
-                                    class="block px-4 py-2 text-sm text-zinc-800 hover:bg-green-600 hover:text-white"
-                                >
-                                    {{ __('messages.language.ukraine') }}
-                                </a>
-                            @endif
-                        </div>
+                    <!-- Language Dropdown (Desktop) - LIVEWIRE COMPONENT -->
+                    <div class="hidden md:block">
+                        @livewire('components.language-switcher')
                     </div>
                 </div>
 
                 <!-- Mobile Menu Toggle -->
                 <button
-                    x-on:click="mobileMenu = !mobileMenu; console.log('Mobile menu toggled:', mobileMenu)"
+                    x-on:click="mobileMenu = !mobileMenu"
                     class="mobile-menu-toggle text-2xl cursor-pointer text-zinc-800 focus:outline-none focus:ring-2 focus:ring-green-600"
                     aria-label="{{ __('messages.nav.toggle_mobile_menu') }}"
                     :aria-expanded="mobileMenu"
@@ -323,24 +290,9 @@
                             {{ __('messages.feedback_form.submit_button') }}
                         </button>
 
-                        <!-- Mobile Language Switch -->
-                        <div class="flex gap-2">
-                            @if(app()->getLocale() !== 'en')
-                                <a
-                                    href="{{ route('lang.switch', ['locale' => 'en', 'redirect_to' => request()->fullUrl()]) }}"
-                                    class="px-3 py-1 text-sm border border-green-600 text-green-600 rounded hover:bg-green-600 hover:text-white"
-                                >
-                                    EN
-                                </a>
-                            @endif
-                            @if(app()->getLocale() !== 'uk')
-                                <a
-                                    href="{{ route('lang.switch', ['locale' => 'uk', 'redirect_to' => request()->fullUrl()]) }}"
-                                    class="px-3 py-1 text-sm border border-green-600 text-green-600 rounded hover:bg-green-600 hover:text-white"
-                                >
-                                    UK
-                                </a>
-                            @endif
+                        <!-- Mobile Language Switch - LIVEWIRE COMPONENT -->
+                        <div class="md:hidden">
+                            @livewire('components.language-switcher', ['mobile' => true])
                         </div>
                     </nav>
                 </div>
@@ -353,11 +305,11 @@
          style="height: 56px;"
          x-cloak
          x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="height 0"
-         x-transition:enter-end="height 56px"
+         x-transition:enter-start="height: 0"
+         x-transition:enter-end="height: 56px"
          x-transition:leave="transition ease-in duration-300"
-         x-transition:leave-start="height 56px"
-         x-transition:leave-end="height 0">
+         x-transition:leave-start="height: 56px"
+         x-transition:leave-end="height: 0">
     </div>
     @livewire('components.contact-form')
 </div>
