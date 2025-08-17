@@ -28,7 +28,7 @@ class LanguageService
         $redirectTo = $redirectTo ?: request()->fullUrl();
 
         $path = $this->processRedirectPath($redirectTo, $locale);
-        
+
         Log::info('Language switch requested', [
             'locale' => $locale,
             'redirect_to' => $path,
@@ -83,7 +83,7 @@ class LanguageService
 
         Session::put('locale', $locale);
         App::setLocale($locale);
-        
+
         return true;
     }
 
@@ -93,7 +93,7 @@ class LanguageService
     private function getBrowserLocale(): ?string
     {
         $acceptLanguage = request()->header('Accept-Language');
-        
+
         if (!$acceptLanguage) {
             return null;
         }
@@ -104,11 +104,11 @@ class LanguageService
             $parts = explode(';', trim($lang));
             $locale = trim($parts[0]);
             $quality = 1.0;
-            
+
             if (isset($parts[1]) && str_starts_with(trim($parts[1]), 'q=')) {
                 $quality = (float) substr(trim($parts[1]), 2);
             }
-            
+
             $languages[$locale] = $quality;
         }
 
@@ -121,7 +121,7 @@ class LanguageService
             if ($this->isValidLocale($locale)) {
                 return $locale;
             }
-            
+
             // Проверяем основную часть (например, en из en-US)
             $mainLocale = explode('-', $locale)[0];
             if ($this->isValidLocale($mainLocale)) {
@@ -161,8 +161,12 @@ class LanguageService
      */
     private function isProductPage(string $path): bool
     {
-        return preg_match('#^/products/([^/]+)#', $path);
+        $slug = ltrim($path, '/');
+        return LunarUrl::where('slug', $slug)
+            ->where('element_type', Product::class)
+            ->exists();
     }
+
 
     /**
      * Handle product page locale switching
@@ -173,14 +177,14 @@ class LanguageService
         $currentSlug = $matches[1];
 
         $url = $this->findProductUrl($currentSlug);
-        
+
         if (!$url) {
             Log::warning('Product not found for slug: ' . $currentSlug);
             return "/{$locale}";
         }
 
         $newUrl = $this->getProductUrlForLocale($url->element, $locale);
-        
+
         if ($newUrl) {
             return "/products/{$newUrl->slug}";
         }
@@ -195,7 +199,7 @@ class LanguageService
     private function handleRegularPageLocale(string $path, string $locale): string
     {
         $newPath = "/{$locale}{$path}";
-        
+
         if ($this->routeExists($newPath)) {
             return $newPath;
         }
@@ -229,7 +233,7 @@ class LanguageService
     private function getProductUrlForLocale(Product $product, string $locale): ?LunarUrl
     {
         $languageId = Language::where('code', $locale)->first()?->id ?? 1;
-        
+
         return $product->urls()
             ->where('language_id', $languageId)
             ->first();
@@ -256,7 +260,7 @@ class LanguageService
     public function addQueryParameters(string $path, string $originalUrl): string
     {
         $query = parse_url($originalUrl, PHP_URL_QUERY);
-        
+
         if ($query) {
             $path .= '?' . $query;
         }
@@ -286,7 +290,7 @@ class LanguageService
     public function getLocaleFromRequest(): string
     {
         $locale = request()->segment(1);
-        
+
         if ($this->isValidLocale($locale)) {
             return $locale;
         }

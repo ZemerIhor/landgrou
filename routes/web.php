@@ -13,17 +13,12 @@ use App\Livewire\Home;
 use App\Livewire\ProductPage;
 use App\Livewire\SearchPage;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\App;
 
 // Маршрут для смены языка через контроллер
 Route::get('/lang/{locale}', [\App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
 
 // Быстрое переключение языка
 Route::get('/switch/{locale}', [\App\Http\Controllers\LanguageController::class, 'quickSwitch'])->name('lang.quick_switch');
-
-// Маршрут для страниц продуктов (без префикса локали)
-Route::get('/products/{slug}', ProductPage::class)->name('product.view')->middleware(['localization']);
 
 // Группа маршрутов с префиксом локали
 Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], function () {
@@ -38,15 +33,16 @@ Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], functi
     Route::get('/contacts', ContactsPage::class)->name('contacts');
     Route::get('/blog', BlogPage::class)->name('blog.index');
     Route::get('/blog/{slug}', BlogPostPage::class)->name('blog.post');
-    Route::get('/collections/{slug}', CollectionPage::class)->name('collection.view');
     Route::get('/search', SearchPage::class)->name('search.view');
     Route::get('/checkout', CheckoutPage::class)->name('checkout.view');
     Route::get('/checkout/success', CheckoutSuccessPage::class)->name('checkout-success.view');
     Route::get('/products', SearchPage::class)->name('products.index');
 
-
-
-
-
-
+    /**
+     * ✅ Универсальный роут для всех slugs (Lunar UrlResolver)
+     * Он сам определяет: продукт это, коллекция или страница,
+     * исходя из записи в таблице urls.
+     */
+    Route::get('/{slug}', \Lunar\Hub\Http\Livewire\UrlResolver::class)
+        ->name('url.resolver');
 });
