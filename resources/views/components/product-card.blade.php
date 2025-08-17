@@ -1,34 +1,34 @@
 @props(['product', 'odd' => false])
 
 @php
-    // Get current locale
+    // Получаем текущую локаль
     $locale = app()->getLocale();
 
-    // Get the language ID for the current locale
+    // Получаем ID языка для текущей локали
     $language = \Lunar\Models\Language::where('code', $locale)->first();
     $languageId = $language ? $language->id : 1;
 
-    // Get the slug for the current locale
+    // Получаем слаг для текущего языка
     $slug = $product->urls()->where('language_id', $languageId)->first()?->slug;
 
-    // Fallback to default URL slug, product slug, or generate a default slug
+    // Если слаг не найден, используем дефолтный слаг или генерируем новый
     if (!$slug) {
         $slug = $product->defaultUrl?->slug ?? $product->slug ?? \Illuminate\Support\Str::slug($product->translateAttribute('name') ?? 'product-' . $product->id);
     }
 
-    // Check if the slug is valid
+    // Проверяем, валиден ли слаг
     $hasValidSlug = is_string($slug) && trim($slug) !== '';
 
-    // Generate product URL (without locale prefix)
+    // Генерируем URL продукта (без префикса локали)
     $productUrl = $hasValidSlug
         ? route('product.view', ['slug' => $slug], false)
         : route('home', ['locale' => $locale], false);
 
-    // Extract translations
-    $nameValue = $product->translateAttribute('name') ?? 'Product';
+    // Извлекаем переводы
+    $nameValue = $product->translateAttribute('name') ?? 'Продукт';
     $descriptionValue = $product->translateAttribute('description') ?? '';
 
-    // Debug logging
+    // Логирование для отладки
     \Log::info('ProductCard Debug', [
         'product_id' => $product->id,
         'locale' => $locale,
@@ -42,6 +42,7 @@
         'defaultUrl_slug' => $product->defaultUrl?->slug,
         'urls' => $product->urls->toArray(),
         'productUrl' => $productUrl,
+        'element_type' => $product->urls()->where('language_id', $languageId)->first()?->element_type,
     ]);
 @endphp
 

@@ -15,13 +15,13 @@ class LanguageService
     private const SUPPORTED_LOCALES = ['en', 'uk'];
 
     /**
-     * Switch application language
+     * Переключение языка приложения
      */
     public function switchLanguage(string $locale, ?string $redirectTo = null): string
     {
         if (!$this->isValidLocale($locale)) {
-            Log::warning('Invalid locale attempted: ' . $locale);
-            throw new \InvalidArgumentException('Invalid locale');
+            Log::warning('Попытка использовать неподдерживаемую локаль: ' . $locale);
+            throw new \InvalidArgumentException('Неподдерживаемая локаль');
         }
 
         $this->setLocale($locale);
@@ -29,7 +29,7 @@ class LanguageService
 
         $path = $this->processRedirectPath($redirectTo, $locale);
 
-        Log::info('Language switch requested', [
+        Log::info('Переключение языка', [
             'locale' => $locale,
             'redirect_to' => $path,
             'current_url' => $redirectTo,
@@ -39,7 +39,7 @@ class LanguageService
     }
 
     /**
-     * Check if locale is valid
+     * Проверка валидности локали
      */
     public function isValidLocale(string $locale): bool
     {
@@ -47,33 +47,33 @@ class LanguageService
     }
 
     /**
-     * Detect locale from URL or session
+     * Определение локали из URL или сессии
      */
     public function detectLocale(?string $urlLocale = null): string
     {
-        // Сначала проверяем URL
+        // Проверяем локаль из URL
         if ($urlLocale && $this->isValidLocale($urlLocale)) {
             return $urlLocale;
         }
 
-        // Затем сессию
+        // Проверяем локаль из сессии
         $sessionLocale = Session::get('locale');
         if ($sessionLocale && $this->isValidLocale($sessionLocale)) {
             return $sessionLocale;
         }
 
-        // Затем заголовки браузера
+        // Проверяем заголовки браузера
         $browserLocale = $this->getBrowserLocale();
         if ($browserLocale && $this->isValidLocale($browserLocale)) {
             return $browserLocale;
         }
 
-        // Дефолтная локаль
+        // Возвращаем дефолтную локаль
         return config('app.locale', 'en');
     }
 
     /**
-     * Set application locale
+     * Установка локали приложения
      */
     public function setLocale(string $locale): bool
     {
@@ -88,7 +88,7 @@ class LanguageService
     }
 
     /**
-     * Get locale from browser headers
+     * Получение локали из заголовков браузера
      */
     private function getBrowserLocale(): ?string
     {
@@ -98,7 +98,7 @@ class LanguageService
             return null;
         }
 
-        // Парсим Accept-Language заголовок
+        // Парсим заголовок Accept-Language
         $languages = [];
         foreach (explode(',', $acceptLanguage) as $lang) {
             $parts = explode(';', trim($lang));
@@ -112,17 +112,15 @@ class LanguageService
             $languages[$locale] = $quality;
         }
 
-        // Сортируем по качеству
+        // Сортируем по приоритету
         arsort($languages);
 
         // Ищем поддерживаемую локаль
         foreach (array_keys($languages) as $locale) {
-            // Проверяем полную локаль (например, en-US)
             if ($this->isValidLocale($locale)) {
                 return $locale;
             }
 
-            // Проверяем основную часть (например, en из en-US)
             $mainLocale = explode('-', $locale)[0];
             if ($this->isValidLocale($mainLocale)) {
                 return $mainLocale;
@@ -133,7 +131,7 @@ class LanguageService
     }
 
     /**
-     * Process redirect path for locale switching
+     * Обработка пути перенаправления при смене локали
      */
     private function processRedirectPath(string $redirectTo, string $locale): string
     {
@@ -149,7 +147,7 @@ class LanguageService
     }
 
     /**
-     * Remove locale prefix from path
+     * Удаление префикса локали из пути
      */
     private function removeLocalePrefix(string $path): string
     {
@@ -157,7 +155,7 @@ class LanguageService
     }
 
     /**
-     * Check if current path is a product page
+     * Проверка, является ли путь страницей продукта
      */
     private function isProductPage(string $path): bool
     {
@@ -165,7 +163,7 @@ class LanguageService
     }
 
     /**
-     * Handle product page locale switching
+     * Обработка локали для страницы продукта
      */
     private function handleProductPageLocale(string $path, string $locale): string
     {
@@ -174,8 +172,14 @@ class LanguageService
 
         $url = $this->findProductUrl($currentSlug);
 
+        Log::info('handleProductPageLocale', [
+            'current_slug' => $currentSlug,
+            'locale' => $locale,
+            'url' => $url ? $url->toArray() : null,
+        ]);
+
         if (!$url) {
-            Log::warning('Product not found for slug: ' . $currentSlug);
+            Log::warning('Продукт не найден для слага: ' . $currentSlug);
             return "/{$locale}";
         }
 
@@ -185,12 +189,12 @@ class LanguageService
             return "/products/{$newUrl->slug}";
         }
 
-        // Fallback to product's default slug
+        // Fallback на дефолтный слаг
         return "/products/{$url->element->slug}";
     }
 
     /**
-     * Handle regular page locale switching
+     * Обработка локали для обычных страниц
      */
     private function handleRegularPageLocale(string $path, string $locale): string
     {
@@ -200,12 +204,12 @@ class LanguageService
             return $newPath;
         }
 
-        Log::warning('Route not found for path: ' . $newPath);
+        Log::warning('Маршрут не найден для пути: ' . $newPath);
         return "/{$locale}";
     }
 
     /**
-     * Find product URL by slug
+     * Поиск URL продукта по слагу
      */
     private function findProductUrl(string $slug): ?LunarUrl
     {
@@ -214,29 +218,44 @@ class LanguageService
             ->first();
 
         if (!$url) {
-            // Check alternative slugs
+            // Проверяем альтернативные слаги
             $url = LunarUrl::whereIn('slug', [$slug, $slug . 'vfv', str_replace('vfv', '', $slug)])
                 ->where('element_type', Product::class)
                 ->first();
         }
 
+        Log::info('findProductUrl result', [
+            'slug' => $slug,
+            'url' => $url ? $url->toArray() : null,
+            'element_type' => Product::class,
+        ]);
+
         return $url;
     }
 
     /**
-     * Get product URL for specific locale
+     * Получение URL продукта для конкретной локали
      */
     private function getProductUrlForLocale(Product $product, string $locale): ?LunarUrl
     {
         $languageId = Language::where('code', $locale)->first()?->id ?? 1;
 
-        return $product->urls()
+        $url = $product->urls()
             ->where('language_id', $languageId)
             ->first();
+
+        Log::info('getProductUrlForLocale', [
+            'product_id' => $product->id,
+            'locale' => $locale,
+            'language_id' => $languageId,
+            'url' => $url ? $url->toArray() : null,
+        ]);
+
+        return $url;
     }
 
     /**
-     * Check if route exists
+     * Проверка существования маршрута
      */
     private function routeExists(string $path): bool
     {
@@ -251,7 +270,7 @@ class LanguageService
     }
 
     /**
-     * Add query parameters to path
+     * Добавление параметров запроса к пути
      */
     public function addQueryParameters(string $path, string $originalUrl): string
     {
@@ -265,7 +284,7 @@ class LanguageService
     }
 
     /**
-     * Get supported locales
+     * Получение поддерживаемых локалей
      */
     public function getSupportedLocales(): array
     {
@@ -273,7 +292,7 @@ class LanguageService
     }
 
     /**
-     * Get current locale
+     * Получение текущей локали
      */
     public function getCurrentLocale(): string
     {
@@ -281,7 +300,7 @@ class LanguageService
     }
 
     /**
-     * Get locale from request
+     * Получение локали из запроса
      */
     public function getLocaleFromRequest(): string
     {

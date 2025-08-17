@@ -17,17 +17,20 @@ use App\Livewire\SubmitReview;
 use App\Livewire\CheckoutPage;
 use App\Livewire\CheckoutSuccessPage;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
 
 // 🔄 Переключение языка (вне группы локали)
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 Route::get('/switch/{locale}', [LanguageController::class, 'quickSwitch'])->name('lang.quick_switch');
-Route::get('/products/{slug}', ProductPage::class)->name('product.view');
+
+// Маршрут для продуктов, добавлено логирование для отладки
+Route::get('/products/{slug}', ProductPage::class)->name('product.view')->middleware('web');
 
 // 🌍 Группа маршрутов с префиксом локали
 Route::group([
     'prefix' => '{locale?}',
-    'where'  => ['locale' => 'en|uk'], // подставь свои коды языков
-    'middleware' => ['localization'],
+    'where'  => ['locale' => 'en|uk'], // Поддерживаемые языки
+    'middleware' => ['localization', 'web'], // Убедитесь, что middleware 'web' добавлен
 ], function () {
     // Статика / разделы
     Route::get('/', Home::class)->name('home');
@@ -47,11 +50,20 @@ Route::group([
     // Поиск / каталог
     Route::get('/search', SearchPage::class)->name('search.view');
 
-    // Продукты и коллекции (slug-и из таблицы lunar_urls)
+    // Продукты и коллекции
     Route::get('/products', SearchPage::class)->name('products.index');
     Route::get('/collections/{slug}', CollectionPage::class)->name('collection.view');
 
     // Чекаут
     Route::get('/checkout', CheckoutPage::class)->name('checkout.view');
     Route::get('/checkout/success', CheckoutSuccessPage::class)->name('checkout-success.view');
+});
+
+// Дополнительное логирование для отладки всех маршрутов
+Route::matched(function ($event) {
+    Log::info('Route matched', [
+        'uri' => $event->request->getUri(),
+        'route_name' => $event->route->getName(),
+        'parameters' => $event->route->parameters(),
+    ]);
 });
