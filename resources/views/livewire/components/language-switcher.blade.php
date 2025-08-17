@@ -15,9 +15,7 @@
     <div
         x-show="desktopLanguageMenu"
         x-transition
-        x
-
-        -cloak
+        x-cloak
         class="absolute right-0 mt-2 w-32 bg-white shadow-lg rounded-md z-50"
         x-on:click.away="desktopLanguageMenu = false"
     >
@@ -49,7 +47,8 @@
         document.addEventListener('livewire:initialized', () => {
             // Обработка успешного переключения языка
             Livewire.on('language-switched', (event) => {
-                const data = event;
+                // Handle both array-wrapped and direct event data
+                const data = Array.isArray(event) ? event[0] : event;
                 console.log('Language switched:', data);
 
                 // Обновляем URL в браузере
@@ -72,7 +71,7 @@
 
             // Обработка ошибок
             Livewire.on('language-error', (event) => {
-                const message = event;
+                const message = Array.isArray(event) ? event[0] : event;
                 console.error('Language switch error:', message);
 
                 if (window.showToast) {

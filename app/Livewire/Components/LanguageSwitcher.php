@@ -7,15 +7,28 @@ use App\Services\LanguageService;
 use Lunar\Models\Url as LunarUrl;
 use Lunar\Models\Language;
 use Lunar\Models\Product;
+use Illuminate\Support\Facades\Session;
 
 class LanguageSwitcher extends Component
 {
     public $currentLocale;
     public $availableLocales = ['en', 'uk'];
+    public $originalPath;
 
     public function mount()
     {
         $this->currentLocale = app()->getLocale();
+        // Store the original request path in the session
+        $this->originalPath = Session::get('original_path', request()->path());
+        if ($this->originalPath !== request()->path()) {
+            Session::put('original_path', request()->path());
+            $this->originalPath = request()->path();
+        }
+        \Log::debug('LanguageSwitcher mounted', [
+            'currentLocale' => $this->currentLocale,
+            'originalPath' => $this->originalPath,
+            'currentPath' => request()->path(),
+        ]);
     }
 
     public function switchLanguage($locale)
@@ -40,6 +53,7 @@ class LanguageSwitcher extends Component
             \Log::info('Livewire language switch', [
                 'locale' => $locale,
                 'new_url' => $newUrl,
+                'original_path' => $this->originalPath,
                 'current_path' => request()->path(),
                 'needs_reload' => $needsReload,
             ]);
@@ -63,7 +77,8 @@ class LanguageSwitcher extends Component
 
     private function getNewUrl($locale): string
     {
-        $currentPath = request()->path();
+        // Use the stored original path instead of the current request path
+        $currentPath = $this->originalPath;
         \Log::debug('Current path in getNewUrl', ['path' => $currentPath]);
 
         // For product pages
@@ -160,9 +175,10 @@ class LanguageSwitcher extends Component
 
     private function needsReload(): bool
     {
-        $isProductPage = request()->is('products/*') || request()->is('*/products/*');
+        // Use the stored original path for detection
+        $isProductPage = preg_match('#^(?:[a-z]{2}/)?products/([^/]+)$#', $this->originalPath);
         \Log::debug('Checking if reload is needed', [
-            'path' => request()->path(),
+            'path' => $this->originalPath,
             'isProductPage' => $isProductPage,
         ]);
         return $isProductPage;
