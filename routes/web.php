@@ -35,6 +35,9 @@ Route::group([
     'where'  => ['locale' => 'en|uk'], // Поддерживаемые языки
     'middleware' => ['localization', 'web'],
 ], function () {
+    Route::get('/blog/{slug}', BlogPostPage::class)->name('blog.post');
+    Route::get('/collections/{slug}', CollectionPage::class)->name('collection.view');
+
     // Статика / разделы
     Route::get('/', Home::class)->name('home');
     Route::get('/catalog', CatalogPage::class)->name('catalog.view');
@@ -48,14 +51,12 @@ Route::group([
 
     // Блог
     Route::get('/blog', BlogPage::class)->name('blog.index');
-    Route::get('/blog/{slug}', BlogPostPage::class)->name('blog.post');
 
     // Поиск / каталог
     Route::get('/search', SearchPage::class)->name('search.view');
 
     // Продукты и коллекции (индексные страницы)
     Route::get('/products', SearchPage::class)->name('products.index');
-    Route::get('/collections/{slug}', CollectionPage::class)->name('collection.view');
 
     // Чекаут
     Route::get('/checkout', CheckoutPage::class)->name('checkout.view');
