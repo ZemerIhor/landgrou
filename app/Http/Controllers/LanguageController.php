@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Services\LanguageService;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL as FacadeURL;
+use Lunar\Models\Url as LunarUrl;
+use Lunar\Models\Language;
 
 class LanguageController extends Controller
 {
@@ -17,15 +19,8 @@ class LanguageController extends Controller
 
         try {
             $redirectTo = request('redirect_to', FacadeURL::full());
-            // Check if the current URL is a product page
-            if (preg_match('#^/products/([^/]+)$#', $redirectTo, $matches)) {
-                // For product pages, keep the URL without locale prefix
-                $path = "/products/{$matches[1]}";
-            } else {
-                // For other routes, use the LanguageService to add locale prefix
-                $path = $languageService->switchLanguage($locale, $redirectTo);
-                $path = $languageService->addQueryParameters($path, $redirectTo);
-            }
+            $path = $languageService->switchLanguage($locale, $redirectTo);
+            $path = $languageService->addQueryParameters($path, $redirectTo);
 
             return redirect($path ?: "/{$locale}");
         } catch (\InvalidArgumentException $e) {
@@ -54,13 +49,21 @@ class LanguageController extends Controller
         app()->setLocale($locale);
 
         $currentPath = request()->path();
-        // Check if the current path is a product page
         if (preg_match('#^products/([^/]+)$#', $currentPath, $matches)) {
-            // For product pages, redirect without locale prefix
-            return redirect("/products/{$matches[1]}");
+            $currentSlug = $matches[1];
+            $urlRecord = LunarUrl::where('slug', $currentSlug)
+                ->where('element_type', 'product')
+                ->first();
+
+            if ($urlRecord) {
+                $product = $urlRecord->element;
+                $language = Language::where('code', $locale)->first();
+                $newUrlRecord = $product->urls()->where('language_id', $language?->id)->first()
+                    ?? $product->urls()->where('default', true)->first();
+                return redirect('/products/' . ($newUrlRecord->slug ?? $currentSlug));
+            }
         }
 
-        // For other routes, prepend the locale
         $currentPath = preg_replace('#^/(en|uk)/#', '/', $currentPath);
         return redirect("/{$locale}/{$currentPath}");
     }
