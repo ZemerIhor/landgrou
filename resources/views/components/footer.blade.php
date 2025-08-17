@@ -7,7 +7,17 @@
     aria-label="Site footer">
     <div class="container mx-auto md:px-12 px-4">
         <section class="header-section">
-            <div class="logo"><x-brand.logo /></div>
+            <div class="logo">
+                <a href="{{ app()->getLocale() === 'uk' ? url('/') : url('/en') }}"
+                   class="flex items-center"
+                   aria-label="{{ __('messages.banner.catalog_button_aria_label') }}"
+                   wire:navigate>
+                    <div>
+                        <x-brand.logo class="w-auto h-8 text-indigo-600" />
+                    </div>
+                </a>
+
+            </div>
 
 
             @if (!empty($footer->social_links))
