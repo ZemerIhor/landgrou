@@ -27,7 +27,7 @@ class AboutUs extends Page implements HasForms
 
     protected static string $settings = AboutUsSettings::class;
 
-    protected static ?string $navigationLabel = 'About Us Settings';
+    protected static ?string $navigationLabel = 'Налаштування сторінки "Про нас"';
 
     public static function getSlug(): string
     {
@@ -39,7 +39,7 @@ class AboutUs extends Page implements HasForms
     public function mount(): void
     {
         $settings = app(AboutUsSettings::class);
-        $defaultLocale = 'en';
+        $defaultLocale = 'uk';
 
         // Логируем настройки для отладки
         Log::info('AboutUs Settings', (array) $settings);
@@ -111,62 +111,62 @@ class AboutUs extends Page implements HasForms
     {
         return $form
             ->schema([
-                Section::make(__('messages.about_us.title'))
+                Section::make('Налаштування сторінки "Про нас"')
                     ->schema([
                         // Hero Section (Images and Text)
-                        Section::make(__('messages.about_us.hero_section'))
+                        Section::make('Геройська секція')
                             ->schema([
                                 FileUpload::make('hero_background_image')
-                                    ->label(__('messages.about_us.hero_background_image'))
+                                    ->label('Фонове зображення героя')
                                     ->image()
                                     ->disk('public')
                                     ->directory('about-us/hero'),
                                 TextInput::make('hero_background_image_alt')
-                                    ->label(__('messages.about_us.hero_background_image_alt'))
+                                    ->label('Альтернативний текст фонового зображення героя')
                                     ->rules(['nullable', 'string', 'max:255']),
                                 FileUpload::make('hero_logo')
-                                    ->label(__('messages.about_us.hero_logo'))
+                                    ->label('Логотип героя')
                                     ->image()
                                     ->disk('public')
                                     ->directory('about-us/logo'),
                                 TextInput::make('hero_logo_alt')
-                                    ->label(__('messages.about_us.hero_logo_alt'))
+                                    ->label('Альтернативний текст логотипу героя')
                                     ->rules(['nullable', 'string', 'max:255']),
                                 Translate::make()
-                                    ->locales(['en', 'uk'])
+                                    ->locales(['uk'])
                                     ->schema([
                                         TextInput::make('hero_title')
-                                            ->label(__('messages.about_us.hero_title'))
+                                            ->label('Заголовок героя')
                                             ->rules(['nullable', 'max:255']),
                                         TextInput::make('hero_subtitle')
-                                            ->label(__('messages.about_us.hero_subtitle'))
+                                            ->label('Підзаголовок героя')
                                             ->rules(['nullable', 'max:255']),
                                         TextInput::make('hero_subtitle_highlight')
-                                            ->label(__('messages.about_us.hero_subtitle_highlight'))
+                                            ->label('Виділений підзаголовок героя')
                                             ->rules(['nullable', 'max:100']),
                                         TextInput::make('hero_slogan')
-                                            ->label(__('messages.about_us.hero_slogan'))
+                                            ->label('Слоган героя')
                                             ->rules(['nullable', 'max:100']),
                                         Textarea::make('hero_description')
-                                            ->label(__('messages.about_us.hero_description'))
+                                            ->label('Опис героя')
                                             ->rules(['nullable']),
                                     ]),
                             ])
                             ->collapsible(),
 
                         // Advantages Section
-                        Section::make(__('messages.about_us.advantages_title'))
+                        Section::make('Переваги')
                             ->schema([
                                 Repeater::make('advantage_images')
-                                    ->label(__('messages.about_us.advantage_images'))
+                                    ->label('Зображення переваг')
                                     ->schema([
                                         FileUpload::make('image')
-                                            ->label(__('messages.about_us.image'))
+                                            ->label('Зображення')
                                             ->image()
                                             ->disk('public')
                                             ->directory('about-us/advantages'),
                                         TextInput::make('alt')
-                                            ->label(__('messages.about_us.alt_text'))
+                                            ->label('Альтернативний текст')
                                             ->rules(['nullable', 'string', 'max:255']),
                                     ])
                                     ->columns(2)
@@ -176,20 +176,20 @@ class AboutUs extends Page implements HasForms
                                     ->defaultItems(3)
                                     ->maxItems(3),
                                 Translate::make()
-                                    ->locales(['en', 'uk'])
+                                    ->locales(['uk'])
                                     ->schema([
                                         Repeater::make('advantages')
-                                            ->label(__('messages.about_us.advantages'))
+                                            ->label('Переваги')
                                             ->schema([
                                                 TextInput::make('value')
-                                                    ->label(__('messages.about_us.value'))
+                                                    ->label('Значення')
                                                     ->numeric()
                                                     ->rules(['nullable']),
                                                 TextInput::make('title')
-                                                    ->label(__('messages.about_us.title'))
+                                                    ->label('Заголовок')
                                                     ->rules(['nullable', 'max:255']),
                                                 TextInput::make('description')
-                                                    ->label(__('messages.about_us.description'))
+                                                    ->label('Опис')
                                                     ->rules(['nullable', 'max:255']),
                                             ])
                                             ->columns(3)
@@ -203,19 +203,19 @@ class AboutUs extends Page implements HasForms
                             ->collapsible(),
 
                         // About Section
-                        Section::make(__('messages.about_us.about_section'))
+                        Section::make('Про нас')
                             ->schema([
                                 Translate::make()
-                                    ->locales(['en', 'uk'])
+                                    ->locales(['uk'])
                                     ->schema([
                                         TextInput::make('about_title')
-                                            ->label(__('messages.about_us.about_title'))
+                                            ->label('Заголовок розділу "Про нас"')
                                             ->rules(['nullable', 'max:255']),
                                         Repeater::make('about_description')
-                                            ->label(__('messages.about_us.about_description'))
+                                            ->label('Опис розділу "Про нас"')
                                             ->schema([
                                                 Textarea::make('text')
-                                                    ->label(__('messages.about_us.paragraph'))
+                                                    ->label('Параграф')
                                                     ->rules(['nullable']),
                                             ])
                                             ->itemLabel(fn (array $state): ?string => is_array($state['text']) ? (substr($state['text'][app()->getLocale()] ?? '', 0, 50) . '...' ?? null) : (substr($state['text'] ?? '', 0, 50) . '...' ?? null))
@@ -228,18 +228,18 @@ class AboutUs extends Page implements HasForms
                             ->collapsible(),
 
                         // Gallery Section
-                        Section::make(__('messages.about_us.gallery_section'))
+                        Section::make('Галерея')
                             ->schema([
                                 Repeater::make('gallery_images')
-                                    ->label(__('messages.about_us.gallery_images'))
+                                    ->label('Зображення галереї')
                                     ->schema([
                                         FileUpload::make('image')
-                                            ->label(__('messages.about_us.image'))
+                                            ->label('Зображення')
                                             ->image()
                                             ->disk('public')
                                             ->directory('about-us/gallery'),
                                         TextInput::make('alt')
-                                            ->label(__('messages.about_us.alt_text'))
+                                            ->label('Альтернативний текст')
                                             ->rules(['nullable', 'string', 'max:255']),
                                     ])
                                     ->columns(2)
@@ -248,28 +248,28 @@ class AboutUs extends Page implements HasForms
                                     ->cloneable()
                                     ->defaultItems(5),
                                 Translate::make()
-                                    ->locales(['en', 'uk'])
+                                    ->locales(['uk'])
                                     ->schema([
                                         TextInput::make('gallery_title')
-                                            ->label(__('messages.about_us.gallery_title'))
+                                            ->label('Заголовок галереї')
                                             ->rules(['nullable', 'max:255']),
                                     ]),
                             ])
                             ->collapsible(),
 
                         // Certificates Section
-                        Section::make(__('messages.about_us.certificates_section'))
+                        Section::make('Сертифікати')
                             ->schema([
                                 Repeater::make('certificates_images')
-                                    ->label(__('messages.about_us.certificates_images'))
+                                    ->label('Зображення сертифікатів')
                                     ->schema([
                                         FileUpload::make('image')
-                                            ->label(__('messages.about_us.image'))
+                                            ->label('Зображення')
                                             ->image()
                                             ->disk('public')
                                             ->directory('about-us/certificates'),
                                         TextInput::make('alt')
-                                            ->label(__('messages.about_us.alt_text'))
+                                            ->label('Альтернативний текст')
                                             ->rules(['nullable', 'string', 'max:255']),
                                     ])
                                     ->columns(2)
@@ -278,10 +278,10 @@ class AboutUs extends Page implements HasForms
                                     ->cloneable()
                                     ->defaultItems(5),
                                 Translate::make()
-                                    ->locales(['en', 'uk'])
+                                    ->locales(['uk'])
                                     ->schema([
                                         TextInput::make('certificates_title')
-                                            ->label(__('messages.about_us.certificates_title'))
+                                            ->label('Заголовок сертифікатів')
                                             ->rules(['nullable', 'max:255']),
                                     ]),
                             ])
@@ -304,7 +304,7 @@ class AboutUs extends Page implements HasForms
             $settings->save();
 
             Notification::make()
-                ->title(__('messages.about_us.settings_saved'))
+                ->title('Налаштування збережено')
                 ->success()
                 ->send();
         } catch (ValidationException $e) {
@@ -314,7 +314,7 @@ class AboutUs extends Page implements HasForms
             ]);
 
             Notification::make()
-                ->title(__('messages.about_us.settings_error'))
+                ->title('Помилка збереження налаштувань')
                 ->body(implode(', ', array_merge(...array_values($e->errors()))))
                 ->danger()
                 ->send();
@@ -325,7 +325,7 @@ class AboutUs extends Page implements HasForms
             ]);
 
             Notification::make()
-                ->title(__('messages.about_us.settings_error'))
+                ->title('Помилка збереження налаштувань')
                 ->body($e->getMessage())
                 ->danger()
                 ->send();
