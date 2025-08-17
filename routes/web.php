@@ -25,9 +25,6 @@ Route::get('/switch/{locale}', [\App\Http\Controllers\LanguageController::class,
 // Маршрут для страниц продуктов (без префикса локали)
 Route::get('/products/{slug}', ProductPage::class)->name('product.view')->middleware(['localization']);
 
-// Временный тестовый роут для отладки
-Route::get('/test-product/{slug}', [\App\Http\Controllers\TestController::class, 'testProduct'])->middleware(['localization']);
-
 // Группа маршрутов с префиксом локали
 Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], function () {
     Route::get('/', Home::class)->name('home');
