@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 // 🔄 Переключение языка (вне группы локали)
 Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 Route::get('/switch/{locale}', [LanguageController::class, 'quickSwitch'])->name('lang.quick_switch');
+Route::get('/products/{slug}', ProductPage::class)->name('product.view');
 
 // 🌍 Группа маршрутов с префиксом локали
 Route::group([
@@ -48,7 +49,6 @@ Route::group([
 
     // Продукты и коллекции (slug-и из таблицы lunar_urls)
     Route::get('/products', SearchPage::class)->name('products.index');
-    Route::get('/products/{slug}', ProductPage::class)->name('product.view');
     Route::get('/collections/{slug}', CollectionPage::class)->name('collection.view');
 
     // Чекаут
