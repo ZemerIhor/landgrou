@@ -47,20 +47,14 @@
         document.addEventListener('livewire:initialized', () => {
             // Обработка успешного переключения языка
             Livewire.on('language-switched', (event) => {
-                // Handle both array-wrapped and direct event data
+                // Обрабатываем данные события (массив или объект)
                 const data = Array.isArray(event) ? event[0] : event;
                 console.log('Language switched:', data);
 
                 // Обновляем URL в браузере
                 if (data.url) {
-                    if (data.reload) {
-                        // Для продуктов делаем мягкий переход через Livewire
-                        Livewire.navigate(data.url);
-                    } else {
-                        // Для обычных страниц обновляем URL и перезагружаем компоненты
-                        window.history.pushState({}, '', data.url);
-                        Livewire.dispatch('refresh'); // Refresh Livewire components
-                    }
+                    // Для всех страниц используем Livewire.navigate для надежности
+                    Livewire.navigate(data.url);
                 }
 
                 // Показываем уведомление (опционально)

@@ -18,9 +18,10 @@ class LanguageSwitcher extends Component
     public function mount()
     {
         $this->currentLocale = app()->getLocale();
-        // Store the original request path in the session
+        // Получаем исходный путь из сессии или текущего запроса
         $this->originalPath = Session::get('original_path', request()->path());
-        if ($this->originalPath !== request()->path()) {
+        // Если текущий путь не livewire/update, обновляем сессию
+        if (!str_contains($this->originalPath, 'livewire/update')) {
             Session::put('original_path', request()->path());
             $this->originalPath = request()->path();
         }
@@ -42,11 +43,11 @@ class LanguageSwitcher extends Component
         try {
             $languageService = app(LanguageService::class);
 
-            // Set new locale
+            // Устанавливаем новую локаль
             $languageService->setLocale($locale);
             $this->currentLocale = $locale;
 
-            // Get new URL
+            // Получаем новый URL
             $newUrl = $this->getNewUrl($locale);
             $needsReload = $this->needsReload();
 
@@ -58,7 +59,7 @@ class LanguageSwitcher extends Component
                 'needs_reload' => $needsReload,
             ]);
 
-            // Dispatch event for URL update
+            // Отправляем событие для обновления URL
             $this->dispatch('language-switched', [
                 'locale' => $locale,
                 'url' => $newUrl,
@@ -77,18 +78,23 @@ class LanguageSwitcher extends Component
 
     private function getNewUrl($locale): string
     {
-        // Use the stored original path instead of the current request path
         $currentPath = $this->originalPath;
         \Log::debug('Current path in getNewUrl', ['path' => $currentPath]);
 
-        // For product pages
+        // Если путь livewire/update, используем fallback
+        if (str_contains($currentPath, 'livewire/update')) {
+            \Log::warning('Livewire update path detected, using fallback', ['originalPath' => $currentPath]);
+            $currentPath = Session::get('last_valid_path', '/'); // Fallback на главную страницу
+        }
+
+        // Для продуктовых страниц
         if (preg_match('#^(?:[a-z]{2}/)?products/([^/]+)$#', $currentPath, $matches)) {
             $slug = $matches[1];
             \Log::debug('Detected product page', ['slug' => $slug]);
             return $this->getProductUrl($slug, $locale);
         }
 
-        // For regular pages
+        // Для обычных страниц
         return $this->getRegularPageUrl($currentPath, $locale);
     }
 
@@ -150,14 +156,14 @@ class LanguageSwitcher extends Component
 
     private function getRegularPageUrl(string $currentPath, string $locale): string
     {
-        // Remove current locale from path
+        // Убираем текущую локаль из пути
         $segments = explode('/', ltrim($currentPath, '/'));
         if (in_array($segments[0] ?? '', $this->availableLocales)) {
             array_shift($segments);
         }
 
         $pathWithoutLocale = implode('/', $segments);
-        $pathWithoutLocale = $pathWithoutLocale ?: ''; // Handle root path
+        $pathWithoutLocale = $pathWithoutLocale ?: ''; // Обрабатываем корневой путь
 
         \Log::debug('Regular page URL resolved', [
             'currentPath' => $currentPath,
@@ -165,17 +171,19 @@ class LanguageSwitcher extends Component
             'pathWithoutLocale' => $pathWithoutLocale,
         ]);
 
-        // Add new locale
+        // Для fallback-локали (en) не добавляем префикс
         if ($locale === config('app.fallback_locale', 'en')) {
-            return "/{$pathWithoutLocale}";
+            $newUrl = "/{$pathWithoutLocale}";
+            return $newUrl === '//' ? '/' : $newUrl; // Обрабатываем случай, когда pathWithoutLocale пустой
         }
 
-        return "/{$locale}/{$pathWithoutLocale}";
+        // Для других локалей добавляем префикс
+        $newUrl = "/{$locale}/{$pathWithoutLocale}";
+        return $newUrl === "/{$locale}/" ? "/{$locale}" : $newUrl; // Убираем лишний слеш в конце
     }
 
     private function needsReload(): bool
     {
-        // Use the stored original path for detection
         $isProductPage = preg_match('#^(?:[a-z]{2}/)?products/([^/]+)$#', $this->originalPath);
         \Log::debug('Checking if reload is needed', [
             'path' => $this->originalPath,
