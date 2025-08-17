@@ -161,12 +161,8 @@ class LanguageService
      */
     private function isProductPage(string $path): bool
     {
-        $slug = ltrim($path, '/');
-        return LunarUrl::where('slug', $slug)
-            ->where('element_type', Product::class)
-            ->exists();
+        return preg_match('#^/products/([^/]+)#', $path);
     }
-
 
     /**
      * Handle product page locale switching
