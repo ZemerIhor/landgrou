@@ -195,6 +195,9 @@
                 </button>
 
                 @php
+                    use Lunar\Models\Url as LunarUrl;
+                    use Lunar\Models\Language;
+
                     $currentUrl = request()->path();
                     $segments = explode('/', $currentUrl);
 
@@ -206,10 +209,33 @@
                     $pathWithoutLocale = implode('/', $segments);
 
                     // Проверяем, является ли текущий URL страницей продукта
-                    if (preg_match('#^products/([^/]+)$#', $pathWithoutLocale)) {
-                        // Для страниц продуктов используем URL без префикса локали
-                        $enUrl = url('/products/' . $segments[1]);
-                        $ukUrl = url('/products/' . $segments[1]);
+                    if (preg_match('#^products/([^/]+)$#', $pathWithoutLocale, $matches)) {
+                        // Находим продукт по текущему slug
+                        $currentSlug = $matches[1];
+                        $urlRecord = LunarUrl::where('slug', $currentSlug)
+                            ->where('element_type', 'product')
+                            ->first();
+
+                        if ($urlRecord) {
+                            $product = $urlRecord->element;
+
+                            // Получаем ID языка для каждой локали
+                            $enLanguage = Language::where('code', 'en')->first();
+                            $ukLanguage = Language::where('code', 'uk')->first();
+
+                            // Получаем slug для каждой локали
+                            $enUrlRecord = $product->urls()->where('language_id', $enLanguage?->id)->first()
+                                ?? $product->urls()->where('default', true)->first();
+                            $ukUrlRecord = $product->urls()->where('language_id', $ukLanguage?->id)->first()
+                                ?? $product->urls()->where('default', true)->first();
+
+                            $enUrl = url('/products/' . ($enUrlRecord->slug ?? $currentSlug));
+                            $ukUrl = url('/products/' . ($ukUrlRecord->slug ?? $currentSlug));
+                        } else {
+                            // Fallback, если URL не найден
+                            $enUrl = url('/products/' . $currentSlug);
+                            $ukUrl = url('/products/' . $currentSlug);
+                        }
                     } else {
                         // Для остальных страниц добавляем префикс локали
                         $enUrl = url('/en/' . $pathWithoutLocale);
