@@ -19,9 +19,9 @@
     // Check if the slug is valid
     $hasValidSlug = is_string($slug) && trim($slug) !== '';
 
-    // Generate product URL
+    // Generate product URL (without locale prefix)
     $productUrl = $hasValidSlug
-        ? route('product.view', ['locale' => $locale, 'slug' => $slug], false)
+        ? route('product.view', ['slug' => $slug], false)
         : route('home', ['locale' => $locale], false);
 
     // Extract translations

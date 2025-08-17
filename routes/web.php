@@ -33,6 +33,7 @@ Route::get('/switch/{locale}', function ($locale) {
 })->name('lang.quick_switch');
 
 // Маршрут для страниц продуктов (без префикса локали)
+Route::get('/products/{slug}', ProductPage::class)->name('product.view')->middleware(['localization']);
 
 // Группа маршрутов с префиксом локали
 Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], function () {
@@ -52,7 +53,6 @@ Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], functi
     Route::get('/checkout', CheckoutPage::class)->name('checkout.view');
     Route::get('/checkout/success', CheckoutSuccessPage::class)->name('checkout-success.view');
     Route::get('/products', SearchPage::class)->name('products.index');
-    Route::get('/products/{slug}', ProductPage::class)->name('product.view');
 
 
 
