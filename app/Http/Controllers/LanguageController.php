@@ -33,4 +33,20 @@ class LanguageController extends Controller
             return Redirect::back()->with('error', 'Language switch failed');
         }
     }
+
+    /**
+     * Quick language switch for simple cases
+     */
+    public function quickSwitch(string $locale)
+    {
+        if (!in_array($locale, ['uk', 'en'])) {
+            abort(404);
+        }
+
+        session(['locale' => $locale]);
+        app()->setLocale($locale);
+
+        $currentPath = preg_replace('#^/(en|uk)/#', '/', request()->path());
+        return redirect("/{$locale}/{$currentPath}");
+    }
 }

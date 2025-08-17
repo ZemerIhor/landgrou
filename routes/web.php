@@ -20,20 +20,13 @@ use Illuminate\Support\Facades\App;
 Route::get('/lang/{locale}', [\App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
 
 // Быстрое переключение языка
-Route::get('/switch/{locale}', function ($locale) {
-    if (!in_array($locale, ['uk', 'en'])) {
-        abort(404);
-    }
-
-    Session::put('locale', $locale);
-    App::setLocale($locale);
-
-    $currentPath = preg_replace('#^/(en|uk)/#', '/', request()->path());
-    return redirect("/{$locale}/{$currentPath}");
-})->name('lang.quick_switch');
+Route::get('/switch/{locale}', [\App\Http\Controllers\LanguageController::class, 'quickSwitch'])->name('lang.quick_switch');
 
 // Маршрут для страниц продуктов (без префикса локали)
 Route::get('/products/{slug}', ProductPage::class)->name('product.view')->middleware(['localization']);
+
+// Временный тестовый роут для отладки
+Route::get('/test-product/{slug}', [\App\Http\Controllers\TestController::class, 'testProduct'])->middleware(['localization']);
 
 // Группа маршрутов с префиксом локали
 Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], function () {
@@ -41,8 +34,8 @@ Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], functi
     Route::get('/catalog', CatalogPage::class)->name('catalog.view');
     Route::get('/reviews', \App\Livewire\ReviewsPage::class)->name('reviews');
     Route::get('/submit-review', \App\Livewire\SubmitReview::class)->name('submit-review');
-    Route::get('/privacy-policy', fn () => 'Hello World')->name('privacy-policy');
-    Route::get('/terms', fn () => 'Hello World')->name('terms');
+    Route::get('/privacy-policy', [\App\Http\Controllers\PageController::class, 'privacyPolicy'])->name('privacy-policy');
+    Route::get('/terms', [\App\Http\Controllers\PageController::class, 'terms'])->name('terms');
     Route::get('/faq', FaqPage::class)->name('faq');
     Route::get('/about-us', AboutUsPage::class)->name('about-us');
     Route::get('/contacts', ContactsPage::class)->name('contacts');

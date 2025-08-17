@@ -2,28 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Livewire\Page;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class PageController extends Controller
 {
-    public function show($slug, Request $request)
+    /**
+     * Privacy Policy page
+     */
+    public function privacyPolicy(): Response
     {
-        \Log::info('PageController::show called', [
-            'slug' => $slug,
-            'locale' => app()->getLocale(),
-            'path' => $request->path(),
-            'url' => $request->fullUrl(),
-        ]);
+        return response('Privacy Policy - Coming Soon', 200);
+    }
 
-        // Поиск страницы по slug
-        $page = Page::where('slug', $slug)->first();
-
-        if (!$page) {
-            \Log::warning('Page not found for slug: ' . $slug);
-            abort(404, 'Page not found');
-        }
-
-        return view('page.show', compact('page'));
+    /**
+     * Terms of Service page
+     */
+    public function terms(): Response
+    {
+        return response('Terms of Service - Coming Soon', 200);
     }
 }
