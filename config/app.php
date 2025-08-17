@@ -96,7 +96,9 @@ return [
 
     'locale' => 'en',
     'fallback_locale' => 'en',
-
+    'discounts' => [
+        'enabled' => false,
+    ],
     /*
     |--------------------------------------------------------------------------
     | Faker Locale

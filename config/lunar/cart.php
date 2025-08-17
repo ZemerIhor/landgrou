@@ -12,7 +12,9 @@ return [
     | Authentication policy
     */
     'auth_policy' => 'merge',
-
+    'discounts' => [
+        'enabled' => false,
+    ],
     /*
     | Cart Pipelines
     */
