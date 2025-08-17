@@ -21,6 +21,7 @@ class LanguageSwitcher extends Component
     public function switchLanguage($locale)
     {
         if (!in_array($locale, $this->availableLocales)) {
+            \Log::error('Invalid locale attempted', ['locale' => $locale]);
             $this->dispatch('language-error', 'Invalid locale');
             return;
         }
@@ -34,18 +35,20 @@ class LanguageSwitcher extends Component
 
             // Get new URL
             $newUrl = $this->getNewUrl($locale);
+            $needsReload = $this->needsReload();
 
             \Log::info('Livewire language switch', [
                 'locale' => $locale,
                 'new_url' => $newUrl,
                 'current_path' => request()->path(),
+                'needs_reload' => $needsReload,
             ]);
 
             // Dispatch event for URL update
             $this->dispatch('language-switched', [
                 'locale' => $locale,
                 'url' => $newUrl,
-                'reload' => $this->needsReload()
+                'reload' => $needsReload,
             ]);
 
         } catch (\Exception $e) {
@@ -61,10 +64,13 @@ class LanguageSwitcher extends Component
     private function getNewUrl($locale): string
     {
         $currentPath = request()->path();
+        \Log::debug('Current path in getNewUrl', ['path' => $currentPath]);
 
         // For product pages
-        if (preg_match('#^products/([^/]+)$#', $currentPath, $matches)) {
-            return $this->getProductUrl($matches[1], $locale);
+        if (preg_match('#^(?:[a-z]{2}/)?products/([^/]+)$#', $currentPath, $matches)) {
+            $slug = $matches[1];
+            \Log::debug('Detected product page', ['slug' => $slug]);
+            return $this->getProductUrl($slug, $locale);
         }
 
         // For regular pages
@@ -79,7 +85,7 @@ class LanguageSwitcher extends Component
                 ->first();
 
             if (!$urlRecord) {
-                \Log::warning('No URL record found', ['slug' => $currentSlug, 'locale' => $locale]);
+                \Log::warning('No URL record found for slug', ['slug' => $currentSlug, 'locale' => $locale]);
                 return "/products/{$currentSlug}";
             }
 
@@ -87,7 +93,7 @@ class LanguageSwitcher extends Component
             $language = Language::where('code', $locale)->first();
 
             if (!$language) {
-                \Log::warning('No language found', ['locale' => $locale]);
+                \Log::warning('No language found for locale', ['locale' => $locale]);
                 return "/products/{$currentSlug}";
             }
 
@@ -96,24 +102,29 @@ class LanguageSwitcher extends Component
                 ->first();
 
             if (!$localizedUrlRecord) {
+                \Log::warning('No localized URL record found, falling back to default', [
+                    'product_id' => $product->id,
+                    'locale' => $locale,
+                ]);
                 $localizedUrlRecord = $product->urls()
                     ->where('default', true)
                     ->first();
             }
 
             $newSlug = $localizedUrlRecord ? $localizedUrlRecord->slug : $currentSlug;
-            \Log::info('Product URL Debug', [
+            \Log::info('Product URL resolved', [
                 'currentSlug' => $currentSlug,
                 'locale' => $locale,
-                'urlRecord' => $urlRecord ? $urlRecord->toArray() : null,
-                'product' => $product ? $product->toArray() : null,
-                'localizedUrlRecord' => $localizedUrlRecord ? $localizedUrlRecord->toArray() : null,
+                'product_id' => $product ? $product->id : null,
                 'newSlug' => $newSlug,
+                'urlRecord' => $urlRecord ? $urlRecord->toArray() : null,
+                'localizedUrlRecord' => $localizedUrlRecord ? $localizedUrlRecord->toArray() : null,
             ]);
+
             return "/products/{$newSlug}";
 
         } catch (\Exception $e) {
-            \Log::error('Error getting product URL in Livewire', [
+            \Log::error('Error getting product URL', [
                 'slug' => $currentSlug,
                 'locale' => $locale,
                 'error' => $e->getMessage(),
@@ -131,9 +142,16 @@ class LanguageSwitcher extends Component
         }
 
         $pathWithoutLocale = implode('/', $segments);
+        $pathWithoutLocale = $pathWithoutLocale ?: ''; // Handle root path
+
+        \Log::debug('Regular page URL resolved', [
+            'currentPath' => $currentPath,
+            'locale' => $locale,
+            'pathWithoutLocale' => $pathWithoutLocale,
+        ]);
 
         // Add new locale
-        if ($locale === config('app.locale', 'en')) {
+        if ($locale === config('app.fallback_locale', 'en')) {
             return "/{$pathWithoutLocale}";
         }
 
@@ -142,8 +160,12 @@ class LanguageSwitcher extends Component
 
     private function needsReload(): bool
     {
-        // Full reload for product pages
-        return request()->is('products/*');
+        $isProductPage = request()->is('products/*') || request()->is('*/products/*');
+        \Log::debug('Checking if reload is needed', [
+            'path' => request()->path(),
+            'isProductPage' => $isProductPage,
+        ]);
+        return $isProductPage;
     }
 
     public function render()
