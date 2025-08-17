@@ -214,20 +214,13 @@ class LanguageService
     private function findProductUrl(string $slug): ?LunarUrl
     {
         $url = LunarUrl::where('slug', $slug)
-            ->where('element_type', Product::class)
+            ->where('element_type', 'product') // Используем 'product' для соответствия базе
             ->first();
-
-        if (!$url) {
-            // Проверяем альтернативные слаги
-            $url = LunarUrl::whereIn('slug', [$slug, $slug . 'vfv', str_replace('vfv', '', $slug)])
-                ->where('element_type', Product::class)
-                ->first();
-        }
 
         Log::info('findProductUrl result', [
             'slug' => $slug,
             'url' => $url ? $url->toArray() : null,
-            'element_type' => Product::class,
+            'element_type' => 'product',
         ]);
 
         return $url;
@@ -242,6 +235,7 @@ class LanguageService
 
         $url = $product->urls()
             ->where('language_id', $languageId)
+            ->where('element_type', 'product') // Используем 'product'
             ->first();
 
         Log::info('getProductUrlForLocale', [
