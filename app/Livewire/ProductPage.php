@@ -10,6 +10,8 @@ use Livewire\Component;
 use Lunar\Models\Cart;
 use Lunar\Models\Product;
 use Lunar\Models\ProductVariant;
+use Lunar\Models\Url as LunarUrl;
+use Lunar\Models\Language;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProductPage extends Component
@@ -29,20 +31,44 @@ class ProductPage extends Component
 
     public function mount($slug): void
     {
-        // Find product using repository
-        $this->product = $this->productRepository->findBySlug($slug);
-        
-        if (!$this->product) {
+        $this->slug = $slug;
+
+        // Find URL by slug without locale filter (fallback search)
+        $url = LunarUrl::where('slug', $slug)
+            ->where('element_type', 'product')
+            ->first();
+
+        if (!$url) {
             abort(404, 'Product not found');
         }
 
-        $this->slug = $slug;
+        $this->product = $url->element;
+
+        // Check if the current slug matches the one for the current locale
+        $currentLocale = app()->getLocale();
+        $languageId = Language::where('code', $currentLocale)->first()?->id ?? 1; // Fallback to default language ID
+
+        $currentUrl = $this->product->urls()
+            ->where('language_id', $languageId)
+            ->first();
+
+        if (!$currentUrl) {
+            // Fallback to default URL if no localized one exists
+            $currentUrl = $this->product->urls()->where('default', true)->first();
+        }
+
+        if ($currentUrl && $currentUrl->slug !== $slug) {
+            // Redirect to the correct localized slug (permanent redirect for SEO)
+            $this->redirect("/products/{$currentUrl->slug}", navigate: true);
+            return;
+        }
 
         // Initialize selected option values
         $this->selectedOptionValues = $this->productOptions->mapWithKeys(function ($data) {
             return [$data['option']->id => $data['values']->first()->id];
         })->toArray();
     }
+
     public function getVariantProperty(): ProductVariant
     {
         return $this->product->variants->first(function ($variant) {
@@ -91,6 +117,7 @@ class ProductPage extends Component
 
         return $this->images->first();
     }
+
     public function getAttributesProperty(): array
     {
         $locale = app()->getLocale();
