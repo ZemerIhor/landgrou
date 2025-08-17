@@ -22,6 +22,11 @@
                 use Datlechin\FilamentMenuBuilder\Models\Menu;
                 $headerLocation = app()->getLocale() === 'en' ? 'header_en' : 'header_uk';
                 $headerMenu = Menu::location($headerLocation);
+                \Log::info('Header Menu Debug', [
+                    'location' => $headerLocation,
+                    'menu' => $headerMenu ? $headerMenu->toArray() : null,
+                    'locale' => app()->getLocale(),
+                ]);
             @endphp
 
             <style>
