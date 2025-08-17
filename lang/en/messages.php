@@ -114,6 +114,7 @@ return [
         'more_button' => 'More',
         'more_button_aria_label' => 'Show more reviews',
         'no_items' => 'No reviews available',
+        'leave' => 'Leave a review'
     ],
     'products' => [
         'title' => 'All Products',

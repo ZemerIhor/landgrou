@@ -113,6 +113,7 @@ return [
         'more_button' => 'Більше',
         'more_button_aria_label' => 'Показати більше відгуків',
         'no_items' => 'Немає відгуків',
+        'leave' => 'Залишити відгук'
     ],
     'products' => [
         'title' => 'Усі продукти',
