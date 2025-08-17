@@ -214,13 +214,13 @@ class LanguageService
     private function findProductUrl(string $slug): ?LunarUrl
     {
         $url = LunarUrl::where('slug', $slug)
-            ->where('element_type', 'product') // Используем 'product' для соответствия базе
+            ->where('element_type', Product::class) // Используем полное имя класса
             ->first();
 
         Log::info('findProductUrl result', [
             'slug' => $slug,
             'url' => $url ? $url->toArray() : null,
-            'element_type' => 'product',
+            'element_type' => Product::class,
         ]);
 
         return $url;
@@ -233,10 +233,19 @@ class LanguageService
     {
         $languageId = Language::where('code', $locale)->first()?->id ?? 1;
 
-        $url = $product->urls()
+        // Используем прямой запрос к LunarUrl вместо $product->urls()
+        $url = LunarUrl::where('element_id', $product->id)
+            ->where('element_type', Product::class)
             ->where('language_id', $languageId)
-            ->where('element_type', 'product') // Используем 'product'
             ->first();
+
+        // Если не найден URL для конкретной локали, ищем дефолтный
+        if (!$url) {
+            $url = LunarUrl::where('element_id', $product->id)
+                ->where('element_type', Product::class)
+                ->where('default', true)
+                ->first();
+        }
 
         Log::info('getProductUrlForLocale', [
             'product_id' => $product->id,

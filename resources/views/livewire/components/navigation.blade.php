@@ -213,7 +213,7 @@
                         // Находим продукт по текущему slug
                         $currentSlug = $matches[1];
                         $urlRecord = LunarUrl::where('slug', $currentSlug)
-                            ->where('element_type', 'product')
+                            ->where('element_type', \Lunar\Models\Product::class) // Используем полное имя класса
                             ->first();
 
                         if ($urlRecord) {
