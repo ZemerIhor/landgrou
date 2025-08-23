@@ -40,13 +40,13 @@
                 </div>
 
                 <!-- Mobile Layout -->
-                <div class="block max-sm:flex overflow-hidden px-4 pt-2 text-center text-white rounded-3xl max-w-[390px] mx-auto">
+                <div class="block max-sm:hidden overflow-hidden px-4 pt-2 text-center text-white rounded-3xl max-w-[390px] mx-auto">
                     <div class="flex gap-2 items-center w-full">
                         @if (!empty($settings->advantages_cards[app()->getLocale()]))
                             <div class="flex-1 shrink self-stretch my-auto basis-0">
                                 @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
                                     @if ($index < 2) <!-- First two cards in left column -->
-                                    <article class="flex flex-col px-4 py-5 w-[187px] rounded-3xl bg-zinc-800 min-h-[187px] @if($index == 1) mt-2 @endif">
+                                    <article class="flex flex-col px-4 py-5 w-full rounded-3xl bg-zinc-800 min-h-[187px] @if($index == 1) mt-2 h-[172px] min-h-[169px] w-[172px] @endif">
                                         @if (!empty($card['icon']))
                                             <img src="{{ Storage::url($card['icon']) }}"
                                                  alt="{{ isset($card['title']) ? $card['title'] : 'Advantage icon' }}"
@@ -66,18 +66,18 @@
                                     @endif
                                     @if ($index == 1 && !empty($settings->advantages_image_2))
                                         <img src="{{ Storage::url($settings->advantages_image_2) }}"
-                                             alt="Advantage image" class="object-contain mt-2 rounded-3xl aspect-[1.41] w-[172px]" />
+                                             alt="Advantage image" class="object-contain mt-2 rounded-3xl aspect-[1.41] w-[175px]" />
                                     @endif
                                 @endforeach
                             </div>
                             <div class="flex-1 shrink self-stretch my-auto basis-0">
                                 @if (!empty($settings->advantages_image_1))
                                     <img src="{{ Storage::url($settings->advantages_image_1) }}"
-                                         alt="Advantage image" class="object-contain rounded-3xl aspect-[1.41] w-[172px]" />
+                                         alt="Advantage image" class="object-contain rounded-3xl aspect-[1.41] w-[175px]" />
                                 @endif
                                 @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
                                     @if ($index >= 2 && $index < 4) <!-- Last two cards in right column -->
-                                    <article class="flex flex-col px-4 py-5 w-[187px] rounded-3xl bg-zinc-800 min-h-[187px] @if($index == 3) mt-2 @endif">
+                                    <article class="flex flex-col px-4 py-5 w-full rounded-3xl bg-zinc-800 min-h-[187px] @if($index == 3) mt-2 h-[172px] min-h-[169px] w-[172px] @endif">
                                         @if (!empty($card['icon']))
                                             <img src="{{ Storage::url($card['icon']) }}"
                                                  alt="{{ isset($card['title']) ? $card['title'] : 'Advantage icon' }}"
@@ -105,7 +105,7 @@
             </section>
         </div>
 
-        <div class="container mx-auto px-2 py-4 pt-40 products ">
+        <div class="container mx-auto px-2 py-4 pt-40 products">
 
             <section class="flex flex-col self-stretch" aria-label="Каталог">
                 <div class="">

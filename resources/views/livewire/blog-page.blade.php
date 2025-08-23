@@ -42,7 +42,7 @@
 
 
             <!-- Tab Navigation -->
-            <nav class="inline-flex items-start px-0 py-2 h-[43px] w-[1180px] max-md:box-border max-md:px-5 max-md:py-0 max-md:w-full max-md:max-w-[1180px] mb-8" role="tablist" aria-label="Content categories">
+            <nav class="inline-flex items-start px-0 h-[43px] w-[1180px] max-md:box-border max-md:py-0 max-md:w-full mb-8" role="tablist" aria-label="Content categories">
                 <div class="flex flex-col gap-2 items-center max-sm:shrink-0" role="presentation">
                     <button wire:click="setCategory('all')" class="flex gap-2.5 justify-center items-center px-4 py-0 tab-button" role="tab" aria-selected="{{ $selectedCategory === 'all' ? 'true' : 'false' }}" tabindex="{{ $selectedCategory === 'all' ? '0' : '-1' }}">
                         <span class="text-sm font-bold leading-4 text-center {{ $selectedCategory === 'all' ? 'text-green-600' : 'text-zinc-800' }}">Всі</span>
