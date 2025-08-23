@@ -7,16 +7,17 @@
             <section
                 class="container mx-auto flex relative flex-col w-full gap-0.5 items-start self-stretch pb-0 max-md:pt-8 max-md:pb-0 max-sm:pt-5 max-sm:pb-0"
                 aria-label="Company Advantages">
+                <!-- Desktop and Tablet Layout -->
                 <div
-                    class="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] max-md:grid-cols-2 max-sm:grid-cols-1 gap-1 w-full">
+                    class="hidden max-sm:block grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] max-md:grid-cols-2 gap-1 w-full">
                     @if (!empty($settings->advantages_cards[app()->getLocale()]))
                         @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
                             <article class="flex flex-col gap-3 items-center p-6 rounded-3xl bg-zinc-800">
                                 <div class="flex flex-col gap-2 w-full text-center text-white">
                                     @if (!empty($card['icon']))
                                         <img src="{{ Storage::url($card['icon']) }}"
-                                            alt="{{ isset($card['title']) ? $card['title'] : 'Advantage icon' }}"
-                                            class="w-12 h-12 mx-auto mb-2" />
+                                             alt="{{ isset($card['title']) ? $card['title'] : 'Advantage icon' }}"
+                                             class="w-12 h-12 mx-auto mb-2" />
                                     @endif
                                     <h2 class="text-base font-bold leading-5 max-sm:text-sm">
                                         {{ isset($card['title']) ? $card['title'] : '' }}
@@ -29,13 +30,77 @@
                             @if ($index < 3 && !empty($settings->{'advantages_image_' . ($index + 1)}))
                                 <figure class="rounded-3xl max-md:h-[200px] max-sm:h-[180px]">
                                     <img src="{{ Storage::url($settings->{'advantages_image_' . ($index + 1)}) }}"
-                                        alt="Advantage image" class="object-cover w-full h-full rounded-3xl" />
+                                         alt="Advantage image" class="object-cover w-full h-full rounded-3xl" />
                                 </figure>
                             @endif
                         @endforeach
                     @else
                         <p>{{ __('messages.advantages.no_cards') }}</p>
                     @endif
+                </div>
+
+                <!-- Mobile Layout -->
+                <div class="block max-sm:flex overflow-hidden px-4 pt-2 text-center text-white rounded-3xl max-w-[390px] mx-auto">
+                    <div class="flex gap-2 items-center w-full">
+                        @if (!empty($settings->advantages_cards[app()->getLocale()]))
+                            <div class="flex-1 shrink self-stretch my-auto basis-0">
+                                @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
+                                    @if ($index < 2) <!-- First two cards in left column -->
+                                    <article class="flex flex-col px-4 py-5 w-full rounded-3xl bg-zinc-800 min-h-[187px] @if($index == 1) mt-2 h-[172px] min-h-[169px] w-[172px] @endif">
+                                        @if (!empty($card['icon']))
+                                            <img src="{{ Storage::url($card['icon']) }}"
+                                                 alt="{{ isset($card['title']) ? $card['title'] : 'Advantage icon' }}"
+                                                 class="object-contain self-center w-10 aspect-square" />
+                                        @else
+                                            <div class="flex self-center w-10 min-h-10"></div>
+                                        @endif
+                                        <div class="flex overflow-hidden flex-col items-start mt-3 w-full">
+                                            <h2 class="text-base font-bold leading-tight text-white">
+                                                {{ isset($card['title']) ? $card['title'] : '' }}
+                                            </h2>
+                                            <p class="mt-2 text-xs font-semibold leading-5 text-white">
+                                                {{ isset($card['description']) ? $card['description'] : '' }}
+                                            </p>
+                                        </div>
+                                    </article>
+                                    @endif
+                                    @if ($index == 1 && !empty($settings->advantages_image_2))
+                                        <img src="{{ Storage::url($settings->advantages_image_2) }}"
+                                             alt="Advantage image" class="object-contain mt-2 rounded-3xl aspect-[1.41] w-[175px]" />
+                                    @endif
+                                @endforeach
+                            </div>
+                            <div class="flex-1 shrink self-stretch my-auto basis-0">
+                                @if (!empty($settings->advantages_image_1))
+                                    <img src="{{ Storage::url($settings->advantages_image_1) }}"
+                                         alt="Advantage image" class="object-contain rounded-3xl aspect-[1.41] w-[175px]" />
+                                @endif
+                                @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
+                                    @if ($index >= 2 && $index < 4) <!-- Last two cards in right column -->
+                                    <article class="flex flex-col px-4 py-5 w-full rounded-3xl bg-zinc-800 min-h-[187px] @if($index == 3) mt-2 h-[172px] min-h-[169px] w-[172px] @endif">
+                                        @if (!empty($card['icon']))
+                                            <img src="{{ Storage::url($card['icon']) }}"
+                                                 alt="{{ isset($card['title']) ? $card['title'] : 'Advantage icon' }}"
+                                                 class="object-contain self-center w-10 aspect-square" />
+                                        @else
+                                            <div class="flex self-center w-10 min-h-10"></div>
+                                        @endif
+                                        <div class="flex overflow-hidden flex-col items-start mt-3 w-full">
+                                            <h2 class="text-base font-bold leading-tight text-white">
+                                                {{ isset($card['title']) ? $card['title'] : '' }}
+                                            </h2>
+                                            <p class="mt-2 text-xs font-semibold leading-5 text-white">
+                                                {{ isset($card['description']) ? $card['description'] : '' }}
+                                            </p>
+                                        </div>
+                                    </article>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @else
+                            <p>{{ __('messages.advantages.no_cards') }}</p>
+                        @endif
+                    </div>
                 </div>
             </section>
         </div>
