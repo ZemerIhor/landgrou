@@ -42,64 +42,77 @@
                 <!-- Mobile Layout -->
                 <div class="block max-sm:hidden overflow-hidden px-4 pt-2 text-center text-white rounded-3xl max-w-[390px] mx-auto">
                     <div class="flex gap-2 items-center w-full">
-                        @if (!empty($settings->advantages_cards[app()->getLocale()]))
-                            <div class="flex-1 shrink self-stretch my-auto basis-0">
-                                @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
-                                    @if ($index < 2) <!-- First two cards in left column -->
-                                    <article class="flex flex-col px-4 py-5 w-full rounded-3xl bg-zinc-800 @if($index == 0) min-h-[187px] @else mt-2 min-h-[172px] @endif">
-                                        @if (!empty($card['icon']))
-                                            <img src="{{ Storage::url($card['icon']) }}"
-                                                 alt="{{ isset($card['title']) ? $card['title'] : 'Advantage icon' }}"
-                                                 class="object-contain self-center w-10 aspect-square" />
-                                        @else
-                                            <div class="flex self-center w-10 min-h-10"></div>
-                                        @endif
-                                        <div class="flex overflow-hidden flex-col items-start mt-3 w-full">
-                                            <h2 class="text-base font-bold leading-tight text-white">
-                                                {{ isset($card['title']) ? $card['title'] : '' }}
-                                            </h2>
-                                            <p class="mt-2 text-xs font-semibold leading-5 text-white">
-                                                {{ isset($card['description']) ? $card['description'] : '' }}
-                                            </p>
-                                        </div>
-                                    </article>
-                                    @endif
-                                    @if ($index == 1 && !empty($settings->advantages_image_2))
-                                        <img src="{{ Storage::url($settings->advantages_image_2) }}"
-                                             alt="Advantage image" class="object-contain mt-2 rounded-3xl aspect-[1.41] w-[175px] mx-auto" />
-                                    @endif
-                                @endforeach
-                            </div>
-                            <div class="flex-1 shrink self-stretch my-auto basis-0">
-                                @if (!empty($settings->advantages_image_1))
-                                    <img src="{{ Storage::url($settings->advantages_image_1) }}"
-                                         alt="Advantage image" class="object-contain rounded-3xl aspect-[1.41] w-[175px] mx-auto" />
-                                @endif
-                                @foreach ($settings->advantages_cards[app()->getLocale()] as $index => $card)
-                                    @if ($index >= 2 && $index < 4) <!-- Last two cards in right column -->
-                                    <article class="flex flex-col px-4 py-5 w-full rounded-3xl bg-zinc-800 @if($index == 2) min-h-[187px] mt-2 @else mt-2 min-h-[172px] @endif">
-                                        @if (!empty($card['icon']))
-                                            <img src="{{ Storage::url($card['icon']) }}"
-                                                 alt="{{ isset($card['title']) ? $card['title'] : 'Advantage icon' }}"
-                                                 class="object-contain self-center w-10 aspect-square" />
-                                        @else
-                                            <div class="flex self-center w-10 min-h-10"></div>
-                                        @endif
-                                        <div class="flex overflow-hidden flex-col items-start mt-3 w-full">
-                                            <h2 class="text-base font-bold leading-tight text-white">
-                                                {{ isset($card['title']) ? $card['title'] : '' }}
-                                            </h2>
-                                            <p class="mt-2 text-xs font-semibold leading-5 text-white">
-                                                {{ isset($card['description']) ? $card['description'] : '' }}
-                                            </p>
-                                        </div>
-                                    </article>
-                                    @endif
-                                @endforeach
-                            </div>
-                        @else
-                            <p>{{ __('messages.advantages.no_cards') }}</p>
-                        @endif
+                        <div class="flex-1 shrink self-stretch my-auto basis-0">
+                            <article class="flex flex-col px-4 py-5 w-full rounded-3xl bg-zinc-800 min-h-[187px]">
+                                <div class="flex self-center w-10 min-h-10"></div>
+                                <div class="flex overflow-hidden flex-col items-start mt-3 w-full">
+                                    <h2 class="text-base font-bold leading-tight text-white">
+                                        Лідер галузі
+                                    </h2>
+                                    <p class="mt-2 text-xs font-semibold leading-5 text-white">
+                                        Виробник 1 торф'яних напівбрикетів - якість, перевірена часом
+                                    </p>
+                                </div>
+                            </article>
+
+                            <article class="flex flex-col px-4 py-5 mt-2 rounded-3xl bg-zinc-800 h-[172px] min-h-[169px] w-[172px]">
+                                <img
+                                    src="https://api.builder.io/api/v1/image/assets/TEMP/3ecb9078eeb9db570fb540346f0367f778f43899?placeholderIfAbsent=true"
+                                    class="object-contain self-center w-10 aspect-square"
+                                    alt="Доступність icon"
+                                />
+                                <div class="flex overflow-hidden flex-col items-start mt-3 w-full">
+                                    <h2 class="text-base font-bold leading-tight text-white">
+                                        Доступність
+                                    </h2>
+                                    <p class="mt-2 text-xs font-semibold leading-5 text-white">
+                                        Довгий час горіння забезпечує менше споживання палива
+                                    </p>
+                                </div>
+                            </article>
+
+                            <img
+                                src="https://api.builder.io/api/v1/image/assets/TEMP/f2157ed5e1ca592a51fcbe03b5bbe5655ef8818b?placeholderIfAbsent=true"
+                                class="object-contain mt-2 rounded-3xl aspect-[1.41] w-[175px]"
+                                alt="Product image"
+                            />
+                        </div>
+
+                        <div class="flex-1 shrink self-stretch my-auto basis-0">
+                            <img
+                                src="https://api.builder.io/api/v1/image/assets/TEMP/e36983f70907804d2ef38e928e36e9151826a4fe?placeholderIfAbsent=true"
+                                class="object-contain rounded-3xl aspect-[1.41] w-[175px]"
+                                alt="Product showcase"
+                            />
+
+                            <article class="flex flex-col px-4 py-5 mt-2 w-full rounded-3xl bg-zinc-800 min-h-[187px]">
+                                <img
+                                    src="https://api.builder.io/api/v1/image/assets/TEMP/950f6584c05b5c9f75661d840f2967284306d60f?placeholderIfAbsent=true"
+                                    class="object-contain self-center w-10 aspect-square"
+                                    alt="Швидкість icon"
+                                />
+                                <div class="flex overflow-hidden flex-col items-start mt-3 w-full">
+                                    <h2 class="text-base font-bold leading-tight text-white">
+                                        Швидкість
+                                    </h2>
+                                    <p class="mt-2 text-xs font-semibold leading-5 text-white">
+                                        Швидка доставка по Україні та Європі завдяки власній логістиці.
+                                    </p>
+                                </div>
+                            </article>
+
+                            <article class="flex flex-col px-4 py-5 mt-2 rounded-3xl bg-zinc-800 h-[172px] min-h-[169px] w-[172px]">
+                                <div class="flex self-center w-10 min-h-10"></div>
+                                <div class="flex overflow-hidden flex-col items-start mt-3 w-full">
+                                    <h2 class="text-base font-bold leading-tight text-white">
+                                        Екологічність
+                                    </h2>
+                                    <p class="mt-2 text-xs font-semibold leading-5 text-white">
+                                        Торфобрикети — натуральний продукт без хімічних добавок.
+                                    </p>
+                                </div>
+                            </article>
+                        </div>
                     </div>
                 </div>
             </section>
