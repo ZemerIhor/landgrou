@@ -718,3 +718,23 @@ grid-row-gap: 0px;
         text-align: center;
     }
 }
+
+/* Mobile Layout Styles */
+@media (max-width: 767px) {
+    .advantages-section article {
+        padding: 1rem;
+    }
+
+    .advantages-section h2 {
+        font-size: 1.1rem;
+    }
+
+    .advantages-section p {
+        font-size: 0.8rem;
+    }
+
+    .advantages-section img {
+        max-width: 100%;
+        height: auto;
+    }
+}
