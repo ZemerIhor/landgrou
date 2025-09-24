@@ -15,6 +15,7 @@
                wire:navigate>
                 <div>
                     <x-brand.logo class="w-auto h-8 text-indigo-600" />
+                    вфвв
                 </div>
             </a>
 
