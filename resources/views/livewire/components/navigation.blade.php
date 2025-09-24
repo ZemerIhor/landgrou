@@ -7,7 +7,6 @@
     <header id="header" class="shadow-xl flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
             :class="{ 'is-fixed': isScrolled }"
             role="banner">
-        вцфввdвввв
         <div class="nav-header flex relative px-2 justify-between items-center w-full h-auto container mx-auto">
             <!-- Logo -->
             <a href="{{ app()->getLocale() === 'uk' ? url('/') : url('/en') }}"
