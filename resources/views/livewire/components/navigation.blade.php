@@ -8,7 +8,7 @@
             :class="{ 'is-fixed': isScrolled }"
             role="banner">
 
-        вфцвфвыыdaddddddd
+        вфцвфвыыdadddddddd
         <div class="nav-header flex relative px-2 justify-between items-center w-full h-auto container mx-auto">
             <!-- Logo -->
             <a href="{{ app()->getLocale() === 'uk' ? url('/') : url('/en') }}"
