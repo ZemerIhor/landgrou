@@ -12,6 +12,7 @@ use App\Livewire\FaqPage;
 use App\Livewire\Home;
 use App\Livewire\ProductPage;
 use App\Livewire\SearchPage;
+use App\Services\LanguageService;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
@@ -21,7 +22,9 @@ Route::get('/lang/{locale}', [\App\Http\Controllers\LanguageController::class, '
 
 // Быстрое переключение языка
 Route::get('/switch/{locale}', function ($locale) {
-    if (!in_array($locale, ['uk', 'en'])) {
+    $languageService = app(LanguageService::class);
+    
+    if (!$languageService->isValidLocale($locale)) {
         abort(404);
     }
 

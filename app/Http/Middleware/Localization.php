@@ -2,32 +2,55 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\LanguageService;
 use Closure;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 
 class Localization
 {
-    public function handle($request, Closure $next)
+    /**
+     * Handle an incoming request.
+     */
+    public function handle(Request $request, Closure $next)
     {
-        $locale = $request->segment(1);
-
-        if (in_array($locale, ['en', 'uk'])) {
-            // Локаль указана в URL (например, /en/...)
-            App::setLocale($locale);
-            Session::put('locale', $locale);
-        } else {
-            // Нет локали в URL (например, /products/{slug}), используем сессию или фоллбек
-            $locale = Session::get('locale', config('app.locale', 'en'));
-            App::setLocale($locale);
+        $excludedPaths = [
+            'lunar/*',
+            'livewire/*',
+            'api/*',
+            '_debugbar/*',
+            'storage/*',
+            'stripe/*',
+            'passkeys/*',
+        ];
+        
+        foreach ($excludedPaths as $pattern) {
+            if ($request->is($pattern)) {
+                return $next($request);
+            }
         }
 
-        \Log::info('Localization Middleware', [
-            'locale' => $locale,
-            'session_locale' => Session::get('locale'),
-            'app_locale' => App::getLocale(),
-            'path' => $request->path(),
-        ]);
+        $languageService = app(LanguageService::class);
+        
+        $urlLocale = $request->segment(1);
+        $detectedLocale = $languageService->detectLocale($urlLocale);
+        
+        if ((!$urlLocale || !$languageService->isValidLocale($urlLocale)) && $request->path() !== '/') {
+            $currentPath = $request->path();
+            if (!preg_match('#^(en|uk)/#', $currentPath)) {
+                return redirect("/{$detectedLocale}/{$currentPath}");
+            }
+        }
+        
+        $languageService->setLocale($detectedLocale);
+
+        if (config('app.debug')) {
+            \Log::debug('Localization Middleware', [
+                'url_locale' => $urlLocale,
+                'detected_locale' => $detectedLocale,
+                'final_locale' => $languageService->getCurrentLocale(),
+                'path' => $request->path(),
+            ]);
+        }
 
         return $next($request);
     }
