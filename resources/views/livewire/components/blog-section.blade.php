@@ -10,13 +10,12 @@
                 $slug = $post->slug; // Используем непереводимый slug
                 $hasValidSlug = is_string($slug) && trim($slug) !== '';
 
-                $routeParams = ['slug' => $slug];
-                if ($locale !== config('app.fallback_locale')) {
-                    $routeParams['locale'] = $locale;
-                }
-
                 // Если slug валиден, формируем URL для поста, иначе для главной страницы
-                $postUrl = $hasValidSlug ? route('blog.post', $routeParams, false) : route('home', $locale !== config('app.fallback_locale') ? ['locale' => $locale] : [], false);
+                if ($hasValidSlug) {
+                    $postUrl = route('blog.post', ['locale' => $locale, 'slug' => $slug]);
+                } else {
+                    $postUrl = route('home', $locale !== config('app.fallback_locale') ? ['locale' => $locale] : []);
+                }
             @endphp
 
             <a href="{{ $postUrl }}" wire:navigate class="block overflow-hidden relative flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 min-w-60 hover:shadow-lg transition-shadow h-full" aria-label="{{ __('blog.read_article', ['title' => $post->getTranslation('title', $locale)]) }}">
