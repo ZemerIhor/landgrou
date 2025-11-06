@@ -76,15 +76,6 @@
                 $product = $url ? \Lunar\Models\Product::where('id', $url->element_id)
                     ->where('status', 'published')
                     ->first() : null;
-                // Логирование для отладки
-                \Illuminate\Support\Facades\Log::info('Product View Meta', [
-                    'locale' => $locale,
-                    'slug' => request()->route()->parameter('slug'),
-                    'url_found' => $url ? $url->toArray() : null,
-                    'product_found' => $product ? $product->id : null,
-                    'product_name' => $product ? $product->translateAttribute('name') : null,
-                    'product_description' => $product ? $product->translateAttribute('description') : null,
-                ]);
 
                 $pageTitle = $product && $product->translateAttribute('name')
                     ? $product->translateAttribute('name')

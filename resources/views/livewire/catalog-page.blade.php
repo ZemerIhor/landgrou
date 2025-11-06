@@ -245,14 +245,6 @@
                             : route('home', ['locale' => $locale], false);
                         $nameValue = $product->translateAttribute('name') ?? 'Product';
                         $descriptionValue = $product->translateAttribute('description') ?? '';
-                        // Debug logging
-                        \Log::info('Product URL Generated', [
-                            'product_id' => $product->id,
-                            'locale' => $locale,
-                            'slug' => $slug,
-                            'productUrl' => $productUrl,
-                            'urls' => $product->urls->toArray(),
-                        ]);
                     @endphp
 
                     <article wire:key="product-{{ $product->id }}"
@@ -311,13 +303,7 @@
                                 </div>
                             </div>
 
-                            @if (!$hasValidSlug)
-                                <div class="p-4 text-red-600 text-sm">
-                                    {{ __('messages.catalog.missing_slug_warning', ['id' => $product->id, 'locale' => app()->getLocale()]) }}
-                                    @dump($product->urls->toArray())
-                                    @dump($product->slug)
-                                </div>
-                            @endif
+
                         </div>
                     </article>
                 @empty
