@@ -50,6 +50,8 @@ class AppServiceProvider extends ServiceProvider
                     BlogPostResource::class,
                     ReviewResource::class,
                     ProductResource::class,
+                    \App\Filament\Resources\ProductCharacteristicResource::class,
+                    \App\Filament\Resources\ProductShortPointResource::class,
                 ])
                 ->plugins([
                     new ShippingPlugin,
