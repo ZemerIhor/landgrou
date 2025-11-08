@@ -464,5 +464,8 @@ return [
         'pagination' => 'Pagination',
     ],
 
-
+    'filters' => [
+        'peat_type' => 'Peat Type',
+        'weight' => 'Weight',
+    ],
 ];

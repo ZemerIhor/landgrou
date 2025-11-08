@@ -20,13 +20,17 @@ use Datlechin\FilamentMenuBuilder\MenuPanel\StaticMenuPanel;
 use Filament\SpatieLaravelTranslatablePlugin;
 use Geosem42\Filamentor\FilamentorPlugin;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Kenepa\TranslationManager\TranslationManagerPlugin;
-use Lunar\Admin\Filament\Resources\ProductResource;
 use Lunar\Admin\Support\Facades\LunarPanel;
+use Lunar\Admin\Support\Facades\AttributeData as LunarAttributeData;
 use Lunar\Base\ShippingModifiers;
 use Lunar\Shipping\ShippingPlugin;
 use SolutionForest\FilamentTranslateField\FilamentTranslateFieldPlugin;
+use Filament\Forms\Components\RichEditor;
+use Filament\Support\Facades\FilamentView;
+use Illuminate\Support\Facades\Blade as BladeFacade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -47,22 +51,24 @@ class AppServiceProvider extends ServiceProvider
                     GlobalSet::class,
                 ])
                 ->resources([
+                    \App\Filament\Resources\ProductResource::class,
                     BlogPostResource::class,
                     ReviewResource::class,
-                    ProductResource::class,
                     \App\Filament\Resources\ProductCharacteristicResource::class,
                     \App\Filament\Resources\ProductShortPointResource::class,
+                    \App\Filament\Resources\PeatTypeResource::class,
+                    \App\Filament\Resources\ProductWeightResource::class,
                 ])
                 ->plugins([
                     new ShippingPlugin,
                     FilamentMenuBuilderPlugin::make()
-                        ->addLocation('header_en', 'Header EN') // Локация для хедера (английский)
-                        ->addLocation('header_uk', 'Header UK') // Локация для хедера (украинский)
-                        ->addLocation('footer_en', 'Footer EN') // Локация для футера (английский)
-                        ->addLocation('footer_uk', 'Footer UK') // Локация для футера (украинский)
+                        ->addLocation('header_en', 'Header EN') // Location for header (English)
+                        ->addLocation('header_pl', 'Header PL') // Location for header (Polish)
+                        ->addLocation('footer_en', 'Footer EN') // Location for footer (English)
+                        ->addLocation('footer_pl', 'Footer PL') // Location for footer (Polish)
                         ->showCustomLinkPanel(true)
                         ->addMenuPanels([
-                            // Хедер для английской локали
+                            // Header for English locale
                             StaticMenuPanel::make('header_en')
                                 ->addMany([
                                     'Home' => url('/en'),
@@ -73,18 +79,18 @@ class AppServiceProvider extends ServiceProvider
                                     'About Us' => url('/en/about-us'),
                                     'Contacts' => url('/en/contacts'),
                                 ]),
-                            // Хедер для украинской локали
-                            StaticMenuPanel::make('header_uk')
+                            // Header for Polish locale
+                            StaticMenuPanel::make('header_pl')
                                 ->addMany([
-                                    'Головна' => url('/uk'),
-                                    'Каталог' => url('/uk/catalog'),
-                                    'Блог' => url('/uk/blog'),
-                                    'FAQ' => url('/uk/faq'),
-                                    'Відгуки' => url('/uk/reviews'),
-                                    'Про нас' => url('/uk/about-us'),
-                                    'Контакти' => url('/uk/contacts'),
+                                    'Strona główna' => url('/pl'),
+                                    'Katalog' => url('/pl/catalog'),
+                                    'Blog' => url('/pl/blog'),
+                                    'FAQ' => url('/pl/faq'),
+                                    'Opinie' => url('/pl/reviews'),
+                                    'O nas' => url('/pl/about-us'),
+                                    'Kontakt' => url('/pl/contacts'),
                                 ]),
-                            // Футер для английской локали
+                            // Footer for English locale
                             StaticMenuPanel::make('footer_en')
                                 ->addMany([
                                     'FAQ' => url('/en/faq'),
@@ -93,19 +99,19 @@ class AppServiceProvider extends ServiceProvider
                                     'Contacts' => url('/en/contacts'),
                                     'Reviews' => url('/en/reviews'),
                                 ]),
-                            // Футер для украинской локали
-                            StaticMenuPanel::make('footer_uk')
+                            // Footer for Polish locale
+                            StaticMenuPanel::make('footer_pl')
                                 ->addMany([
-                                    'FAQ' => url('/uk/faq'),
-                                    'Політика конфіденційності' => url('/uk/privacy-policy'),
-                                    'Умови використання' => url('/uk/terms'),
-                                    'Контакти' => url('/uk/contacts'),
-                                    'Відгуки' => url('/uk/reviews'),
+                                    'FAQ' => url('/pl/faq'),
+                                    'Polityka prywatności' => url('/pl/privacy-policy'),
+                                    'Warunki użytkowania' => url('/pl/terms'),
+                                    'Kontakt' => url('/pl/contacts'),
+                                    'Opinie' => url('/pl/reviews'),
                                 ]),
                         ]),
                     FilamentorPlugin::make(),
                     FilamentTranslateFieldPlugin::make()
-                        ->defaultLocales(['en', 'uk']),
+                        ->defaultLocales(['en', 'pl']),
                 ])
         )->register();
     }
@@ -118,9 +124,46 @@ class AppServiceProvider extends ServiceProvider
         $shippingModifiers->add(
             ShippingModifier::class
         );
+
         \Lunar\Facades\ModelManifest::replace(
             \Lunar\Models\Contracts\Product::class,
             \App\Models\Product::class,
         );
+
+        // Register Observers (если есть)
+
+        // Use CKEditor-based rich text for Lunar Text attributes in the panel
+        LunarAttributeData::registerFieldType(
+            \Lunar\FieldTypes\Text::class,
+            \App\Support\FieldTypes\TextField::class,
+        );
+
+        // Replace Lunar TranslatedText field with extended toolbar & attachments
+        LunarAttributeData::registerFieldType(
+            \Lunar\FieldTypes\TranslatedText::class,
+            \App\Support\FieldTypes\TranslatedTextField::class,
+        );
+
+        // Configure Filament RichEditor globally (for places where it is used)
+        RichEditor::configureUsing(function (RichEditor $editor) {
+            $editor
+                ->columnSpanFull()
+                ->toolbarButtons([
+                    'undo', 'redo', '|',
+                    'h2', 'h3', '|',
+                    'bold', 'italic', 'underline', 'strike', '|',
+                    'link', 'blockquote', 'codeBlock', '|',
+                    'bulletList', 'orderedList', '|',
+                    'attachFiles',
+                ]);
+        });
+
+        // Add font size selector to Trix editor
+        FilamentView::registerRenderHook(
+            'panels::body.end',
+            fn (): string => BladeFacade::render('filament.trix-font-size-script')
+        );
     }
+
+
 }
