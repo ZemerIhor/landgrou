@@ -148,7 +148,7 @@
 
             <section class="flex relative flex-col gap-6 items-end flex-[1_0_0]">
                 <p class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm">
-                    {{ strip_tags($this->product->translateAttribute('description')) }}
+                    {!! nl2br(e(html_entity_decode(strip_tags($this->product->translateAttribute('description'))))) !!}
                 </p>
 
                 <table class="product-properties flex relative flex-col items-start self-stretch" role="table" aria-label="{{ __('messages.product.attributes_table') }}">
@@ -218,7 +218,7 @@
             {{ __('messages.product.description') }}
         </h2>
         <p class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm">
-            {{ strip_tags($this->product->translateAttribute('description')) }}
+            {!! nl2br(e(html_entity_decode(strip_tags($this->product->translateAttribute('description'))))) !!}
         </p>
     </section>
 
