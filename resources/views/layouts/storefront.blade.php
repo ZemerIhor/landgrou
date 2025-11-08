@@ -60,11 +60,12 @@
                 break;
             case 'product.view':
                 $language = \Lunar\Models\Language::where('code', $locale)->first();
+                $languageId = $language ? $language->id : 1;
+                
                 $url = \Lunar\Models\Url::where('slug', request()->route()->parameter('slug'))
                     ->where('element_type', 'Lunar\Models\Product')
-                    ->where('language_id', $language ? $language->id : 1)
+                    ->where('language_id', $languageId)
                     ->first();
-
 
                 if (!$url) {
                     $url = \Lunar\Models\Url::where('slug', request()->route()->parameter('slug'))
@@ -73,16 +74,59 @@
                         ->first();
                 }
 
-                $product = $url ? \Lunar\Models\Product::where('id', $url->element_id)
-                    ->where('status', 'published')
-                    ->first() : null;
+                $product = null;
+                if ($url && $url->element_id) {
+                    $product = \Lunar\Models\Product::where('id', $url->element_id)
+                        ->where('status', 'published')
+                        ->first();
+                }
 
-                $pageTitle = $product && $product->translateAttribute('name')
-                    ? $product->translateAttribute('name')
-                    : __('messages.product.default_title', [], $locale);
-                $pageDescription = $product && $product->translateAttribute('description')
-                    ? html_entity_decode(strip_tags($product->translateAttribute('description')))
-                    : __('messages.product.default_meta_description', [], $locale);
+                $pageTitle = __('messages.product.default_title', [], $locale);
+                $pageDescription = __('messages.product.default_meta_description', [], $locale);
+
+                if ($product) {
+                    // Try translateAttribute first
+                    $productName = $product->translateAttribute('name', $locale);
+                    
+                    // If empty, try direct attribute access
+                    if (empty($productName) && isset($product->attribute_data['name'])) {
+                        $nameAttr = $product->attribute_data['name'];
+                        if (is_object($nameAttr)) {
+                            if (method_exists($nameAttr, 'getValue')) {
+                                $nameValue = $nameAttr->getValue();
+                                $productName = $nameValue[$locale] ?? $nameValue['en'] ?? null;
+                            } else {
+                                $productName = $nameAttr->$locale ?? $nameAttr->en ?? null;
+                            }
+                        } else {
+                            $productName = $nameAttr;
+                        }
+                    }
+                    
+                    $productDescription = $product->translateAttribute('description', $locale);
+                    if (empty($productDescription) && isset($product->attribute_data['description'])) {
+                        $descAttr = $product->attribute_data['description'];
+                        if (is_object($descAttr)) {
+                            if (method_exists($descAttr, 'getValue')) {
+                                $descValue = $descAttr->getValue();
+                                $productDescription = $descValue[$locale] ?? $descValue['en'] ?? null;
+                            } else {
+                                $productDescription = $descAttr->$locale ?? $descAttr->en ?? null;
+                            }
+                        } else {
+                            $productDescription = $descAttr;
+                        }
+                    }
+
+                    if (!empty($productName)) {
+                        $pageTitle = is_string($productName) ? $productName : (string) $productName;
+                    }
+                    
+                    if (!empty($productDescription)) {
+                        $descText = is_string($productDescription) ? $productDescription : (string) $productDescription;
+                        $pageDescription = html_entity_decode(strip_tags($descText));
+                    }
+                }
                 break;
             case 'collection.view':
                 $language = \Lunar\Models\Language::where('code', $locale)->first();
