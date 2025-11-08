@@ -17,48 +17,61 @@ class ProductPage extends Component
 
     public array $selectedOptionValues = [];
     public int $quantity = 1;
-
     public $slug;
+
     public function mount($slug): void
     {
-        // Find the URL record for the given slug
-        $url = Url::where('slug', $slug)
-            ->where('element_type', (new Product)->getMorphClass())
-            ->first();
+        $this->slug = $slug;
+        $this->loadProduct();
+    }
 
-        if (!$url) {
-            // Check if the slug exists in any language
-            $url = Url::whereIn('slug', [$slug, $slug . 'vfv']) // Handle both English and Ukrainian slugs
-            ->where('element_type', (new Product)->getMorphClass())
+    public function hydrate()
+    {
+        $this->loadProduct();
+    }
+
+    protected function loadProduct(): void
+    {
+        if (!$this->url) {
+            // Find the URL record for the given slug
+            $urlRecord = Url::where('slug', $this->slug)
+                ->where('element_type', (new Product)->getMorphClass())
                 ->first();
 
-            if (!$url) {
+            if (!$urlRecord) {
+                // Check if the slug exists in any language
+                $urlRecord = Url::whereIn('slug', [$this->slug, $this->slug . 'vfv'])
+                    ->where('element_type', (new Product)->getMorphClass())
+                    ->first();
+
+                if (!$urlRecord) {
+                    abort(404);
+                }
+            }
+
+            // Fetch product with relations
+            $this->url = $this->fetchUrl(
+                $urlRecord->slug,
+                (new Product)->getMorphClass(),
+                [
+                    'element.media',
+                    'element.variants.basePrices.currency',
+                    'element.variants.basePrices.priceable',
+                    'element.variants.values.option',
+                ]
+            );
+
+            if (!$this->url) {
                 abort(404);
             }
+
+            // Initialize selected option values only on first load
+            if (empty($this->selectedOptionValues) && $this->productOptions->count() > 0) {
+                $this->selectedOptionValues = $this->productOptions->mapWithKeys(function ($data) {
+                    return [$data['option']->id => $data['values']->first()->id];
+                })->toArray();
+            }
         }
-
-        // Fetch product with relations
-        $this->url = $this->fetchUrl(
-            $url->slug,
-            (new Product)->getMorphClass(),
-            [
-                'element.media',
-                'element.variants.basePrices.currency',
-                'element.variants.basePrices.priceable',
-                'element.variants.values.option',
-            ]
-        );
-
-        if (!$this->url) {
-            abort(404);
-        }
-
-        $this->slug = $slug;
-
-        // Initialize selected option values
-        $this->selectedOptionValues = $this->productOptions->mapWithKeys(function ($data) {
-            return [$data['option']->id => $data['values']->first()->id];
-        })->toArray();
     }
     public function getVariantProperty(): ProductVariant
     {
