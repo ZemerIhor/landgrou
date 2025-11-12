@@ -300,6 +300,7 @@ return [
         'home' => 'Головна',
         'title' => 'Про нас',
         'no_advantages' => 'Без переваг',
+        'about_description_fallback' => 'Про нас опис',
         'breadcrumbs_aria_label' => 'Навігаційні крихти',
         'hero_background_image_alt' => 'Фонове зображення сторінки Про нас',
         'hero_logo_alt' => 'Логотип компанії',
