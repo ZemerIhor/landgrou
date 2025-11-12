@@ -112,12 +112,12 @@
 .swiper-button-prev,
 .swiper-button-next {
     all: unset;
+    z-index: 1000 !important;
     position: absolute;
     width: 42px !important;
     height: 42px !important;
     color: #228f5d;
     /* --swiper-navigation-size: 24px; */
-    z-index: 99;
     cursor: pointer;
     pointer-events: auto;
     display: block;
