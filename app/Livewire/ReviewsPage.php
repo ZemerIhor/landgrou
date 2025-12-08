@@ -10,6 +10,16 @@ class ReviewsPage extends Component
 {
     use WithPagination;
 
+    public $successMessage = null;
+    public $errorMessage = null;
+
+    public function mount()
+    {
+        // Получаем flash-сообщения из сессии
+        $this->successMessage = session('success');
+        $this->errorMessage = session('error');
+    }
+
     public function render()
     {
         // Получаем только опубликованные отзывы, сортируем по дате публикации
