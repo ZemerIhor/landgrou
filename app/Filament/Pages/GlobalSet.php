@@ -3,7 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Settings\GlobalSettings;
-use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\FileUpload;
@@ -12,7 +12,6 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use SolutionForest\FilamentTranslateField\Forms\Component\Translate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
@@ -73,79 +72,86 @@ class GlobalSet extends Page implements HasForms
     {
         return $form
             ->schema([
-                Section::make('Main Settings')
-                    ->schema([
-                        TextInput::make('site_name')
-                            ->label('Site Name')
-                            ->required()
-                            ->maxLength(255),
-                        Textarea::make('meta_description')
-                            ->label('Meta Description')
-                            ->rows(4)
-                            ->required()
-                            ->maxLength(500),
-                        FileUpload::make('logo')
-                            ->label('Logo')
-                            ->disk('public')
-                            ->directory('logos')
-                            ->nullable()
-                            ->rules(['nullable', 'mimes:jpeg,png,jpg,gif,webp,svg+xml']),
-                        FileUpload::make('favicon')
-                            ->label('Favicon')
-                            ->disk('public')
-                            ->directory('favicons')
-                            ->nullable()
-                            ->rules(['nullable', 'mimes:jpeg,png,jpg,gif,webp,svg+xml']),
-                        TextInput::make('contact_email')
-                            ->label('Contact Email')
-                            ->email()
-                            ->required()
-                            ->maxLength(255),
-                    ])
-                    ->columns(2),
+                Tabs::make('Global Settings')
+                    ->tabs([
+                        Tabs\Tab::make('Main Settings')
+                            ->schema([
+                                TextInput::make('site_name')
+                                    ->label('Site Name')
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('meta_description')
+                                    ->label('Meta Description')
+                                    ->rows(4)
+                                    ->required()
+                                    ->maxLength(500),
+                                FileUpload::make('logo')
+                                    ->label('Logo')
+                                    ->image()
+                                    ->disk('public')
+                                    ->directory('logos')
+                                    ->nullable()
+                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
+                                FileUpload::make('favicon')
+                                    ->label('Favicon')
+                                    ->image()
+                                    ->disk('public')
+                                    ->directory('favicons')
+                                    ->nullable()
+                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
+                                TextInput::make('contact_email')
+                                    ->label('Contact Email')
+                                    ->email()
+                                    ->required()
+                                    ->maxLength(255),
+                            ])
+                            ->columns(2),
 
-                Section::make('Feedback Form Settings')
-                    ->schema([
-                        TextInput::make('feedback_form_title')
-                            ->label('Form Title')
-                            ->required()
-                            ->maxLength(255),
-                        Textarea::make('feedback_form_description')
-                            ->label('Form Description')
-                            ->rows(4)
-                            ->required()
-                            ->maxLength(500),
-                        FileUpload::make('feedback_form_image')
-                            ->label('Form Image')
-                            ->disk('public')
-                            ->directory('feedback-images')
-                            ->nullable()
-                            ->rules(['nullable', 'mimes:jpeg,png,jpg,gif,webp,svg+xml']),
-                    ])
-                    ->columns(2),
+                        Tabs\Tab::make('Feedback Form')
+                            ->schema([
+                                TextInput::make('feedback_form_title')
+                                    ->label('Feedback Form Title')
+                                    ->required()
+                                    ->maxLength(255),
+                                Textarea::make('feedback_form_description')
+                                    ->label('Feedback Form Description')
+                                    ->rows(4)
+                                    ->required()
+                                    ->maxLength(500),
+                                FileUpload::make('feedback_form_image')
+                                    ->label('Feedback Form Image')
+                                    ->image()
+                                    ->disk('public')
+                                    ->directory('feedback-images')
+                                    ->nullable()
+                                    ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
+                            ])
+                            ->columns(2),
 
-                Section::make('Static Pages')
-                    ->schema([
-                        TextInput::make('home_title')->label('Home Page Title')->required()->maxLength(255),
-                        Textarea::make('home_meta_description')->label('Home Page Meta Description')->rows(4)->required()->maxLength(500),
-                        TextInput::make('about_us_title')->label('About Us Title')->required()->maxLength(255),
-                        Textarea::make('about_us_meta_description')->label('About Us Meta Description')->rows(4)->required()->maxLength(500),
-                        TextInput::make('contacts_title')->label('Contacts Title')->required()->maxLength(255),
-                        Textarea::make('contacts_meta_description')->label('Contacts Meta Description')->rows(4)->required()->maxLength(500),
-                        TextInput::make('faq_title')->label('FAQ Title')->required()->maxLength(255),
-                        Textarea::make('faq_meta_description')->label('FAQ Meta Description')->rows(4)->required()->maxLength(500),
-                        TextInput::make('reviews_title')->label('Reviews Title')->required()->maxLength(255),
-                        Textarea::make('reviews_meta_description')->label('Reviews Meta Description')->rows(4)->required()->maxLength(500),
-                        TextInput::make('submit_review_title')->label('Submit Review Title')->required()->maxLength(255),
-                        Textarea::make('submit_review_meta_description')->label('Submit Review Meta Description')->rows(4)->required()->maxLength(500),
-                        TextInput::make('blog_title')->label('Blog Title')->required()->maxLength(255),
-                        Textarea::make('blog_meta_description')->label('Blog Meta Description')->rows(4)->required()->maxLength(500),
-                        TextInput::make('checkout_title')->label('Checkout Title')->required()->maxLength(255),
-                        Textarea::make('checkout_meta_description')->label('Checkout Meta Description')->rows(4)->required()->maxLength(500),
-                        TextInput::make('checkout_success_title')->label('Checkout Success Title')->required()->maxLength(255),
-                        Textarea::make('checkout_success_meta_description')->label('Checkout Success Meta Description')->rows(4)->required()->maxLength(500),
+                        Tabs\Tab::make('Static Pages')
+                            ->schema([
+                                TextInput::make('home_title')->label('Home Title')->required()->maxLength(255),
+                                Textarea::make('home_meta_description')->label('Home Meta Description')->rows(4)->required()->maxLength(500),
+                                TextInput::make('about_us_title')->label('About Us Title')->required()->maxLength(255),
+                                Textarea::make('about_us_meta_description')->label('About Us Meta Description')->rows(4)->required()->maxLength(500),
+                                TextInput::make('contacts_title')->label('Contacts Title')->required()->maxLength(255),
+                                Textarea::make('contacts_meta_description')->label('Contacts Meta Description')->rows(4)->required()->maxLength(500),
+                                TextInput::make('faq_title')->label('FAQ Title')->required()->maxLength(255),
+                                Textarea::make('faq_meta_description')->label('FAQ Meta Description')->rows(4)->required()->maxLength(500),
+                                TextInput::make('reviews_title')->label('Reviews Title')->required()->maxLength(255),
+                                Textarea::make('reviews_meta_description')->label('Reviews Meta Description')->rows(4)->required()->maxLength(500),
+                                TextInput::make('submit_review_title')->label('Submit Review Title')->required()->maxLength(255),
+                                Textarea::make('submit_review_meta_description')->label('Submit Review Meta Description')->rows(4)->required()->maxLength(500),
+                                TextInput::make('blog_title')->label('Blog Title')->required()->maxLength(255),
+                                Textarea::make('blog_meta_description')->label('Blog Meta Description')->rows(4)->required()->maxLength(500),
+                                TextInput::make('checkout_title')->label('Checkout Title')->required()->maxLength(255),
+                                Textarea::make('checkout_meta_description')->label('Checkout Meta Description')->rows(4)->required()->maxLength(500),
+                                TextInput::make('checkout_success_title')->label('Checkout Success Title')->required()->maxLength(255),
+                                Textarea::make('checkout_success_meta_description')->label('Checkout Success Meta Description')->rows(4)->required()->maxLength(500),
+                            ])
+                            ->columns(2),
                     ])
-                    ->columns(2),
+                    ->persistTabInQueryString(),
             ])
             ->statePath('data');
     }
@@ -168,7 +174,7 @@ class GlobalSet extends Page implements HasForms
             $settings->save();
 
             Notification::make()
-                ->title('Settings Saved')
+                ->title('Settings saved')
                 ->success()
                 ->send();
         } catch (ValidationException $e) {
