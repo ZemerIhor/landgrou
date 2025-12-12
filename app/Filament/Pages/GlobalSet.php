@@ -23,8 +23,8 @@ class GlobalSet extends Page implements HasForms
     protected static string $settings = GlobalSettings::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
-    protected static ?string $navigationLabel = 'Глобальные настройки';
-    protected static ?string $navigationGroup = 'Настройки';
+    protected static ?string $navigationLabel = 'Global Settings';
+    protected static ?string $navigationGroup = 'Settings';
     protected static ?int $navigationSort = 1;
 
     protected static string $view = 'filament.pages.global-settings';
@@ -35,34 +35,33 @@ class GlobalSet extends Page implements HasForms
     {
         $settings = app(GlobalSettings::class);
 
-        // Инициализация данных формы из настроек
         $this->data = [
-            'site_name' => $settings->site_name ?? ['en' => '', 'uk' => ''],
-            'meta_description' => $settings->meta_description ?? ['en' => '', 'uk' => ''],
+            'site_name' => $settings->site_name ?? '',
+            'meta_description' => $settings->meta_description ?? '',
             'logo' => $settings->logo ?? '',
             'favicon' => $settings->favicon ?? '',
             'contact_email' => $settings->contact_email ?? 'contact@example.com',
-            'feedback_form_title' => $settings->feedback_form_title ?? ['en' => '', 'uk' => ''],
-            'feedback_form_description' => $settings->feedback_form_description ?? ['en' => '', 'uk' => ''],
+            'feedback_form_title' => $settings->feedback_form_title ?? '',
+            'feedback_form_description' => $settings->feedback_form_description ?? '',
             'feedback_form_image' => $settings->feedback_form_image ?? '',
-            'home_title' => $settings->home_title ?? ['en' => 'Home Page', 'uk' => 'Головна сторінка'],
-            'home_meta_description' => $settings->home_meta_description ?? ['en' => 'Welcome to our site’s home page', 'uk' => 'Ласкаво просимо на головну сторінку нашого сайту'],
-            'about_us_title' => $settings->about_us_title ?? ['en' => 'About Us', 'uk' => 'Про нас'],
-            'about_us_meta_description' => $settings->about_us_meta_description ?? ['en' => 'Learn more about our company', 'uk' => 'Дізнайтесь більше про нашу компанію'],
-            'contacts_title' => $settings->contacts_title ?? ['en' => 'Contacts', 'uk' => 'Контакти'],
-            'contacts_meta_description' => $settings->contacts_meta_description ?? ['en' => 'Get in touch with us', 'uk' => 'Зв’яжіться з нами'],
-            'faq_title' => $settings->faq_title ?? ['en' => 'FAQ', 'uk' => 'Поширені запитання'],
-            'faq_meta_description' => $settings->faq_meta_description ?? ['en' => 'Answers to frequently asked questions', 'uk' => 'Відповіді на поширені запитання'],
-            'reviews_title' => $settings->reviews_title ?? ['en' => 'Reviews', 'uk' => 'Відгуки'],
-            'reviews_meta_description' => $settings->reviews_meta_description ?? ['en' => 'Read our customer reviews', 'uk' => 'Читайте відгуки наших клієнтів'],
-            'submit_review_title' => $settings->submit_review_title ?? ['en' => 'Submit Review', 'uk' => 'Залишити відгук'],
-            'submit_review_meta_description' => $settings->submit_review_meta_description ?? ['en' => 'Share your feedback about our products', 'uk' => 'Поділіться своїм відгуком про наші продукти'],
-            'blog_title' => $settings->blog_title ?? ['en' => 'Blog', 'uk' => 'Блог'],
-            'blog_meta_description' => $settings->blog_meta_description ?? ['en' => 'Read our latest articles and news', 'uk' => 'Читайте наші останні статті та новини'],
-            'checkout_title' => $settings->checkout_title ?? ['en' => 'Checkout', 'uk' => 'Оформлення замовлення'],
-            'checkout_meta_description' => $settings->checkout_meta_description ?? ['en' => 'Complete your order quickly and easily', 'uk' => 'Оформіть ваше замовлення швидко та зручно'],
-            'checkout_success_title' => $settings->checkout_success_title ?? ['en' => 'Order Successfully Placed', 'uk' => 'Замовлення успішно оформлено'],
-            'checkout_success_meta_description' => $settings->checkout_success_meta_description ?? ['en' => 'Thank you for your order!', 'uk' => 'Дякуємо за ваше замовлення!'],
+            'home_title' => $settings->home_title ?? 'Home Page',
+            'home_meta_description' => $settings->home_meta_description ?? 'Welcome to our site’s home page',
+            'about_us_title' => $settings->about_us_title ?? 'About Us',
+            'about_us_meta_description' => $settings->about_us_meta_description ?? 'Learn more about our company',
+            'contacts_title' => $settings->contacts_title ?? 'Contacts',
+            'contacts_meta_description' => $settings->contacts_meta_description ?? 'Get in touch with us',
+            'faq_title' => $settings->faq_title ?? 'FAQ',
+            'faq_meta_description' => $settings->faq_meta_description ?? 'Answers to frequently asked questions',
+            'reviews_title' => $settings->reviews_title ?? 'Reviews',
+            'reviews_meta_description' => $settings->reviews_meta_description ?? 'Read our customer reviews',
+            'submit_review_title' => $settings->submit_review_title ?? 'Submit Review',
+            'submit_review_meta_description' => $settings->submit_review_meta_description ?? 'Share your feedback about our products',
+            'blog_title' => $settings->blog_title ?? 'Blog',
+            'blog_meta_description' => $settings->blog_meta_description ?? 'Read our latest articles and news',
+            'checkout_title' => $settings->checkout_title ?? 'Checkout',
+            'checkout_meta_description' => $settings->checkout_meta_description ?? 'Complete your order quickly and easily',
+            'checkout_success_title' => $settings->checkout_success_title ?? 'Order Successfully Placed',
+            'checkout_success_meta_description' => $settings->checkout_success_meta_description ?? 'Thank you for your order!',
         ];
 
         Log::info('Global Settings form initialized', ['data' => $this->data]);
@@ -74,159 +73,78 @@ class GlobalSet extends Page implements HasForms
     {
         return $form
             ->schema([
-                Section::make(__('messages.settings.main_section'))
+                Section::make('Main Settings')
                     ->schema([
-                        Translate::make()
-                            ->locales(['en', 'uk'])
-                            ->schema([
-                                TextInput::make('site_name')
-                                    ->label(__('messages.settings.site_name'))
-                                    ->required()
-                                    ->maxLength(255),
-                                Textarea::make('meta_description')
-                                    ->label(__('messages.settings.meta_description'))
-                                    ->rows(4)
-                                    ->required()
-                                    ->maxLength(500),
-                            ]),
+                        TextInput::make('site_name')
+                            ->label('Site Name')
+                            ->required()
+                            ->maxLength(255),
+                        Textarea::make('meta_description')
+                            ->label('Meta Description')
+                            ->rows(4)
+                            ->required()
+                            ->maxLength(500),
                         FileUpload::make('logo')
-                            ->label(__('messages.settings.logo'))
-                            ->image()
+                            ->label('Logo')
                             ->disk('public')
                             ->directory('logos')
                             ->nullable()
-                            ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
+                            ->rules(['nullable', 'mimes:jpeg,png,jpg,gif,webp,svg+xml']),
                         FileUpload::make('favicon')
-                            ->label(__('messages.settings.favicon'))
-                            ->image()
+                            ->label('Favicon')
                             ->disk('public')
                             ->directory('favicons')
                             ->nullable()
-                            ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
+                            ->rules(['nullable', 'mimes:jpeg,png,jpg,gif,webp,svg+xml']),
                         TextInput::make('contact_email')
-                            ->label(__('messages.settings.contact_email'))
+                            ->label('Contact Email')
                             ->email()
                             ->required()
                             ->maxLength(255),
                     ])
-                    ->collapsible()
                     ->columns(2),
 
-                Section::make(__('messages.settings.feedback_form_section'))
+                Section::make('Feedback Form Settings')
                     ->schema([
-                        Translate::make()
-                            ->locales(['en', 'uk'])
-                            ->schema([
-                                TextInput::make('feedback_form_title')
-                                    ->label(__('messages.settings.feedback_form_title'))
-                                    ->required()
-                                    ->maxLength(255),
-                                Textarea::make('feedback_form_description')
-                                    ->label(__('messages.settings.feedback_form_description'))
-                                    ->rows(4)
-                                    ->required()
-                                    ->maxLength(500),
-                            ]),
+                        TextInput::make('feedback_form_title')
+                            ->label('Form Title')
+                            ->required()
+                            ->maxLength(255),
+                        Textarea::make('feedback_form_description')
+                            ->label('Form Description')
+                            ->rows(4)
+                            ->required()
+                            ->maxLength(500),
                         FileUpload::make('feedback_form_image')
-                            ->label(__('messages.settings.feedback_form_image'))
-                            ->image()
+                            ->label('Form Image')
                             ->disk('public')
                             ->directory('feedback-images')
                             ->nullable()
-                            ->rules(['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp']),
+                            ->rules(['nullable', 'mimes:jpeg,png,jpg,gif,webp,svg+xml']),
                     ])
-                    ->collapsible()
                     ->columns(2),
 
-                Section::make(__('messages.settings.static_pages_section'))
+                Section::make('Static Pages')
                     ->schema([
-                        Translate::make()
-                            ->locales(['en', 'uk'])
-                            ->schema([
-                                TextInput::make('home_title')
-                                    ->label(__('messages.settings.home_title'))
-                                    ->required()
-                                    ->maxLength(255),
-                                Textarea::make('home_meta_description')
-                                    ->label(__('messages.settings.home_meta_description'))
-                                    ->rows(4)
-                                    ->required()
-                                    ->maxLength(500),
-                                TextInput::make('about_us_title')
-                                    ->label(__('messages.settings.about_us_title'))
-                                    ->required()
-                                    ->maxLength(255),
-                                Textarea::make('about_us_meta_description')
-                                    ->label(__('messages.settings.about_us_meta_description'))
-                                    ->rows(4)
-                                    ->required()
-                                    ->maxLength(500),
-                                TextInput::make('contacts_title')
-                                    ->label(__('messages.settings.contacts_title'))
-                                    ->required()
-                                    ->maxLength(255),
-                                Textarea::make('contacts_meta_description')
-                                    ->label(__('messages.settings.contacts_meta_description'))
-                                    ->rows(4)
-                                    ->required()
-                                    ->maxLength(500),
-                                TextInput::make('faq_title')
-                                    ->label(__('messages.settings.faq_title'))
-                                    ->required()
-                                    ->maxLength(255),
-                                Textarea::make('faq_meta_description')
-                                    ->label(__('messages.settings.faq_meta_description'))
-                                    ->rows(4)
-                                    ->required()
-                                    ->maxLength(500),
-                                TextInput::make('reviews_title')
-                                    ->label(__('messages.settings.reviews_title'))
-                                    ->required()
-                                    ->maxLength(255),
-                                Textarea::make('reviews_meta_description')
-                                    ->label(__('messages.settings.reviews_meta_description'))
-                                    ->rows(4)
-                                    ->required()
-                                    ->maxLength(500),
-                                TextInput::make('submit_review_title')
-                                    ->label(__('messages.settings.submit_review_title'))
-                                    ->required()
-                                    ->maxLength(255),
-                                Textarea::make('submit_review_meta_description')
-                                    ->label(__('messages.settings.submit_review_meta_description'))
-                                    ->rows(4)
-                                    ->required()
-                                    ->maxLength(500),
-                                TextInput::make('blog_title')
-                                    ->label(__('messages.settings.blog_title'))
-                                    ->required()
-                                    ->maxLength(255),
-                                Textarea::make('blog_meta_description')
-                                    ->label(__('messages.settings.blog_meta_description'))
-                                    ->rows(4)
-                                    ->required()
-                                    ->maxLength(500),
-                                TextInput::make('checkout_title')
-                                    ->label(__('messages.settings.checkout_title'))
-                                    ->required()
-                                    ->maxLength(255),
-                                Textarea::make('checkout_meta_description')
-                                    ->label(__('messages.settings.checkout_meta_description'))
-                                    ->rows(4)
-                                    ->required()
-                                    ->maxLength(500),
-                                TextInput::make('checkout_success_title')
-                                    ->label(__('messages.settings.checkout_success_title'))
-                                    ->required()
-                                    ->maxLength(255),
-                                Textarea::make('checkout_success_meta_description')
-                                    ->label(__('messages.settings.checkout_success_meta_description'))
-                                    ->rows(4)
-                                    ->required()
-                                    ->maxLength(500),
-                            ]),
+                        TextInput::make('home_title')->label('Home Page Title')->required()->maxLength(255),
+                        Textarea::make('home_meta_description')->label('Home Page Meta Description')->rows(4)->required()->maxLength(500),
+                        TextInput::make('about_us_title')->label('About Us Title')->required()->maxLength(255),
+                        Textarea::make('about_us_meta_description')->label('About Us Meta Description')->rows(4)->required()->maxLength(500),
+                        TextInput::make('contacts_title')->label('Contacts Title')->required()->maxLength(255),
+                        Textarea::make('contacts_meta_description')->label('Contacts Meta Description')->rows(4)->required()->maxLength(500),
+                        TextInput::make('faq_title')->label('FAQ Title')->required()->maxLength(255),
+                        Textarea::make('faq_meta_description')->label('FAQ Meta Description')->rows(4)->required()->maxLength(500),
+                        TextInput::make('reviews_title')->label('Reviews Title')->required()->maxLength(255),
+                        Textarea::make('reviews_meta_description')->label('Reviews Meta Description')->rows(4)->required()->maxLength(500),
+                        TextInput::make('submit_review_title')->label('Submit Review Title')->required()->maxLength(255),
+                        Textarea::make('submit_review_meta_description')->label('Submit Review Meta Description')->rows(4)->required()->maxLength(500),
+                        TextInput::make('blog_title')->label('Blog Title')->required()->maxLength(255),
+                        Textarea::make('blog_meta_description')->label('Blog Meta Description')->rows(4)->required()->maxLength(500),
+                        TextInput::make('checkout_title')->label('Checkout Title')->required()->maxLength(255),
+                        Textarea::make('checkout_meta_description')->label('Checkout Meta Description')->rows(4)->required()->maxLength(500),
+                        TextInput::make('checkout_success_title')->label('Checkout Success Title')->required()->maxLength(255),
+                        Textarea::make('checkout_success_meta_description')->label('Checkout Success Meta Description')->rows(4)->required()->maxLength(500),
                     ])
-                    ->collapsible()
                     ->columns(2),
             ])
             ->statePath('data');
@@ -237,7 +155,6 @@ class GlobalSet extends Page implements HasForms
         try {
             $data = $this->form->getState();
 
-            // Логирование MIME-типа для изображений
             foreach (['logo', 'favicon', 'feedback_form_image'] as $field) {
                 if (isset($data[$field]) && is_object($data[$field])) {
                     Log::info("MIME type for {$field}", ['mime' => $data[$field]->getMimeType()]);
@@ -251,28 +168,28 @@ class GlobalSet extends Page implements HasForms
             $settings->save();
 
             Notification::make()
-                ->title(__('messages.settings.saved'))
+                ->title('Settings Saved')
                 ->success()
                 ->send();
         } catch (ValidationException $e) {
-            Log::error('Ошибки валидации в глобальных настройках', [
+            Log::error('Validation errors in global settings', [
                 'errors' => $e->errors(),
                 'message' => $e->getMessage(),
             ]);
 
             Notification::make()
-                ->title(__('messages.settings.error'))
+                ->title('Error')
                 ->body(implode(', ', array_merge(...array_values($e->errors()))))
                 ->danger()
                 ->send();
         } catch (\Exception $e) {
-            Log::error('Ошибка сохранения глобальных настроек', [
+            Log::error('Error saving global settings', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
 
             Notification::make()
-                ->title(__('messages.settings.error'))
+                ->title('Error')
                 ->body($e->getMessage())
                 ->danger()
                 ->send();
@@ -281,7 +198,7 @@ class GlobalSet extends Page implements HasForms
 
     public static function getNavigationLabel(): string
     {
-        return __('messages.settings.navigation_label');
+        return 'Global Settings';
     }
 
     public static function getSlug(): string
