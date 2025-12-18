@@ -78,6 +78,7 @@ return [
     ],
     'faq' => [
         'title' => 'Frequently Asked Questions',
+        'no_items' => 'No questions available',
         'no_image' => 'No image available',
         'no_icon' => 'No icon available',
         'show_more' => 'Show more',

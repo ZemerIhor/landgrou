@@ -142,9 +142,21 @@ class ProductPage extends Component
                 $name = $attributeModel->name[$locale] ?? $attributeModel->name['en'] ?? $name;
             }
 
+            // Обрабатываем значение в зависимости от типа
+            if (is_array($value)) {
+                // Если массив - преобразуем в строку через implode
+                $displayValue = implode(', ', $value);
+            } elseif (is_object($value)) {
+                // Если объект - преобразуем в строку
+                $displayValue = (string) $value;
+            } else {
+                // Если строка - убираем HTML теги
+                $displayValue = is_string($value) ? strip_tags($value) : (string) $value;
+            }
+
             $attributes[$handle] = [
                 'name' => $name,
-                'value' => strip_tags($value), // Убираем HTML-теги
+                'value' => $displayValue,
             ];
         }
         return $attributes;
