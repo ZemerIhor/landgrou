@@ -29,6 +29,7 @@ class BlogPostResource extends Resource
     {
         return $form->schema([
             Translate::make()
+
                 ->columnSpanFull()
                 ->schema([
                     TextInput::make('title')
