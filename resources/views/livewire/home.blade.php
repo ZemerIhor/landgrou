@@ -40,7 +40,7 @@
             </section>
         </div>
 
-        <div class="container mx-auto px-2 py-4 pt-40 products mx-auto ">
+        <div class="container px-2 py-4 pt-40 products mx-auto ">
 
             <section class="flex flex-col self-stretch" aria-label="Каталог">
                 <div class="">
