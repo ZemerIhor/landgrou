@@ -142,8 +142,8 @@ order: -1;
                 {{ __('messages.faq.title') }}
             </h1>
             <div class="mt-5 w-full">
-                @if (!empty($settings->faq_blocks[app()->getLocale()]))
-                    @foreach ($settings->faq_blocks[app()->getLocale()] as $block_index => $block)
+                @if (!empty($settings->faq_blocks) && is_array($settings->faq_blocks))
+                    @foreach ($settings->faq_blocks as $block_index => $block)
                         <div class="faq-container">
                             <img
                                 src="{{ Storage::url($block['main_image']) }}"

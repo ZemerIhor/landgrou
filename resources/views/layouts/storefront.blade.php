@@ -126,7 +126,10 @@
 
                     if (!empty($productDescription)) {
                         $descText = is_string($productDescription) ? $productDescription : (string) $productDescription;
+                        // Видаляємо HTML теги для meta description
                         $pageDescription = html_entity_decode(strip_tags($descText));
+                        // Обмежуємо довжину до 160 символів для meta description
+                        $pageDescription = mb_substr($pageDescription, 0, 160);
                     }
                 }
                 break;

@@ -147,9 +147,9 @@
 
 
             <section class="flex relative flex-col gap-6 items-end flex-[1_0_0]">
-                <p class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm">
-                    {!! nl2br(e(html_entity_decode(strip_tags($this->product->translateAttribute('description'))))) !!}
-                </p>
+                <div class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm product-description">
+                    {!! $this->product->translateAttribute('description') !!}
+                </div>
 
                 <table class="product-properties flex relative flex-col items-start self-stretch" role="table" aria-label="{{ __('messages.product.attributes_table') }}">
                     <tbody class="w-full">
@@ -182,11 +182,11 @@
                         <div class="flex relative gap-2 items-center px-2 py-0 h-11 rounded-2xl bg-neutral-200"
                              role="group"
                              aria-label="{{ __('messages.product.quantity_selection') }}">
-                            <button wire:click="incrementQuantity"
+                              <button wire:click="decrementQuantity"
                                     class="flex relative gap-2.5 items-center"
-                                    aria-label="{{ __('messages.product.increment_quantity') }}">dddd
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="plus-icon">
-                                    <path d="M12.75 7C12.75 6.58579 12.4142 6.25 12 6.25C11.5858 6.25 11.25 6.58579 11.25 7L11.25 11.25H7C6.58579 11.25 6.25 11.5858 6.25 12C6.25 12.4142 6.58579 12.75 7 12.75H11.25V17C11.25 17.4142 11.5858 17.75 12 17.75C12.4142 17.75 12.75 17.4142 12.75 17L12.75 12.75H17C17.4142 12.75 17.75 12.4142 17.75 12C17.75 11.5858 17.4142 11.25 17 11.25H12.75V7Z" fill="#333333"/>
+                                    aria-label="{{ __('messages.product.decrement_quantity') }}">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="minus-icon">
+                                    <path d="M17.2174 12.5C17.6496 12.5 18 12.1642 18 11.75C18 11.3358 17.6496 11 17.2174 11H6.78261C6.35039 11 6 11.3358 6 11.75C6 11.5858 6.35039 12.5 6.78261 12.5H17.2174Z" fill="#333333"/>
                                 </svg>
                             </button>
                             <div class="flex relative gap-2.5 justify-center items-center">
@@ -194,11 +194,11 @@
                                     {{ $this->quantity }}
                                 </span>
                             </div>
-                            <button wire:click="decrementQuantity"
+                            <button wire:click="incrementQuantity"
                                     class="flex relative gap-2.5 items-center"
-                                    aria-label="{{ __('messages.product.decrement_quantity') }}">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="minus-icon">
-                                    <path d="M17.2174 12.5C17.6496 12.5 18 12.1642 18 11.75C18 11.3358 17.6496 11 17.2174 11H6.78261C6.35039 11 6 11.3358 6 11.75C6 11.5858 6.35039 12.5 6.78261 12.5H17.2174Z" fill="#333333"/>
+                                    aria-label="{{ __('messages.product.increment_quantity') }}">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="plus-icon">
+                                    <path d="M12.75 7C12.75 6.58579 12.4142 6.25 12 6.25C11.5858 6.25 11.25 6.58579 11.25 7L11.25 11.25H7C6.58579 11.25 6.25 11.5858 6.25 12C6.25 12.4142 6.58579 12.75 7 12.75H11.25V17C11.25 17.4142 11.5858 17.75 12 17.75C12.4142 17.75 12.75 17.4142 12.75 17L12.75 12.75H17C17.4142 12.75 17.75 12.4142 17.75 12C17.75 11.5858 17.4142 11.25 17 11.25H12.75V7Z" fill="#333333"/>
                                 </svg>
                             </button>
                         </div>
@@ -214,9 +214,9 @@
         <h2 class="relative self-stretch text-xl font-bold leading-6 text-black max-sm:text-lg">
             {{ __('messages.product.description') }}
         </h2>
-        <p class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm">
-            {!! nl2br(e(html_entity_decode(strip_tags($this->product->translateAttribute('description'))))) !!}
-        </p>
+        <div class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm product-description">
+            {!! $this->product->translateAttribute('description') !!}
+        </div>
     </section>
 
     <!-- Characteristics Section -->
