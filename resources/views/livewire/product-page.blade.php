@@ -184,7 +184,7 @@
                              aria-label="{{ __('messages.product.quantity_selection') }}">
                               <button wire:click="decrementQuantity"
                                     class="flex relative gap-2.5 items-center"
-                                    aria-label="{{ __('messages.product.decrement_quantity') }}">
+                                    aria-label="{{ __('messages.product.decrement_quantity') }}">ddd
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="minus-icon">
                                     <path d="M17.2174 12.5C17.6496 12.5 18 12.1642 18 11.75C18 11.3358 17.6496 11 17.2174 11H6.78261C6.35039 11 6 11.3358 6 11.75C6 11.5858 6.35039 12.5 6.78261 12.5H17.2174Z" fill="#333333"/>
                                 </svg>
