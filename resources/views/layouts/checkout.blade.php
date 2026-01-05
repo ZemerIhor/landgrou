@@ -12,7 +12,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="flex flex-col min-h-screen antialiased text-gray-900 relative 111">
+<body class="flex flex-col min-h-screen antialiased text-gray-900 relative overflow-x-hidden">
 @livewire('components.navigation')
 <main>
     {{ $slot }}

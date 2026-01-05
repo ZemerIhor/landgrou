@@ -182,7 +182,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="flex flex-col min-h-screen antialiased text-gray-900 relative">
+<body class="flex flex-col min-h-screen antialiased text-gray-900 relative overflow-x-hidden">
 @livewire('components.navigation')
 
 <div class="pt-14">
