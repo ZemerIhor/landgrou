@@ -37,7 +37,7 @@
                 }
 
                 /* Show desktop menu on screens 900px and above */
-                @media (max-width: 900px) {
+                @media (max-width: 1100px) {
                     .desktop-menu {
                         display: none;
                     }
@@ -47,7 +47,7 @@
                 .mobile-menu-toggle {
                     display: none;
                 }
-                @media (max-width: 900px) {
+                @media (max-width: 1100px) {
                     .mobile-menu-toggle {
                         display: block;
                     }
@@ -64,7 +64,7 @@
                 }
 
                 /* Mobile menu styles */
-                @media (max-width: 900px) {
+                @media (max-width: 1100px) {
                     .nav-header ul.mobile-menu-items {
                         flex-direction: column;
                         gap: 10px;
