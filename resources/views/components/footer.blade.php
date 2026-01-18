@@ -53,6 +53,20 @@
                 </nav>
             @endif
 
+            <section class="footer-docs" aria-label="Документи">
+                <h3 class="footer-docs__title">
+                    {{ app()->getLocale() === 'en' ? 'Documents' : 'Документи' }}
+                </h3>
+                <ul class="footer-docs__list">
+                    <li>
+                        <a class="footer-docs__link"
+                            href="{{ route('public-offer', ['locale' => app()->getLocale()]) }}">
+                            {{ app()->getLocale() === 'en' ? 'Public Offer Agreement' : 'Публічний договір (оферта)' }}
+                        </a>
+                    </li>
+                </ul>
+            </section>
+
             <!-- Контактная информация -->
             @if (isset($footer) && (!empty($footer->phone) || !empty($footer->email) || !empty($footer->address)))
                 <section class="contacts " aria-label="{{ __('messages.footer.contact_aria_label') }}">
@@ -146,6 +160,44 @@
                 gap: 20px;
                 align-items: flex-start;
                 flex-grow: 1;
+            }
+
+            .footer-docs {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                min-width: 220px;
+            }
+
+            .footer-docs__title {
+                font-size: 16px;
+                font-weight: 700;
+                color: #FFFFFF;
+            }
+
+            .footer-docs__list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .footer-docs__link {
+                font-size: 14px;
+                font-weight: 600;
+                color: #FFFFFF;
+                text-decoration: none;
+            }
+
+            .footer-docs__link:hover {
+                color: #D1D5DB;
+            }
+
+            .footer-docs__link:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #18181B;
             }
 
 

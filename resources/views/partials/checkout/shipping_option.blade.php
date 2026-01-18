@@ -245,9 +245,10 @@
         outline-offset: 2px;
     }
 
-    .comment-textarea:focus {
-        outline: 2px solid #228F5D;
-        border-color: #228F5D;
+    #comment-textarea:focus {
+        outline: none;
+        border-color: transparent;
+        box-shadow: none;
     }
 
     .btn-primary:hover {

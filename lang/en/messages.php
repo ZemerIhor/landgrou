@@ -136,6 +136,10 @@ return [
         'section_aria_label' => 'Customer reviews',
         'articles' => 'Customer reviews',
     ],
+    'public-offer' => [
+        'title' => 'Public Offer Agreement',
+        'meta_description' => 'Terms for ordering, payment, delivery, and returns in the LEND GROU online store.',
+    ],
 
     'submit_review' => [
         'title' => 'Submit Your Review',
@@ -169,6 +173,8 @@ return [
     'products' => [
         'title' => 'All Products',
         'no_items' => 'No products available',
+        'more_button' => 'More',
+        'more_button_aria_label' => 'View the full catalog',
     ],
     'blog' => [
         'title' => 'Blog',

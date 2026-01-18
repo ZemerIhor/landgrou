@@ -4,7 +4,7 @@
 @endphp
 
 <div x-data="{ isScrolled: false, mobileMenu: false, languageMenu: false }" @scroll.window="isScrolled = (window.scrollY > 0)">
-    <header id="header" class="shadow-xl flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
+    <header id="header" class="flex items-center bg-white top-0 left-0 right-0 z-50 transition-all duration-300"
             :class="{ 'is-fixed': isScrolled }"
             role="banner">
         <div class="nav-header flex relative px-2 justify-between items-center w-full h-auto container mx-auto">
@@ -91,25 +91,23 @@
                 }
 
                 /* Header styles */
-                header {
-                    position: relative;
-                    transform: translateY(0);
-                    opacity: 1;
-                }
-
-                header.is-fixed {
+                #header {
                     position: fixed;
                     transform: translateY(0);
                     opacity: 1;
+                    box-shadow: none;
+                }
+
+                #header.is-fixed {
                     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 }
 
-                header:not(.is-fixed) {
-                    transition: transform 0.3s ease, opacity 0.3s ease;
+                #header:not(.is-fixed) {
+                    transition: box-shadow 0.3s ease;
                 }
 
                 .header-placeholder {
-                    transition: height 0.3s ease;
+                    height: 56px;
                 }
 
                 /* Contact button styles */
@@ -354,16 +352,6 @@
 
 
 
-    <div class="header-placeholder"
-         x-show="isScrolled"
-         style="height: 56px;"
-         x-cloak
-         x-transition:enter="transition ease-out duration-300"
-         x-transition:enter-start="height 0"
-         x-transition:enter-end="height 56px"
-         x-transition:leave="transition ease-in duration-300"
-         x-transition:leave-start="height 56px"
-         x-transition:leave-end="height 0">
-    </div>
+    <div class="header-placeholder"></div>
     @livewire('components.contact-form')
 </div>

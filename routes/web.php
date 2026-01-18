@@ -11,8 +11,10 @@ use App\Livewire\ContactsPage;
 use App\Livewire\FaqPage;
 use App\Livewire\Home;
 use App\Livewire\ProductPage;
+use App\Livewire\PublicOfferPage;
 use App\Livewire\SearchPage;
 use App\Services\LanguageService;
+use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\App;
@@ -23,7 +25,7 @@ Route::get('/lang/{locale}', [\App\Http\Controllers\LanguageController::class, '
 // Быстрое переключение языка
 Route::get('/switch/{locale}', function ($locale) {
     $languageService = app(LanguageService::class);
-    
+
     if (!$languageService->isValidLocale($locale)) {
         abort(404);
     }
@@ -56,5 +58,7 @@ Route::group(['prefix' => '{locale?}', 'middleware' => ['localization']], functi
     Route::get('/checkout/success', CheckoutSuccessPage::class)->name('checkout-success.view');
     Route::get('/products', SearchPage::class)->name('products.index');
     Route::get('/products/{slug}', ProductPage::class)->name('product.view');
+    Route::get('/public-offer', PublicOfferPage::class)->name('public-offer');
+    Route::get('/{slug}', [PageController::class, 'show'])->name('page.show');
 
 });

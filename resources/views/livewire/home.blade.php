@@ -40,32 +40,93 @@
             </section>
         </div>
 
-        <div class="container px-2 py-4 pt-40 products mx-auto ">
+        <div class="container px-2 py-4 pt-40 products mx-auto">
+            <section class="flex flex-col self-stretch gap-6" aria-label="{{ __('messages.catalog.title') }}">
+                <h2 class="text-2xl font-bold leading-tight text-zinc-800 max-md:max-w-full">
+                    {{ __('messages.catalog.title') }}
+                </h2>
 
-            <section class="flex flex-col self-stretch" aria-label="Каталог">
-                <div class="">
-                    <!-- <h2 class="text-2xl pb-5 font-bold leading-tight text-black max-md:max-w-full">
-                    {{ __('messages.products.title') }}
-                </h2> -->
-                    <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1  overflow-hidden gap-2 sm:h-auto"
-                        role="list">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" role="list">
+                    @if (!empty($allProducts))
+                        @foreach ($allProducts->take(4) as $product)
+                            @php
+                                $locale = app()->getLocale();
+                                $language = \Lunar\Models\Language::where('code', $locale)->first();
+                                $languageId = $language ? $language->id : 1;
+                                $url = $product->urls()->where('language_id', $languageId)->first();
+                                $slug = $url?->slug ?? $product->defaultUrl?->slug ?? $product->slug ?? 'product-' . $product->id;
+                                $hasValidSlug = is_string($slug) && trim($slug) !== '';
+                                $productUrl = $hasValidSlug
+                                    ? route('product.view', ['locale' => $locale, 'slug' => $slug])
+                                    : route('home', ['locale' => $locale]);
+                                $nameValue = $product->translateAttribute('name') ?? 'Product';
+                                $shortDescriptionValue = $product->translateAttribute('short_description')
+                                    ?: ($product->translateAttribute('description') ?? '');
+                            @endphp
 
-                        @if (!empty($allProducts))
-                            @foreach ($allProducts as $product)
-                                <x-product-card :product="$product" :odd="$loop->odd" />
-                                <div class="flex w-full justify-center hidden">
-                                    <button wire:click="$dispatch('openContactForm')"
-                                        class="px-4 py-2 text-sm font-bold text-green-600 rounded-2xl border-2 border-green-600 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 w-full max-w-xs"
-                                        aria-label="{{ __('messages.feedback_form.submit_button') }}">
-                                        {{ __('messages.feedback_form.submit_button') }}
-                                    </button>
+                            <article wire:key="home-product-{{ $product->id }}"
+                                class="overflow-hidden product-card flex-1 shrink self-stretch my-auto rounded-3xl basis-0 bg-neutral-200 h-full"
+                                role="listitem">
+                                <div class="flex flex-col justify-between group h-full">
+                                    <a href="{{ $productUrl }}" wire:navigate class="flex flex-col h-full">
+                                        <div class="flex relative flex-col w-full">
+                                            <div class="flex overflow-hidden flex-col max-w-full w-full">
+                                                @if ($product->thumbnail)
+                                                    <img src="{{ $product->thumbnail->getUrl() }}"
+                                                        alt="{{ $nameValue }}"
+                                                        class="object-cover w-full aspect-[1.77] transition-transform duration-300 group-hover:scale-105" />
+                                                @else
+                                                    <img src="https://cdn.builder.io/api/v1/image/assets/bdb2240bae064d82b869b3fcebf2733a/d7f2f96fb365d97b578a2cfa0ccb76eaba272ebd?placeholderIfAbsent=true"
+                                                        alt="{{ __('messages.catalog.placeholder_image') }}"
+                                                        class="object-contain w-full aspect-[1.77]" />
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <div class="p-4 w-full">
+                                            <div class="w-full text-zinc-800">
+                                                <h3 class="text-base font-bold leading-5 text-zinc-800">
+                                                    {{ $nameValue }}
+                                                </h3>
+                                                <div
+                                                    class="mt-3 text-xs font-semibold leading-5 text-zinc-800 product-description line-clamp-3">
+                                                    {!! $shortDescriptionValue !!}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <div class="flex gap-4 justify-between items-end mt-4 px-4 pb-4 w-full">
+                                        <span class="text-base font-bold leading-tight text-zinc-800">
+                                            <x-product-price :product="$product" />
+                                        </span>
+                                        <div>
+                                            <livewire:components.add-to-cart :purchasable="$product->variants->first()"
+                                                :key="'home-add-to-cart-' . $product->id" />
+                                        </div>
+                                    </div>
                                 </div>
+                            </article>
+                        @endforeach
+                    @else
+                        <p>{{ __('messages.products.no_items') }}</p>
+                    @endif
+                </div>
 
-                            @endforeach
-                        @else
-                            <p>{{ __('messages.products.no_items') }}</p>
-                        @endif
-                    </div>
+                <div class="flex justify-center">
+                    <a href="{{ route('catalog.view', ['locale' => app()->getLocale()]) }}"
+                        class="flex gap-2 justify-center items-center self-stretch px-6 py-2.5 my-auto font-bold leading-snug text-green-600 whitespace-nowrap rounded-2xl border-2 border-green-600 border-solid min-h-11 max-md:px-5 hover:bg-green-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 transition-colors duration-200"
+                        aria-label="{{ __('messages.products.more_button_aria_label') }}">
+                        <span class="self-stretch my-auto text-current">
+                            {{ __('messages.products.more_button') }}
+                        </span>
+                        <svg width="18" height="15" viewBox="0 0 18 15" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M10.4697 1.1474C10.7626 0.854511 11.2374 0.854511 11.5303 1.1474L17.5303 7.1474C17.8232 7.4403 17.8232 7.91517 17.5303 8.20806L11.5303 14.2081C11.2374 14.501 10.7626 14.501 10.4697 14.2081C10.1768 13.9152 10.1768 13.4403 10.4697 13.1474L15.1893 8.42773H1C0.585786 8.42773 0.25 8.09195 0.25 7.67773C0.25 7.26352 0.585786 6.92773 1 6.92773H15.1893L10.4697 2.20806C10.1768 1.91517 10.1768 1.4403 10.4697 1.1474Z"
+                                fill="currentColor" />
+                        </svg>
+                    </a>
                 </div>
             </section>
         </div>

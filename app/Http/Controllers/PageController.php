@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Livewire\Page;
+use Geosem42\Filamentor\Models\Page as FilamentorPage;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -17,13 +17,15 @@ class PageController extends Controller
         ]);
 
         // Поиск страницы по slug
-        $page = Page::where('slug', $slug)->first();
+        $page = FilamentorPage::where('slug', $slug)
+            ->where('is_published', true)
+            ->first();
 
         if (!$page) {
             \Log::warning('Page not found for slug: ' . $slug);
             abort(404, 'Page not found');
         }
 
-        return view('page.show', compact('page'));
+        return view('pages.show', compact('page'));
     }
 }

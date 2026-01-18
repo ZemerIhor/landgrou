@@ -167,6 +167,10 @@
                 $pageTitle = __('messages.terms.title', [], $locale);
                 $pageDescription = __('messages.terms.meta_description', [], $locale);
                 break;
+            case 'public-offer':
+                $pageTitle = __('messages.public-offer.title', [], $locale);
+                $pageDescription = __('messages.public-offer.meta_description', [], $locale);
+                break;
         }
     @endphp
 

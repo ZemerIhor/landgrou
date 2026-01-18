@@ -45,7 +45,7 @@
                                     id="comment-textarea"
                                     wire:model="comment"
                                     rows="3"
-                                    class="flex-1 resize-none border-none outline-none bg-transparent text-neutral-400 placeholder-neutral-400"
+                                    class="flex-1 resize-none border-none outline-none bg-transparent text-neutral-400 placeholder-neutral-400 focus:ring-0"
                                     placeholder="{{ __('messages.feedback_form.comment_placeholder') }}"
                                     aria-describedby="comment-help"
                                     aria-required="true"
