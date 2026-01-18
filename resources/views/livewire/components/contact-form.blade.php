@@ -78,11 +78,12 @@
                     />
                     @error('phone') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
 
-                    <div class="box-border flex flex-col px-4 py-3 w-full rounded-2xl border border-solid border-neutral-400 focus-within:ring-2 focus-within:ring-green-600 focus-within:border-transparent @error('formMessage') border-red-500 @enderror">
+                    <div class="box-border flex flex-col px-4 py-3 w-full rounded-2xl border border-solid border-neutral-400 bg-white @error('formMessage') border-red-500 @enderror">
                         <textarea
                             wire:model="formMessage"
                             placeholder="{{ __('messages.contact_form.message_placeholder') }}"
-                            class="w-full text-base font-semibold leading-5 h-[90px] text-neutral-400 placeholder-neutral-400 max-sm:text-sm resize-none border-none outline-none bg-transparent"
+                            class="w-full text-base font-semibold leading-5 h-[90px] text-neutral-400 placeholder-neutral-400 max-sm:text-sm resize-none border-none outline-none bg-transparent focus:outline-none"
+                            style="outline: none; box-shadow: none;"
                             aria-label="{{ __('messages.contact_form.message_label') }}"
                             required
                         ></textarea>

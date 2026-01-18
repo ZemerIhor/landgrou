@@ -39,7 +39,7 @@
                             @error('phone') <span class="text-sm text-red-600">{{ $message }}</span> @enderror
                         </div>
                         <div class="mb-4">
-                            <div class="flex flex-col px-4 py-3 w-full leading-6 rounded-2xl border border-solid border-[color:var(--Gray-400,#A9A9A9)] max-md:max-w-full focus-within:ring-2 focus-within:ring-green-600 focus-within:border-transparent @error('comment') border-red-500 @enderror">
+                            <div class="flex flex-col px-4 py-3 w-full leading-6 rounded-2xl border border-solid border-[color:var(--Gray-400,#A9A9A9)] bg-white max-md:max-w-full focus-within:ring-2 focus-within:ring-green-600 focus-within:border-transparent @error('comment') border-red-500 @enderror">
                                 <label for="comment-textarea" class="text-neutral-400 mb-2">{{ __('messages.feedback_form.comment_label') }}</label>
                                 <textarea
                                     id="comment-textarea"

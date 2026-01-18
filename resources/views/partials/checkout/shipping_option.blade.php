@@ -140,7 +140,7 @@
             <!-- Поле для комментария -->
             <div class="mt-4">
                 <label for="comment" class="block text-sm font-medium text-zinc-800 mb-1">{{ __('messages.checkout.comment') }}</label>
-                <div class="flex flex-col items-end px-4 py-3 rounded-2xl border border-solid border-neutral-400">
+                <div class="flex flex-col items-end px-4 py-3 rounded-2xl border border-solid border-neutral-400 bg-white">
                     <textarea
                         id="comment"
                         name="comment"

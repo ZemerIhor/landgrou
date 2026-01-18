@@ -69,7 +69,7 @@
         @enderror
 
         <!-- Поле для комментария -->
-        <div class="flex flex-col items-end px-4 py-3 rounded-2xl border border-solid border-neutral-400 mt-4">
+        <div class="flex flex-col items-end px-4 py-3 rounded-2xl border border-solid border-neutral-400 bg-white mt-4">
             <textarea id="comment"
                       name="comment"
                       wire:model.live="comment"

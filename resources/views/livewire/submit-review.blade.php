@@ -137,12 +137,12 @@
                 <label for="comment" class="block text-base font-semibold text-zinc-800 mb-2">
                     {{ __('messages.submit_review.comment_label') }} <span class="text-red-600">*</span>
                 </label>
-                <textarea 
-                    wire:model="comment" 
-                    id="comment" 
-                    rows="6" 
+                <textarea
+                    wire:model="comment"
+                    id="comment"
+                    rows="6"
                     placeholder="{{ __('messages.submit_review.comment_placeholder') }}"
-                    class="w-full px-4 py-3 rounded-2xl border-2 border-gray-200 focus:border-green-600 focus:ring-0 transition-colors resize-none"
+                    class="w-full px-4 py-3 rounded-2xl border-2 border-gray-200 bg-white focus:border-green-600 focus:ring-0 focus:outline-none transition-colors resize-none"
                     @if($isSubmitting) disabled @endif
                 ></textarea>
                 <div class="flex justify-between mt-2">
