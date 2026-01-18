@@ -16,6 +16,7 @@ use Lunar\Models\Currency;
 use Lunar\Models\Order;
 use Lunar\Models\OrderAddress;
 use Lunar\Models\ProductVariant;
+use Lunar\Models\Country;
 
 class OrderSeeder extends Seeder
 {
@@ -31,6 +32,7 @@ class OrderSeeder extends Seeder
             $faker = Factory::create();
             $channel = Channel::getDefault();
             $currency = Currency::getDefault();
+            $countryId = Country::firstWhere('iso3', 'GBR')?->id ?? Country::first()?->id;
 
             $cardTypes = ['visa', 'mastercard'];
 
@@ -115,7 +117,7 @@ class OrderSeeder extends Seeder
                 $shipping = OrderAddress::factory()->create([
                     'order_id' => $orderModel->id,
                     'type' => 'shipping',
-                    'country_id' => 235, // UK
+                    'country_id' => $countryId,
                 ]);
 
                 if ($faker->boolean()) {
@@ -127,7 +129,7 @@ class OrderSeeder extends Seeder
                     OrderAddress::factory()->create([
                         'order_id' => $orderModel->id,
                         'type' => 'billing',
-                        'country_id' => 235, // UK
+                        'country_id' => $countryId,
                     ]);
                 }
 

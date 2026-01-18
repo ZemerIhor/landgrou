@@ -23,7 +23,7 @@ class Home extends Page implements HasForms
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static string $view = 'filament.pages.home';
     protected static string $settings = HomeSettings::class;
-    protected static ?string $navigationLabel = 'Home Settings';
+    protected static ?string $navigationLabel = 'Налаштування головної';
 
     public static function getSlug(): string
     {
@@ -81,10 +81,10 @@ class Home extends Page implements HasForms
     {
         return $form
             ->schema([
-                Section::make(__('Главный баннер'))
+                Section::make(__('Головний банер'))
                     ->schema([
                         FileUpload::make('banner_image')
-                            ->label(__('Изображение баннера'))
+                            ->label(__('Зображення банера'))
                             ->directory('home/main_banner')
                             ->disk('public')
                             ->preserveFilenames()
@@ -94,34 +94,34 @@ class Home extends Page implements HasForms
                             ->locales(['en', 'uk'])
                             ->schema([
                                 TextInput::make('banner_title')
-                                    ->label(__('Заголовок баннера'))
+                                    ->label(__('Заголовок банера'))
                                     ->maxLength(255),
                                 Textarea::make('banner_description')
-                                    ->label(__('Описание баннера'))
+                                    ->label(__('Опис банера'))
                                     ->maxLength(500),
                             ]),
                     ])
                     ->collapsible(),
 
-                Section::make(__('Баннер'))
+                Section::make(__('Банер'))
                     ->schema([
                         Translate::make()
                             ->locales(['en', 'uk'])
                             ->schema([
                                 Repeater::make('hero_slides')
-                                    ->label(__('Слайды баннера'))
+                                    ->label(__('Слайди банера'))
                                     ->schema([
                                         TextInput::make('heading')
                                             ->label(__('Заголовок'))
                                             ->maxLength(255),
                                         Textarea::make('subheading')
-                                            ->label(__('Подзаголовок'))
+                                            ->label(__('Підзаголовок'))
                                             ->maxLength(500),
                                         TextInput::make('extra_text')
-                                            ->label(__('Дополнительный текст'))
+                                            ->label(__('Додатковий текст'))
                                             ->maxLength(255),
                                         FileUpload::make('background_image')
-                                            ->label(__('Фоновое изображение'))
+                                            ->label(__('Фонове зображення'))
                                             ->directory('home/banners')
                                             ->disk('public')
                                             ->preserveFilenames()
@@ -136,16 +136,16 @@ class Home extends Page implements HasForms
                     ])
                     ->collapsible(),
 
-                Section::make(__('Преимущества'))
+                Section::make(__('Переваги'))
                     ->schema([
                         Translate::make()
                             ->locales(['en', 'uk'])
                             ->schema([
                                 Repeater::make('advantages_cards')
-                                    ->label(__('Карточки преимуществ'))
+                                    ->label(__('Картки переваг'))
                                     ->schema([
                                         FileUpload::make('icon')
-                                            ->label(__('Иконка'))
+                                            ->label(__('Іконка'))
                                             ->directory('home/advantages/icons')
                                             ->disk('public')
                                             ->preserveFilenames()
@@ -155,7 +155,7 @@ class Home extends Page implements HasForms
                                             ->label(__('Заголовок'))
                                             ->maxLength(100),
                                         Textarea::make('description')
-                                            ->label(__('Описание'))
+                                            ->label(__('Опис'))
                                             ->maxLength(500),
                                     ])
                                     ->maxItems(4)
@@ -164,21 +164,21 @@ class Home extends Page implements HasForms
                                     ->cloneable(),
                             ]),
                         FileUpload::make('advantages_image_1')
-                            ->label(__('Изображение 1'))
+                            ->label(__('Зображення 1'))
                             ->directory('home/advantages')
                             ->disk('public')
                             ->preserveFilenames()
                             ->maxSize(5120)
                             ->image(),
                         FileUpload::make('advantages_image_2')
-                            ->label(__('Изображение 2'))
+                            ->label(__('Зображення 2'))
                             ->directory('home/advantages')
                             ->disk('public')
                             ->preserveFilenames()
                             ->maxSize(5120)
                             ->image(),
                         FileUpload::make('advantages_image_3')
-                            ->label(__('Изображение 3'))
+                            ->label(__('Зображення 3'))
                             ->directory('home/advantages')
                             ->disk('public')
                             ->preserveFilenames()
@@ -187,7 +187,7 @@ class Home extends Page implements HasForms
                     ])
                     ->collapsible(),
 
-                Section::make(__('Сравнение'))
+                Section::make(__('Порівняння'))
                     ->schema([
                         Translate::make()
                             ->locales(['en', 'uk'])
@@ -196,22 +196,22 @@ class Home extends Page implements HasForms
                                     ->label(__('Заголовок'))
                                     ->maxLength(255),
                                 TextInput::make('main_comparison_alt')
-                                    ->label(__('Альтернативный текст основного изображения'))
+                                    ->label(__('Альтернативний текст основного зображення'))
                                     ->maxLength(255),
                                 Repeater::make('comparison_items')
-                                    ->label(__('Пункты сравнения'))
+                                    ->label(__('Пункти порівняння'))
                                     ->schema([
                                         TextInput::make('value')
-                                            ->label(__('Значение'))
+                                            ->label(__('Значення'))
                                             ->maxLength(50),
                                         TextInput::make('unit')
-                                            ->label(__('Единица измерения'))
+                                            ->label(__('Одиниця вимірювання'))
                                             ->maxLength(100),
                                         TextInput::make('alt')
-                                            ->label(__('Альтернативный текст изображения'))
+                                            ->label(__('Альтернативний текст зображення'))
                                             ->maxLength(255),
                                         FileUpload::make('image')
-                                            ->label(__('Изображение'))
+                                            ->label(__('Зображення'))
                                             ->directory('home/comparison/items')
                                             ->disk('public')
                                             ->preserveFilenames()
@@ -223,14 +223,14 @@ class Home extends Page implements HasForms
                                     ->reorderable()
                                     ->cloneable(),
                                 TextInput::make('central_text_value')
-                                    ->label(__('Центральное значение'))
+                                    ->label(__('Центральне значення'))
                                     ->maxLength(50),
                                 TextInput::make('central_text_unit')
-                                    ->label(__('Центральная единица'))
+                                    ->label(__('Центральна одиниця'))
                                     ->maxLength(100),
                             ]),
                         FileUpload::make('main_comparison_image')
-                            ->label(__('Основное изображение'))
+                            ->label(__('Основне зображення'))
                             ->directory('home/comparison')
                             ->disk('public')
                             ->preserveFilenames()
@@ -254,7 +254,7 @@ class Home extends Page implements HasForms
                                             ->label(__('Відповідь'))
                                             ->maxLength(500),
                                         FileUpload::make('icon')
-                                            ->label(__('Иконка'))
+                                            ->label(__('Іконка'))
                                             ->directory('home/faq/icons')
                                             ->disk('public')
                                             ->preserveFilenames()
@@ -266,11 +266,11 @@ class Home extends Page implements HasForms
                                     ->reorderable()
                                     ->cloneable(),
                                 TextInput::make('faq_main_image_alt')
-                                    ->label(__('Альтернативный текст основного изображения FAQ'))
+                                    ->label(__('Альтернативний текст основного зображення FAQ'))
                                     ->maxLength(255),
                             ]),
                         FileUpload::make('faq_main_image')
-                            ->label(__('Основное изображение FAQ'))
+                            ->label(__('Основне зображення FAQ'))
                             ->directory('home/faq')
                             ->disk('public')
                             ->preserveFilenames()
@@ -295,7 +295,7 @@ class Home extends Page implements HasForms
                                             ->maxLength(255)
                                             ->required(),
                                         FileUpload::make('icon')
-                                            ->label(__('Иконка категории'))
+                                            ->label(__('Іконка категорії'))
                                             ->directory('home/tenders/icons')
                                             ->disk('public')
                                             ->preserveFilenames()

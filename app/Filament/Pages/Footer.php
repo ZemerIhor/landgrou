@@ -24,7 +24,7 @@ class Footer extends Page implements HasForms
 
     protected static string $settings = FooterSettings::class;
 
-    protected static ?string $navigationLabel = 'Footer Settings';
+    protected static ?string $navigationLabel = 'Налаштування футера';
 
     public static function getSlug(): string
     {
@@ -61,7 +61,7 @@ class Footer extends Page implements HasForms
                     ->locales(['en', 'uk'])
                     ->schema([
                         TextInput::make('email')
-                            ->label(__('Email'))
+                            ->label(__('Електронна пошта'))
                             ->email()
                             ->required()
                             ->maxLength(255),

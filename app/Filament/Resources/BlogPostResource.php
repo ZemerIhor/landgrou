@@ -24,6 +24,7 @@ class BlogPostResource extends Resource
     protected static ?string $model = BlogPost::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Дописи блогу';
 
     public static function form(Form $form): Form
     {
@@ -55,9 +56,9 @@ class BlogPostResource extends Resource
                 ->image()
                 ->disk('public'),
             Toggle::make('published')
-                ->label('Опубликовано'),
+                ->label('Опубліковано'),
             DateTimePicker::make('published_at')
-                ->label('Дата публикации'),
+                ->label('Дата публікації'),
         ]);
     }
 
@@ -71,16 +72,16 @@ class BlogPostResource extends Resource
                     ->limit(40),
                 IconColumn::make('published')
                     ->boolean()
-                    ->label('Публ.'),
+                    ->label('Опубл.'),
                 TextColumn::make('published_at')
                     ->dateTime()
-                    ->label('Дата публикации'),
+                    ->label('Дата публікації'),
             ])
             ->filters([])
             ->actions([
                 \Filament\Tables\Actions\EditAction::make(),
                 Action::make('duplicate')
-                    ->label('Дублировать')
+                    ->label('Дублювати')
                     ->icon('heroicon-o-document-duplicate')
                     ->action(function ($record) {
                         $newRecord = $record->replicate();
@@ -99,7 +100,7 @@ class BlogPostResource extends Resource
                         $newRecord->save();
 
                         Notification::make()
-                            ->title('Пост успешно дублирован')
+                            ->title('Запис успішно дубльовано')
                             ->success()
                             ->send();
                     })

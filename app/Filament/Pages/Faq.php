@@ -21,7 +21,7 @@ class Faq extends Page implements HasForms
     protected static ?string $navigationIcon = 'heroicon-o-question-mark-circle';
     protected static string $view = 'filament.pages.faq';
     protected static string $settings = FaqSettings::class;
-    protected static ?string $navigationLabel = 'FAQ Settings';
+    protected static ?string $navigationLabel = 'Налаштування FAQ';
 
     public static function getSlug(): string
     {
@@ -45,35 +45,35 @@ class Faq extends Page implements HasForms
     {
         return $form
             ->schema([
-                Section::make('Frequently Asked Questions')
+                Section::make('Поширені запитання')
                     ->schema([
                         Repeater::make('faq_blocks')
-                            ->label('FAQ Blocks')
+                            ->label('Блоки FAQ')
                             ->schema([
                                 FileUpload::make('main_image')
-                                    ->label('Main Image')
+                                    ->label('Основне зображення')
                                     ->image()
                                     ->disk('public')
                                     ->directory('faq-images/main'),
                                 TextInput::make('main_image_alt')
-                                    ->label('Alt text for main image')
+                                    ->label('Альтернативний текст основного зображення')
                                     ->maxLength(255),
                                 Repeater::make('items')
-                                    ->label('Questions and Answers')
+                                    ->label('Питання та відповіді')
                                     ->schema([
                                         FileUpload::make('thumbnail')
-                                            ->label('Thumbnail')
+                                            ->label('Мініатюра')
                                             ->image()
                                             ->disk('public')
                                             ->directory('faq-images/thumbnails'),
                                         TextInput::make('thumbnail_alt')
-                                            ->label('Alt text for thumbnail')
+                                            ->label('Альтернативний текст мініатюри')
                                             ->maxLength(255),
                                         TextInput::make('question')
-                                            ->label('Question')
+                                            ->label('Питання')
                                             ->maxLength(255),
                                         Textarea::make('answer')
-                                            ->label('Answer')
+                                            ->label('Відповідь')
                                             ->maxLength(1000),
                                     ])
                                     ->columns(2)
@@ -103,13 +103,13 @@ class Faq extends Page implements HasForms
             $settings->save();
 
             Notification::make()
-                ->title('FAQ Settings Saved!')
+                ->title('Налаштування FAQ збережено!')
                 ->success()
                 ->send();
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Error saving FAQ settings', ['error' => $e->getMessage()]);
             Notification::make()
-                ->title('Error saving FAQ settings')
+                ->title('Помилка збереження налаштувань FAQ')
                 ->body($e->getMessage())
                 ->danger()
                 ->send();

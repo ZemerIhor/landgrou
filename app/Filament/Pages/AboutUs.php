@@ -27,7 +27,7 @@ class AboutUs extends Page implements HasForms
 
     protected static string $settings = AboutUsSettings::class;
 
-    protected static ?string $navigationLabel = 'About Us Settings';
+    protected static ?string $navigationLabel = 'Налаштування сторінки "Про нас"';
 
     public static function getSlug(): string
     {

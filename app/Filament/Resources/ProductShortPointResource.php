@@ -16,9 +16,9 @@ class ProductShortPointResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-queue-list';
     
-    protected static ?string $navigationGroup = 'Catalog';
+    protected static ?string $navigationGroup = 'Каталог';
     
-    protected static ?string $navigationLabel = 'Product Short Specs';
+    protected static ?string $navigationLabel = 'Короткі характеристики товару';
     
     protected static ?int $navigationSort = 5;
 
@@ -32,7 +32,7 @@ class ProductShortPointResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required()
-                    ->label('Product')
+                    ->label('Товар')
                     ->columnSpanFull()
                     ->reactive()
                     ->afterStateUpdated(fn ($state, callable $set) => $set('short_specs', [])),
@@ -40,27 +40,27 @@ class ProductShortPointResource extends Resource
                 Forms\Components\Repeater::make('short_specs')
                     ->schema([
                         Forms\Components\Hidden::make('id'),
-                        Forms\Components\Tabs::make('Translations')
+                        Forms\Components\Tabs::make('Переклади')
                             ->tabs([
                                 Forms\Components\Tabs\Tab::make('EN')
                                     ->schema([
                                         Forms\Components\TextInput::make('name_en')
-                                            ->label('Name (EN)')
+                                            ->label('Назва (EN)')
                                             ->required()
                                             ->maxLength(255),
                                         Forms\Components\TextInput::make('value_en')
-                                            ->label('Value (EN)')
+                                            ->label('Значення (EN)')
                                             ->required()
                                             ->maxLength(255),
                                     ]),
                                 Forms\Components\Tabs\Tab::make('UK')
                                     ->schema([
                                         Forms\Components\TextInput::make('name_uk')
-                                            ->label('Name (UK)')
+                                            ->label('Назва (UK)')
                                             ->required()
                                             ->maxLength(255),
                                         Forms\Components\TextInput::make('value_uk')
-                                            ->label('Value (UK)')
+                                            ->label('Значення (UK)')
                                             ->required()
                                             ->maxLength(255),
                                     ]),
@@ -71,7 +71,7 @@ class ProductShortPointResource extends Resource
                     ->itemLabel(fn (array $state): ?string => $state['name_en'] ?? null)
                     ->columnSpanFull()
                     ->defaultItems(1)
-                    ->addActionLabel('Add Spec')
+                    ->addActionLabel('Додати специфікацію')
                     ->deleteAction(
                         fn (Forms\Components\Actions\Action $action) => $action
                             ->requiresConfirmation()
@@ -85,19 +85,19 @@ class ProductShortPointResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('product.attribute_data.name.value.en')
-                    ->label('Product')
+                    ->label('Товар')
                     ->formatStateUsing(fn ($record) => $record->product->translateAttribute('name'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name.en')
-                    ->label('Name (EN)')
+                    ->label('Назва (EN)')
                     ->searchable()
                     ->limit(30),
                 Tables\Columns\TextColumn::make('value.en')
-                    ->label('Value')
+                    ->label('Значення')
                     ->limit(40),
                 Tables\Columns\TextColumn::make('sort_order')
-                    ->label('Order')
+                    ->label('Порядок')
                     ->sortable(),
             ])
             ->defaultSort('sort_order')
@@ -108,7 +108,7 @@ class ProductShortPointResource extends Resource
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->translateAttribute('name'))
                     ->searchable()
                     ->preload()
-                    ->label('Product'),
+                    ->label('Товар'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -70,15 +70,15 @@ document.addEventListener('DOMContentLoaded', function() {
         fontSizeGroup.setAttribute('data-trix-button-group', 'font-tools');
         
         const select = document.createElement('select');
-        select.title = 'Font Size';
+        select.title = 'Розмір шрифту';
         
         const sizes = [
-            { label: 'Normal', value: '' },
-            { label: 'Small (12px)', value: 'fontSize12' },
-            { label: 'Medium (16px)', value: 'fontSize16' },
-            { label: 'Large (20px)', value: 'fontSize20' },
-            { label: 'X-Large (24px)', value: 'fontSize24' },
-            { label: 'XX-Large (32px)', value: 'fontSize32' }
+            { label: 'Звичайний', value: '' },
+            { label: 'Малий (12px)', value: 'fontSize12' },
+            { label: 'Середній (16px)', value: 'fontSize16' },
+            { label: 'Великий (20px)', value: 'fontSize20' },
+            { label: 'Дуже великий (24px)', value: 'fontSize24' },
+            { label: 'Надвеликий (32px)', value: 'fontSize32' }
         ];
         
         sizes.forEach(size => {
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const range = trixEditor.getSelectedRange();
             if (range[0] === range[1]) {
-                alert('Please select text first');
+                alert('Спочатку виберіть текст');
                 this.value = '';
                 return;
             }

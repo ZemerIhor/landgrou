@@ -1,0 +1,95 @@
+version: "3.9"
+
+services:
+  php-fpm:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ./:/var/www:delegated
+    depends_on:
+      - mariadb
+    networks:
+      - app
+
+  caddy:
+    image: caddy:2.7-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www:ro
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - php-fpm
+      - pma
+      - mailcatcher
+    networks:
+      - app
+
+  mariadb:
+    image: mariadb:10.11
+    environment:
+      MYSQL_DATABASE: demostore
+      MYSQL_USER: demostore
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      app:
+        aliases:
+          - mysql
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - app
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.7
+    environment:
+      MEILI_MASTER_KEY: ${MEILISEARCH_KEY}
+      MEILI_NO_ANALYTICS: "true"
+    volumes:
+      - meilisearch_data:/meili_data
+    ports:
+      - "${MEILISEARCH_PORT:-7700}:7700"
+    networks:
+      - app
+
+  pma:
+    image: phpmyadmin:5.2
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 0
+    depends_on:
+      - mariadb
+    networks:
+      - app
+
+  mailcatcher:
+    image: schickling/mailcatcher:latest
+    networks:
+      app:
+        aliases:
+          - mailhog
+
+networks:
+  app:
+
+volumes:
+  mariadb_data:
+  redis_data:
+  meilisearch_data:
+  caddy_data:
+  caddy_config:

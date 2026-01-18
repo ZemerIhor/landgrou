@@ -8,13 +8,16 @@ use Lunar\Admin\Filament\Resources\ProductResource as LunarProductResource;
 
 class ProductResource extends LunarProductResource
 {
+    protected static ?string $navigationLabel = 'Товари';
+    protected static ?string $navigationGroup = 'Каталог';
+
     protected static function getMainFormComponents(): array
     {
         $components = parent::getMainFormComponents();
         
         // Добавляем наши поля после существующих
         $components[] = Select::make('peat_type_id')
-            ->label('Peat Type')
+            ->label('Тип торфу')
             ->relationship('peatType', 'id')
             ->getOptionLabelFromRecordUsing(fn ($record) => $record ? $record->translate() : '')
             ->searchable()
@@ -22,7 +25,7 @@ class ProductResource extends LunarProductResource
             ->nullable();
             
         $components[] = Select::make('product_weight_id')
-            ->label('Product Weight')
+            ->label('Вага товару')
             ->relationship('productWeight', 'id')
             ->getOptionLabelFromRecordUsing(fn ($record) => $record ? $record->translate() : '')
             ->searchable()

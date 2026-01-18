@@ -19,9 +19,9 @@ class ProductTypeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
     
-    protected static ?string $navigationGroup = 'Catalog';
+    protected static ?string $navigationGroup = 'Каталог';
     
-    protected static ?string $navigationLabel = 'Product Types';
+    protected static ?string $navigationLabel = 'Типи товарів';
     
     protected static ?int $navigationSort = 5;
 
@@ -29,18 +29,18 @@ class ProductTypeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Tabs::make('Translations')
+                Forms\Components\Tabs::make('Переклади')
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('EN')
                             ->schema([
                                 Forms\Components\TextInput::make('name.en')
-                                    ->label('Name (EN)')
+                                    ->label('Назва (EN)')
                                     ->required(),
                             ]),
                         Forms\Components\Tabs\Tab::make('UK')
                             ->schema([
                                 Forms\Components\TextInput::make('name.uk')
-                                    ->label('Name (UK)')
+                                    ->label('Назва (UK)')
                                     ->required(),
                             ]),
                     ])->columnSpanFull(),
@@ -68,10 +68,10 @@ class ProductTypeResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name.en')
-                    ->label('Name (EN)')
+                    ->label('Назва (EN)')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name.uk')
-                    ->label('Name (UK)')
+                    ->label('Назва (UK)')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
@@ -81,11 +81,11 @@ class ProductTypeResource extends Resource
                     ->boolean(),
                 Tables\Columns\TextColumn::make('products_count')
                     ->counts('products')
-                    ->label('Products'),
+                    ->label('Товари'),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_active')
-                    ->label('Active')
+                    ->label('Активний')
                     ->boolean(),
             ])
             ->actions([

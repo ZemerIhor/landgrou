@@ -20,9 +20,9 @@ class PeatTypeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-cube';
     
-    protected static ?string $navigationGroup = 'Catalog';
+    protected static ?string $navigationGroup = 'Каталог';
     
-    protected static ?string $navigationLabel = 'Peat Types';
+    protected static ?string $navigationLabel = 'Типи торфу';
     
     protected static ?int $navigationSort = 5;
 
@@ -30,18 +30,18 @@ class PeatTypeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Tabs::make('Translations')
+                Forms\Components\Tabs::make('Переклади')
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('EN')
                             ->schema([
                                 Forms\Components\TextInput::make('name.en')
-                                    ->label('Name (EN)')
+                                    ->label('Назва (EN)')
                                     ->required(),
                             ]),
                         Forms\Components\Tabs\Tab::make('PL')
                             ->schema([
                                 Forms\Components\TextInput::make('name.pl')
-                                    ->label('Name (PL)')
+                                    ->label('Назва (PL)')
                                     ->required(),
                             ]),
                     ])->columnSpanFull(),
@@ -60,17 +60,17 @@ class PeatTypeResource extends Resource
                     ->default(true)
                     ->required(),
                     
-                Forms\Components\Section::make('Продукты')
-                    ->description('Выберите продукты для этого типа торфа')
+                Forms\Components\Section::make('Товари')
+                    ->description('Оберіть товари для цього типу торфу')
                     ->schema([
                         Forms\Components\Select::make('product_ids')
-                            ->label('Продукты')
+                            ->label('Товари')
                             ->multiple()
                             ->searchable()
                             ->preload()
                             ->options(function () {
                                 return \Lunar\Models\Product::all()->mapWithKeys(function ($product) {
-                                    $name = $product->translateAttribute('name') ?? 'Product #' . $product->id;
+                                    $name = $product->translateAttribute('name') ?? 'Товар #' . $product->id;
                                     return [$product->id => $name];
                                 });
                             })
@@ -91,10 +91,10 @@ class PeatTypeResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name.en')
-                    ->label('Name (EN)')
+                    ->label('Назва (EN)')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name.pl')
-                    ->label('Name (PL)')
+                    ->label('Назва (PL)')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
@@ -104,11 +104,11 @@ class PeatTypeResource extends Resource
                     ->boolean(),
                 Tables\Columns\TextColumn::make('products_count')
                     ->counts('products')
-                    ->label('Products'),
+                    ->label('Товари'),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_active')
-                    ->label('Active')
+                    ->label('Активний')
                     ->boolean(),
             ])
             ->actions([

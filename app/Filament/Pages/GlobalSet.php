@@ -24,8 +24,8 @@ class GlobalSet extends Page implements HasForms
     protected static string $settings = GlobalSettings::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog';
-    protected static ?string $navigationLabel = 'Global Settings';
-    protected static ?string $navigationGroup = 'Settings';
+    protected static ?string $navigationLabel = 'Глобальні налаштування';
+    protected static ?string $navigationGroup = 'Налаштування';
     protected static ?int $navigationSort = 1;
 
     protected static string $view = 'filament.pages.global-settings';
@@ -75,9 +75,9 @@ class GlobalSet extends Page implements HasForms
     {
         return $form
             ->schema([
-                Tabs::make('Tabs')
+                Tabs::make('Вкладки')
                     ->tabs([
-                        Tabs\Tab::make('Main Settings')
+                        Tabs\Tab::make('Основні налаштування')
                             ->schema([
                                 Section::make()
                                     ->schema([
@@ -85,34 +85,34 @@ class GlobalSet extends Page implements HasForms
                                             ->locales(['en', 'uk'])
                                             ->schema([
                                                 TextInput::make('site_name')
-                                                    ->label('Site Name')
-                                                    ->helperText('Enter the name of your website')
+                                                    ->label('Назва сайту')
+                                                    ->helperText('Вкажіть назву вашого сайту')
                                                     ->required()
                                                     ->maxLength(255),
                                                 Textarea::make('meta_description')
-                                                    ->label('Meta Description')
-                                                    ->helperText('Enter the meta description for SEO')
+                                                    ->label('Метаопис')
+                                                    ->helperText('Вкажіть метаопис для SEO')
                                                     ->rows(4)
                                                     ->required()
                                                     ->maxLength(500),
                                             ]),
                                         FileUpload::make('logo')
-                                            ->label('Logo')
-                                            ->helperText('Upload the main site logo')
+                                            ->label('Логотип')
+                                            ->helperText('Завантажте основний логотип сайту')
                                             ->image()
                                             ->disk('public')
                                             ->directory('logos')
                                             ->nullable(),
                                         FileUpload::make('favicon')
-                                            ->label('Favicon')
-                                            ->helperText('Upload the site favicon')
+                                            ->label('Фавікон')
+                                            ->helperText('Завантажте фавікон сайту')
                                             ->image()
                                             ->disk('public')
                                             ->directory('favicons')
                                             ->nullable(),
                                         TextInput::make('contact_email')
-                                            ->label('Contact Email')
-                                            ->helperText('Email address for contact inquiries')
+                                            ->label('Контактний email')
+                                            ->helperText('Email для звернень і запитів')
                                             ->email()
                                             ->required()
                                             ->maxLength(255),
@@ -120,7 +120,7 @@ class GlobalSet extends Page implements HasForms
                                     ->columns(2),
                             ]),
 
-                        Tabs\Tab::make('Feedback Form')
+                        Tabs\Tab::make('Форма зворотного зв’язку')
                             ->schema([
                                 Section::make()
                                     ->schema([
@@ -128,20 +128,20 @@ class GlobalSet extends Page implements HasForms
                                             ->locales(['en', 'uk'])
                                             ->schema([
                                                 TextInput::make('feedback_form_title')
-                                                    ->label('Feedback Form Title')
-                                                    ->helperText('Title displayed above the feedback form')
+                                                    ->label('Заголовок форми зворотного зв’язку')
+                                                    ->helperText('Заголовок, що відображається над формою')
                                                     ->required()
                                                     ->maxLength(255),
                                                 Textarea::make('feedback_form_description')
-                                                    ->label('Feedback Form Description')
-                                                    ->helperText('Short description for the feedback form')
+                                                    ->label('Опис форми зворотного зв’язку')
+                                                    ->helperText('Короткий опис для форми')
                                                     ->rows(4)
                                                     ->required()
                                                     ->maxLength(500),
                                             ]),
                                         FileUpload::make('feedback_form_image')
-                                            ->label('Feedback Form Image')
-                                            ->helperText('Optional image for the feedback form')
+                                            ->label('Зображення для форми зворотного зв’язку')
+                                            ->helperText('Необов’язкове зображення для форми')
                                             ->image()
                                             ->disk('public')
                                             ->directory('feedback-images')
@@ -150,31 +150,31 @@ class GlobalSet extends Page implements HasForms
                                     ->columns(2),
                             ]),
 
-                        Tabs\Tab::make('Static Pages')
+                        Tabs\Tab::make('Статичні сторінки')
                             ->schema([
                                 Section::make()
                                     ->schema([
                                         Translate::make()
                                             ->locales(['en', 'uk'])
                                             ->schema([
-                                                TextInput::make('home_title')->label('Home Page Title')->required()->maxLength(255),
-                                                Textarea::make('home_meta_description')->label('Home Page Meta Description')->rows(4)->required()->maxLength(500),
-                                                TextInput::make('about_us_title')->label('About Us Title')->required()->maxLength(255),
-                                                Textarea::make('about_us_meta_description')->label('About Us Meta Description')->rows(4)->required()->maxLength(500),
-                                                TextInput::make('contacts_title')->label('Contacts Page Title')->required()->maxLength(255),
-                                                Textarea::make('contacts_meta_description')->label('Contacts Meta Description')->rows(4)->required()->maxLength(500),
-                                                TextInput::make('faq_title')->label('FAQ Page Title')->required()->maxLength(255),
-                                                Textarea::make('faq_meta_description')->label('FAQ Meta Description')->rows(4)->required()->maxLength(500),
-                                                TextInput::make('reviews_title')->label('Reviews Page Title')->required()->maxLength(255),
-                                                Textarea::make('reviews_meta_description')->label('Reviews Meta Description')->rows(4)->required()->maxLength(500),
-                                                TextInput::make('submit_review_title')->label('Submit Review Title')->required()->maxLength(255),
-                                                Textarea::make('submit_review_meta_description')->label('Submit Review Meta Description')->rows(4)->required()->maxLength(500),
-                                                TextInput::make('blog_title')->label('Blog Page Title')->required()->maxLength(255),
-                                                Textarea::make('blog_meta_description')->label('Blog Meta Description')->rows(4)->required()->maxLength(500),
-                                                TextInput::make('checkout_title')->label('Checkout Page Title')->required()->maxLength(255),
-                                                Textarea::make('checkout_meta_description')->label('Checkout Meta Description')->rows(4)->required()->maxLength(500),
-                                                TextInput::make('checkout_success_title')->label('Checkout Success Title')->required()->maxLength(255),
-                                                Textarea::make('checkout_success_meta_description')->label('Checkout Success Meta Description')->rows(4)->required()->maxLength(500),
+                                                TextInput::make('home_title')->label('Заголовок головної сторінки')->required()->maxLength(255),
+                                                Textarea::make('home_meta_description')->label('Метаопис головної сторінки')->rows(4)->required()->maxLength(500),
+                                                TextInput::make('about_us_title')->label('Заголовок сторінки "Про нас"')->required()->maxLength(255),
+                                                Textarea::make('about_us_meta_description')->label('Метаопис сторінки "Про нас"')->rows(4)->required()->maxLength(500),
+                                                TextInput::make('contacts_title')->label('Заголовок сторінки "Контакти"')->required()->maxLength(255),
+                                                Textarea::make('contacts_meta_description')->label('Метаопис сторінки "Контакти"')->rows(4)->required()->maxLength(500),
+                                                TextInput::make('faq_title')->label('Заголовок сторінки "FAQ"')->required()->maxLength(255),
+                                                Textarea::make('faq_meta_description')->label('Метаопис сторінки "FAQ"')->rows(4)->required()->maxLength(500),
+                                                TextInput::make('reviews_title')->label('Заголовок сторінки "Відгуки"')->required()->maxLength(255),
+                                                Textarea::make('reviews_meta_description')->label('Метаопис сторінки "Відгуки"')->rows(4)->required()->maxLength(500),
+                                                TextInput::make('submit_review_title')->label('Заголовок сторінки "Додати відгук"')->required()->maxLength(255),
+                                                Textarea::make('submit_review_meta_description')->label('Метаопис сторінки "Додати відгук"')->rows(4)->required()->maxLength(500),
+                                                TextInput::make('blog_title')->label('Заголовок сторінки "Блог"')->required()->maxLength(255),
+                                                Textarea::make('blog_meta_description')->label('Метаопис сторінки "Блог"')->rows(4)->required()->maxLength(500),
+                                                TextInput::make('checkout_title')->label('Заголовок сторінки "Оформлення замовлення"')->required()->maxLength(255),
+                                                Textarea::make('checkout_meta_description')->label('Метаопис сторінки "Оформлення замовлення"')->rows(4)->required()->maxLength(500),
+                                                TextInput::make('checkout_success_title')->label('Заголовок сторінки "Успішне оформлення"')->required()->maxLength(255),
+                                                Textarea::make('checkout_success_meta_description')->label('Метаопис сторінки "Успішне оформлення"')->rows(4)->required()->maxLength(500),
                                             ]),
                                     ])
                                     ->columns(2),
@@ -203,14 +203,14 @@ class GlobalSet extends Page implements HasForms
             $settings->save();
 
             Notification::make()
-                ->title('Settings saved')
+                ->title('Налаштування збережено')
                 ->success()
                 ->send();
         } catch (ValidationException $e) {
             Log::error('Validation errors', ['errors' => $e->errors(), 'message' => $e->getMessage()]);
 
             Notification::make()
-                ->title('Error')
+                ->title('Помилка')
                 ->body(implode(', ', array_merge(...array_values($e->errors()))))
                 ->danger()
                 ->send();
@@ -218,7 +218,7 @@ class GlobalSet extends Page implements HasForms
             Log::error('Error saving settings', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
 
             Notification::make()
-                ->title('Error')
+                ->title('Помилка')
                 ->body($e->getMessage())
                 ->danger()
                 ->send();
@@ -227,7 +227,7 @@ class GlobalSet extends Page implements HasForms
 
     public static function getNavigationLabel(): string
     {
-        return 'Global Settings';
+        return 'Глобальні налаштування';
     }
 
     public static function getSlug(): string

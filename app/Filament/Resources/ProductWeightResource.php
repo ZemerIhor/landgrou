@@ -19,27 +19,27 @@ class ProductWeightResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-scale';
     
-    protected static ?string $navigationGroup = 'Catalog';
+    protected static ?string $navigationGroup = 'Каталог';
     
-    protected static ?string $navigationLabel = 'Product Weights';
+    protected static ?string $navigationLabel = 'Ваги товарів';
     
     protected static ?int $navigationSort = 6;
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-                Forms\Components\Tabs::make('Translations')
+                Forms\Components\Tabs::make('Переклади')
                     ->tabs([
                         Forms\Components\Tabs\Tab::make('EN')
                             ->schema([
                                 Forms\Components\TextInput::make('name.en')
-                                    ->label('Name (EN)')
+                                    ->label('Назва (EN)')
                                     ->required(),
                             ]),
                         Forms\Components\Tabs\Tab::make('PL')
                             ->schema([
                                 Forms\Components\TextInput::make('name.pl')
-                                    ->label('Name (PL)')
+                                    ->label('Назва (PL)')
                                     ->required(),
                             ]),
                     ])->columnSpanFull(),
@@ -47,7 +47,7 @@ class ProductWeightResource extends Resource
                 Forms\Components\TextInput::make('value')
                     ->required()
                     ->maxLength(255)
-                    ->helperText('Examples: 10, 20, 25, bulk'),
+                    ->helperText('Приклади: 10, 20, 25, насипом'),
                     
                 Forms\Components\TextInput::make('sort_order')
                     ->numeric()
@@ -58,17 +58,17 @@ class ProductWeightResource extends Resource
                     ->default(true)
                     ->required(),
                     
-                Forms\Components\Section::make('Продукты')
-                    ->description('Выберите продукты для этого веса')
+                Forms\Components\Section::make('Товари')
+                    ->description('Оберіть товари для цієї ваги')
                     ->schema([
                         Forms\Components\Select::make('product_ids')
-                            ->label('Продукты')
+                            ->label('Товари')
                             ->multiple()
                             ->searchable()
                             ->preload()
                             ->options(function () {
                                 return \Lunar\Models\Product::all()->mapWithKeys(function ($product) {
-                                    $name = $product->translateAttribute('name') ?? 'Product #' . $product->id;
+                                    $name = $product->translateAttribute('name') ?? 'Товар #' . $product->id;
                                     return [$product->id => $name];
                                 });
                             })
@@ -89,10 +89,10 @@ class ProductWeightResource extends Resource
                 Tables\Columns\TextColumn::make('id')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name.en')
-                    ->label('Name (EN)')
+                    ->label('Назва (EN)')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name.pl')
-                    ->label('Name (PL)')
+                    ->label('Назва (PL)')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('value')
                     ->searchable(),
@@ -102,11 +102,11 @@ class ProductWeightResource extends Resource
                     ->boolean(),
                 Tables\Columns\TextColumn::make('products_count')
                     ->counts('products')
-                    ->label('Products'),
+                    ->label('Товари'),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('is_active')
-                    ->label('Active')
+                    ->label('Активний')
                     ->boolean(),
             ])
             ->actions([

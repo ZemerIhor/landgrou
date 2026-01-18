@@ -2,7 +2,7 @@
     auto_https off
 }
 
-localhost:80 {
+http://landgrou.localhost {
     root * /var/www/public
 
     php_fastcgi php-fpm:9000 {
@@ -10,5 +10,15 @@ localhost:80 {
     }
 
     file_server
+    encode zstd gzip
+}
+
+http://pma.landgrou.localhost {
+    reverse_proxy pma:80
+    encode zstd gzip
+}
+
+http://mail.landgrou.localhost {
+    reverse_proxy mailcatcher:1080
     encode zstd gzip
 }

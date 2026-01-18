@@ -62,10 +62,12 @@ class AppServiceProvider extends ServiceProvider
                 ->plugins([
                     new ShippingPlugin,
                     FilamentMenuBuilderPlugin::make()
-                        ->addLocation('header_en', 'Header EN') // Location for header (English)
-                        ->addLocation('header_pl', 'Header PL') // Location for header (Polish)
-                        ->addLocation('footer_en', 'Footer EN') // Location for footer (English)
-                        ->addLocation('footer_pl', 'Footer PL') // Location for footer (Polish)
+                        ->navigationLabel('Меню')
+                        ->navigationGroup('Контент')
+                        ->addLocation('header_en', 'Шапка EN') // Location for header (English)
+                        ->addLocation('header_pl', 'Шапка PL') // Location for header (Polish)
+                        ->addLocation('footer_en', 'Футер EN') // Location for footer (English)
+                        ->addLocation('footer_pl', 'Футер PL') // Location for footer (Polish)
                         ->showCustomLinkPanel(true)
                         ->addMenuPanels([
                             // Header for English locale

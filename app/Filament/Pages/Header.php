@@ -18,7 +18,7 @@ class Header extends Page implements HasForms
     protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
     protected static string $view = 'filament.pages.header';
     protected static string $settings = HeaderSettings::class;
-    protected static ?string $navigationLabel = 'Header Settings';
+    protected static ?string $navigationLabel = 'Налаштування шапки';
 
     public static function getSlug(): string
     {
@@ -44,18 +44,18 @@ class Header extends Page implements HasForms
     {
         return $form
             ->schema([
-                Section::make('Social Media')
+                Section::make('Соцмережі')
                     ->schema([
                         TextInput::make('instagram_url')
-                            ->label('Instagram URL')
+                            ->label('Посилання на Instagram')
                             ->url()
                             ->maxLength(255),
                         TextInput::make('facebook_url')
-                            ->label('Facebook URL')
+                            ->label('Посилання на Facebook')
                             ->url()
                             ->maxLength(255),
                         TextInput::make('telegram_url')
-                            ->label('Telegram URL')
+                            ->label('Посилання на Telegram')
                             ->url()
                             ->maxLength(255),
                     ])
@@ -76,13 +76,13 @@ class Header extends Page implements HasForms
             $settings->save();
 
             Notification::make()
-                ->title('Header Settings Saved!')
+                ->title('Налаштування шапки збережено!')
                 ->success()
                 ->send();
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Error saving Header Settings', ['error' => $e->getMessage()]);
             Notification::make()
-                ->title('Error saving Header Settings')
+                ->title('Помилка збереження налаштувань шапки')
                 ->body($e->getMessage())
                 ->danger()
                 ->send();

@@ -16,9 +16,9 @@ class ProductCharacteristicResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-list-bullet';
     
-    protected static ?string $navigationGroup = 'Catalog';
+    protected static ?string $navigationGroup = 'Каталог';
     
-    protected static ?string $navigationLabel = 'Product Characteristics';
+    protected static ?string $navigationLabel = 'Характеристики товару';
     
     protected static ?int $navigationSort = 4;
 
@@ -32,7 +32,7 @@ class ProductCharacteristicResource extends Resource
                     ->searchable()
                     ->preload()
                     ->required()
-                    ->label('Product')
+                    ->label('Товар')
                     ->columnSpanFull()
                     ->reactive()
                     ->afterStateUpdated(fn ($state, callable $set) => $set('characteristics', [])),
@@ -40,33 +40,33 @@ class ProductCharacteristicResource extends Resource
                 Forms\Components\Repeater::make('characteristics')
                     ->schema([
                         Forms\Components\Hidden::make('id'),
-                        Forms\Components\Tabs::make('Translations')
+                        Forms\Components\Tabs::make('Переклади')
                             ->tabs([
                                 Forms\Components\Tabs\Tab::make('EN')
                                     ->schema([
                                         Forms\Components\TextInput::make('name_en')
-                                            ->label('Name (EN)')
+                                            ->label('Назва (EN)')
                                             ->required()
                                             ->maxLength(255),
                                         Forms\Components\TextInput::make('standard_en')
-                                            ->label('Standard (EN)')
+                                            ->label('Стандарт (EN)')
                                             ->maxLength(255),
                                         Forms\Components\TextInput::make('actual_en')
-                                            ->label('Actual (EN)')
+                                            ->label('Фактичне (EN)')
                                             ->required()
                                             ->maxLength(255),
                                     ]),
                                 Forms\Components\Tabs\Tab::make('UK')
                                     ->schema([
                                         Forms\Components\TextInput::make('name_uk')
-                                            ->label('Name (UK)')
+                                            ->label('Назва (UK)')
                                             ->required()
                                             ->maxLength(255),
                                         Forms\Components\TextInput::make('standard_uk')
-                                            ->label('Standard (UK)')
+                                            ->label('Стандарт (UK)')
                                             ->maxLength(255),
                                         Forms\Components\TextInput::make('actual_uk')
-                                            ->label('Actual (UK)')
+                                            ->label('Фактичне (UK)')
                                             ->required()
                                             ->maxLength(255),
                                     ]),
@@ -77,7 +77,7 @@ class ProductCharacteristicResource extends Resource
                     ->itemLabel(fn (array $state): ?string => $state['name_en'] ?? null)
                     ->columnSpanFull()
                     ->defaultItems(1)
-                    ->addActionLabel('Add Characteristic')
+                    ->addActionLabel('Додати характеристику')
                     ->deleteAction(
                         fn (Forms\Components\Actions\Action $action) => $action
                             ->requiresConfirmation()
@@ -91,22 +91,22 @@ class ProductCharacteristicResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('product.attribute_data.name.value.en')
-                    ->label('Product')
+                    ->label('Товар')
                     ->formatStateUsing(fn ($record) => $record->product->translateAttribute('name'))
                     ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('name.en')
-                    ->label('Name (EN)')
+                    ->label('Назва (EN)')
                     ->searchable()
                     ->limit(30),
                 Tables\Columns\TextColumn::make('standard.en')
-                    ->label('Standard')
+                    ->label('Стандарт')
                     ->limit(20),
                 Tables\Columns\TextColumn::make('actual.en')
-                    ->label('Actual')
+                    ->label('Фактичне')
                     ->limit(20),
                 Tables\Columns\TextColumn::make('sort_order')
-                    ->label('Order')
+                    ->label('Порядок')
                     ->sortable(),
             ])
             ->defaultSort('sort_order')
@@ -117,7 +117,7 @@ class ProductCharacteristicResource extends Resource
                     ->getOptionLabelFromRecordUsing(fn ($record) => $record->translateAttribute('name'))
                     ->searchable()
                     ->preload()
-                    ->label('Product'),
+                    ->label('Товар'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

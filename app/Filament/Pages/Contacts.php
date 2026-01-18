@@ -22,7 +22,7 @@ class Contacts extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-phone';
     protected static string $view = 'filament.pages.contacts';
-    protected static ?string $navigationLabel = 'Contact Settings';
+    protected static ?string $navigationLabel = 'Налаштування контактів';
     public static function getSlug(): string
     {
         return 'contacts';
