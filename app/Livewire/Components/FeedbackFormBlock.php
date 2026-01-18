@@ -77,7 +77,9 @@ class FeedbackFormBlock extends Component
             $recipient = $settings['contact_email'] ?? config('mail.feedback_recipient', 'office@landgrou.com');
             Log::info('Sending email to', ['recipient' => $recipient]);
 
-            Mail::to($recipient)->send(new FeedbackFormSubmitted($validated));
+            Mail::to($recipient)
+                ->locale('uk')
+                ->send(new FeedbackFormSubmitted($validated));
 
             $this->state = 'success';
             $this->resetForm();

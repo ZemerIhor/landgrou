@@ -1,14 +1,30 @@
 [
     {
-        "name": "Name",
+        "name": {
+            "en": "Name",
+            "uk": "Назва"
+        },
         "handle": "name",
         "type": "Lunar\\FieldTypes\\TranslatedText",
         "attribute_type": "product",
         "configuration": {}
     },
     {
-        "name": "Description",
+        "name": {
+            "en": "Description",
+            "uk": "Опис"
+        },
         "handle": "description",
+        "type": "Lunar\\FieldTypes\\TranslatedText",
+        "attribute_type": "product",
+        "configuration": {}
+    },
+    {
+        "name": {
+            "en": "Short Description",
+            "uk": "Короткий опис"
+        },
+        "handle": "short_description",
         "type": "Lunar\\FieldTypes\\TranslatedText",
         "attribute_type": "product",
         "configuration": {}

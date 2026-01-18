@@ -4,6 +4,7 @@ namespace App\Support\FieldTypes;
 
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\ViewField;
+use App\Support\Forms\Components\TranslatedTextarea;
 use Lunar\Admin\Support\FieldTypes\BaseFieldType;
 use Lunar\Admin\Support\Forms\Components\TranslatedText as TranslatedTextComponent;
 use Lunar\Admin\Support\Synthesizers\TranslatedTextSynth;
@@ -20,6 +21,13 @@ class TranslatedTextField extends BaseFieldType
 
     public static function getFilamentComponent(Attribute $attribute): Component
     {
+        if ($attribute->handle === 'short_description') {
+            return TranslatedTextarea::make($attribute->handle)
+                ->when(filled($attribute->validation_rules), fn (TranslatedTextarea $component) => $component->rules($attribute->validation_rules))
+                ->required((bool) $attribute->required)
+                ->helperText($attribute->translate('description'));
+        }
+
         // Use standard TranslatedText with richtext
         if ((bool) $attribute->configuration->get('richtext')) {
             return TranslatedTextComponent::make($attribute->handle)

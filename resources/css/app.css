@@ -5,6 +5,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    html,
+    body {
+        overflow-x: hidden;
+    }
+}
+
 @layer components {
     .no-spinner {
         @apply [-moz-appearance:_textfield];
@@ -251,9 +258,9 @@
     content: "";
     position: absolute;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100vw;
-    margin-left: calc(-50vw + 50%);
     background: #e6e6e6;
     z-index: -1;
     height: 100%;
@@ -263,9 +270,9 @@
     content: "";
     position: absolute;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100vw;
-    margin-left: calc(-50vw + 50%);
     background: #333;
     z-index: -1;
     height: 100%;
@@ -274,9 +281,9 @@
     content: "";
     position: absolute;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100vw;
-    margin-left: calc(-50vw + 50%);
     background: #333;
     z-index: -1;
     height: 100%;
@@ -285,9 +292,9 @@
     content: "";
     position: absolute;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100vw;
-    margin-left: calc(-50vw + 50%);
     background: #333;
     z-index: -1;
     height: 100%;
@@ -296,9 +303,9 @@
     content: "";
     position: absolute;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100vw;
-    margin-left: calc(-50vw + 50%);
     background: #f3f3f3;
     z-index: -2;
     height: 100%;
@@ -308,9 +315,9 @@
     content: "";
     position: absolute;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100vw;
-    margin-left: calc(-50vw + 50%);
     background: #333;
     z-index: -1;
     height: 100%;
@@ -329,9 +336,9 @@
     content: "";
     position: absolute;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100vw;
-    margin-left: calc(-50vw + 50%);
     background: #333;
     z-index: -1;
     height: 100%;
@@ -619,7 +626,8 @@
 .main-banner__image {
     position: absolute;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100vw;
     z-index: -1;
     height: 100%;

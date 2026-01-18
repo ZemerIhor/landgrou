@@ -89,6 +89,7 @@ class ContactForm extends Component
 
         try {
             Mail::to(config('mail.contact_recipient', 'office@landgrou.com'))
+                ->locale('uk')
                 ->send(new ContactFormSubmitted($validated));
 
             $this->state = 'success';

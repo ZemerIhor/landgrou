@@ -39,7 +39,17 @@ class ContactFormSubmitted extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.contact-form')
-            ->subject('New Contact Form Submission');
+        $fromAddress = config('mail.from.address') ?: 'no-reply@landgrou.localhost';
+        $fromName = config('mail.from.name') ?: 'Website';
+
+        $mail = $this->view('emails.contact-form')
+            ->subject(__('messages.feedback_form.email_subject'))
+            ->from($fromAddress, $fromName);
+
+        if (! empty($this->email) && $this->email !== 'N/A') {
+            $mail->replyTo($this->email, $this->name !== 'N/A' ? $this->name : null);
+        }
+
+        return $mail;
     }
 }

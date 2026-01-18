@@ -88,6 +88,8 @@ return [
         'title' => 'Зв’яжіться з нами',
         'description' => 'Заповніть форму, і ми зв’яжемося з вами найближчим часом.',
         'contact_info' => 'Контактна інформація',
+        'name_label' => 'Ім’я',
+        'phone_label' => 'Телефон',
         'name_placeholder' => 'Ім’я',
         'phone_placeholder' => 'Телефон',
         'comment_label' => 'Коментар',
@@ -103,6 +105,8 @@ return [
         'close_button_aria_label' => 'Закрити форму',
         'thank_you' => 'Дякуємо за ваше повідомлення!', // Taken from contact_form.thank_you
         'order_processed' => 'Ваше повідомлення успішно надіслано. Ми зв’яжемося з вами незабаром.', // Taken from contact_form.order_processed
+        'email_subject' => 'Нова заявка на дзвінок',
+        'email_title' => 'Нова заявка на дзвінок',
         'error_occurred' => 'Сталася помилка', // Taken from contact_form.error_occurred
         'try_again' => 'Щось пішло не так. Спробуйте ще раз.', // Taken from contact_form.try_again
         'try_again_button' => 'Спробувати ще раз', // Taken from contact_form.try_again_button
@@ -474,4 +478,3 @@ return [
         'weight' => 'Вага',
     ],
 ];
-

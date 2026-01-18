@@ -147,8 +147,12 @@
 
 
             <section class="flex relative flex-col gap-6 items-end flex-[1_0_0]">
+                @php
+                    $shortDescriptionValue = $this->product->translateAttribute('short_description')
+                        ?: $this->product->translateAttribute('description');
+                @endphp
                 <div class="relative self-stretch text-base font-semibold leading-5 text-black max-sm:text-sm product-description">
-                    {!! $this->product->translateAttribute('description') !!}
+                    {!! $shortDescriptionValue !!}
                 </div>
 
                 <table class="product-properties flex relative flex-col items-start self-stretch" role="table" aria-label="{{ __('messages.product.attributes_table') }}">

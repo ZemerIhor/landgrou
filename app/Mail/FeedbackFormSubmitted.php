@@ -33,7 +33,11 @@ class FeedbackFormSubmitted extends Mailable
      */
     public function build()
     {
+        $fromAddress = config('mail.from.address') ?: 'no-reply@landgrou.localhost';
+        $fromName = config('mail.from.name') ?: 'Website';
+
         return $this->view('emails.feedback-form')
-            ->subject(__('messages.feedback_form.email_subject'));
+            ->subject(__('messages.feedback_form.email_subject'))
+            ->from($fromAddress, $fromName);
     }
 }

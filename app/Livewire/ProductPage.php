@@ -127,7 +127,7 @@ class ProductPage extends Component
         $attributes = [];
 
         // Список атрибутов, которые нужно пропустить
-        $excludedAttributes = ['name', 'description'];
+        $excludedAttributes = ['name', 'description', 'short_description'];
 
         // Перебираем все ключи из attribute_data, исключая name и description
         foreach ($this->product->attribute_data->keys()->filter(fn($handle) => !in_array($handle, $excludedAttributes)) as $handle) {

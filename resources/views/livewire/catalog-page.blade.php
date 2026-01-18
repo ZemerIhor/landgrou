@@ -313,7 +313,8 @@
                             ? route('product.view', ['locale' => $locale, 'slug' => $slug])
                             : route('home', ['locale' => $locale]);
                         $nameValue = $product->translateAttribute('name') ?? 'Product';
-                        $descriptionValue = $product->translateAttribute('description') ?? '';
+                        $shortDescriptionValue = $product->translateAttribute('short_description')
+                            ?: ($product->translateAttribute('description') ?? '');
                     @endphp
 
                     <article wire:key="product-{{ $product->id }}"
@@ -353,7 +354,7 @@
                                 <div class="p-4 w-full">
                                     <div class="w-full text-zinc-800">
                                         <h2 class="text-base font-bold leading-5 text-zinc-800">{{ $nameValue }}</h2>
-                                        <div class="mt-3 text-xs font-semibold leading-5 text-zinc-800 product-description ">{!! $descriptionValue !!}</div>
+                                        <div class="mt-3 text-xs font-semibold leading-5 text-zinc-800 product-description ">{!! $shortDescriptionValue !!}</div>
                                         @if ($product->brand)
                                             <p class="text-xs mt-1">{{ __('messages.catalog.brand') }}
                                                 : {{ $product->brand->translateAttribute('name') ?? $product->brand->name ?? 'N/A' }}</p>

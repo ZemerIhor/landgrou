@@ -24,6 +24,7 @@ class AttributeSeeder extends AbstractSeeder
                 'attributable_type' => Product::morphName(),
                 'name' => [
                     'en' => 'Details',
+                    'uk' => 'Деталі',
                 ],
                 'handle' => 'details',
                 'position' => 1,
@@ -38,6 +39,17 @@ class AttributeSeeder extends AbstractSeeder
                     $attributeType = 'product';
                 }
 
+                $translations = $attribute->name;
+                if (is_object($translations)) {
+                    $translations = (array) $translations;
+                }
+                if (! is_array($translations)) {
+                    $translations = [
+                        'en' => $translations,
+                        'uk' => $translations,
+                    ];
+                }
+
                 Attribute::firstOrCreate([
                     'handle' => $attribute->handle,
                     'attribute_type' => $attributeType,
@@ -50,12 +62,8 @@ class AttributeSeeder extends AbstractSeeder
                     'filterable' => false,
                     'system' => false,
                     'position' => $attributeGroup->attributes()->count() + 1,
-                    'name' => [
-                        'en' => $attribute->name,
-                    ],
-                    'description' => [
-                        'en' => $attribute->name,
-                    ],
+                    'name' => $translations,
+                    'description' => $translations,
                     'configuration' => (array) $attribute->configuration,
                 ]);
             }
